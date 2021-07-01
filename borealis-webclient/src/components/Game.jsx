@@ -6,7 +6,7 @@ import Overlay from './Overlay.jsx';
 import ControlPanel from './ControlPanel.jsx';
 import Token from './Token.jsx';
 import Gamesocket from './Gamesocket.jsx';
-import guid from './Guid.jsx';
+import guid from './Guid.js';
 
 class Game extends React.Component {
 

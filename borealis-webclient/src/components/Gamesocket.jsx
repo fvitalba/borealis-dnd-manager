@@ -1,7 +1,7 @@
 /* cf.
 https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
 */
-import guid from './Guid.jsx';
+import guid from './Guid.js';
 
 const RETRY_INTERVAL = 2500;
 

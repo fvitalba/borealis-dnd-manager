@@ -1,5 +1,5 @@
 import React from 'react';
-import guid from './Guid.jsx';
+import guid from './Guid.js';
 
 function Button(props) {
   const {title, value, onClick, isSelected, style, disabled, ..._} = props; /* eslint-disable-line no-unused-vars */
