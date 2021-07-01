@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import drawImage from '../controllers/drawImage.js'
 
 const Drawing = ({ game, ref }) => {
@@ -15,4 +15,4 @@ const Drawing = ({ game, ref }) => {
 	)
 }
 
-export default Drawing;
+export default Drawing

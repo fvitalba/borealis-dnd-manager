@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
 const Canvas = ({ id, ref, onClick, game, resizeCanvases }) => {
   const [canvasRef, setCanvasRef] = useState(React.createRef())
@@ -21,7 +21,7 @@ const Canvas = ({ id, ref, onClick, game, resizeCanvases }) => {
     if (!url || url.trim().length === 0) {
       if (resizeCanvases) {
         resizeCanvases()
-      }; /* Clear canvas */
+      } /* Clear canvas */
       return Promise.resolve(map.w, map.h)
     }
 
@@ -33,13 +33,13 @@ const Canvas = ({ id, ref, onClick, game, resizeCanvases }) => {
         let w = map.w
         let h = map.h
         if (!w && !h) {
-          w = img.width;
-          h = img.height;
+          w = img.width
+          h = img.height
         } else if (!w)
           w = h * img.width / img.height
         else if (!h)
           h = w * img.height / img.width
-        const promise = resizeCanvases ? resizeCanvases(w, h) : Promise.resolve();
+        const promise = resizeCanvases ? resizeCanvases(w, h) : Promise.resolve()
         promise.then(() => {
           ctx.drawImage(img, map.x || 0, map.y || 0, w, h)
           resolve(w, h)
