@@ -73,10 +73,10 @@ canvas {
 .passthrough {
 	pointer-events: none;
 }
-canvas#bg {
+canvas#background {
 	z-index: var(--z-map);
 }
-canvas#draw {
+canvas#drawing {
 	z-index: var(--z-drawing);
 	border: 1px dashed #ddd;
 }
