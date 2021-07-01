@@ -3,7 +3,7 @@ const drawImage = (url, which, game, context, resizeCanvases) => {
 	if (!url || url.trim().length === 0) {
 		if (resizeCanvases) {
 			resizeCanvases()
-		}; /* Clear canvas */
+		} /* Clear canvas */
 		return Promise.resolve(game.map.w, game.map.h)
 	}
 
@@ -15,13 +15,13 @@ const drawImage = (url, which, game, context, resizeCanvases) => {
 			let w = game.map.w
 			let h = game.map.h
 			if (!w && !h) {
-				w = img.width;
-				h = img.height;
+				w = img.width
+				h = img.height
 			} else if (!w)
 				w = h * img.width / img.height
 			else if (!h)
 				h = w * img.height / img.width
-			const promise = resizeCanvases ? resizeCanvases(w, h) : Promise.resolve();
+			const promise = resizeCanvases ? resizeCanvases(w, h) : Promise.resolve()
 			promise.then(() => {
 				ctx.drawImage(img, game.map.x || 0, game.map.y || 0, w, h)
 				resolve(w, h)

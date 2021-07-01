@@ -1,5 +1,5 @@
 import React from 'react';
-import Canvas from './Canvas.js';
+import Canvas from './Canvas.jsx';
 
 class Background extends Canvas {
 
