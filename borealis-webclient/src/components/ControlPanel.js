@@ -4,96 +4,9 @@ import Button from '../views/button.js'
 import ToolButton from './ToolButton.js'
 import ToggleButton from './ToggleButton.js'
 import MapConfig from './MapConfig.js'
+import TokenConfig from './TokenConfig.js'
 
 //TODO: Complete refactoring
-
-class TokenConfig extends React.Component {
-  update (callback) {
-    this.props.game.updateToken(this.props.token, callback);
-  }
-
-  delete () {
-    const game = this.props.game;
-    const tokens = game.state.tokens.map(t => t);
-    const index = tokens.indexOf(this.props.token);
-    tokens.splice(index, 1);
-    game.setState({tokens: tokens});
-  }
-
-  copy () {
-    const game = this.props.game;
-    const copy = Object.assign({}, this.props.token);
-    const tokens = game.state.tokens.map(t => t);
-    const index = tokens.indexOf(this.props.token);
-    tokens.splice(index+1, 0, copy);
-    game.setState({tokens: tokens});
-  }
-
-  onMapSelect (evt) {
-    let value = evt.target.value;
-    if (Object.keys(this.props.game.state.maps).indexOf(value) < 0)
-      value = undefined;
-    this.update(token => token.mapId = value);
-  }
-
-  onToggle (key) {
-    this.update(token => token[key] = !token[key]);
-  }
-
-  onIntegerChange (key, evt) {
-    this.update(token => token[key] = parseInt(evt.target.value) || undefined);
-  }
-
-  onTextChange (key, evt) {
-    this.update(token => token[key] = evt.target.value);
-  }
-
-  selectToken (token, evt) {
-    this.props.game.selectToken(token, undefined, true);
-  }
-
-  render () {
-    const token = this.props.token;
-    if (!token) return null;
-    const game = this.props.game;
-    const maps = game.state.maps;
-    if (game.isHost)
-      return <div className="tokenConfig">
-        <Button title="Duplicate token" value="&#x1f46f;" onClick={this.copy.bind(this)} />
-        {<Button value={token.pc ? "\u{1f236}" : "\u{1f21a}"} onClick={this.onToggle.bind(this, 'pc')} title="pc/npc" />}
-        {<Button value={token.$selected ? "\u{1f22f}" : "\u{1f233}"} onClick={this.selectToken.bind(this, token)} title="(un)select" />}
-        {<Button value={token.ko ? "\u{1f940}" : "\u{1f339}"} onClick={this.onToggle.bind(this, 'ko')} title="alive/dead" />}
-        <input value={token.name||''} placeholder="Name" size="8" onChange={this.onTextChange.bind(this, 'name')} />
-        <input value={token.url||''} placeholder="Url" size="8" onChange={this.onTextChange.bind(this, 'url')} />
-        wh:
-        <input value={token.w||''} placeholder="w" className="text2" onChange={this.onIntegerChange.bind(this, 'w')} type="number" step="5" min="0" title="width" />
-        <input value={token.h||''} placeholder="h" className="text2" onChange={this.onIntegerChange.bind(this, 'h')} type="number" step="5" min="0" title="height" />
-        xy:
-        <input value={token.x||''} placeholder="x" className="text3" onChange={this.onIntegerChange.bind(this, 'x')} type="number" step="5" title="x coord" />
-        <input value={token.y||''} placeholder="y" className="text3" onChange={this.onIntegerChange.bind(this, 'y')} type="number" step="5" title="y coord" />
-        <select defaultValue={token.mapId} onChange={this.onMapSelect.bind(this)} title="which map(s)">
-          <option>(all)</option>
-          {Object.keys(maps).map((key, $i) => (
-            <option key={$i} value={key}>
-              {maps[key].name || maps[key].url || '(unnamed)'}
-            </option>
-          ))}
-        </select>
-        <Button title="Delete token" value="&#x1f5d1;" onClick={this.delete.bind(this)} />
-      </div>
-    else
-      return <div className="tokenConfig">
-        <input value={token.name||''} placeholder="Name" size="8" onChange={this.onTextChange.bind(this, 'name')} />
-        <input value={token.url||''} placeholder="Url" size="8" onChange={this.onTextChange.bind(this, 'url')} />
-        wh:
-        <input value={token.w||''} placeholder="w" className="text2" onChange={this.onIntegerChange.bind(this, 'w')} type="number" step="5" min="0" title="width" />
-        <input value={token.h||''} placeholder="h" className="text2" onChange={this.onIntegerChange.bind(this, 'h')} type="number" step="5" min="0" title="height" />
-        xy:
-        <input value={token.x||''} placeholder="x" className="text3" onChange={this.onIntegerChange.bind(this, 'x')} type="number" step="5" title="x coord" />
-        <input value={token.y||''} placeholder="y" className="text3" onChange={this.onIntegerChange.bind(this, 'y')} type="number" step="5" title="y coord" />
-      </div>
-  }
-}
 
 class ControlPanel extends React.Component {
   constructor (props) {
