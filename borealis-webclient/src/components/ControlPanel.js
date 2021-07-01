@@ -3,66 +3,7 @@ import guid from '../controllers/guid.js'
 import Button from '../views/button.js'
 import ToolButton from './ToolButton.js'
 import ToggleButton from './ToggleButton.js'
-
-class MapConfig extends React.Component {
-  update (callback) {
-    return new Promise(resolve => {
-      const game = this.props.game;
-      const mapsCopy = JSON.parse(JSON.stringify(game.state.maps));
-      callback(mapsCopy[this.props.mapId]);
-      game.setState({maps: mapsCopy}, resolve);
-    });
-  }
-
-  resize (key, evt) {
-    return this.onIntegerChange(key, evt).then(() => {
-      const game = this.props.game;
-      if (game.bgRef.current && this.props.mapId == game.state.mapId) { /* eslint-disable-line eqeqeq */
-        return game.loadMap();
-      } else return Promise.resolve();
-    });
-  }
-
-  onTextChange (key, evt) {
-    return this.update(map => map[key] = evt.target.value);
-  }
-
-  onIntegerChange (key, evt) {
-    const value = parseInt(evt.target.value) || undefined;
-    return this.update(map => map[key] = value);
-  }
-
-  load () { this.props.game.loadMap(this.props.map) }
-
-  delete () {
-    if (window.confirm('Delete map?')) {
-      const game = this.props.game;
-      const mapsCopy = JSON.parse(JSON.stringify(game.state.maps));
-      delete mapsCopy[this.props.mapId];
-      const newState = {maps: mapsCopy};
-      if (game.state.mapId === this.props.mapId)
-        newState.mapId = Object.keys(newState.maps)[0];
-      game.setState(newState);
-    }
-  }
-
-  render () {
-    if (!this.props.map) return null;
-    const game = this.props.game
-    const map = this.props.map;
-    const isSelected = game.state.mapId === this.props.mapId;
-    return <div className={isSelected ? 'selected' : null}>
-      {this.props.mapId}
-      <input value={map.name||''} placeholder="Map name" size="8" onChange={this.onTextChange.bind(this, 'name')} />
-      <input value={map.url||''} placeholder="Map url" size="8" onChange={this.onTextChange.bind(this, 'url')} />
-      <Button title="Load map" value="&#x1f23a;" onClick={this.load.bind(this)} />
-      wh:
-      <input value={map.w||''} placeholder="w" className="text3" onChange={this.resize.bind(this, 'w')} type="number" min="0" step="5" title="width" />
-      <input value={map.h||''} placeholder="h" className="text3" onChange={this.resize.bind(this, 'h')} type="number" min="0" step="5" title="height" />
-      <Button title="Delete map" value="&#x1f5d1;" onClick={this.delete.bind(this)} />
-    </div>
-  }
-}
+import MapConfig from './MapConfig.js'
 
 class TokenConfig extends React.Component {
   update (callback) {
