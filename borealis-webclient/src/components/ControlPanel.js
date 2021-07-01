@@ -1,28 +1,8 @@
 import React from 'react'
 import guid from '../controllers/guid.js'
 import Button from '../views/button.js'
-
-function ToolButton({ cp, title, value, game }) {
-	//TODO: To review post Refactoring
-	const isSelected = title === game.state.tool
-	const onClick = cp.setGameState.bind(cp, 'tool', title)
-	return (
-		<Button title={ title } value={ value.toString() } onClick={ onClick } isSelected={ isSelected } />
-	)
-}
-
-function ToggleButton({ cp, title, value }) {
-	const toggleKey = `toggleOn${title}`
-	const onClick = () => {
-		cp.setState({
-			[toggleKey]: !cp.state[toggleKey]
-		})
-	}
-	const isSelected = cp.state[toggleKey]
-	return (
-		<Button title={ title } value={ value } onClick={ onClick } isSelected={ isSelected } />
-	)
-}
+import ToolButton from './ToolButton.js'
+import ToggleButton from './ToggleButton.js'
 
 class MapConfig extends React.Component {
   update (callback) {
