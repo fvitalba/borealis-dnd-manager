@@ -84,9 +84,9 @@ class ControlPanel extends React.Component {
 
   renderToolSelect () {
     return (<span id="tools">
-      <ToolButton title="move" value="&#x1f9f3;" cp={this} />
-      <ToolButton title="draw" value="&#x1f58d;" cp={this} />
-      <ToolButton title="fog"  value="&#x1f32c;" cp={this} />
+      <ToolButton title="move" value="&#x1f9f3;" controlPanel={this} />
+      <ToolButton title="draw" value="&#x1f58d;" controlPanel={this} />
+      <ToolButton title="fog"  value="&#x1f32c;" controlPanel={this} />
     </span>)
   }
 
@@ -135,7 +135,7 @@ class ControlPanel extends React.Component {
     return <div>
       <hr />
       <input title="User name" placeholder="User name" value={game.state.username||''} onChange={this.setGameText.bind(this, 'username')} />
-      <ToggleButton title="Share mouse (cursor)" value="&#x1f401;" cp={game} />
+      <ToggleButton title="Share mouse (cursor)" value="&#x1f401;" controlPanel={game} />
       <input title="Cursor size" value={game.state.cursorSize||''} onChange={this.setGameInt.bind(this, 'cursorSize')} type="number" min="0" />
       <hr />
       <Button title="Redo as dev" value="&#x1f530;" onClick={game.initAsDev.bind(game)} />
@@ -178,9 +178,9 @@ class ControlPanel extends React.Component {
       return <div id="control-panel">
         {toggleHiddenButton}
         |||
-        <ToggleButton title="User" value="&#x1f9d9;&#x200d;&#x2642;&#xfe0f;" cp={this} />
-        <ToggleButton title="Maps" value="&#x1f5fa;" cp={this} />
-        <ToggleButton title="Tokens" value="&#x265f;" cp={this} />
+        <ToggleButton title="User" value="&#x1f9d9;&#x200d;&#x2642;&#xfe0f;" controlPanel={this} />
+        <ToggleButton title="Maps" value="&#x1f5fa;" controlPanel={this} />
+        <ToggleButton title="Tokens" value="&#x265f;" controlPanel={this} />
         <Button title="Push refresh to players" value="&#x1f4ab;" onClick={game.websocket.pushRefresh.bind(game.websocket, {})} />
         |||
         {this.renderToolSelect()}
@@ -194,7 +194,7 @@ class ControlPanel extends React.Component {
       return <div id="control-panel">
         {toggleHiddenButton}
         <input title="User name" placeholder="User name" value={game.state.username||''} onChange={this.setGameText.bind(this, 'username')} />
-        <ToggleButton title="Share mouse (cursor)" value="&#x1f401;" cp={game} />
+        <ToggleButton title="Share mouse (cursor)" value="&#x1f401;" controlPanel={game} />
         <input title="Cursor size" value={game.state.cursorSize||''} onChange={this.setGameInt.bind(this, 'cursorSize')} type="number" min="0" />
         <Button title="Request gameboard refresh from host" onClick={this.socketRequestRefresh.bind(this)} value="&#x1f4ab;" />
         {this.renderSelectedTokensControls()}
