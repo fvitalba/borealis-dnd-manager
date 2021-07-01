@@ -2,6 +2,7 @@ import React from 'react'
 import drawImage from '../controllers/drawImage.js'
 
 const Background = ({ game, ref }) => {
+	//TODO: Verify if component is correct past refactoring
 	const resizeCanvases = (w, h) => {
 		return new Promise((resolve, reject) => {
 			if (!w)

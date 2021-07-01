@@ -45,7 +45,7 @@ const MapConfig = ({ game, map, mapId }) => {
 			delete mapsCopy[mapId]
 			const newState = { maps: mapsCopy }
 			if (game.state.mapId === mapId)
-			newState.mapId = Object.keys(newState.maps)[0]
+				newState.mapId = Object.keys(newState.maps)[0]
 			game.setState(newState)
 		}
 	}

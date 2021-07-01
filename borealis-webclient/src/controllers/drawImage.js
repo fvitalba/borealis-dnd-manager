@@ -1,4 +1,6 @@
 const drawImage = (url, which, game, context, resizeCanvases) => {
+	//TODO: Verify if everything is drawn post refactoring
+
 	/* Handle 'whiteboard' (no bg img) */
 	if (!url || url.trim().length === 0) {
 		if (resizeCanvases) {

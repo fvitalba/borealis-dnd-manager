@@ -5,6 +5,8 @@ import ToolButton from './ToolButton.js'
 import ToggleButton from './ToggleButton.js'
 import MapConfig from './MapConfig.js'
 
+//TODO: Complete refactoring
+
 class TokenConfig extends React.Component {
   update (callback) {
     this.props.game.updateToken(this.props.token, callback);

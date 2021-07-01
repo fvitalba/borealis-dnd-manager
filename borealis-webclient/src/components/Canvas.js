@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 
 const Canvas = ({ id, ref, onClick, game, resizeCanvases }) => {
+	//TODO: Review after refactoring, if this component is not necessary delete it.
 	const [canvasRef, setCanvasRef] = useState(React.createRef())
 
 	const buildDataUrl = () => { return getCanvas().toDataURL('image/webp', 0.5) }

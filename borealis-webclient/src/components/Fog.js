@@ -2,6 +2,7 @@ import React from 'react'
 import drawImage from '../controllers/drawImage.js'
 
 const Fog = ({ game, ref, width, height }) => {
+	//TODO: Verify if component is correct past refactoring
 	const fogOpacity = game.isHost ? game.state.fogOpacity : 1
 
 	const fill = () => {
