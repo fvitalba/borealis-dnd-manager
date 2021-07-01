@@ -34,7 +34,7 @@ const Background = ({ game, ref }) => {
 	}
 
 	const handleOnClick = (e) => {
-		game.cpRef.current.setState({
+		game.controlPanelRef.current.setState({
 			toggleOnMaps: false,
 			toggleOnTokens: false
 		})
