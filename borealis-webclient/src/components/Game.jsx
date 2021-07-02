@@ -9,7 +9,6 @@ import Gamesocket from './Gamesocket.jsx';
 import guid from '../controllers/guid.js';
 
 class Game extends React.Component {
-
   constructor (props) {
     super(props);
     window.game = this;
