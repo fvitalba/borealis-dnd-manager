@@ -65,10 +65,11 @@ const Game = () => {
 		const startStateAttrs = { mapId: map.$id, isFogLoaded: false }
 		const finishStateAttrs = { isFirstLoadDone: true, isFogLoaded: true }
 		//TODO: refactor new state update
+		/*
 		return savePromise.then(() => {
 			return new Promise((resolve, reject) => {
 				this.setState(startStateAttrs, () => {
-					/* Load bg first because that resizes the canvases */
+					// Load bg first because that resizes the canvases
 					this.bgRef.current.load().then(() => {
 					Promise.all([
 						this.fogRef.current.load(),
@@ -93,6 +94,7 @@ const Game = () => {
 			console.error('fail savePromise:', arg);
 			this.setState(finishStateAttrs);
 		});
+		*/
 	}
 
 	const initAsDev = () => {
