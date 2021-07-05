@@ -1,9 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Background from './Background.js'
-import Drawing from './Drawing.js'
-import Fog from './Fog.js'
-import Overlay from './Overlay.jsx'
-import ControlPanel from './ControlPanel.js'
 import Token from './Token.js'
 import Gamesocket from './Gamesocket.jsx'
 import GameView from '../views/GameView.js'
@@ -23,6 +18,7 @@ const initialGameState = () => {
 		drawingRef: React.createRef(),
 		overlayRef: React.createRef(),
 		tokens: React.createRef(),
+		gen: 0,
 		state: {
 			maps: {},
 			tokens: [],
@@ -63,9 +59,64 @@ const Game = () => {
 		}
 	},[])
 
+	/****************************************************
+	 * Map Functions                                    *
+	 ****************************************************/
 	const getMap = () => {
 		const map = gameState.state.maps[gameState.state.mapId]
 		return map || Object.values(gameState.state.maps)[0]
+	}
+
+	const dumpCanvas = (which) => {
+		//TODO: This function is simply a mess. This surely needs to be revisited
+		const map = getMap()
+		const changedAt = map[`$${which}ChangedAt`]
+		const dumpedAt = map[`$${which}DumpedAt`]
+		if (gameState.isHost && changedAt && (!dumpedAt || dumpedAt < changedAt)) {
+			const at = new Date()
+			const url = gameState[`${which}Ref`].current.buildDataUrl()
+			console.log('dumped', which, url)
+			return [url, at]
+		}
+		else
+			return [map[`${which}Url`], dumpedAt]
+	}
+
+	/* Copy maps and dump current data urls, suitable for save to state or localStorage */
+	const dumpMaps = () => {
+		console.log('dumpMaps')
+		let mapId = gameState.state.mapId
+
+		/* Infer map id if it's not set */
+		if (undefined === mapId)
+			mapId = 
+				Object
+					.keys(gameState.state.maps)
+					.find(key => gameState.state.maps[key] === gameState.map)
+		
+		const mapsCopy = JSON.parse(JSON.stringify(gameState.state.maps))
+		const map = mapsCopy[mapId]
+		if (map && gameState.state.isFirstLoadDone) { /* Map may have been deleted */
+			notify('Building data urls...', undefined, 'dumpMaps')
+			[map.fogUrl, map.$fogDumpedAt] = dumpCanvas('fog')
+			[map.drawUrl, map.$drawDumpedAt] = dumpCanvas('draw')
+			notify('Data urls readied', undefined, 'dumpMaps')
+		}
+		return mapsCopy
+	}
+
+	/* From playarea to state */
+	const saveMap = () => {
+		return new Promise((resolve, reject) => {
+			//TODO: Verify if ,resolve is really needed or working
+			setGameState({
+				...gameState,
+				state: {
+					...gameState.state,
+					maps: dumpMaps(),
+				}
+			}, resolve)
+		})
 	}
 
 	const loadMap = (map, skipSave, noEmit) => {
@@ -193,6 +244,33 @@ const Game = () => {
 			gameState.websocket.pushToken(index, tokenCopy)
 	}
 
+	const updateCursors = (x, y, name, guid) => {
+		const cursors = Object.assign({}, gameState.state.cursors)
+		cursors[guid] = { x: x, y: y, time: new Date(), u: name }
+		setGameState({
+			...gameState,
+			state: {
+				...gameState.state,
+				cursors: cursors,
+			}
+		})
+	}
+
+	const updateMap = (callback) => {
+		return new Promise(resolve => {
+			const mapsCopy = JSON.parse(JSON.stringify(gameState.state.maps))
+			callback(mapsCopy[gameState.state.mapId])
+			//TODO: Verify if ,resolve is really needed or working
+			setGameState({
+				...gameState,
+				state: {
+					...gameState.state,
+					maps: mapsCopy,
+				}
+			}, resolve)
+		})
+	}
+
 	/****************************************************
 	 * Control Functions                                *
 	 ****************************************************/
@@ -273,7 +351,7 @@ const Game = () => {
 			if (x.tagName == 'INPUT' && (x.type === 'text' || x.type === 'number')) /* eslint-disable-line eqeqeq */
 				return e
 		
-		const moveFactor = evt.shiftKey ? 100 : 10
+		const moveFactor = e.shiftKey ? 100 : 10
 		const moveSelectedTokens = () => {
 			updateTokens(token => {
 				if (token.$selected) {
@@ -448,6 +526,7 @@ const Game = () => {
 	const scrubObject = (object) => {
 		for (let key in object) if (/^\$/.test(key) && key !== '$id') delete object[key];
 	}
+
 	const notify = (msg, ttl, tag) => {
 		console.log(msg)
 		if (window.Notification) {
@@ -460,6 +539,63 @@ const Game = () => {
 			}
 		}
 	}
+
+	const toJson = (additionalAttrs) => {
+		const map = getMap()
+		const newGeneration = 1 + (gameState.state.gen || 0)
+		/* Generation is tracked so that we don't get refresh loops when multiple DMs exist. */
+		if (gameState.isHost)
+			setGameState({
+				...gameState,
+				gen: newGeneration,
+			})
+		const tokens = gameState.state.tokens.map(token => ({...token}))
+		tokens.forEach(token => scrubObject(token))
+		const maps = dumpMaps()
+		Object.values(maps).forEach(map => scrubObject(map))
+		const data = Object.assign({
+			gen: newGeneration,
+			maps: maps,
+			mapId: map && map.$id,
+			tokens: tokens,
+		}, additionalAttrs)
+		return JSON.stringify(data)
+	}
+
+	const fromJson = (json) => {
+		const data = Object.assign(JSON.parse(json)||{})
+		if (data.tokens) {
+			data.tokens.forEach(token => {
+				if (!token.guid) token.guid = guid()
+			})
+		}
+		return new Promise(resolve => {
+			//TODO: Verify how we can use this correctly
+			/*
+			this.setState(data, () => loadMap().then(resolve))
+			*/
+		})
+	}
+
+	const saveToLocalStorage = () => {
+		if (gameState.state.isFirstLoadDone) {
+			console.log('Saving game to local storage')
+			localStorage.setItem(gameState.room, toJson())
+		}
+	}
+	
+	const loadFromLocalStorage = () => {
+		console.log('Loading game from local storage')
+		return fromJson(localStorage.getItem(gameState.room))
+	}
+	
+	function handleError (ex) {
+		console.error(ex)
+		console.error('Exception in `render`. Clearing localStorage...')
+		localStorage.removeItem(gameState.room)
+		window.alert('Fatal error. Local storage cleared.')
+	}
+	  
 
 	/****************************************************
 	 * Component Render                                 *
