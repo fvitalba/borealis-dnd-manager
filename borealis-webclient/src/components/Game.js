@@ -51,11 +51,11 @@ const Game = () => {
 
 		// On Unmount
 		return () => {
-			saveToLocalStorage();
-			window.removeEventListener('beforeunload', saveToLocalStorage.bind(this));
-			window.removeEventListener('resize', onResize.bind(this));
-			window.removeEventListener('keypress', onKeyPress.bind(this));
-			window.removeEventListener('keydown', onKeyDown.bind(this));
+			saveToLocalStorage()
+			window.removeEventListener('beforeunload', saveToLocalStorage.bind(this))
+			window.removeEventListener('resize', onResize.bind(this))
+			window.removeEventListener('keypress', onKeyPress.bind(this))
+			window.removeEventListener('keydown', onKeyDown.bind(this))
 		}
 	},[])
 
@@ -145,24 +145,24 @@ const Game = () => {
 						this.drawRef.current.load(),
 					]).then(() => {
 						this.setState(finishStateAttrs, () => {
-						resolve();
-						note && note.close();
-						this.notify('map loaded', undefined, 'loadMap');
-						});
+						resolve()
+						note && note.close()
+						this.notify('map loaded', undefined, 'loadMap')
+						})
 					}).catch(arg => {
-						console.error('fail loads:', arg);
-						this.setState(finishStateAttrs);
-					});
+						console.error('fail loads:', arg)
+						this.setState(finishStateAttrs)
+					})
 					}).catch(arg => {
-					console.error('fail load bgRef:', arg);
-					this.setState(finishStateAttrs);
-					});
-				});
-			});
+					console.error('fail load bgRef:', arg)
+					this.setState(finishStateAttrs)
+					})
+				})
+			})
 		}).catch(arg => {
-			console.error('fail savePromise:', arg);
-			this.setState(finishStateAttrs);
-		});
+			console.error('fail savePromise:', arg)
+			this.setState(finishStateAttrs)
+		})
 		*/
 	}
 
@@ -296,7 +296,7 @@ const Game = () => {
 	const dragSelectedTokens = (evt) => {
 		if (gameState.state.tool !== 'move')
 			return
-		const downX = gameState.state.downX, downY = gameState.state.downY;
+		const downX = gameState.state.downX, downY = gameState.state.downY
 		updateTokens(token => {
 			if (token.$selected) {
 				token.x = token.$x0 + evt.pageX - downX
@@ -399,10 +399,10 @@ const Game = () => {
 		
 		/*
 		const toggle = (key, location) => {
-			(location||this).setState({[key]: !(location||this).state[key]});
+			(location||this).setState({[key]: !(location||this).state[key]})
 		}
 		*/
-		const cp = gameState.cpRef.current;
+		const cp = gameState.cpRef.current
 		switch(e.code) {
 			case 'KeyC':
 				if (e.shiftKey)
@@ -462,8 +462,8 @@ const Game = () => {
 
 	const onMouseUp = (e) => {
 		updateTokens(tok => {
-			tok.$x0 = tok.x;
-			tok.$y0 = tok.y;
+			tok.$x0 = tok.x
+			tok.$y0 = tok.y
 		}, true)
 		//TODO: Verify where we have to update this state
 		/*
@@ -524,7 +524,7 @@ const Game = () => {
 	 * Helper Functions                                 *
 	 ****************************************************/
 	const scrubObject = (object) => {
-		for (let key in object) if (/^\$/.test(key) && key !== '$id') delete object[key];
+		for (let key in object) if (/^\$/.test(key) && key !== '$id') delete object[key]
 	}
 
 	const notify = (msg, ttl, tag) => {
