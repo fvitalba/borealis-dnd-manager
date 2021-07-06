@@ -1,8 +1,14 @@
 import React, { useState } from 'react'
 import TokenView from '../views/TokenView'
 
+const initialTokenState = () => {
+	return {
+		was: undefined,
+	}
+}
+
 const Token = ({ game, token }) => {
-	const [was, setWas] = useState(false)
+	const [tokenState, setTokenState] = useState(initialTokenState)
 
 	const isMoveTool = () => {
 		return game.state.tool === 'move'
@@ -11,14 +17,17 @@ const Token = ({ game, token }) => {
 	const onMouseUp = (e) => {
 		if (!isMoveTool())
 			return
-		if (was)
+		if (tokenState.was)
 			game.selectToken(token, false, e.ctrlKey)
 	}
 
 	const onMouseDown = (e) => {
 		if (!isMoveTool())
 			return
-		setWas(token.$selected)
+		setTokenState({
+			...tokenState,
+			was: token.$selected
+		})
 		if (token.$selected)
 			game.selectToken(token, true, e.ctrlKey)
 	}

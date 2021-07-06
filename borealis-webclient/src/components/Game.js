@@ -18,7 +18,6 @@ const initialGameState = () => {
 		drawingRef: React.createRef(),
 		overlayRef: React.createRef(),
 		tokens: React.createRef(),
-		gen: 0,
 		state: {
 			maps: {},
 			tokens: [],
@@ -34,6 +33,10 @@ const initialGameState = () => {
 			tool: 'move',
 			username: params.get('host') ? 'DM' : 'PC',
 			'toggleOnShare mouse (cursor)': true,
+			downX: undefined,
+			downY: undefined,
+			mapId: undefined,
+			gen: 0,
 		}
 	}
 }
@@ -114,7 +117,7 @@ const Game = () => {
 				state: {
 					...gameState.state,
 					maps: dumpMaps(),
-				}
+				},
 			}, resolve)
 		})
 	}
@@ -190,7 +193,7 @@ const Game = () => {
 					maps: Object.fromEntries([defaultMap, kiwiMap].map(m => [m.$id, m])),
 					tokens: tokens,
 					mapId: kiwiMap.$id,
-				}
+				},
 			})
 			loadMap()
 			resolve()
@@ -208,7 +211,7 @@ const Game = () => {
 			state: {
 				...gameState.state,
 				tokens: tokensCopy,
-			}
+			},
 		})
 		if (!noEmit && gameState.websocket)
 			gameState.websocket.pushTokens(tokensCopy)
@@ -224,7 +227,7 @@ const Game = () => {
 			state: {
 				...gameState.state,
 				tokens: tokensCopy,
-			}
+			},
 		})
 		if (!noEmit && gameState.websocket)
 			gameState.websocket.pushToken(tokenIdx, tokenCopy)
@@ -238,7 +241,7 @@ const Game = () => {
 			state: {
 				...gameState.state,
 				tokens: tokensCopy,
-			}
+			},
 		})
 		if (!noEmit && gameState.websocket)
 			gameState.websocket.pushToken(index, tokenCopy)
@@ -252,7 +255,7 @@ const Game = () => {
 			state: {
 				...gameState.state,
 				cursors: cursors,
-			}
+			},
 		})
 	}
 
@@ -266,7 +269,7 @@ const Game = () => {
 				state: {
 					...gameState.state,
 					maps: mapsCopy,
-				}
+				},
 			}, resolve)
 		})
 	}
@@ -418,7 +421,7 @@ const Game = () => {
 					state: {
 						...gameState.state,
 						tool: 'fog',
-					}
+					},
 				})
 				break
 			case 'KeyL':
@@ -437,7 +440,7 @@ const Game = () => {
 					state: {
 						...gameState.state,
 						tool: 'draw',
-					}
+					},
 				})
 				break
 			case 'KeyT':
@@ -453,7 +456,7 @@ const Game = () => {
 					state: {
 						...gameState.state,
 						tool: 'move',
-					}
+					},
 				})
 				break
 			default: return
@@ -547,7 +550,10 @@ const Game = () => {
 		if (gameState.isHost)
 			setGameState({
 				...gameState,
-				gen: newGeneration,
+				state: {
+					...gameState.state,
+					gen: newGeneration,
+				},
 			})
 		const tokens = gameState.state.tokens.map(token => ({...token}))
 		tokens.forEach(token => scrubObject(token))

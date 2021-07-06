@@ -7,6 +7,9 @@ const initialControlPanelState = () => {
 		newTokenUrl: undefined,
 		newMapName: undefined,
 		hidden: false,
+		toggleOnMaps: false,
+		toggleOnUser: false,
+		toggleOnTokens: false,
 		fogDiameter: 33,
 	}
 }
