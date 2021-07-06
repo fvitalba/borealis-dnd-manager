@@ -1,24 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import guid from '../controllers/guid.js'
 import ControlPanelView from '../views/ControlPanelView.js'
 
-const initialControlPanelState = () => {
-	return {
-		name: undefined,
-		url: undefined,
-		newTokenUrl: undefined,
-		newMapName: undefined,
-		hidden: false,
-		toggleOnMaps: false,
-		toggleOnUser: false,
-		toggleOnTokens: false,
-		fogDiameter: 33,
-	}
-}
-
-const ControlPanel = ({ gameState, setGameState, websocket, notify, fromJson, token, initAsDev, loadMap, updateGameToken, selectGameToken, resetFog }) => {
-	const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
-
+const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, notify, fromJson, token, initAsDev, loadMap, updateGameToken, selectGameToken, resetFog }) => {
 	const toggleHidden = () => {
 		setControlPanelState({
 			...controlPanelState,

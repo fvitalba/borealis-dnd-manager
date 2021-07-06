@@ -7,20 +7,20 @@ const initialOverlayState = () => {
 	})
 }
 
-const Overlay = ({ game, canvasRef }) => {
+const Overlay = ({ gameState, canvasRef, updateMap, websocket }) => {
 	const [overlayState, setOverlayState] = useState(initialOverlayState)
 
 	const drawingControl = () => {
-		return game.drawingRef.current.getContext('2d')
+		return gameState.drawingRef.current.getContext('2d')
 	}
 	const fogControl = () => {
-		return game.fogRef.current.getContext('2d')
+		return gameState.fogRef.current.getContext('2d')
 	}
 
 	const fogErase = (x, y, r, r2, noEmit) => {
 		const ctx = fogControl
 		if (!r)
-			r = game.state.fogRadius
+			r = gameState.state.fogRadius
 		ctx.globalCompositeOperation = 'destination-out'
 		let gradient = ctx.createRadialGradient(x, y, r2||1, x, y, r*0.75)
 		gradient.addColorStop(0, 'rgba(0,0,0,255)')
@@ -28,9 +28,9 @@ const Overlay = ({ game, canvasRef }) => {
 		ctx.fillStyle = gradient
 		ctx.fillRect(x-r, y-r, x+r, y+r)
 		ctx.globalCompositeOperation = 'destination-over'
-		game.updateMap(map => map.$fogChangedAt = new Date())
+		updateMap(map => map.$fogChangedAt = new Date())
 		if (!noEmit)
-			game.websocket.pushFogErase(x, y, r, r2)
+			websocket.pushFogErase(x, y, r, r2)
 	}
 
 	const draw = (x, y, opts, noEmit) => {
@@ -38,8 +38,8 @@ const Overlay = ({ game, canvasRef }) => {
 		opts = Object.assign({
 			x: x,
 			y: y,
-			color: game.state.drawColor,
-			size: game.state.drawSize,
+			color: gameState.state.drawColor,
+			size: gameState.state.drawSize,
 			x0: overlayState.lastX || x,
 			y0: overlayState.lastY || y,
 		}, opts)
@@ -54,19 +54,19 @@ const Overlay = ({ game, canvasRef }) => {
 				lastX: x,
 				lastY: y
 			})
-			game.websocket.pushDraw(opts)
+			websocket.pushDraw(opts)
 		}
 	}
 
 	const erase = (x, y, r, noEmit) => {
-		const radius = r || game.state.drawSize
+		const radius = r || gameState.state.drawSize
 		drawingControl.clearRect(x-radius, y-radius, radius*2, radius*2)
 		if (!noEmit)
-			game.websocket.pushErase(x, y, radius)
+			websocket.pushErase(x, y, radius)
 	}
 
 	const isEraser = () => {
-		return game.state.subtool === 'ereaser'
+		return gameState.state.subtool === 'ereaser'
 	}
 
 	const drawOrErase = (x, y) => {
@@ -74,7 +74,7 @@ const Overlay = ({ game, canvasRef }) => {
 			erase(x, y)
 		else
 			draw(x, y)
-		game.updateMap(map => map.$drawChangedAt = new Date())
+		updateMap(map => map.$drawChangedAt = new Date())
 	}
 
 	const setPointerOutline = (x, y, color, radius) => {
@@ -90,7 +90,7 @@ const Overlay = ({ game, canvasRef }) => {
 	}
 
 	let canvasClass
-    switch (game.state.tool) {
+    switch (gameState.state.tool) {
 		case 'fog':
 		case 'draw':
 			canvasClass = ''

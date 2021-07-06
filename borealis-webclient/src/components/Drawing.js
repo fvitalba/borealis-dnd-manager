@@ -1,10 +1,10 @@
 import React from 'react'
 import drawImage from '../controllers/drawImage.js'
 
-const Drawing = ({ game, ref }) => {
+const Drawing = ({ gameState, ref }) => {
 	//TODO: Verify if component is correct past refactoring
 	const load = () => {
-		const dataUrl = game.map.drawUrl
+		const dataUrl = gameState.map.drawUrl
 		if (dataUrl)
 			return drawImage(dataUrl, 'drawing')
 		else

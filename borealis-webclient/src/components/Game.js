@@ -44,8 +44,23 @@ const initialGameState = () => {
 	}
 }
 
+const initialControlPanelState = () => {
+	return {
+		name: undefined,
+		url: undefined,
+		newTokenUrl: undefined,
+		newMapName: undefined,
+		hidden: false,
+		toggleOnMaps: false,
+		toggleOnUser: false,
+		toggleOnTokens: false,
+		fogDiameter: 33,
+	}
+}
+
 const Game = () => {
 	const [gameState, setGameState] = useState(initialGameState)
+	const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
 	const websocket = new Gamesocket(gameState)
 	
 	// On Mount
@@ -504,6 +519,8 @@ const Game = () => {
 
 	const onMouseMove = (e) => {
 		const overlay = gameState.overlayRef.current
+		if (!overlay)
+			return
 		if (overlay.canvasRef && overlay.canvasRef.current)
 			overlay.clear()
 		let x = e.pageX, y = e.pageY
@@ -619,13 +636,22 @@ const Game = () => {
 			<GameView 
 				gameState={ gameState } 
 				setGameState={ setGameState } 
+				controlPanelState={ controlPanelState } 
+				setControlPanelState={ setControlPanelState } 
 				websocket={ websocket }
 				onMouseMove={ onMouseMove } 
 				onMouseUp={ onMouseUp } 
 				onMouseDown={ onMouseDown } 
 				renderTokens={ renderTokens } 
 				renderCursors={ renderCursors } 
-				handleError={ handleError } 
+				notify={ notify } 
+				token={ undefined } 
+				initAsDev={ initAsDev } 
+				loadMap={ loadMap } 
+				updateGameToken={ updateToken } 
+				selectGameToken={ selectToken } 
+				updateMap={ updateMap } 
+				resetFog={ resetFog }
 			/>
 		)
 	} catch (ex) {
