@@ -118,7 +118,7 @@ class GameSocket {
 			case 'refreshRequest': /* refresh request from player */
 				if (this.gameState.isHost) {
 					console.log('Got refresh request', data.from)
-					this.pushRefresh({to: data.from})
+					this.pushRefresh(this.gameState, {to: data.from})
 				}
 				break
 			default:
@@ -147,10 +147,13 @@ class GameSocket {
 	}
 
 	/* Push refresh */
-	pushRefresh (additionalAttrs) {
+	pushRefresh (gameState, additionalAttrs) {
+		//TODO: Fix call to toJSON function
+		/*
 		const attrs = Object.assign({t: 'refresh'}, additionalAttrs)
-		let json = this.gameState.toJson(attrs)
+		let json = gameState.toJson(attrs)
 		this.send(JSON.parse(json))
+		*/
 	}
 
 	/* Push token update */

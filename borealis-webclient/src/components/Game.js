@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Token from './Token.js'
-import Gamesocket from './Gamesocket.js'
+import Gamesocket from './GameSocket.js'
 import GameView from '../views/GameView.js'
 import Cursor from '../views/Cursor.js'
 import guid from '../controllers/guid.js'
