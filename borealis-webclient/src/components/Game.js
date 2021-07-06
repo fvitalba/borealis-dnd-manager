@@ -153,8 +153,14 @@ const Game = () => {
 		const savePromise = needsSave ? saveMap() : Promise.resolve()
 		if (!noEmit && gameState.isHost && websocket)
 			websocket.pushMapId(map.$id)
-		const startStateAttrs = { mapId: map.$id, isFogLoaded: false }
-		const finishStateAttrs = { isFirstLoadDone: true, isFogLoaded: true }
+		const startStateAttrs = {
+			mapId: map.$id,
+			isFogLoaded: false
+		}
+		const finishStateAttrs = {
+			isFirstLoadDone: true,
+			isFogLoaded: true
+		}
 		//TODO: refactor new state update
 		/*
 		return savePromise.then(() => {
