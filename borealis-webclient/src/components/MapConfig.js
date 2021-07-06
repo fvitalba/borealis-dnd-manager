@@ -1,16 +1,21 @@
 import React from 'react'
 import MapConfigView from '../views/MapConfigView.js'
 
-const MapConfig = ({ game, map, mapId }) => {
+const MapConfig = ({ gameState, setGameState, map, mapId, loadMap }) => {
 	//TODO: Remove comments if not necessary
-	const isSelected = game.state.mapId === mapId
+	const isSelected = gameState.state.mapId === mapId
 
 	const update = (callback) => {
 		return new Promise(resolve => {
-			// const game = this.props.game
-			const mapsCopy = JSON.parse(JSON.stringify(game.state.maps))
+			const mapsCopy = JSON.parse(JSON.stringify(gameState.state.maps))
 			callback(mapsCopy[mapId])
-			game.setState({ maps: mapsCopy }, resolve)
+			setGameState({
+				...gameState,
+				state: {
+					...gameState,
+					maps: mapsCopy
+				}
+			}, resolve)
 		})
 	}
 
@@ -25,28 +30,32 @@ const MapConfig = ({ game, map, mapId }) => {
 
 	const resize = (key, evt) => {
 		return onIntegerChange(key, evt).then(() => {
-			// const game = this.props.game;
 			//TODO: Check if it's possible to use triple equal
-			if (game.backgroundRef.current && mapId == game.state.mapId) { /* eslint-disable-line eqeqeq */
-				return game.loadMap()
+			if (gameState.backgroundRef.current && mapId == gameState.state.mapId) { /* eslint-disable-line eqeqeq */
+				return loadMap()
 			} else
 				return Promise.resolve()
 		})
 	}
 
 	const load = () => {
-		game.loadMap(map)
+		loadMap(map)
 	}
 	
 	const deleteMap = () => {
 		if (window.confirm('Delete map?')) {
-			// const game = this.props.game;
-			const mapsCopy = JSON.parse(JSON.stringify(game.state.maps))
+			const mapsCopy = JSON.parse(JSON.stringify(gameState.state.maps))
 			delete mapsCopy[mapId]
-			const newState = { maps: mapsCopy }
-			if (game.state.mapId === mapId)
+			const newState = {
+				...gameState.state,
+				maps: mapsCopy
+			}
+			if (gameState.state.mapId === mapId)
 				newState.mapId = Object.keys(newState.maps)[0]
-			game.setState(newState)
+			setGameState({
+				...gameState,
+				state: newState,
+			})
 		}
 	}
 

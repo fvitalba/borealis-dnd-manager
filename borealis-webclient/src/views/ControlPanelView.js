@@ -7,7 +7,7 @@ import TokenToolView from './TokenToolView.js'
 import UserToolView from './UserToolView.js'
 import SelectedTokensControlsView from './SelectedTokensControlsView.js'
 
-const ControlPanelView = ({ gameState, setGameState, hidden, toggleHidden, setGameInt, setGameText, socketRequestRefresh, initAsDev, toggleOnUser, copyJson, pasteJson, resetFog }) => {
+const ControlPanelView = ({ gameState, setGameState, controlPanelState, hidden, toggleHidden, setGameInt, setGameText, socketRequestRefresh, initAsDev, toggleOnUser, copyJson, pasteJson, resetFog, onTextChange, createMap, loadMap }) => {
 	//TODO: Pass parameters to custom Controls
 	if (hidden)
 		return (
@@ -26,11 +26,21 @@ const ControlPanelView = ({ gameState, setGameState, hidden, toggleHidden, setGa
 				<ToggleButton title='Tokens' value='&#x265f;' gameState={ gameState } setGameState={ setGameState } />
 				<Button title='Push refresh to players' value='&#x1f4ab;' onClick={ gameState.websocket.pushRefresh.bind(gameState.websocket, {}) } />
 				|||
-				<ToolSelectView gameState={ gameState } setGameState={ setGameState } />
+				<ToolSelectView 
+					gameState={ gameState } 
+					setGameState={ setGameState } />
 				|||
-				<ToolControlsView gameState={ gameState } setGameState={ setGameState } resetFog={ resetFog } />
-				{/*this.renderMaps()*/}
-				<MapToolView />
+				<ToolControlsView 
+					gameState={ gameState } 
+					setGameState={ setGameState } 
+					resetFog={ resetFog } />
+				<MapToolView 
+					gameState={ gameState }
+					setGameState={ setGameState } 
+					controlPanelState={ controlPanelState } 
+					onTextChange={ onTextChange } 
+					createMap={ createMap } 
+					loadMap={ loadMap } />
 				{/*this.renderTokens()*/}
 				<TokenToolView />
 				<UserToolView 
