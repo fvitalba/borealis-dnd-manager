@@ -1,6 +1,6 @@
 import Button from './button'
 
-const HostTokenConfig = ({ maps, token, copy, onToggle, selectToken, onTextChange, onIntegerChange, onMapSelect, deleteToken }) => {
+const HostTokenConfigView = ({ maps, token, copy, onToggle, selectToken, onTextChange, onIntegerChange, onMapSelect, deleteToken }) => {
 	//TODO: Review after refactoring
 	return (
 		<div className='tokenConfig'>
@@ -29,4 +29,4 @@ const HostTokenConfig = ({ maps, token, copy, onToggle, selectToken, onTextChang
 	)
 }
 
-export default HostTokenConfig
+export default HostTokenConfigView

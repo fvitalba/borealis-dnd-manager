@@ -1,6 +1,6 @@
 import Button from "./button"
 
-const renderToolControls = ({ game, tool, setGameState, onTextChange, setFogOpacity, resetFog }) => {
+const ToolControlsView = ({ game, tool, setGameState, onTextChange, setFogOpacity, resetFog }) => {
 	const ToolControl = () => {
 		switch (tool) {
 			case 'draw':
@@ -33,4 +33,4 @@ const renderToolControls = ({ game, tool, setGameState, onTextChange, setFogOpac
 	)
 }
 
-export default renderToolControls
+export default ToolControlsView

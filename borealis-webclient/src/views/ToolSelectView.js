@@ -1,6 +1,6 @@
 import ToolButton from "../components/ToolButton"
 
-const ToolSelect = ({ controlPanel }) => {
+const ToolSelectView = ({ controlPanel }) => {
 	return (
 		<span id='tools'>
 			<ToolButton title='move' value='&#x1f9f3;' controlPanel={ controlPanel } />
@@ -10,4 +10,4 @@ const ToolSelect = ({ controlPanel }) => {
 	)
 }
 
-export default ToolSelect
+export default ToolSelectView

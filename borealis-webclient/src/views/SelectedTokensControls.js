@@ -1,6 +1,6 @@
 import TokenConfig from "../components/TokenConfig"
 
-const SelectedTokensControls = ({ game }) => {
+const SelectedTokensControlsView = ({ game }) => {
 	const tokens = game.state.tokens.filter(t => t.$selected)
 	return (
 		<div>
@@ -11,4 +11,4 @@ const SelectedTokensControls = ({ game }) => {
 	)
 }
 
-export default SelectedTokensControls
+export default SelectedTokensControlsView

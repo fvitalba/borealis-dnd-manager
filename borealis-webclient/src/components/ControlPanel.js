@@ -1,10 +1,6 @@
 import React, { useState } from 'react'
 import guid from '../controllers/guid.js'
-import Button from '../views/button.js'
-import ToolButton from './ToolButton.js'
-import ToggleButton from './ToggleButton.js'
-import MapConfig from './MapConfig.js'
-import TokenConfig from './TokenConfig.js'
+import ControlPanelView from '../views/ControlPanelView.js'
 
 const initialControlPanelState = () => {
 	return {
@@ -129,42 +125,11 @@ const ControlPanel = ({ game }) => {
 		//TODO: How do I update the game's State?
 		//game.websocket.requestRefresh()
 	}
-}
 
-//TODO: Complete refactoring
-/*
-	render () {
-    const toggleHiddenButton = <Button value='&#x1f441;' onClick={this.toggleHidden.bind(this)} title='show/hide control panel' />;
-    if (this.state.hidden)
-      return <div id='control-panel'>{toggleHiddenButton}</div>
-    const game = this.props.game;
-    if (game.isHost)
-      return <div id='control-panel'>
-        {toggleHiddenButton}
-        |||
-        <ToggleButton title='User' value='&#x1f9d9;&#x200d;&#x2642;&#xfe0f;' controlPanel={this} />
-        <ToggleButton title='Maps' value='&#x1f5fa;' controlPanel={this} />
-        <ToggleButton title='Tokens' value='&#x265f;' controlPanel={this} />
-        <Button title='Push refresh to players' value='&#x1f4ab;' onClick={game.websocket.pushRefresh.bind(game.websocket, {})} />
-        |||
-        {this.renderToolSelect()}
-        |||
-        {this.renderToolControls()}
-        {this.renderMaps()}
-        {this.renderTokens()}
-        {this.renderUser()}
-      </div>;
-    else
-      return <div id='control-panel'>
-        {toggleHiddenButton}
-        <input title='User name' placeholder='User name' value={game.state.username||''} onChange={this.setGameText.bind(this, 'username')} />
-        <ToggleButton title='Share mouse (cursor)' value='&#x1f401;' controlPanel={game} />
-        <input title='Cursor size' value={game.state.cursorSize||''} onChange={this.setGameInt.bind(this, 'cursorSize')} type='number' min='0' />
-        <Button title='Request gameboard refresh from host' onClick={this.socketRequestRefresh.bind(this)} value='&#x1f4ab;' />
-        {this.renderSelectedTokensControls()}
-      </div>
-  }
+	//TODO: Pass parameters to View
+	return (
+		<ControlPanelView />
+	)
 }
-*/
 
 export default ControlPanel
