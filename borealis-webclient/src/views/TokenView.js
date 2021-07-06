@@ -5,8 +5,8 @@ const TokenView = ({ divStyle, token, classes, imgStyle, onMouseUp, onMouseDown 
 			style={ divStyle }
 			title={ token.name }
 			className={ classes.join(' ') }
-			onMouseUp={ onMouseUp.bind(this) }
-			onMouseDown={ onMouseDown.bind(this) }>
+			onMouseUp={ (e) => onMouseUp(e) }
+			onMouseDown={ (e) => onMouseDown(e) }>
 			<img src={ token.url } alt={ token.name ||'' } style={ imgStyle } />
 		</div>
 	)

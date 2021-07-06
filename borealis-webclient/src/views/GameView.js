@@ -8,7 +8,7 @@ const GameView = ({ game, state, onMouseMove, onMouseUp, onMouseDown, renderToke
 	const goneClass = state.isFogLoaded ? null : 'gone'
 	try {
 		return (
-		<div id='game' onMouseMove={ onMouseMove } onMouseDown={ onMouseDown } onMouseUp={ onMouseUp }>
+		<div id='game' onMouseMove={ (e) => onMouseMove(e) } onMouseDown={ (e) => onMouseDown(e) } onMouseUp={ (e) => onMouseUp(e) }>
 			<div className={ goneClass }>
 			<Background game={ game } ref={ backgroundRef } className={ goneClass } />
 			<Drawing game={ game } ref={ drawingRef } />

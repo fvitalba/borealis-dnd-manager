@@ -9,8 +9,8 @@ const TokenToolView = ({ game, toggleOnTokens, onTextChange, newTokenUrl, create
 		return (
 			<div>
 			<hr />
-			<input placeholder='New token url' onChange={ onTextChange.bind(this, 'newTokenUrl') } value={ newTokenUrl || '' } />
-			<Button title='Create new token' value='&#x2795;' onClick={ createToken.bind(this) } />
+			<input placeholder='New token url' onChange={ (e) => onTextChange('newTokenUrl', e) } value={ newTokenUrl || '' } />
+			<Button title='Create new token' value='&#x2795;' onClick={ createToken() } />
 			{ game.state.tokens.length }
 			{game.state.tokens.map((token, $i) => (
 				<TokenConfig key={ `token${$i}` } token={ token } game={ game } />

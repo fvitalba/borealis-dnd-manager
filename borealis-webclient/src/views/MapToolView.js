@@ -10,7 +10,7 @@ const MapToolView = ({ controlPanelState, game, onTextChange, createMap }) => {
 		<div>
 			<hr />
 			<div>
-			<input placeholder='New map name (optional)' onChange={ onTextChange.bind(this, 'newMapName') } />
+			<input placeholder='New map name (optional)' onChange={ (e) => onTextChange('newMapName', e) } />
 			<Button title='Create new map' value='&#x2795;' onClick={ createMap } />
 			{keys && keys.map((mapId, $i) => (
 				<MapConfig key={ `map${$i}` } mapId={ mapId } map={ maps[mapId] } game={ game } />
