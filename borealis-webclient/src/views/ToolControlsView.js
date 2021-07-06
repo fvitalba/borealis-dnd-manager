@@ -11,7 +11,7 @@ const ToolControlsView = ({ gameState, setGameState, resetFog }) => {
 		})
 	}
 
-	const onTextChange = (key, e) => {
+	const onTextChangeGame = (key, e) => {
 		setGameState({
 			...gameState,
 			state: {
@@ -40,8 +40,8 @@ const ToolControlsView = ({ gameState, setGameState, resetFog }) => {
 					<span>
 						<Button title='eraser' value='&#x1f9fd;' onClick={ setSubtool('eraser') } isSelected={ gameState.state.subtool === 'eraser' } />
 						<Button title='pencil' value='&#x1f58d;' onClick={ setSubtool('pencil') } isSelected={ gameState.state.subtool === 'pencil' } />
-						<input size='3' title='draw size' value={ gameState.state.drawSize } onChange={ (e) => onTextChange('drawSize', e) } type='number' step='3' min='1' />
-						<input size='3' title='draw color' value={ gameState.state.drawColor } onChange={ (e) => onTextChange('drawColor', e) } />
+						<input size='3' title='draw size' value={ gameState.state.drawSize } onChange={ (e) => onTextChangeGame('drawSize', e) } type='number' step='3' min='1' />
+						<input size='3' title='draw color' value={ gameState.state.drawColor } onChange={ (e) => onTextChangeGame('drawColor', e) } />
 						<Button style={{ backgroundColor: gameState.state.drawColor }} value='&#x1f58c;' disabled />
 					</span>
 				)
@@ -51,7 +51,7 @@ const ToolControlsView = ({ gameState, setGameState, resetFog }) => {
 				return (
 					<span>
 						<Button title='reset fog' onClick={ resetFog } value='&#x1f300;' />
-						<input size='3' title='fog radius' value={ gameState.state.fogRadius || 0 } onChange={ (e) => onTextChange('fogRadius', e) } type='number' step='5' min='1' />
+						<input size='3' title='fog radius' value={ gameState.state.fogRadius || 0 } onChange={ (e) => onTextChangeGame('fogRadius', e) } type='number' step='5' min='1' />
 						<input size='3' title='fog opacity' step='0.05' min='0' max='1' value={ gameState.state.fogOpacity } onChange={ (e) => setFogOpacity(e) } type='number' />
 					</span>
 				)

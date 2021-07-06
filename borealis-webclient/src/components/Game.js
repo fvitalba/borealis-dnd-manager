@@ -309,6 +309,11 @@ const Game = () => {
 		})
 	}
 
+	const resetFog = () => {
+		//TODO: How do I update the game's State?
+		//game.fogRef.current.fill()
+	}
+
 	/****************************************************
 	 * Render Functions                                 *
 	 ****************************************************/
@@ -590,19 +595,18 @@ const Game = () => {
 			localStorage.setItem(gameState.room, toJson())
 		}
 	}
-	
+
 	const loadFromLocalStorage = () => {
 		console.log('Loading game from local storage')
 		return fromJson(localStorage.getItem(gameState.room))
 	}
-	
+
 	function handleError (ex) {
 		console.error(ex)
 		console.error('Exception in `render`. Clearing localStorage...')
 		localStorage.removeItem(gameState.room)
 		window.alert('Fatal error. Local storage cleared.')
 	}
-	  
 
 	/****************************************************
 	 * Component Render                                 *
