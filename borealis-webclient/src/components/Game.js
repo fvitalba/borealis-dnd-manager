@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Token from './Token.js'
-import Gamesocket from './Gamesocket.jsx'
+import Gamesocket from './Gamesocket.js'
 import GameView from '../views/GameView.js'
 import Cursor from '../views/Cursor.js'
 import guid from '../controllers/guid.js'
@@ -11,7 +11,6 @@ const initialGameState = () => {
 	return {
 		isHost: params.get('host'),
 		room: params.get('room'),
-		websocket: new Gamesocket(),
 		controlPanelRef: React.createRef(),
 		backgroundRef: React.createRef(),
 		fogRef: React.createRef(),
@@ -47,6 +46,7 @@ const initialGameState = () => {
 
 const Game = () => {
 	const [gameState, setGameState] = useState(initialGameState)
+	const websocket = new Gamesocket(gameState)
 	
 	// On Mount
 	useEffect(() => {
@@ -136,8 +136,8 @@ const Game = () => {
 			map.$id = Object.keys(gameState.state.maps).find(key => gameState.state.maps[key] === getMap())
 		const needsSave = gameState.isHost && gameState.state.isFirstLoadDone && !skipSave
 		const savePromise = needsSave ? saveMap() : Promise.resolve()
-		if (!noEmit && gameState.isHost && gameState.websocket)
-			gameState.websocket.pushMapId(map.$id)
+		if (!noEmit && gameState.isHost && websocket)
+			websocket.pushMapId(map.$id)
 		const startStateAttrs = { mapId: map.$id, isFogLoaded: false }
 		const finishStateAttrs = { isFirstLoadDone: true, isFogLoaded: true }
 		//TODO: refactor new state update
@@ -217,8 +217,8 @@ const Game = () => {
 				tokens: tokensCopy,
 			},
 		})
-		if (!noEmit && gameState.websocket)
-			gameState.websocket.pushTokens(tokensCopy)
+		if (!noEmit && websocket)
+			websocket.pushTokens(tokensCopy)
 	}
 
 	const updateToken = (token, callback, noEmit) => {
@@ -233,8 +233,8 @@ const Game = () => {
 				tokens: tokensCopy,
 			},
 		})
-		if (!noEmit && gameState.websocket)
-			gameState.websocket.pushToken(tokenIdx, tokenCopy)
+		if (!noEmit && websocket)
+			websocket.pushToken(tokenIdx, tokenCopy)
 	}
 
 	const updateTokenByIndex = (index, attrs, noEmit) => {
@@ -247,8 +247,8 @@ const Game = () => {
 				tokens: tokensCopy,
 			},
 		})
-		if (!noEmit && gameState.websocket)
-			gameState.websocket.pushToken(index, tokenCopy)
+		if (!noEmit && websocket)
+			websocket.pushToken(index, tokenCopy)
 	}
 
 	const updateCursors = (x, y, name, guid) => {
@@ -528,8 +528,8 @@ const Game = () => {
 		/*
 		this.setState({lastX: e.pageX, lastY: e.pageY})
 		*/
-		if (gameState.websocket && gameState.state['toggleOnShare mouse (cursor)'])
-			gameState.websocket.pushCursor(e.pageX, e.pageY)
+		if (websocket && gameState.state['toggleOnShare mouse (cursor)'])
+			websocket.pushCursor(e.pageX, e.pageY)
 	}
 
 	/****************************************************
@@ -617,18 +617,14 @@ const Game = () => {
 	try {
 		return (
 			<GameView 
-				game={ gameState } 
-				state={ gameState.state } 
+				gameState={ gameState } 
+				setGameState={ setGameState } 
+				websocket={ websocket }
 				onMouseMove={ onMouseMove } 
 				onMouseUp={ onMouseUp } 
 				onMouseDown={ onMouseDown } 
 				renderTokens={ renderTokens } 
 				renderCursors={ renderCursors } 
-				backgroundRef={ gameState.backgroundRef } 
-				drawingRef={ gameState.drawingRef } 
-				fogRef={ gameState.fogRef } 
-				overlayRef={ gameState.overlayRef } 
-				controlPanelRef={ gameState.controlPanelRef } 
 				handleError={ handleError } 
 			/>
 		)

@@ -7,7 +7,7 @@ import TokenToolView from './TokenToolView.js'
 import UserToolView from './UserToolView.js'
 import SelectedTokensControlsView from './SelectedTokensControlsView.js'
 
-const ControlPanelView = ({ gameState, setGameState, controlPanelState, token, hidden, toggleHidden, setGameInt, setGameText, socketRequestRefresh, initAsDev, toggleOnUser, copyJson, pasteJson, resetFog, onTextChange, createMap, loadMap, updateGameToken, selectGameToken, newTokenUrl, createToken }) => {
+const ControlPanelView = ({ gameState, setGameState, controlPanelState, websocket, token, hidden, toggleHidden, setGameInt, setGameText, socketRequestRefresh, initAsDev, toggleOnUser, copyJson, pasteJson, resetFog, onTextChange, createMap, loadMap, updateGameToken, selectGameToken, newTokenUrl, createToken }) => {
 	if (hidden)
 		return (
 			<div id='control-panel'>
@@ -24,7 +24,7 @@ const ControlPanelView = ({ gameState, setGameState, controlPanelState, token, h
 				<ToggleButton title='Maps' value='&#x1f5fa;' gameState={ gameState } setGameState={ setGameState } />
 				<ToggleButton title='Tokens' value='&#x265f;' gameState={ gameState } setGameState={ setGameState } />
 				{/* TODO: Verify how this is called correctly */}
-				<Button title='Push refresh to players' value='&#x1f4ab;' onClick={ gameState.websocket.pushRefresh.bind(gameState.websocket, {}) } />
+				<Button title='Push refresh to players' value='&#x1f4ab;' onClick={ websocket.pushRefresh.bind(gameState.websocket, {}) } />
 				|||
 				<ToolSelectView 
 					gameState={ gameState } 

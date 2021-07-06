@@ -16,7 +16,7 @@ const initialControlPanelState = () => {
 	}
 }
 
-const ControlPanel = ({ gameState, setGameState, notify, fromJson, token, initAsDev, loadMap, updateGameToken, selectGameToken, resetFog }) => {
+const ControlPanel = ({ gameState, setGameState, websocket, notify, fromJson, token, initAsDev, loadMap, updateGameToken, selectGameToken, resetFog }) => {
 	const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
 
 	const toggleHidden = () => {
@@ -90,7 +90,7 @@ const ControlPanel = ({ gameState, setGameState, notify, fromJson, token, initAs
 			...controlPanelState,
 			newTokenUrl: undefined,
 		})
-		gameState.websocket.pushTokens(tokensCopy)
+		websocket.pushTokens(tokensCopy)
 	}
 
 	const copyJson = () => {
@@ -118,7 +118,7 @@ const ControlPanel = ({ gameState, setGameState, notify, fromJson, token, initAs
 	}
 
 	const socketRequestRefresh = () => {
-		gameState.websocket.requestRefresh()
+		websocket.requestRefresh()
 	}
 
 	/*
@@ -132,6 +132,7 @@ const ControlPanel = ({ gameState, setGameState, notify, fromJson, token, initAs
 			gameState={ gameState } 
 			setGameState={ setGameState } 
 			controlPanelState={ controlPanelState } 
+			websocket={ websocket } 
 			token={ token } 
 			hidden={ controlPanelState.hidden } 
 			toggleHidden={ toggleHidden } 
