@@ -133,47 +133,7 @@ const ControlPanel = ({ game }) => {
 
 //TODO: Complete refactoring
 /*
-	renderUser () {
-    if (!this.state.toggleOnUser) return null;
-    const game = this.props.game;
-    return <div>
-      <hr />
-      <input title='User name' placeholder='User name' value={game.state.username||''} onChange={this.setGameText.bind(this, 'username')} />
-      <ToggleButton title='Share mouse (cursor)' value='&#x1f401;' controlPanel={game} />
-      <input title='Cursor size' value={game.state.cursorSize||''} onChange={this.setGameInt.bind(this, 'cursorSize')} type='number' min='0' />
-      <hr />
-      <Button title='Redo as dev' value='&#x1f530;' onClick={game.initAsDev.bind(game)} />
-      <Button title='Copy JSON to clipboard' value='&#x1f46f;' onClick={this.copyJson.bind(this)} />
-      <Button title='Paste JSON from clipboard' value='&#x1f4cb;' onClick={this.pasteJson.bind(this)} />
-    </div>;
-  }
-
-  renderTokens () {
-    if (!this.props.game.isHost) return null;
-    if (this.state.toggleOnTokens)
-      return (<div>
-        <hr />
-        <input placeholder='New token url' onChange={this.onTextChange.bind(this, 'newTokenUrl')} value={this.state.newTokenUrl||''} />
-        <Button title='Create new token' value='&#x2795;' onClick={this.createToken.bind(this)} />
-        {this.props.game.state.tokens.length}
-        {this.props.game.state.tokens.map((token, $i) => (
-          <TokenConfig key={`token${$i}`} token={token} game={this.props.game} />
-        ))}
-      </div>)
-    else
-      return this.renderSelectedTokensControls();
-  }
-
-  renderSelectedTokensControls () {
-    const tokens = this.props.game.state.tokens.filter(t => t.$selected);
-    return <div>
-      {tokens.map((token, $i) => (
-        <TokenConfig key={`token${$i}`} token={token} game={this.props.game} />
-      ))}
-    </div>
-  }
-
-  render () {
+	render () {
     const toggleHiddenButton = <Button value='&#x1f441;' onClick={this.toggleHidden.bind(this)} title='show/hide control panel' />;
     if (this.state.hidden)
       return <div id='control-panel'>{toggleHiddenButton}</div>

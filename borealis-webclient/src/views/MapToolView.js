@@ -21,4 +21,4 @@ const MapToolView = ({ controlPanelState, game, onTextChange, createMap }) => {
 	)
 }
 
-export default MapConfigView
+export default MapToolView
