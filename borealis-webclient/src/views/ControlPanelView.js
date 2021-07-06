@@ -12,14 +12,14 @@ const ControlPanelView = ({ game, controlPanel, hidden, toggleHidden, setGameInt
 	if (hidden)
 		return (
 			<div id='control-panel'>
-				<Button value='&#x1f441;' onClick={ toggleHidden.bind(this) } title='show/hide control panel' />
+				<Button value='&#x1f441;' onClick={ toggleHidden() } title='show/hide control panel' />
 			</div>
 		)
 	
 	if (game.isHost)
 		return (
 			<div id='control-panel'>
-				<Button value='&#x1f441;' onClick={ toggleHidden.bind(this) } title='show/hide control panel' />
+				<Button value='&#x1f441;' onClick={ toggleHidden() } title='show/hide control panel' />
 				|||
 				<ToggleButton title='User' value='&#x1f9d9;&#x200d;&#x2642;&#xfe0f;' controlPanel={ controlPanel } />
 				<ToggleButton title='Maps' value='&#x1f5fa;' controlPanel={ controlPanel } />
@@ -42,11 +42,11 @@ const ControlPanelView = ({ game, controlPanel, hidden, toggleHidden, setGameInt
 	else
 		return (
 			<div id='control-panel'>
-			<Button value='&#x1f441;' onClick={ toggleHidden.bind(this) } title='show/hide control panel' />
-			<input title='User name' placeholder='User name' value={ game.state.username || '' } onChange={ setGameText.bind(this, 'username') } />
+			<Button value='&#x1f441;' onClick={ toggleHidden() } title='show/hide control panel' />
+			<input title='User name' placeholder='User name' value={ game.state.username || '' } onChange={ (e) => setGameText('username', e) } />
 			<ToggleButton title='Share mouse (cursor)' value='&#x1f401;' controlPanel={ game } />
-			<input title='Cursor size' value={ game.state.cursorSize || '' } onChange={ setGameInt.bind(this, 'cursorSize') } type='number' min='0' />
-			<Button title='Request gameboard refresh from host' onClick={ socketRequestRefresh.bind(this) } value='&#x1f4ab;' />
+			<input title='Cursor size' value={ game.state.cursorSize || '' } onChange={ (e) => setGameInt('cursorSize', e) } type='number' min='0' />
+			<Button title='Request gameboard refresh from host' onClick={ socketRequestRefresh() } value='&#x1f4ab;' />
 			{/* this.renderSelectedTokensControls() */}
 			<SelectedTokensControlsView />
 			</div>
