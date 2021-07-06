@@ -1,4 +1,4 @@
-import Button from '../views/button.js'
+import Button from '../views/Button.js'
 
 function ToggleButton({ controlPanel, title, value }) {
     //TODO: To review post Refactoring

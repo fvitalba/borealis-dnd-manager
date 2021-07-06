@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import TokenView from '../views/TokenView'
+import TokenView from '../views/TokenView.js'
 
 const initialTokenState = () => {
 	return {

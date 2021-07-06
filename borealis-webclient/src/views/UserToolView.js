@@ -1,5 +1,5 @@
-import Button from "./button"
-import ToggleButton from "../components/ToggleButton"
+import Button from "./Button.js"
+import ToggleButton from "../components/ToggleButton.js"
 
 const UserToolView = ({ toggleOnUser, game, copyJson, pasteJson, setGameInt, setGameText }) => {
 	if (!toggleOnUser)
@@ -7,13 +7,13 @@ const UserToolView = ({ toggleOnUser, game, copyJson, pasteJson, setGameInt, set
 	return (
 		<div>
 			<hr />
-			<input title='User name' placeholder='User name' value={ game.state.username || ''} onChange={ setGameText.bind(this, 'username') } />
+			<input title='User name' placeholder='User name' value={ game.state.username || ''} onChange={ (e) => setGameText('username', e) } />
 			<ToggleButton title='Share mouse (cursor)' value='&#x1f401;' controlPanel={ game } />
-			<input title='Cursor size' value={ game.state.cursorSize || '' } onChange={ setGameInt.bind(this, 'cursorSize') } type='number' min='0' />
+			<input title='Cursor size' value={ game.state.cursorSize || '' } onChange={ (e) => setGameInt('cursorSize', e) } type='number' min='0' />
 			<hr />
-			<Button title='Redo as dev' value='&#x1f530;' onClick={ game.initAsDev.bind(game) } />
-			<Button title='Copy JSON to clipboard' value='&#x1f46f;' onClick={ copyJson.bind(this) } />
-			<Button title='Paste JSON from clipboard' value='&#x1f4cb;' onClick={ pasteJson.bind(this) } />
+			<Button title='Redo as dev' value='&#x1f530;' onClick={ game.initAsDev() } />
+			<Button title='Copy JSON to clipboard' value='&#x1f46f;' onClick={ copyJson() } />
+			<Button title='Paste JSON from clipboard' value='&#x1f4cb;' onClick={ pasteJson() } />
 		</div>
 	)
 }

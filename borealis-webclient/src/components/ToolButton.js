@@ -1,4 +1,4 @@
-import Button from '../views/button.js'
+import Button from '../views/Button.js'
 
 function ToolButton({ controlPanel, title, value, game }) {
 	//TODO: To review post Refactoring

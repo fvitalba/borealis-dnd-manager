@@ -1,5 +1,5 @@
 import React from 'react'
-import MapConfigView from '../views/MapConfigView'
+import MapConfigView from '../views/MapConfigView.js'
 
 const MapConfig = ({ game, map, mapId }) => {
 	//TODO: Remove comments if not necessary

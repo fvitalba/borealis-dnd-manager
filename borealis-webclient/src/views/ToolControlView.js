@@ -1,4 +1,4 @@
-import Button from "./button"
+import Button from "./Button.js"
 
 const ToolControlsView = ({ game, tool, setGameState, onTextChange, setFogOpacity, resetFog }) => {
 	const ToolControl = () => {

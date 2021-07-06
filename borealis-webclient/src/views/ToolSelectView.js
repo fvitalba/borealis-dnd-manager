@@ -1,4 +1,4 @@
-import ToolButton from "../components/ToolButton"
+import ToolButton from "../components/ToolButton.js"
 
 const ToolSelectView = ({ controlPanel }) => {
 	return (

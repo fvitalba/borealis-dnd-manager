@@ -1,6 +1,6 @@
 import React from 'react'
-import HostTokenConfig from '../views/HostTokenConfigView'
-import GuestTokenConfigView from '../views/GuestTokenConfigView'
+import HostTokenConfig from '../views/HostTokenConfigView.js'
+import GuestTokenConfigView from '../views/GuestTokenConfigView.js'
 
 const TokenConfig = ({ game, token }) => {
 	const update = (callback) => {

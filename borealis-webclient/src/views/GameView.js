@@ -1,8 +1,8 @@
-import Background from './Background.js'
-import Drawing from './Drawing.js'
-import Fog from './Fog.js'
-import Overlay from './Overlay.jsx'
-import ControlPanel from './ControlPanel.js'
+import Background from '../components/Background.js'
+import Drawing from '../components/Drawing.js'
+import Fog from '../components/Fog.js'
+import Overlay from '../components/Overlay.js'
+import ControlPanel from '../components/ControlPanel.js'
 
 const GameView = ({ game, state, onMouseMove, onMouseUp, onMouseDown, renderTokens, renderCursors, backgroundRef, drawingRef, fogRef, overlayRef, controlPanelRef, handleError }) => {
 	const goneClass = state.isFogLoaded ? null : 'gone'

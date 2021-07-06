@@ -1,4 +1,4 @@
-import Button from './button'
+import Button from './Button.js'
 
 const MapConfigView = ({ isSelected, map, mapId, load, onTextChange, resize, deleteMap }) => {
 	//TODO: Review after refactoring

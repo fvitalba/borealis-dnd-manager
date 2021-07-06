@@ -1,11 +1,11 @@
-import Button from "./button"
-import ToggleButton from "../components/ToggleButton"
-import ToolSelectView from "./ToolSelectView"
-import ToolControlsView from "./ToolControlView"
-import MapToolView from "./MapToolView"
-import TokenToolView from "./TokenToolView"
-import UserToolView from "./UserToolView"
-import SelectedTokensControlsView from "./SelectedTokensControls"
+import Button from "./Button.js"
+import ToggleButton from "../components/ToggleButton.js"
+import ToolSelectView from "./ToolSelectView.js"
+import ToolControlsView from "./ToolControlView.js"
+import MapToolView from "./MapToolView.js"
+import TokenToolView from "./TokenToolView.js"
+import UserToolView from "./UserToolView.js"
+import SelectedTokensControlsView from "./SelectedTokensControlsView.js"
 
 const ControlPanelView = ({ game, controlPanel, hidden, toggleHidden, setGameInt, setGameText, socketRequestRefresh }) => {
 	//TODO: Pass parameters to custom Controls
