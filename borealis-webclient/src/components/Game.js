@@ -38,6 +38,9 @@ const initialGameState = () => {
 			downY: undefined,
 			mapId: undefined,
 			gen: 0,
+			map: undefined,	//TODO: maybe {} instead of undefined
+			width: undefined,
+			height: undefined,
 		}
 	}
 }
