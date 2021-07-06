@@ -1,4 +1,4 @@
-import Button from "./Button.js"
+import Button from './Button.js'
 
 const ToolControlsView = ({ gameState, setGameState, resetFog }) => {
 	const setSubtool = (subtool) => {

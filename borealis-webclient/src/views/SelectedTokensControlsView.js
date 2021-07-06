@@ -1,4 +1,4 @@
-import TokenConfig from "../components/TokenConfig.js"
+import TokenConfig from '../components/TokenConfig.js'
 
 const SelectedTokensControlsView = ({ game }) => {
 	const tokens = game.state.tokens.filter(t => t.$selected)

@@ -1,6 +1,6 @@
-import TokenConfig from "../components/TokenConfig.js"
-import Button from "./Button.js"
-import SelectedTokensControls from "./SelectedTokensControlsView.js"
+import TokenConfig from '../components/TokenConfig.js'
+import Button from './Button.js'
+import SelectedTokensControls from './SelectedTokensControlsView.js'
 
 const TokenToolView = ({ game, toggleOnTokens, onTextChange, newTokenUrl, createToken }) => {
 	if (!game.isHost)

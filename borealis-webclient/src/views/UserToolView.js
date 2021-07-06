@@ -1,5 +1,5 @@
-import Button from "./Button.js"
-import ToggleButton from "../components/ToggleButton.js"
+import Button from './Button.js'
+import ToggleButton from '../components/ToggleButton.js'
 
 const UserToolView = ({ gameState, setGameState, initAsDev, toggleOnUser, copyJson, pasteJson, setGameInt, setGameText }) => {
 	if (!toggleOnUser)

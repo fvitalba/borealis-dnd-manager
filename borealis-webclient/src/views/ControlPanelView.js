@@ -1,11 +1,11 @@
-import Button from "./Button.js"
-import ToggleButton from "../components/ToggleButton.js"
-import ToolSelectView from "./ToolSelectView.js"
-import ToolControlsView from "./ToolControlsView.js"
-import MapToolView from "./MapToolView.js"
-import TokenToolView from "./TokenToolView.js"
-import UserToolView from "./UserToolView.js"
-import SelectedTokensControlsView from "./SelectedTokensControlsView.js"
+import Button from './Button.js'
+import ToggleButton from '../components/ToggleButton.js'
+import ToolSelectView from './ToolSelectView.js'
+import ToolControlsView from './ToolControlsView.js'
+import MapToolView from './MapToolView.js'
+import TokenToolView from './TokenToolView.js'
+import UserToolView from './UserToolView.js'
+import SelectedTokensControlsView from './SelectedTokensControlsView.js'
 
 const ControlPanelView = ({ gameState, setGameState, hidden, toggleHidden, setGameInt, setGameText, socketRequestRefresh, initAsDev, toggleOnUser, copyJson, pasteJson, resetFog }) => {
 	//TODO: Pass parameters to custom Controls
@@ -47,13 +47,13 @@ const ControlPanelView = ({ gameState, setGameState, hidden, toggleHidden, setGa
 	else
 		return (
 			<div id='control-panel'>
-			<Button value='&#x1f441;' onClick={ toggleHidden } title='show/hide control panel' />
-			<input title='User name' placeholder='User name' value={ gameState.state.username || '' } onChange={ (e) => setGameText('username', e) } />
-			<ToggleButton title='Share mouse (cursor)' value='&#x1f401;' gameState={ gameState } setGameState={ setGameState } />
-			<input title='Cursor size' value={ gameState.state.cursorSize || '' } onChange={ (e) => setGameInt('cursorSize', e) } type='number' min='0' />
-			<Button title='Request gameboard refresh from host' onClick={ socketRequestRefresh } value='&#x1f4ab;' />
-			{/* this.renderSelectedTokensControls() */}
-			<SelectedTokensControlsView />
+				<Button value='&#x1f441;' onClick={ toggleHidden } title='show/hide control panel' />
+				<input title='User name' placeholder='User name' value={ gameState.state.username || '' } onChange={ (e) => setGameText('username', e) } />
+				<ToggleButton title='Share mouse (cursor)' value='&#x1f401;' gameState={ gameState } setGameState={ setGameState } />
+				<input title='Cursor size' value={ gameState.state.cursorSize || '' } onChange={ (e) => setGameInt('cursorSize', e) } type='number' min='0' />
+				<Button title='Request gameboard refresh from host' onClick={ socketRequestRefresh } value='&#x1f4ab;' />
+				{/* this.renderSelectedTokensControls() */}
+				<SelectedTokensControlsView />
 			</div>
 		)
 }

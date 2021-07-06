@@ -1,5 +1,5 @@
-import MapConfig from "../components/MapConfig.js"
-import Button from "./Button.js"
+import MapConfig from '../components/MapConfig.js'
+import Button from './Button.js'
 
 const MapToolView = ({ controlPanelState, game, onTextChange, createMap }) => {
 	if (!controlPanelState.toggleOnMaps)
