@@ -31,6 +31,7 @@ const initialGameState = () => {
 			drawColor: 'purple',
 			drawSize: 8,
 			tool: 'move',
+			subtool: undefined,
 			username: params.get('host') ? 'DM' : 'PC',
 			'toggleOnShare mouse (cursor)': true,
 			downX: undefined,
