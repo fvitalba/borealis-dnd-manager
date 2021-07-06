@@ -7,8 +7,7 @@ import TokenToolView from './TokenToolView.js'
 import UserToolView from './UserToolView.js'
 import SelectedTokensControlsView from './SelectedTokensControlsView.js'
 
-const ControlPanelView = ({ gameState, setGameState, controlPanelState, hidden, toggleHidden, setGameInt, setGameText, socketRequestRefresh, initAsDev, toggleOnUser, copyJson, pasteJson, resetFog, onTextChange, createMap, loadMap }) => {
-	//TODO: Pass parameters to custom Controls
+const ControlPanelView = ({ gameState, setGameState, controlPanelState, token, hidden, toggleHidden, setGameInt, setGameText, socketRequestRefresh, initAsDev, toggleOnUser, copyJson, pasteJson, resetFog, onTextChange, createMap, loadMap, updateGameToken, selectGameToken }) => {
 	if (hidden)
 		return (
 			<div id='control-panel'>
@@ -41,8 +40,12 @@ const ControlPanelView = ({ gameState, setGameState, controlPanelState, hidden, 
 					onTextChange={ onTextChange } 
 					createMap={ createMap } 
 					loadMap={ loadMap } />
-				{/*this.renderTokens()*/}
-				<TokenToolView />
+				<TokenToolView 
+					gameState={ gameState }
+					setGameState={ setGameState } 
+					token={ token } 
+					updateGameToken={ updateGameToken } 
+					selectGameToken={ selectGameToken } />
 				<UserToolView 
 					gameState={ gameState }
 					setGameState={ setGameState }
@@ -62,8 +65,11 @@ const ControlPanelView = ({ gameState, setGameState, controlPanelState, hidden, 
 				<ToggleButton title='Share mouse (cursor)' value='&#x1f401;' gameState={ gameState } setGameState={ setGameState } />
 				<input title='Cursor size' value={ gameState.state.cursorSize || '' } onChange={ (e) => setGameInt('cursorSize', e) } type='number' min='0' />
 				<Button title='Request gameboard refresh from host' onClick={ socketRequestRefresh } value='&#x1f4ab;' />
-				{/* this.renderSelectedTokensControls() */}
-				<SelectedTokensControlsView />
+				<SelectedTokensControlsView 
+					gameState={ gameState }
+					setGameState={ setGameState } 
+					updateGameToken={ updateGameToken } 
+					selectGameToken={ selectGameToken } />
 			</div>
 		)
 }

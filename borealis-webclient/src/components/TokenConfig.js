@@ -2,28 +2,40 @@ import React from 'react'
 import HostTokenConfig from '../views/HostTokenConfigView.js'
 import GuestTokenConfigView from '../views/GuestTokenConfigView.js'
 
-const TokenConfig = ({ game, token }) => {
+const TokenConfig = ({ gameState, setGameState, token, updateGameToken, selectGameToken }) => {
 	const update = (callback) => {
-		game.updateToken(token, callback)
+		updateGameToken(token, callback)
 	}
 
 	const deleteToken = () => {
-		const tokens = game.state.tokens.map(t => t)
+		const tokens = gameState.state.tokens.map(t => t)
 		const index = tokens.indexOf(token)
 		tokens.splice(index, 1)
-		game.setState({ tokens: tokens })
+		setGameState({
+			...gameState,
+			state: {
+				...gameState,
+				toekns: tokens,
+			}
+		})
 	}
 	
 	const copy = () => {
-		const tokens = game.state.tokens.map(t => t)
+		const tokens = gameState.state.tokens.map(t => t)
 		const index = tokens.indexOf(token)
 		tokens.splice(index + 1, 0, copy)
-		game.setState({ tokens: tokens })
+		setGameState({
+			...gameState,
+			state: {
+				...gameState,
+				toekns: tokens,
+			}
+		})
 	}
 
 	const onMapSelect = (e) => {
 		let value = e.target.value
-		if (Object.keys(game.state.maps).indexOf(value) < 0)
+		if (Object.keys(gameState.state.maps).indexOf(value) < 0)
 			value = undefined
 		update(token => token.mapId = value)
 	}
@@ -41,15 +53,15 @@ const TokenConfig = ({ game, token }) => {
 	}
 
 	const selectToken = (token, e) => {
-		game.selectToken(token, undefined, true)
+		selectGameToken(token, undefined, true)
 	}
 
-	const maps = game.state.maps;
+	const maps = gameState.state.maps;
 
 	return (
 		<div>
 			token ?
-				game.isHost ?
+				gameState.isHost ?
 				<HostTokenConfig 
 					maps={ maps } 
 					token={ token } 

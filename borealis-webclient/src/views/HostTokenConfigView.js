@@ -1,12 +1,11 @@
 import Button from './Button.js'
 
 const HostTokenConfigView = ({ maps, token, copy, onToggle, selectToken, onTextChange, onIntegerChange, onMapSelect, deleteToken }) => {
-	//TODO: Review after refactoring
 	return (
 		<div className='tokenConfig'>
-			<Button title='Duplicate token' value='&#x1f46f;' onClick={ copy.bind(this) } />
+			<Button title='Duplicate token' value='&#x1f46f;' onClick={ copy } />
 			<Button value={ token.pc ? '\u{1f236}' : '\u{1f21a}' } onClick={ (e) => onToggle('pc', e) } title='pc/npc' />
-			<Button value={ token.$selected ? '\u{1f22f}' : '\u{1f233}' } onClick={ selectToken.bind(this, token) } title='(un)select' />
+			<Button value={ token.$selected ? '\u{1f22f}' : '\u{1f233}' } onClick={ (e) => selectToken(token, e) } title='(un)select' />
 			<Button value={ token.ko ? '\u{1f940}' : '\u{1f339}' } onClick={ (e) => onToggle('ko', e) } title='alive/dead' />
 			<input value={ token.name || '' } placeholder='Name' size='8' onChange={ (e) => onTextChange('name', e) } />
 			<input value={ token.url || '' } placeholder='Url' size='8' onChange={ (e) => onTextChange('url', e) } />
@@ -24,7 +23,7 @@ const HostTokenConfigView = ({ maps, token, copy, onToggle, selectToken, onTextC
 				</option>
 			))}
 			</select>
-			<Button title='Delete token' value='&#x1f5d1;' onClick={ deleteToken() } />
+			<Button title='Delete token' value='&#x1f5d1;' onClick={ deleteToken } />
 		</div>
 	)
 }
