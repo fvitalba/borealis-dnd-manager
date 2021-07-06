@@ -611,23 +611,27 @@ const Game = () => {
 	/****************************************************
 	 * Component Render                                 *
 	 ****************************************************/
-	return (
-		<GameView 
-			game={ gameState } 
-			state={ gameState.state } 
-			onMouseMove={ onMouseMove } 
-			onMouseUp={ onMouseUp } 
-			onMouseDown={ onMouseDown } 
-			renderTokens={ renderTokens } 
-			renderCursors={ renderCursors } 
-			backgroundRef={ gameState.backgroundRef } 
-			drawingRef={ gameState.drawingRef } 
-			fogRef={ gameState.fogRef } 
-			overlayRef={ gameState.overlayRef } 
-			controlPanelRef={ gameState.controlPanelRef } 
-			handleError={ handleError } 
-		/>
-	)
+	try {
+		return (
+			<GameView 
+				game={ gameState } 
+				state={ gameState.state } 
+				onMouseMove={ onMouseMove } 
+				onMouseUp={ onMouseUp } 
+				onMouseDown={ onMouseDown } 
+				renderTokens={ renderTokens } 
+				renderCursors={ renderCursors } 
+				backgroundRef={ gameState.backgroundRef } 
+				drawingRef={ gameState.drawingRef } 
+				fogRef={ gameState.fogRef } 
+				overlayRef={ gameState.overlayRef } 
+				controlPanelRef={ gameState.controlPanelRef } 
+				handleError={ handleError } 
+			/>
+		)
+	} catch (ex) {
+		handleError(ex)
+	}
 }
 
 export default Game
