@@ -1,14 +1,17 @@
 import Button from '../views/Button.js'
 
-function ToggleButton({ controlPanel, title, value }) {
-    //TODO: To review post Refactoring
+function ToggleButton({ gameState, setGameState, title, value }) {
 	const toggleKey = `toggleOn${title}`
 	const onClick = () => {
-		controlPanel.setState({
-			[toggleKey]: !controlPanel.state[toggleKey]
+		setGameState({
+			...gameState,
+			state: {
+				...gameState.state,
+			[toggleKey]: !gameState.state[toggleKey],
+			}
 		})
 	}
-	const isSelected = controlPanel.state[toggleKey]
+	const isSelected = gameState.state[toggleKey]
 	return (
 		<Button title={ title } value={ value } onClick={ onClick } isSelected={ isSelected } />
 	)
