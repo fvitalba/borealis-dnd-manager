@@ -163,8 +163,6 @@ const Game = () => {
 			isFirstLoadDone: true,
 			isFogLoaded: true,
 		}
-		console.info('gameState before loadMap', gameState)
-		console.info('newStateAttributes', newStateAttributes)
 		setGameState({
 			...gameState,
 			state: {
@@ -175,7 +173,6 @@ const Game = () => {
 			note && note.close()
 			notify('map loaded', undefined, 'loadMap')
 		})
-		console.info('gameState after loadMap', gameState)
 	}
 
 	const initAsDev = () => {
