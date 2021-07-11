@@ -1,6 +1,7 @@
 import guid from '../controllers/guid.js'
 
-const RETRY_INTERVAL = 2500
+// TODO: reset to 2500
+const RETRY_INTERVAL = 250000
 
 const K_SOCKET = 'gameWebSocket'
 const K_INTERVAL = 'gameWebSocketInterval'

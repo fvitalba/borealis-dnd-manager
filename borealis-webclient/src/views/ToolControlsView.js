@@ -27,7 +27,7 @@ const ToolControlsView = ({ gameState, setGameState, resetFog }) => {
 			setGameState({
 				...gameState,
 				state: {
-					...gameState,
+					...gameState.state,
 					fogOpacity: newOpacity,
 				}
 			})

@@ -12,7 +12,7 @@ const MapConfig = ({ gameState, setGameState, map, mapId, loadMap }) => {
 			setGameState({
 				...gameState,
 				state: {
-					...gameState,
+					...gameState.state,
 					maps: mapsCopy
 				}
 			}, resolve)

@@ -65,10 +65,11 @@ const Game = () => {
 	
 	// On Mount
 	useEffect(() => {
-		setGameState({
-			...gameState,
-			websocket: websocket,
-		})
+		if (gameState.websocket !== websocket)
+			setGameState({
+				...gameState,
+				websocket: websocket,
+			})
 		window.addEventListener('beforeunload', saveToLocalStorage.bind(this))
 		window.addEventListener('resize', onResize.bind(this))
 		window.addEventListener('keypress', onKeyPress.bind(this))
@@ -150,29 +151,31 @@ const Game = () => {
 			map = getMap()
 		if (!map)
 			return Promise.reject('no map')
-		//const note = notify(`loading map ${map.$id}...`, 6000, 'loadMap')
+		const note = notify(`loading map ${map.$id}...`, 6000, 'loadMap')
 		if (undefined === map.$id)
 			map.$id = Object.keys(gameState.state.maps).find(key => gameState.state.maps[key] === getMap())
-		//const needsSave = gameState.isHost && gameState.state.isFirstLoadDone && !skipSave
-		//const savePromise = needsSave ? saveMap() : Promise.resolve()
+		const needsSave = gameState.isHost && gameState.state.isFirstLoadDone && !skipSave
+		const savePromise = needsSave ? saveMap() : Promise.resolve()
 		if (!noEmit && gameState.isHost && websocket)
 			websocket.pushMapId(map.$id)
-		const startStateAttrs = {
+		const newStateAttributes = {
 			mapId: map.$id,
-			isFogLoaded: false
-		}
-		const finishStateAttrs = {
 			isFirstLoadDone: true,
-			isFogLoaded: true
+			isFogLoaded: true,
 		}
+		console.info('gameState before loadMap', gameState)
+		console.info('newStateAttributes', newStateAttributes)
 		setGameState({
 			...gameState,
 			state: {
-				...gameState,
-				...startStateAttrs,
-				...finishStateAttrs,
+				...gameState.state,
+				...newStateAttributes,
 			}
+		},() => {
+			note && note.close()
+			notify('map loaded', undefined, 'loadMap')
 		})
+		console.info('gameState after loadMap', gameState)
 	}
 
 	const initAsDev = () => {

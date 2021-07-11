@@ -21,7 +21,8 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 			<div className={ goneClass }>
 				<Background gameState={ gameState } className={ goneClass } />
 				<Drawing gameState={ gameState } />
-				{ /* gameState.state.tokens ? 
+				{ //TODO: Enable Tokens
+				/* gameState.state.tokens ? 
 					<div id='tokens'>
 						{ gameState.state.tokens.map((token, $i) => (
 							<Token key={ `Token${$i}` } token={ token } game={ gameState } />

@@ -14,7 +14,7 @@ const TokenConfig = ({ gameState, setGameState, token, updateGameToken, selectGa
 		setGameState({
 			...gameState,
 			state: {
-				...gameState,
+				...gameState.state,
 				toekns: tokens,
 			}
 		})
@@ -27,7 +27,7 @@ const TokenConfig = ({ gameState, setGameState, token, updateGameToken, selectGa
 		setGameState({
 			...gameState,
 			state: {
-				...gameState,
+				...gameState.state,
 				toekns: tokens,
 			}
 		})

@@ -16,7 +16,7 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 		setGameState({
 			...gameState,
 			state: {
-				...gameState,
+				...gameState.state,
 				[key]: parseInt(e.target.value) || undefined,	
 			}
 		})
@@ -26,7 +26,7 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 		setGameState({
 			...gameState,
 			state: {
-				...gameState,
+				...gameState.state,
 				[key]: e.target.value,
 			}
 		})

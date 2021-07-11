@@ -5,6 +5,8 @@ import Canvas from './Canvas.js'
 const Background = ({ gameState, setGameState, controlPanelState, setControlPanelState, updateTokens, updateMap }) => {
 	const map = gameState.state.maps ? gameState.state.maps[gameState.state.mapId] : null
 
+	//TODO: Verify that this is actually needed
+	/*
 	const resizeCanvases = (w, h) => {
 		return new Promise((resolve, reject) => {
 			if (!w)
@@ -21,7 +23,7 @@ const Background = ({ gameState, setGameState, controlPanelState, setControlPane
 				setGameState({
 					...gameState,
 					state: {
-						...gameState,
+						...gameState.state,
 						width: w,
 						height: h,
 						isFogLoaded: false,
@@ -29,15 +31,16 @@ const Background = ({ gameState, setGameState, controlPanelState, setControlPane
 				})
 		})
 	}
+	*/
 
 	const draw = (ctx, frameCount) => {
 		if (!map) {
-			console.error('No map is selected.')
+			//console.error('No map is selected.')
 			return Promise.reject()
 		}
 
 		const url = map.url
-		drawImage(url, map.name, map, ctx, resizeCanvases, updateMap)
+		drawImage(url, map.name, map, ctx, null, updateMap)
 	}
 
 	const handleOnClick = (e) => {
