@@ -100,7 +100,7 @@ const Overlay = ({ gameState, canvasRef, updateMap, websocket }) => {
     }
 
 	return (
-		<canvas id='overlay' ref={ canvasRef } className={ canvasClass } />
+		<canvas id='overlay' ref={ canvasRef } className={ canvasClass } width={ gameState.state.width } height={ gameState.state.height } />
 	)
 }
 

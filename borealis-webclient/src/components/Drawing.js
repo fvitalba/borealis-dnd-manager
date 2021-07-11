@@ -12,7 +12,7 @@ const Drawing = ({ gameState, ref }) => {
 	}
 
 	return (
-		<canvas id='drawing' ref={ ref } className='passthrough' />
+		<canvas id='drawing' ref={ ref } className='passthrough' width={ gameState.state.width } height={ gameState.state.height } />
 	)
 }
 

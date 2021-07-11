@@ -116,6 +116,7 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 			gameState={ gameState } 
 			setGameState={ setGameState } 
 			controlPanelState={ controlPanelState } 
+			setControlPanelState={ setControlPanelState } 
 			websocket={ websocket } 
 			token={ token } 
 			hidden={ controlPanelState.hidden } 

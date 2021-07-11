@@ -27,7 +27,7 @@ const Fog = ({ gameState, ref, width, height, updateMap }) => {
 	}
 
 	return (
-		<canvas id='fog' ref={ ref } className='passthrough' style={{ opacity: fogOpacity }} />
+		<canvas id='fog' ref={ ref } className='passthrough' style={{ opacity: fogOpacity }} width={ gameState.state.width } height={ gameState.state.height } />
 	)
 }
 

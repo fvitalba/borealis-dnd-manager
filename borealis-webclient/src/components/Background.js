@@ -1,14 +1,16 @@
 import React from 'react'
 import drawImage from '../controllers/drawImage.js'
+import Canvas from './Canvas.js'
 
-const Background = ({ gameState, setGameState, controlPanelState, setControlPanelState, updateTokens }) => {
-	//TODO: Verify if component is correct past refactoring
+const Background = ({ gameState, setGameState, controlPanelState, setControlPanelState, updateTokens, updateMap }) => {
+	const map = gameState.state.maps ? gameState.state.maps[gameState.state.mapId] : null
+
 	const resizeCanvases = (w, h) => {
 		return new Promise((resolve, reject) => {
 			if (!w)
-				w = (gameState.map && gameState.map.w) || window.innerWidth
+				w = (map && map.w) || window.innerWidth
 			if (!h)
-				h = (gameState.map && gameState.map.h) || window.innerHeight
+				h = (map && map.h) || window.innerHeight
 			let canvases = document.querySelectorAll('canvas')
 			const noChangeNeeded = Array.from(canvases).reduce((prev, canv) => (
 				prev && canv.width === w && canv.height === h
@@ -24,22 +26,18 @@ const Background = ({ gameState, setGameState, controlPanelState, setControlPane
 						height: h,
 						isFogLoaded: false,
 					}
-				}, () => {
-					canvases.forEach(canvas => {
-						canvas.width = w
-						canvas.height = h
-					})
-					resolve(w, h)
 				})
 		})
 	}
 
-	const load = () => {
-		if (!gameState.map) {
+	const draw = (ctx, frameCount) => {
+		if (!map) {
 			console.error('No map is selected.')
 			return Promise.reject()
 		}
-		//return drawImage(gameState.map.url, null /* which */, gameState, ref.current.getContext('2d'), resizeCanvases)
+
+		const url = map.url
+		drawImage(url, map.name, map, ctx, resizeCanvases, updateMap)
 	}
 
 	const handleOnClick = (e) => {
@@ -52,7 +50,12 @@ const Background = ({ gameState, setGameState, controlPanelState, setControlPane
 	}
 
 	return (
-		<canvas id='background' onClick={ handleOnClick } />
+		<Canvas 
+			id='background' 
+			onClick={ handleOnClick } 
+			width={ map ? map.width : 0 } 
+			height={ map ? map.height : 0 } 
+			draw={ draw } />
 	)
 }
 

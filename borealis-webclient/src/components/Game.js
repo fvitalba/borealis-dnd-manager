@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import Token from './Token.js'
 import Gamesocket from './GameSocket.js'
 import GameView from '../views/GameView.js'
-import Cursor from '../views/Cursor.js'
 import guid from '../controllers/guid.js'
+import GameSocket from './GameSocket.js'
 
 const initialGameState = () => {
 	const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
 
 	return {
+		websocket: null,
 		isHost: params.get('host'),
 		room: params.get('room'),
 		controlPanelRef: React.createRef(),
@@ -61,10 +61,14 @@ const initialControlPanelState = () => {
 const Game = () => {
 	const [gameState, setGameState] = useState(initialGameState)
 	const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
-	const websocket = new Gamesocket(gameState)
+	const websocket = gameState.websocket ? gameState.websocket : new GameSocket(gameState)
 	
 	// On Mount
 	useEffect(() => {
+		setGameState({
+			...gameState,
+			websocket: websocket,
+		})
 		window.addEventListener('beforeunload', saveToLocalStorage.bind(this))
 		window.addEventListener('resize', onResize.bind(this))
 		window.addEventListener('keypress', onKeyPress.bind(this))
@@ -146,11 +150,11 @@ const Game = () => {
 			map = getMap()
 		if (!map)
 			return Promise.reject('no map')
-		const note = notify(`loading map ${map.$id}...`, 6000, 'loadMap')
+		//const note = notify(`loading map ${map.$id}...`, 6000, 'loadMap')
 		if (undefined === map.$id)
 			map.$id = Object.keys(gameState.state.maps).find(key => gameState.state.maps[key] === getMap())
-		const needsSave = gameState.isHost && gameState.state.isFirstLoadDone && !skipSave
-		const savePromise = needsSave ? saveMap() : Promise.resolve()
+		//const needsSave = gameState.isHost && gameState.state.isFirstLoadDone && !skipSave
+		//const savePromise = needsSave ? saveMap() : Promise.resolve()
 		if (!noEmit && gameState.isHost && websocket)
 			websocket.pushMapId(map.$id)
 		const startStateAttrs = {
@@ -161,37 +165,14 @@ const Game = () => {
 			isFirstLoadDone: true,
 			isFogLoaded: true
 		}
-		//TODO: refactor new state update
-		/*
-		return savePromise.then(() => {
-			return new Promise((resolve, reject) => {
-				this.setState(startStateAttrs, () => {
-					// Load bg first because that resizes the canvases
-					this.bgRef.current.load().then(() => {
-					Promise.all([
-						this.fogRef.current.load(),
-						this.drawRef.current.load(),
-					]).then(() => {
-						this.setState(finishStateAttrs, () => {
-						resolve()
-						note && note.close()
-						this.notify('map loaded', undefined, 'loadMap')
-						})
-					}).catch(arg => {
-						console.error('fail loads:', arg)
-						this.setState(finishStateAttrs)
-					})
-					}).catch(arg => {
-					console.error('fail load bgRef:', arg)
-					this.setState(finishStateAttrs)
-					})
-				})
-			})
-		}).catch(arg => {
-			console.error('fail savePromise:', arg)
-			this.setState(finishStateAttrs)
+		setGameState({
+			...gameState,
+			state: {
+				...gameState,
+				...startStateAttrs,
+				...finishStateAttrs,
+			}
 		})
-		*/
 	}
 
 	const initAsDev = () => {
@@ -230,6 +211,8 @@ const Game = () => {
 	 ****************************************************/
 	const updateTokens = (callback, noEmit) => {
 		const tokensCopy = JSON.parse(JSON.stringify(gameState.state.tokens))
+		if (!tokensCopy || !Array.isArray(tokensCopy))
+			return
 		tokensCopy.forEach(callback)
 		setGameState({
 			...gameState,
@@ -336,38 +319,6 @@ const Game = () => {
 	const resetFog = () => {
 		//TODO: How do I update the game's State?
 		//game.fogRef.current.fill()
-	}
-
-	/****************************************************
-	 * Render Functions                                 *
-	 ****************************************************/
-	const renderCursors = () => {
-		const deadline = new Date() - 30000
-		const cursors = Object.assign({}, gameState.state.cursors)
-		for (let name in cursors) {
-			let time = cursors[name].time
-			if (!time || time < deadline)
-				delete cursors[name]
-		}
-		return (
-			<div id='cursors'>
-				{ Object.keys(cursors).map((key, $i) => (
-					<Cursor key={ `cursor${$i}` } name={ key } cursor={ gameState.state.cursors[key] } size={ gameState.state.cursorSize } />
-				)) }
-			</div>
-		)
-	}
-
-	const renderTokens = () => {
-		try {
-			return <div id='tokens'>
-			{ gameState.state.tokens.map((token, $i) => (
-				<Token key={ `Token${$i}` } token={ token } game={ gameState } />
-			)) }
-			</div>
-		} catch (ex) {
-			handleError(ex)
-		}
 	}
 
 	/****************************************************
@@ -648,8 +599,6 @@ const Game = () => {
 				onMouseMove={ onMouseMove } 
 				onMouseUp={ onMouseUp } 
 				onMouseDown={ onMouseDown } 
-				renderTokens={ renderTokens } 
-				renderCursors={ renderCursors } 
 				notify={ notify } 
 				token={ undefined } 
 				initAsDev={ initAsDev } 
