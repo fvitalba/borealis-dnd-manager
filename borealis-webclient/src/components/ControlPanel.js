@@ -44,7 +44,12 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 		const mapId = 1 + Object.keys(mapsCopy).reduce((m, x) => Math.max(m, x), 0)
 		const newMap = {
 			name: controlPanelState.newMapName,
-			$id: mapId
+			$id: mapId,
+			url: '',
+			w: window.innerWidth,
+			h: window.innerHeight,
+			x: 0,
+			y: 0,
 		}
 		mapsCopy[mapId] = newMap
 		setGameState({
@@ -62,7 +67,7 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 
 	const createToken = () => {
 		const tokensCopy = JSON.parse(JSON.stringify(gameState.state.tokens || []))
-		tokensCopy.push({url: this.state.newTokenUrl, guid: guid()})
+		tokensCopy.push({url: controlPanelState.newTokenUrl, guid: guid()})
 		setGameState({
 			...gameState,
 			state: {

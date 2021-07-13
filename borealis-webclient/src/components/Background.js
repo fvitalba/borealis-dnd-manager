@@ -4,7 +4,7 @@ import Canvas from './Canvas.js'
 
 const Background = ({ gameState, setGameState, controlPanelState, setControlPanelState, updateTokens, updateMap }) => {
 	const map = gameState.state.maps ? gameState.state.maps[gameState.state.mapId] : null
-
+	
 	//TODO: Verify that this is actually needed
 	/*
 	const resizeCanvases = (w, h) => {
@@ -33,14 +33,19 @@ const Background = ({ gameState, setGameState, controlPanelState, setControlPane
 	}
 	*/
 
-	const draw = (ctx, frameCount) => {
+	const draw = (ctx) => {
 		if (!map) {
-			//console.error('No map is selected.')
+			console.error('No map is selected.')
 			return Promise.reject()
 		}
-
-		const url = map.url
-		drawImage(url, map.name, map, ctx, null, updateMap)
+		drawImage(map.url, map.name, map, ctx, null, updateMap)
+			.then({
+				// no need to do anything
+			})
+			.catch((e) => {
+				console.error('could not draw image')
+				console.info('could not draw image... map', map)
+			})
 	}
 
 	const handleOnClick = (e) => {
@@ -48,16 +53,15 @@ const Background = ({ gameState, setGameState, controlPanelState, setControlPane
 			...controlPanelState,
 			toggleOnMaps: false,
 			toggleOnTokens: false,
-		})
-		updateTokens(token => token.$selected = false)
+		}, () => updateTokens(token => token.$selected = false))
 	}
 
 	return (
 		<Canvas 
 			id='background' 
 			onClick={ handleOnClick } 
-			width={ map ? map.width : 0 } 
-			height={ map ? map.height : 0 } 
+			width={ map ? map.w : 0 } 
+			height={ map ? map.h : 0 } 
 			draw={ draw } />
 	)
 }

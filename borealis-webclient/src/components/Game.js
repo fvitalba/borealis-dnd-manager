@@ -186,10 +186,16 @@ const Game = () => {
 		]
 		let defaultMap = {
 			url: '/dev/FFtri9T.png',
-			spawnX: 40, spawnY: 80, $id: 2,
+			spawnX: 40,
+			spawnY: 80,
+			$id: 2,
 		}
 		let kiwiMap = {
-			name: 'kiwi', url: '/dev/kiwi.jpeg', $id: 1,
+			name: 'kiwi',
+			url: '/dev/kiwi.jpeg',
+			$id: 1,
+			w: 500,
+			h: 500,
 		}
 		return new Promise(resolve => {
 			setGameState({
@@ -603,6 +609,7 @@ const Game = () => {
 				token={ undefined } 
 				initAsDev={ initAsDev } 
 				loadMap={ loadMap } 
+				updateTokens={ updateTokens } 
 				updateGameToken={ updateToken } 
 				selectGameToken={ selectToken } 
 				updateMap={ updateMap } 

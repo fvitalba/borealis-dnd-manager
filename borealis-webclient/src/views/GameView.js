@@ -6,7 +6,7 @@ import Token from '../components/Token.js'
 import Cursor from './Cursor.js'
 import ControlPanel from '../components/ControlPanel.js'
 
-const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, onMouseMove, onMouseUp, onMouseDown, renderTokens, renderCursors, notify, token, initAsDev, loadMap, updateGameToken, selectGameToken, updateMap, resetFog }) => {
+const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, onMouseMove, onMouseUp, onMouseDown, renderTokens, renderCursors, notify, token, initAsDev, loadMap, updateTokens, updateGameToken, selectGameToken, updateMap, resetFog }) => {
 	const goneClass = gameState.state.isFogLoaded ? null : 'gone'
 	const deadline = new Date() - 30000
 	const cursors = Object.assign({}, gameState.state.cursors)
@@ -19,7 +19,13 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 	return (
 		<div id='game' onMouseMove={ (e) => onMouseMove(e) } onMouseDown={ (e) => onMouseDown(e) } onMouseUp={ (e) => onMouseUp(e) }>
 			<div className={ goneClass }>
-				<Background gameState={ gameState } className={ goneClass } />
+				<Background
+					gameState={ gameState } 
+					setGameState={ setGameState } 
+					controlPanelState={ controlPanelState } 
+					setControlPanelState={ setControlPanelState } 
+					updateTokens={ updateTokens } 
+					className={ goneClass } />
 				<Drawing gameState={ gameState } />
 				{ //TODO: Enable Tokens
 				/* gameState.state.tokens ? 
