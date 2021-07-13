@@ -6,10 +6,11 @@ const MapConfigView = ({ isSelected, mapConfigState, mapId, load, onTextChange, 
 			{ mapId }
 			<input value={ mapConfigState.name || '' } placeholder='Map name' size='8' onChange={ (e) => onTextChange('name', e) } />
 			<input value={ mapConfigState.imageUrl || '' } placeholder='Map url' size='8' onChange={ (e) => onTextChange('imageUrl', e) } />
-			<Button title='Load map' value='&#x1f23a;' onClick={ load } />
-			wh:
-			<input value={ mapConfigState.width || '' } placeholder='w' className='text3' onChange={ (e) => onIntegerChange('width', e) } type='number' min='0' step='5' title='width' />
-			<input value={ mapConfigState.height || '' } placeholder='h' className='text3' onChange={ (e) => onIntegerChange('height', e) } type='number' min='0' step='5' title='height' />
+			w:
+			<input value={ mapConfigState.width || 0 } placeholder='width' className='text3' onChange={ (e) => onIntegerChange('width', e) } type='number' min='0' step='10' title='width' />
+			h:
+			<input value={ mapConfigState.height || 0 } placeholder='height' className='text3' onChange={ (e) => onIntegerChange('height', e) } type='number' min='0' step='10' title='height' />
+			<Button title='Save & load map' value='&#x1f4c0;' onClick={ load } />
 			<Button title='Delete map' value='&#x1f5d1;' onClick={ deleteMap } />
 		</div>
 	)

@@ -10,8 +10,8 @@ const initialMapConfigState = (gameState, map) => {
 		$id: map.$id,
 		name: currentMap.name ? currentMap.name : map.name,
 		imageUrl: currentMap.url ? currentMap.url : '',
-		width: currentMap.w ? currentMap.w : 0,
-		height: currentMap.h ? currentMap.h : 0,
+		width: currentMap.w ? currentMap.w : window.innerWidth,
+		height: currentMap.h ? currentMap.h : window.innerHeight,
 		x: 0,
 		y: 0,	
 	}
@@ -38,7 +38,7 @@ const MapConfig = ({ gameState, setGameState, map, mapId, loadMap }) => {
 
 	const load = () => {
 		const maps = JSON.parse(JSON.stringify(gameState.state.maps))
-		if (!maps || Array.isArray(maps))	//TODO: Check if we need to remove the array-check
+		if (!maps)
 			return
 		const newMap = {
 			$id: mapConfigState.$id,
@@ -49,7 +49,8 @@ const MapConfig = ({ gameState, setGameState, map, mapId, loadMap }) => {
 			x: mapConfigState.x,
 			y: mapConfigState.y,
 		}
-		const newMaps = maps.map((map) => map.$id === newMap.$id ? newMap : map)
+		console.info('maps', maps)
+		const newMaps = maps.map(map => map.$id === newMap.$id ? newMap : map)
 		setGameState({
 			...gameState,
 			state: {

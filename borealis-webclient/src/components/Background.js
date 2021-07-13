@@ -43,8 +43,8 @@ const Background = ({ gameState, setGameState, controlPanelState, setControlPane
 				// no need to do anything
 			})
 			.catch((e) => {
-				console.error('could not draw image')
-				console.info('could not draw image... map', map)
+				console.error('could not draw background')
+				console.info('could not draw background... map', map)
 			})
 	}
 

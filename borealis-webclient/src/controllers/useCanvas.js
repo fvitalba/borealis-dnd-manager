@@ -8,6 +8,12 @@ const useCanvas = (draw, gameState, options={}) => {
 		const context = canvas.getContext(options.context || '2d')
 		
 		draw(context)
+			.then({
+				// do nothing
+			})
+			.catch((err) => {
+				console.error('error in draw', err)
+			})
 	}, [draw])
 
 	return canvasRef
