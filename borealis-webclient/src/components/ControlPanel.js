@@ -40,8 +40,8 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 	}
 
 	const createMap = () => {
-		const mapsCopy = JSON.parse(JSON.stringify(gameState.state.maps || {}))
-		const mapId = 1 + Object.keys(mapsCopy).reduce((m, x) => Math.max(m, x), 0)
+		const maps = JSON.parse(JSON.stringify(gameState.state.maps || []))
+		const mapId = 1 + Object.keys(maps).reduce((m, x) => Math.max(m, x), 0)
 		const newMap = {
 			name: controlPanelState.newMapName,
 			$id: mapId,
@@ -51,12 +51,13 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 			x: 0,
 			y: 0,
 		}
-		mapsCopy[mapId] = newMap
+		maps[mapId] = newMap
+		const newMaps = maps.filter(map => map)
 		setGameState({
 			...gameState,
 			state: {
 				...gameState.state,
-				maps: mapsCopy,
+				maps: newMaps,
 			}
 		})
 		setControlPanelState({
@@ -115,7 +116,6 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 	const token = this.props.token;
     if (!token) return null;
 	*/
-
 	return (
 		<ControlPanelView 
 			gameState={ gameState } 

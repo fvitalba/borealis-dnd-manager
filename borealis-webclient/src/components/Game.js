@@ -18,9 +18,9 @@ const initialGameState = () => {
 		overlayRef: React.createRef(),
 		tokens: React.createRef(),
 		state: {
-			maps: {},
+			maps: [],
 			tokens: [],
-			cursors: {},
+			cursors: [],
 			cursorSize: 50,
 			fogOpacity: 0.5,
 			fogUrl: undefined, /* data url */
@@ -163,16 +163,16 @@ const Game = () => {
 			isFirstLoadDone: true,
 			isFogLoaded: true,
 		}
+		console.info('gameState in loadMap - PRE', gameState)
 		setGameState({
 			...gameState,
 			state: {
 				...gameState.state,
 				...newStateAttributes,
 			}
-		},() => {
-			note && note.close()
-			notify('map loaded', undefined, 'loadMap')
 		})
+		note && note.close()
+		notify('map loaded', undefined, 'loadMap')
 	}
 
 	const initAsDev = () => {
@@ -605,8 +605,9 @@ const Game = () => {
 				onMouseMove={ onMouseMove } 
 				onMouseUp={ onMouseUp } 
 				onMouseDown={ onMouseDown } 
+				fromJson={ fromJson } 
 				notify={ notify } 
-				token={ undefined } 
+				token={ undefined } /* TODO: Verify what this is */
 				initAsDev={ initAsDev } 
 				loadMap={ loadMap } 
 				updateTokens={ updateTokens } 

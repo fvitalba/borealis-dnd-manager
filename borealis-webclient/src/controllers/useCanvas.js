@@ -14,7 +14,7 @@ const useCanvas = (draw, gameState, options={}) => {
 			.catch((err) => {
 				console.error('error in draw', err)
 			})
-	}, [draw])
+	}, [])
 
 	return canvasRef
 }

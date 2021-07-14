@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import MapConfigView from '../views/MapConfigView.js'
 
 const initialMapConfigState = (gameState, map) => {
-	const maps = JSON.parse(JSON.stringify(gameState.state.maps || {}))
-	const existingMap = Array.isArray(maps) ? maps.filter((mapElement) => mapElement.$id === map.$id) : undefined
+	const maps = JSON.parse(JSON.stringify(gameState.state.maps || []))
+	const existingMap = maps.filter((mapElement) => mapElement.$id === map.$id)
 	const currentMap = existingMap ? existingMap : { name: undefined, url: undefined, w: undefined, h: undefined, }
 
 	return {
@@ -18,7 +18,11 @@ const initialMapConfigState = (gameState, map) => {
 }
 
 const MapConfig = ({ gameState, setGameState, map, mapId, loadMap }) => {
+	console.info('redraw mapconfig')
 	const [mapConfigState, setMapConfigState] = useState(initialMapConfigState(gameState, map))
+	console.info('mapConfigState', mapConfigState)
+	console.info('map', map)
+	console.info('gameState', gameState)
 	const isSelected = gameState.state.mapId === mapId
 
 	const onTextChange = (key, evt) => {
@@ -37,7 +41,7 @@ const MapConfig = ({ gameState, setGameState, map, mapId, loadMap }) => {
 	}
 
 	const load = () => {
-		const maps = JSON.parse(JSON.stringify(gameState.state.maps))
+		let maps = JSON.parse(JSON.stringify(gameState.state.maps))
 		if (!maps)
 			return
 		const newMap = {
@@ -49,15 +53,18 @@ const MapConfig = ({ gameState, setGameState, map, mapId, loadMap }) => {
 			x: mapConfigState.x,
 			y: mapConfigState.y,
 		}
-		console.info('maps', maps)
-		const newMaps = maps.map(map => map.$id === newMap.$id ? newMap : map)
+		//newMaps[newMap.$id] = newMap
+		const newMaps = maps.map(currMap => currMap.$id === newMap.$id ? newMap : currMap)
+		console.info('newMaps', newMaps)
 		setGameState({
 			...gameState,
 			state: {
 				...gameState.state,
-				maps : newMaps,
+				maps: newMaps,
 			}
-		}, () => loadMap(gameState.state.maps[mapId],false))
+		})
+		console.info('new GameState', gameState)
+		loadMap(gameState.state.maps[mapId],false)
 	}
 
 	const deleteMap = () => {

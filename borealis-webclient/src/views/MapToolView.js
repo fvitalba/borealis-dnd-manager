@@ -4,7 +4,7 @@ import Button from './Button.js'
 const MapToolView = ({ gameState, setGameState, controlPanelState, onTextChange, createMap, loadMap }) => {
 	if (!controlPanelState.toggleOnMaps)
 		return null
-	const maps = gameState.state.maps
+	const maps = JSON.parse(JSON.stringify(gameState.state.maps || {}))
 	const keys = maps && Object.keys(maps)
 
 	return (
@@ -14,7 +14,7 @@ const MapToolView = ({ gameState, setGameState, controlPanelState, onTextChange,
 			<input placeholder='New map name (optional)' onChange={ (e) => onTextChange('newMapName', e) } />
 			<Button title='Create new map' value='&#x2795;' onClick={ createMap } />
 			{ keys && keys.map((mapId, $i) => (
-				<MapConfig key={ `map${$i}` } mapId={ mapId } map={ maps[mapId] } gameState={ gameState } setGameState={ setGameState } loadMap={ loadMap } />
+				<MapConfig key={ `map${$i}` } gameState={ gameState } setGameState={ setGameState } map={ maps[mapId] } mapId={ mapId } loadMap={ loadMap } />
 			))}
 			</div>
 		</div>
