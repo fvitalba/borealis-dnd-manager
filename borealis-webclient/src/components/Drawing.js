@@ -1,18 +1,23 @@
 import React from 'react'
 import drawImage from '../controllers/drawImage.js'
+import Canvas from './Canvas.js'
 
-const Drawing = ({ gameState, ref }) => {
-	//TODO: Verify if component is correct past refactoring
-	const load = () => {
-		const dataUrl = gameState.map.drawUrl
-		if (dataUrl)
-			return drawImage(dataUrl, 'drawing')
-		else
-			return Promise.resolve()
+const Drawing = ({ gameState, setGameState }) => {
+	const draw = (ctx) => {
+		const map = gameState.state.maps ? gameState.state.maps[gameState.state.mapId] : undefined
+		if (!map || !map.drawUrl) {
+			return
+		}
+		drawImage(map.drawUrl, 'drawing', undefined, ctx, undefined, undefined)
 	}
 
 	return (
-		<canvas id='drawing' ref={ ref } className='passthrough' width={ gameState.state.width } height={ gameState.state.height } />
+		<Canvas 
+			id='drawing' 
+			className='passthrough' 
+			width={ gameState.state.width } 
+			height={ gameState.state.height } 
+			draw={ draw } />
 	)
 }
 

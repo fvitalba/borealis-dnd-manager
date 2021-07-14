@@ -37,8 +37,8 @@ const initialGameState = () => {
 			downY: undefined,
 			mapId: undefined,
 			gen: 0,
-			width: undefined,
-			height: undefined,
+			width: window.innerWidth,
+			height: window.innerHeight,
 		}
 	}
 }
