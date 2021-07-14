@@ -86,6 +86,11 @@ const Game = () => {
 		}
 	},[])
 
+	useEffect(() => {
+		if (getMap())
+			loadMap(getMap(), false)
+	}, [gameState.state.mapId])
+
 	/****************************************************
 	 * Map Functions                                    *
 	 ****************************************************/
@@ -163,7 +168,6 @@ const Game = () => {
 			isFirstLoadDone: true,
 			isFogLoaded: true,
 		}
-		console.info('gameState in loadMap - PRE', gameState)
 		setGameState({
 			...gameState,
 			state: {

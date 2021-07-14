@@ -41,7 +41,7 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 
 	const createMap = () => {
 		const maps = JSON.parse(JSON.stringify(gameState.state.maps || []))
-		const mapId = 1 + Object.keys(maps).reduce((m, x) => Math.max(m, x), 0)
+		const mapId = maps.length
 		const newMap = {
 			name: controlPanelState.newMapName,
 			$id: mapId,

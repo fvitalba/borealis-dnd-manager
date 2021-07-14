@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MapConfigView from '../views/MapConfigView.js'
 
 const initialMapConfigState = (gameState, map) => {
@@ -18,11 +18,7 @@ const initialMapConfigState = (gameState, map) => {
 }
 
 const MapConfig = ({ gameState, setGameState, map, mapId, loadMap }) => {
-	console.info('redraw mapconfig')
 	const [mapConfigState, setMapConfigState] = useState(initialMapConfigState(gameState, map))
-	console.info('mapConfigState', mapConfigState)
-	console.info('map', map)
-	console.info('gameState', gameState)
 	const isSelected = gameState.state.mapId === mapId
 
 	const onTextChange = (key, evt) => {
@@ -53,18 +49,15 @@ const MapConfig = ({ gameState, setGameState, map, mapId, loadMap }) => {
 			x: mapConfigState.x,
 			y: mapConfigState.y,
 		}
-		//newMaps[newMap.$id] = newMap
 		const newMaps = maps.map(currMap => currMap.$id === newMap.$id ? newMap : currMap)
-		console.info('newMaps', newMaps)
 		setGameState({
 			...gameState,
 			state: {
 				...gameState.state,
 				maps: newMaps,
+				mapId: newMap.$id,
 			}
 		})
-		console.info('new GameState', gameState)
-		loadMap(gameState.state.maps[mapId],false)
 	}
 
 	const deleteMap = () => {

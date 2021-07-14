@@ -3,7 +3,9 @@ import drawImage from '../controllers/drawImage.js'
 import Canvas from './Canvas.js'
 
 const Background = ({ gameState, setGameState, controlPanelState, setControlPanelState, updateTokens, updateMap }) => {
-	const map = gameState.state.maps ? gameState.state.maps[gameState.state.mapId] : null
+	const map = gameState.state.maps ? gameState.state.maps[gameState.state.mapId] : undefined
+	console.info('redraw background')
+	console.info('map', map)
 	
 	//TODO: Verify that this is actually needed
 	/*
@@ -34,17 +36,14 @@ const Background = ({ gameState, setGameState, controlPanelState, setControlPane
 	*/
 
 	const draw = (ctx) => {
+		console.info('draw function from background')
+		console.info('gameState', gameState)
+		console.info('map', map)
 		if (!map) {
 			console.error('No map is selected.')
-			return Promise.reject()
+			return
 		}
 		drawImage(map.url, map.name, map, ctx, null, updateMap)
-			.then({
-				// no need to do anything
-			})
-			.catch((e) => {
-				console.error('could not draw background', e)
-			})
 	}
 
 	const handleOnClick = (e) => {
