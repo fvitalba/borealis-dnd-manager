@@ -1,6 +1,4 @@
 const drawImage = (url, which, map, context, resizeCanvases, updateMap) => {
-	console.info('url', url)
-	console.info('map', map)
 	// Handle 'whiteboard' (no bg img)
 	if (!url || url.trim().length === 0) {
 		if (resizeCanvases) {

@@ -116,7 +116,6 @@ const Game = () => {
 
 	/* Copy maps and dump current data urls, suitable for save to state or localStorage */
 	const dumpMaps = () => {
-		console.log('dumpMaps')
 		let mapId = gameState.state.mapId
 
 		/* Infer map id if it's not set */
@@ -126,14 +125,17 @@ const Game = () => {
 					.keys(gameState.state.maps)
 					.find(key => gameState.state.maps[key] === gameState.map)
 		
-		const mapsCopy = JSON.parse(JSON.stringify(gameState.state.maps))
+		const mapsCopy = JSON.parse(JSON.stringify(gameState.state.maps || []))
+		/*
+		//TODO: generate dumping functions
 		const map = mapsCopy[mapId]
-		if (map && gameState.state.isFirstLoadDone) { /* Map may have been deleted */
+		if (map && gameState.state.isFirstLoadDone) { // Map may have been deleted
 			notify('Building data urls...', undefined, 'dumpMaps')
 			[map.fogUrl, map.$fogDumpedAt] = dumpCanvas('fog')
 			[map.drawUrl, map.$drawDumpedAt] = dumpCanvas('draw')
 			notify('Data urls readied', undefined, 'dumpMaps')
 		}
+		*/
 		return mapsCopy
 	}
 

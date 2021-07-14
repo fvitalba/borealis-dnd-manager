@@ -50,6 +50,10 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 			h: window.innerHeight,
 			x: 0,
 			y: 0,
+			fogUrl: undefined,
+			$fogDumpedAt: undefined,
+			drawUrl: undefined,
+			$drawDumpedAt: undefined,
 		}
 		maps[mapId] = newMap
 		const newMaps = maps.filter(map => map)

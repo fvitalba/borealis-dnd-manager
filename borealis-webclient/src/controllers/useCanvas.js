@@ -4,7 +4,6 @@ const useCanvas = (draw, gameState, options={}) => {
 	const canvasRef = useRef(null)
 
 	useEffect(() => {
-		console.info('useEffect of useCanvas')
 		const canvas = canvasRef.current
 		const context = canvas.getContext(options.context || '2d')
 		
