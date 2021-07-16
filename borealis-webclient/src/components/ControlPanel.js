@@ -2,7 +2,7 @@ import React from 'react'
 import guid from '../controllers/guid.js'
 import ControlPanelView from '../views/ControlPanelView.js'
 
-const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, notify, fromJson, token, initAsDev, loadMap, updateGameToken, selectGameToken, resetFog }) => {
+const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, notify, fromJson, initAsDev, loadMap, updateGameToken, selectGameToken, resetFog }) => {
 	const toggleHidden = () => {
 		setControlPanelState({
 			...controlPanelState,
@@ -72,7 +72,9 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 
 	const createToken = () => {
 		const tokensCopy = JSON.parse(JSON.stringify(gameState.state.tokens || []))
-		tokensCopy.push({url: controlPanelState.newTokenUrl, guid: guid()})
+		if (!controlPanelState.newTokenUrl)
+			return
+		tokensCopy.push({ url: controlPanelState.newTokenUrl, guid: guid() })
 		setGameState({
 			...gameState,
 			state: {
@@ -127,7 +129,6 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 			controlPanelState={ controlPanelState } 
 			setControlPanelState={ setControlPanelState } 
 			websocket={ websocket } 
-			token={ token } 
 			hidden={ controlPanelState.hidden } 
 			toggleHidden={ toggleHidden } 
 			setGameInt={ setGameInt } 
@@ -135,6 +136,7 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 			socketRequestRefresh={ socketRequestRefresh } 
 			initAsDev={ initAsDev } 
 			toggleOnUser={ controlPanelState.toggleOnUser } 
+			toggleOnTokens={ controlPanelState.toggleOnTokens }
 			copyJson={ copyJson } 
 			pasteJson={ pasteJson } 
 			resetFog={ resetFog } 

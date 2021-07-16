@@ -612,7 +612,6 @@ const Game = () => {
 				onMouseDown={ onMouseDown } 
 				fromJson={ fromJson } 
 				notify={ notify } 
-				token={ undefined } /* TODO: Verify what this is */
 				initAsDev={ initAsDev } 
 				loadMap={ loadMap } 
 				updateTokens={ updateTokens } 

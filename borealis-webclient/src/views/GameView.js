@@ -63,7 +63,6 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 				websocket={ websocket } 
 				notify={ notify } 
 				fromJson={ fromJson } 
-				token={ token } 
 				initAsDev={ initAsDev } 
 				loadMap={ loadMap } 
 				updateGameToken={ updateGameToken } 
