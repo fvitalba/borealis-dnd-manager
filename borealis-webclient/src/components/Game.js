@@ -90,6 +90,11 @@ const Game = () => {
 			loadMap(getMap(), false)
 	}, [gameState.state.mapId])
 
+	useEffect(() => {
+		if (websocket)
+			websocket.pushTokens(gameState.state.tokens)
+	}, [gameState.state.tokens])
+
 	/****************************************************
 	 * Map Functions                                    *
 	 ****************************************************/
@@ -232,8 +237,6 @@ const Game = () => {
 				tokens: tokensCopy,
 			},
 		})
-		if (!noEmit && websocket)
-			websocket.pushTokens(tokensCopy)
 	}
 
 	const updateToken = (token, callback, noEmit) => {
@@ -248,8 +251,6 @@ const Game = () => {
 				tokens: tokensCopy,
 			},
 		})
-		if (!noEmit && websocket)
-			websocket.pushToken(tokenIdx, tokenCopy)
 	}
 
 	const updateTokenByIndex = (index, attrs, noEmit) => {
@@ -262,8 +263,6 @@ const Game = () => {
 				tokens: tokensCopy,
 			},
 		})
-		if (!noEmit && websocket)
-			websocket.pushToken(index, tokenCopy)
 	}
 
 	const updateCursors = (x, y, name, guid) => {
@@ -520,10 +519,6 @@ const Game = () => {
 	/****************************************************
 	 * Helper Functions                                 *
 	 ****************************************************/
-	const scrubObject = (object) => {
-		for (let key in object) if (/^\$/.test(key) && key !== '$id') delete object[key]
-	}
-
 	const notify = (msg, ttl, tag) => {
 		console.log(msg)
 		if (window.Notification) {
@@ -550,9 +545,9 @@ const Game = () => {
 				},
 			})
 		const tokens = gameState.state.tokens.map(token => ({...token}))
-		tokens.forEach(token => scrubObject(token))
+		tokens.forEach(token => websocket.scrubObject(token))
 		const maps = dumpMaps()
-		Object.values(maps).forEach(map => scrubObject(map))
+		Object.values(maps).forEach(map => websocket.scrubObject(map))
 		const data = Object.assign({
 			gen: newGeneration,
 			maps: maps,

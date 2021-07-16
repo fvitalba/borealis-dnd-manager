@@ -60,7 +60,7 @@ const TokenConfig = ({ gameState, setGameState, token, updateGameToken, selectGa
 
 	return (
 		<div>
-			token ?
+			{ token ?
 				gameState.isHost ?
 				<HostTokenConfig 
 					maps={ maps } 
@@ -80,6 +80,7 @@ const TokenConfig = ({ gameState, setGameState, token, updateGameToken, selectGa
 					onIntegerChange={ onIntegerChange }
 				/>
 			: null
+			}
 		</div>
 	)
 }

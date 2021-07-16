@@ -160,7 +160,7 @@ class GameSocket {
 	/* Push token update */
 	pushToken (index, token) {
 		const tokenCopy = Object.assign({}, token)
-		this.gameState.scrubObject(tokenCopy)
+		this.scrubObject(tokenCopy)
 		const data = {t: 't', i: index, a: tokenCopy}
 		this.send(data)
 	}
@@ -169,13 +169,19 @@ class GameSocket {
 	pushTokens (tokens) {
 		const tokensCopy = JSON.parse(JSON.stringify(tokens))
 		const data = { t: 'ts', tokens: tokensCopy }
-		data.tokens.forEach(token => this.gameState.scrubObject(token))
+		data.tokens.forEach(token => this.scrubObject(token))
 		this.send(data)
 	}
 
 	/* Send refresh request */
 	requestRefresh () {
 		this.send({t: 'refreshRequest'})
+	}
+
+	scrubObject (object) {
+		for (let key in object)
+			if (/^\$/.test(key) && key !== '$id')
+				delete object[key]
 	}
 }
 export default GameSocket

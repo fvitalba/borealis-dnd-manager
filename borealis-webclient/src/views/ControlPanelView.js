@@ -26,7 +26,6 @@ const ControlPanelView = ({ gameState, setGameState, controlPanelState, setContr
 				<ToggleButton title='User' value='&#x1f9d9;&#x200d;&#x2642;&#xfe0f;' controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
 				<ToggleButton title='Maps' value='&#x1f5fa;' controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
 				<ToggleButton title='Tokens' value='&#x265f;' controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
-				{/* TODO: Verify how this is called correctly */}
 				<Button title='Push refresh to players' value='&#x1f4ab;' onClick={ websocket.pushRefresh(gameState, {}) } />
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<ToolSelectView 

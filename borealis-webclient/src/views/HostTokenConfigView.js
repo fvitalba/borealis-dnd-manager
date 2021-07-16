@@ -4,8 +4,8 @@ const HostTokenConfigView = ({ maps, token, copy, onToggle, selectToken, onTextC
 	return (
 		<div className='tokenConfig'>
 			<Button title='Duplicate token' value='&#x1f46f;' onClick={ copy } />
-			<Button value={ token.pc ? '\u{1f236}' : '\u{1f21a}' } onClick={ (e) => onToggle('pc', e) } title='pc/npc' />
-			<Button value={ token.$selected ? '\u{1f22f}' : '\u{1f233}' } onClick={ (e) => selectToken(token, e) } title='(un)select' />
+			<Button value={ token.pc ? '\u{1f5a5}' : '\u{1f464}' } onClick={ (e) => onToggle('pc', e) } title='pc/npc' />
+			<Button value={ token.$selected ? '\u{2705}' : '\u{274C}' } onClick={ (e) => selectToken(token, e) } title='(un)select' />
 			<Button value={ token.ko ? '\u{1f940}' : '\u{1f339}' } onClick={ (e) => onToggle('ko', e) } title='alive/dead' />
 			<input value={ token.name || '' } placeholder='Name' size='8' onChange={ (e) => onTextChange('name', e) } />
 			<input value={ token.url || '' } placeholder='Url' size='8' onChange={ (e) => onTextChange('url', e) } />

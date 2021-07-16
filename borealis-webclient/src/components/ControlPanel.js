@@ -86,7 +86,6 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 			...controlPanelState,
 			newTokenUrl: undefined,
 		})
-		websocket.pushTokens(tokensCopy)
 	}
 
 	const copyJson = () => {

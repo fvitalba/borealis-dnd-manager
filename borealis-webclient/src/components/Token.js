@@ -7,18 +7,18 @@ const initialTokenState = () => {
 	}
 }
 
-const Token = ({ game, token }) => {
+const Token = ({ gameState, token, selectGameToken }) => {
 	const [tokenState, setTokenState] = useState(initialTokenState)
 
 	const isMoveTool = () => {
-		return game.state.tool === 'move'
+		return gameState.state.tool === 'move'
 	}
 
 	const onMouseUp = (e) => {
 		if (!isMoveTool())
 			return
 		if (tokenState.was)
-			game.selectToken(token, false, e.ctrlKey)
+			selectGameToken(token, false, e.ctrlKey)
 	}
 
 	const onMouseDown = (e) => {
@@ -29,11 +29,11 @@ const Token = ({ game, token }) => {
 			was: token.$selected
 		})
 		if (token.$selected)
-			game.selectToken(token, true, e.ctrlKey)
+			selectGameToken(token, true, e.ctrlKey)
 	}
 
-	const isHost = game.isHost
-	const mapId = game.state.mapId
+	const isHost = gameState.isHost
+	const mapId = gameState.state.mapId
 	let showToken = false
 
 	if (!token.url || !token.url.trim())
