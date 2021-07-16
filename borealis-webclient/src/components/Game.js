@@ -69,21 +69,26 @@ const Game = () => {
 				...gameState,
 				websocket: websocket,
 			})
-		window.addEventListener('beforeunload', saveToLocalStorage.bind(this))
-		window.addEventListener('resize', onResize.bind(this))
-		window.addEventListener('keypress', onKeyPress.bind(this))
-		window.addEventListener('keydown', onKeyDown.bind(this))
+		window.addEventListener('beforeunload', saveToLocalStorage)
+		window.addEventListener('resize', onResize)
+		window.addEventListener('keypress', onKeyPress)
+		window.addEventListener('keydown', onKeyDown)
 		loadFromLocalStorage()
 
 		// On Unmount
 		return () => {
 			saveToLocalStorage()
-			window.removeEventListener('beforeunload', saveToLocalStorage.bind(this))
-			window.removeEventListener('resize', onResize.bind(this))
-			window.removeEventListener('keypress', onKeyPress.bind(this))
-			window.removeEventListener('keydown', onKeyDown.bind(this))
+			window.removeEventListener('beforeunload', saveToLocalStorage)
+			window.removeEventListener('resize', onResize)
+			window.removeEventListener('keypress', onKeyPress)
+			window.removeEventListener('keydown', onKeyDown)
 		}
 	},[])
+
+	useEffect(() => {
+		if (websocket && gameState.state['toggleOnShare mouse (cursor)'])
+			websocket.pushCursor(gameState.state.lastX, gameState.state.lastY)
+	}, [gameState.state.lastX, gameState.state.lastY, gameState.state['toggleOnShare mouse (cursor)']])
 
 	useEffect(() => {
 		if (getMap())
@@ -99,8 +104,9 @@ const Game = () => {
 	 * Map Functions                                    *
 	 ****************************************************/
 	const getMap = () => {
-		const map = gameState.state.maps[gameState.state.mapId]
-		return map || Object.values(gameState.state.maps)[0]
+		const maps = JSON.parse(JSON.stringify(gameState.state.maps || []))
+		const map = maps[gameState.state.mapId] || undefined
+		return map || Object.values(maps)[0]
 	}
 
 	const dumpCanvas = (which) => {
@@ -217,7 +223,6 @@ const Game = () => {
 					mapId: kiwiMap.$id,
 				},
 			})
-			loadMap()
 			resolve()
 		})
 	}
@@ -226,7 +231,7 @@ const Game = () => {
 	 * Update Functions                                 *
 	 ****************************************************/
 	const updateTokens = (callback, noEmit) => {
-		const tokensCopy = JSON.parse(JSON.stringify(gameState.state.tokens))
+		const tokensCopy = JSON.parse(JSON.stringify(gameState.state.tokens || []))
 		if (!tokensCopy || !Array.isArray(tokensCopy))
 			return
 		tokensCopy.forEach(callback)
@@ -241,7 +246,7 @@ const Game = () => {
 
 	const updateToken = (token, callback, noEmit) => {
 		const tokenIdx = gameState.state.tokens.indexOf(token)
-		const tokensCopy = JSON.parse(JSON.stringify(gameState.state.tokens))
+		const tokensCopy = JSON.parse(JSON.stringify(gameState.state.tokens || []))
 		const tokenCopy = tokensCopy[tokenIdx]
 		callback(tokenCopy, tokenIdx, tokensCopy)
 		setGameState({
@@ -254,7 +259,7 @@ const Game = () => {
 	}
 
 	const updateTokenByIndex = (index, attrs, noEmit) => {
-		const tokensCopy = JSON.parse(JSON.stringify(gameState.state.tokens))
+		const tokensCopy = JSON.parse(JSON.stringify(gameState.state.tokens || []))
 		const tokenCopy = Object.assign(tokensCopy[index], attrs)
 		setGameState({
 			...gameState,
@@ -279,7 +284,7 @@ const Game = () => {
 
 	const updateMap = (callback) => {
 		return new Promise(resolve => {
-			const mapsCopy = JSON.parse(JSON.stringify(gameState.state.maps))
+			const mapsCopy = JSON.parse(JSON.stringify(gameState.state.maps || []))
 			callback(mapsCopy[gameState.state.mapId])
 			//TODO: Verify if ,resolve is really needed or working
 			setGameState({
@@ -289,6 +294,13 @@ const Game = () => {
 					maps: mapsCopy,
 				},
 			}, resolve)
+		})
+	}
+
+	const toggleControlPanelVisibility = (key) => {
+		setControlPanelState({
+			...controlPanelState,
+			[key]: !controlPanelState[key],
 		})
 	}
 
@@ -346,6 +358,7 @@ const Game = () => {
 				return e
 		
 		const moveFactor = e.shiftKey ? 100 : 10
+		console.info('onKeyDown triggered')
 		const moveSelectedTokens = () => {
 			updateTokens(token => {
 				if (token.$selected) {
@@ -388,23 +401,17 @@ const Game = () => {
 			return e
 		for (let x of [document.activeElement, e.target])
 			//TODO: Check if we can use triple equal
-			if (x.tagName == 'INPUT' && (x.type === 'text' || x.type === 'number')) /* eslint-disable-line eqeqeq */
+			if ((x.tagName == 'INPUT' && (x.type === 'text' || x.type === 'number')) || (x.tagName == 'BUTTON')) /* eslint-disable-line eqeqeq */
 				return e
-		
-		/*
-		const toggle = (key, location) => {
-			(location||this).setState({[key]: !(location||this).state[key]})
-		}
-		*/
+
 		const cp = gameState.cpRef.current
 		switch(e.code) {
 			case 'KeyC':
 				if (e.shiftKey)
-					cp.copyJson() /* dump json to clipboard */
+					cp.copyJson() // dump json to clipboard
 				break
 			case 'KeyH':
-				//TODO: toggle hidden property on Control Panel State
-				//toggle('hidden', cp)
+				toggleControlPanelVisibility('hidden')
 				break
 			case 'KeyG':
 				setGameState({
@@ -422,8 +429,7 @@ const Game = () => {
 					saveToLocalStorage()
 				break
 			case 'KeyM':
-				//TODO: toggle toggleOnMaps property on Control Panel State
-				//toggle('toggleOnMaps', cp)
+				toggleControlPanelVisibility('toggleOnMaps')
 				break
 			case 'KeyP':
 				setGameState({
@@ -435,12 +441,11 @@ const Game = () => {
 				})
 				break
 			case 'KeyT':
-				//TODO: toggle toggleOnTokens property on Control Panel State
-				//toggle('toggleOnTokens', cp)
+				toggleControlPanelVisibility('toggleOnTokens')
 				break
 			case 'KeyV':
 				if (e.shiftKey)
-					cp.pasteJson() /* load json from clipboard */
+					cp.pasteJson() // load json from clipboard
 				else
 				setGameState({
 					...gameState,
@@ -455,15 +460,20 @@ const Game = () => {
 	}
 
 	const onMouseUp = (e) => {
-		updateTokens(tok => {
-			tok.$x0 = tok.x
-			tok.$y0 = tok.y
+		updateTokens(token => {
+			token.$x0 = token.x
+			token.$y0 = token.y
 		}, true)
+		setGameState({
+			...gameState,
+			state: {
+				...gameState.state,
+				lastX: undefined,
+				lastY: undefined,
+			}
+		})
 		//TODO: Verify where we have to update this state
 		/*
-		this.setState({
-			lastX: undefined, lastY: undefined,
-		})
 		this.overlayRef.current.setState({
 			lastX: undefined, lastY: undefined,
 		})
@@ -471,36 +481,50 @@ const Game = () => {
 	}
 
 	const onMouseDown = (e) => {
+		for (let x of [document.activeElement, e.target])
+			//TODO: Check if we can use triple equal
+			if ((x.tagName == 'INPUT' && (x.type === 'text' || x.type === 'number')) || (x.tagName == 'BUTTON')) /* eslint-disable-line eqeqeq */
+				return e
+
 		if (e.buttons & 1) {
 			if (!/(\s|^)token(\s|$)/.test(e.target.getAttribute('class')))
 				updateTokens(tok => {delete tok.$selected})
-			//TODO: Verify where we have to update this state
-			/*
-			this.setState({
-				lastX: e.pageX, lastY: e.pageY,
-				downX: e.pageX, downY: e.pageY,
+			setGameState({
+				...gameState,
+				state: {
+					...gameState.state,
+					lastX: e.pageX,
+					lastY: e.pageY,
+					downX: e.pageX,
+					downY: e.pageY,
+				}
 			})
-			*/
 		}
 	}
 
 	const onMouseMove = (e) => {
+		/*
 		const overlay = gameState.overlayRef.current
 		if (!overlay)
 			return
 		if (overlay.canvasRef && overlay.canvasRef.current)
 			overlay.clear()
+		*/
 		let x = e.pageX, y = e.pageY
 		switch (gameState.isHost ? gameState.state.tool : 'move') {
 			case 'fog':
+				/*
 				if (e.buttons & 1)
 					overlay.fogErase(x, y)
 				overlay.setPointerOutline(x, y, 'yellow', gameState.state.fogRadius)
+				*/
 				break
 			case 'draw':
+				/*
 				if (e.buttons & 1)
 					overlay.drawOrErase(x, y)
 				overlay.setPointerOutline(x, y, gameState.state.drawColor, gameState.state.drawSize)
+				*/
 				break
 			case 'move':
 				if (e.buttons & 1)
@@ -508,12 +532,14 @@ const Game = () => {
 				break
 			default: break
 		}
-		//TODO: Verify where we have to update this state
-		/*
-		this.setState({lastX: e.pageX, lastY: e.pageY})
-		*/
-		if (websocket && gameState.state['toggleOnShare mouse (cursor)'])
-			websocket.pushCursor(e.pageX, e.pageY)
+		setGameState({
+			...gameState,
+			state: {
+				...gameState.state,
+				lastX: e.pageX,
+				lastY: e.pageY,
+			}
+		})
 	}
 
 	/****************************************************
@@ -565,10 +591,14 @@ const Game = () => {
 			})
 		}
 		return new Promise(resolve => {
-			//TODO: Verify how we can use this correctly
-			/*
-			this.setState(data, () => loadMap().then(resolve))
-			*/
+			setGameState({
+				...gameState,
+				state: {
+					...gameState.state,
+					data,
+				}
+			})
+			resolve()
 		})
 	}
 

@@ -1,5 +1,4 @@
 const TokenView = ({ divStyle, token, classes, imgStyle, onMouseUp, onMouseDown }) => {
-	//TODO: To review post Refactoring
 	return (
 		<div
 			style={ divStyle }

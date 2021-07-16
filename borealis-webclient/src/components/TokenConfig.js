@@ -3,6 +3,7 @@ import HostTokenConfig from '../views/HostTokenConfigView.js'
 import GuestTokenConfigView from '../views/GuestTokenConfigView.js'
 
 const TokenConfig = ({ gameState, setGameState, token, updateGameToken, selectGameToken }) => {
+	console.info('drawing token, token', token)
 	const update = (callback) => {
 		updateGameToken(token, callback)
 	}
@@ -15,7 +16,7 @@ const TokenConfig = ({ gameState, setGameState, token, updateGameToken, selectGa
 			...gameState,
 			state: {
 				...gameState.state,
-				toekns: tokens,
+				tokens: tokens,
 			}
 		})
 	}
@@ -28,7 +29,7 @@ const TokenConfig = ({ gameState, setGameState, token, updateGameToken, selectGa
 			...gameState,
 			state: {
 				...gameState.state,
-				toekns: tokens,
+				tokens: tokens,
 			}
 		})
 	}

@@ -74,7 +74,21 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 		const tokensCopy = JSON.parse(JSON.stringify(gameState.state.tokens || []))
 		if (!controlPanelState.newTokenUrl)
 			return
-		tokensCopy.push({ url: controlPanelState.newTokenUrl, guid: guid() })
+		tokensCopy.push({
+			url: controlPanelState.newTokenUrl,
+			guid: guid(),
+			mapId: undefined,
+			$selected: undefined,
+			name: undefined,
+			$x0: undefined,
+			$y0: undefined,
+			x: undefined,
+			y: undefined,
+			ko: undefined,
+			pc: undefined,
+			w: undefined,
+			h: undefined,
+		})
 		setGameState({
 			...gameState,
 			state: {
@@ -116,11 +130,6 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 		websocket.requestRefresh()
 	}
 
-	/*
-	// TODO: Check where the Token comes from
-	const token = this.props.token;
-    if (!token) return null;
-	*/
 	return (
 		<ControlPanelView 
 			gameState={ gameState } 

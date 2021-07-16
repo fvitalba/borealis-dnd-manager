@@ -167,6 +167,8 @@ class GameSocket {
 
 	/* Push replacement of all tokens */
 	pushTokens (tokens) {
+		if (!tokens)
+			return
 		const tokensCopy = JSON.parse(JSON.stringify(tokens))
 		const data = { t: 'ts', tokens: tokensCopy }
 		data.tokens.forEach(token => this.scrubObject(token))
