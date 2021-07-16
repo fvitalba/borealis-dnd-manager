@@ -39,7 +39,8 @@ const Token = ({ gameState, token, selectGameToken }) => {
 	if (!token.url || !token.url.trim())
 		return null
 	
-		const classes = ['token',
+	const classes = [
+		'token',
 		token.ko && 'dead',
 		token.pc ? 'pc' : 'npc',
 		token.$selected && 'selected',
