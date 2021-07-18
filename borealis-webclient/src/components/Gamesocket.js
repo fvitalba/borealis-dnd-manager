@@ -22,12 +22,14 @@ class GameSocket {
 		let room = this.gameState.room
 		const protocol = /https/.test(window.location.protocol) ? 'wss' : 'ws'
 		this.guid = guid()
-		console.log('Trying to establish websocket connection', host, room)
+		//TODO: reenable log
+		//console.log('Trying to establish websocket connection', host, room)
 		if (window[K_INTERVAL])
 			clearInterval(window[K_INTERVAL])
 		if (window[K_SOCKET]) {
 			let socket = window[K_SOCKET]
-			console.log('Closing extant websocket', socketRoom())
+			//TODO: reenable log
+			//console.log('Closing extant websocket', socketRoom())
 			delete window[K_SOCKET] /* Delete, then close, s.t. cb doesn't re-open it */
 			socket.close()
 		}
@@ -39,7 +41,8 @@ class GameSocket {
 		let ws = window[K_SOCKET]
 		/* Connection callback */
 		ws.addEventListener('open', (a,b,c) => {
-			console.log(`WebSocket opened (from ${this.guid})`, socketRoom())
+			//TODO: reenable log
+			//console.log(`WebSocket opened (from ${this.guid})`, socketRoom())
 			// debugger
 			if (window[K_INTERVAL])
 				clearInterval(window[K_INTERVAL])
@@ -51,7 +54,8 @@ class GameSocket {
 		/* Closed callback */
 		let setup = this.setup.bind(this)
 		ws.addEventListener('close', () => {
-			console.error(`WebSocket closed. Will retry in ${RETRY_INTERVAL}`)
+			//TODO: reenable error
+			//console.error(`WebSocket closed. Will retry in ${RETRY_INTERVAL}`)
 			window[K_INTERVAL] = setInterval(setup, RETRY_INTERVAL)
 		})
 	}

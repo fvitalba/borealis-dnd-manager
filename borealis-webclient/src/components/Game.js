@@ -96,8 +96,9 @@ const Game = () => {
 	}, [gameState.state.mapId])
 
 	useEffect(() => {
-		if (websocket)
-			websocket.pushTokens(gameState.state.tokens)
+		//TODO: reenable websocket push
+		//if (websocket)
+		//	websocket.pushTokens(gameState.state.tokens)
 	}, [gameState.state.tokens])
 
 	/****************************************************
@@ -230,15 +231,18 @@ const Game = () => {
 	/****************************************************
 	 * Update Functions                                 *
 	 ****************************************************/
-	const updateTokens = (callback, noEmit) => {
-		const tokensCopy = JSON.parse(JSON.stringify(gameState.state.tokens || []))
-		if (!tokensCopy || !Array.isArray(tokensCopy))
+	const updateTokens = (callback, noEmit, additionalStateProperties) => {
+		const tokens = JSON.parse(JSON.stringify(gameState.state.tokens || []))
+		if (!tokens || !Array.isArray(tokens))
 			return
-		tokensCopy.forEach(callback)
+		console.info('tokens', tokens)
+		const tokensCopy = tokens.map(callback)
+		console.info('tokens Copy',tokensCopy)
 		setGameState({
 			...gameState,
 			state: {
 				...gameState.state,
+				...additionalStateProperties,
 				tokens: tokensCopy,
 			},
 		})
@@ -323,19 +327,21 @@ const Game = () => {
 				copy.$x0 = copy.x
 				copy.$y0 = copy.y
 			}
+			return copy
 		}, true)
 	}
 
-	const dragSelectedTokens = (evt) => {
+	const dragSelectedTokens = (e) => {
 		if (gameState.state.tool !== 'move')
 			return
 		const downX = gameState.state.downX, downY = gameState.state.downY
-		updateTokens(token => {
+		updateTokens((token) => {
 			if (token.$selected) {
-				token.x = token.$x0 + evt.pageX - downX
-				token.y = token.$y0 + evt.pageY - downY
+				token.x = token.$x0 + e.pageX - downX
+				token.y = token.$y0 + e.pageY - downY
 			}
-		})
+			return token
+		}, false, { lastX: e.pageX, lastY: e.pageY, })
 	}
 
 	const resetFog = () => {
@@ -382,6 +388,7 @@ const Game = () => {
 					}
 					e.preventDefault()
 				}
+				return token
 			})
 		}
 		switch (e.keyCode) {
@@ -460,18 +467,12 @@ const Game = () => {
 	}
 
 	const onMouseUp = (e) => {
+		console.info('mouse released')
 		updateTokens(token => {
 			token.$x0 = token.x
 			token.$y0 = token.y
-		}, true)
-		setGameState({
-			...gameState,
-			state: {
-				...gameState.state,
-				lastX: undefined,
-				lastY: undefined,
-			}
-		})
+			return token
+		}, true, { lastX: undefined, lastY: undefined, })
 		//TODO: Verify where we have to update this state
 		/*
 		this.overlayRef.current.setState({
@@ -481,6 +482,7 @@ const Game = () => {
 	}
 
 	const onMouseDown = (e) => {
+		console.info('mouse selected')
 		for (let x of [document.activeElement, e.target])
 			//TODO: Check if we can use triple equal
 			if ((x.tagName == 'INPUT' && (x.type === 'text' || x.type === 'number')) || (x.tagName == 'BUTTON')) /* eslint-disable-line eqeqeq */
@@ -488,6 +490,7 @@ const Game = () => {
 
 		if (e.buttons & 1) {
 			if (!/(\s|^)token(\s|$)/.test(e.target.getAttribute('class')))
+				//TOOD: Update to map function
 				updateTokens(tok => {delete tok.$selected})
 			setGameState({
 				...gameState,
@@ -532,14 +535,6 @@ const Game = () => {
 				break
 			default: break
 		}
-		setGameState({
-			...gameState,
-			state: {
-				...gameState.state,
-				lastX: e.pageX,
-				lastY: e.pageY,
-			}
-		})
 	}
 
 	/****************************************************
