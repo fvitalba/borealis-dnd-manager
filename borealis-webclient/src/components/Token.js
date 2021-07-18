@@ -1,35 +1,17 @@
-import React, { useState } from 'react'
+import React from 'react'
 import TokenView from '../views/TokenView.js'
 
-const initialTokenState = () => {
-	return {
-		was: undefined,
-	}
-}
-
 const Token = ({ gameState, token, selectGameToken }) => {
-	const [tokenState, setTokenState] = useState(initialTokenState)
-
 	const isMoveTool = () => {
 		return gameState.state.tool === 'move'
-	}
-
-	const onMouseUp = (e) => {
-		if (!isMoveTool())
-			return
-		if (tokenState.was)
-			selectGameToken(token, false, e.ctrlKey)
 	}
 
 	const onMouseDown = (e) => {
 		if (!isMoveTool())
 			return
-		setTokenState({
-			...tokenState,
-			was: token.$selected
-		})
-		if (token.$selected)
-			selectGameToken(token, true, e.ctrlKey)
+		//TODO: Fix multi token selection
+		if (!token.$selected)
+			selectGameToken(token, true, e.metaKey)
 	}
 
 	const isHost = gameState.isHost
@@ -66,7 +48,6 @@ const Token = ({ gameState, token, selectGameToken }) => {
 				token={ token } 
 				classes={ classes } 
 				imgStyle={ imgStyle } 
-				onMouseUp={ onMouseUp } 
 				onMouseDown={ onMouseDown }
 			/>
 		: null

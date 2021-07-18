@@ -235,9 +235,7 @@ const Game = () => {
 		const tokens = JSON.parse(JSON.stringify(gameState.state.tokens || []))
 		if (!tokens || !Array.isArray(tokens))
 			return
-		console.info('tokens', tokens)
 		const tokensCopy = tokens.map(callback)
-		console.info('tokens Copy',tokensCopy)
 		setGameState({
 			...gameState,
 			state: {
@@ -311,19 +309,21 @@ const Game = () => {
 	/****************************************************
 	 * Control Functions                                *
 	 ****************************************************/
-	const selectToken = (token, trueFalse, multiSelect) => {
+	const selectToken = (token, tokenSelected, multiSelect) => {
 		if (!token.pc && !gameState.isHost)
 			return
 		const tokenIdx = gameState.state.tokens.indexOf(token)
 		updateTokens((copy, $i) => {
 			if (tokenIdx === $i) {
-				if (trueFalse === undefined || trueFalse === null)
-					trueFalse = !copy.$selected
-				copy.$selected = trueFalse
+				if (tokenSelected === undefined || tokenSelected === null)
+					tokenSelected = !copy.$selected
+				copy.$selected = tokenSelected
 			} else if (!multiSelect)
 				copy.$selected = false
 			
-			if (copy.$selected) { /* set initial coords (for drag) */
+			// set initial coords (for drag)
+			//TODO: fix initial records, tokens jump on selection through mousekey
+			if (copy.$selected) {
 				copy.$x0 = copy.x
 				copy.$y0 = copy.y
 			}
@@ -467,7 +467,6 @@ const Game = () => {
 	}
 
 	const onMouseUp = (e) => {
-		console.info('mouse released')
 		updateTokens(token => {
 			token.$x0 = token.x
 			token.$y0 = token.y
@@ -482,7 +481,6 @@ const Game = () => {
 	}
 
 	const onMouseDown = (e) => {
-		console.info('mouse selected')
 		for (let x of [document.activeElement, e.target])
 			//TODO: Check if we can use triple equal
 			if ((x.tagName == 'INPUT' && (x.type === 'text' || x.type === 'number')) || (x.tagName == 'BUTTON')) /* eslint-disable-line eqeqeq */
