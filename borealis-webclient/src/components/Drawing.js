@@ -15,8 +15,14 @@ const Drawing = ({ gameState, setGameState }) => {
 		<Canvas 
 			id='drawing' 
 			className='passthrough' 
+			{
+			//TODO: Verify if we need the width & height parameters
+			/*
 			width={ gameState.state.width } 
 			height={ gameState.state.height } 
+			*/
+				...null
+			}
 			draw={ draw } />
 	)
 }

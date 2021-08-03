@@ -26,7 +26,7 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 					setControlPanelState={ setControlPanelState } 
 					updateTokens={ updateTokens } 
 					className={ goneClass } />
-				<Drawing gameState={ gameState } />
+				<Drawing gameState={ gameState } setGameState={ setGameState } />
 				{ gameState.state.tokens ? 
 					<div id='tokens'>
 						{ gameState.state.tokens.map((token, $i) => (
