@@ -505,8 +505,7 @@ const Game = () => {
 	}
 
 	const onMouseMove = (e) => {
-		const overlay = gameState.overlayRef.current
-		console.log('overlay',overlay)
+		const overlay = gameState.overlayRef
 		if (!overlay)
 			return
 		if (overlay.canvasRef && overlay.canvasRef.current)
