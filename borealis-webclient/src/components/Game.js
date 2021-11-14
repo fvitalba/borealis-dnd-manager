@@ -4,15 +4,14 @@ import GameView from '../views/GameView.js'
 import guid from '../controllers/guid.js'
 import GameSocket from './GameSocket.js'
 
-const initialGameState = () => {
+const initialGameState = (overlayRef) => {
 	const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
 
 	return {
 		websocket: null,
 		isHost: params.get('host'),
 		room: params.get('room'),
-		overlayRef: React.createRef(),
-		tokens: React.createRef(),
+		overlayRef: overlayRef,
 		state: {
 			maps: [],
 			tokens: [],
@@ -54,8 +53,8 @@ const initialControlPanelState = () => {
 }
 
 const Game = () => {
-	const [gameState, setGameState] = useState(initialGameState)
-	console.log('gameState', gameState)
+	const overlayRef = React.useRef()
+	const [gameState, setGameState] = useState(initialGameState(overlayRef))
 	const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
 	const websocket = gameState.websocket ? gameState.websocket : new GameSocket(gameState)
 	
@@ -102,9 +101,10 @@ const Game = () => {
 	 * Map Functions                                    *
 	 ****************************************************/
 	const getMap = () => {
-		const maps = JSON.parse(JSON.stringify(gameState.state.maps || []))
-		const map = maps[gameState.state.mapId] || undefined
-		return map || Object.values(maps)[0]
+		if (gameState.state.maps.length === 0)
+			return undefined
+		const map = gameState.state.maps.filter(map => map.$id === gameState.state.mapId)
+		return map.length > 0 ? map[0] : gameState.state.maps[0]
 	}
 
 	const dumpCanvas = (which) => {
@@ -133,7 +133,7 @@ const Game = () => {
 					.keys(gameState.state.maps)
 					.find(key => gameState.state.maps[key] === gameState.map)
 		
-		const mapsCopy = JSON.parse(JSON.stringify(gameState.state.maps || []))
+		const mapsCopy = gameState.state.maps
 		/*
 		//TODO: generate dumping functions
 		const map = mapsCopy[mapId]
@@ -283,7 +283,7 @@ const Game = () => {
 
 	const updateMap = (callback) => {
 		return new Promise(resolve => {
-			const mapsCopy = JSON.parse(JSON.stringify(gameState.state.maps || []))
+			const mapsCopy = gameState.state.maps
 			callback(mapsCopy[gameState.state.mapId])
 			//TODO: Verify if ,resolve is really needed or working
 			setGameState({
@@ -341,9 +341,131 @@ const Game = () => {
 		}, false, { lastX: e.pageX, lastY: e.pageY, })
 	}
 
+	/****************************************************
+	 * Drawing Functions                                *
+	 ****************************************************/
+	const getFogContext = () => {
+		const map = getMap()
+		if (!map)
+			return undefined
+		if (!map.fogRef)
+			return undefined
+		if (!map.fogRef.current)
+			return undefined
+		return map.fogRef.current.getContext('2d')
+	}
+
+	const getDrawingContext = () => {
+		const map = getMap()
+		if (!map)
+			return undefined
+		if (!map.drawingRef)
+			return undefined
+		if (!map.drawingRef.current)
+			return undefined
+		return map.drawingRef.current.getContext('2d')
+	}
+
+	 const drawFog = () => {
+		const map = getMap()
+		const ctx = getFogContext()
+		if (!ctx)
+			return
+		ctx.globalCompositeOperation = 'destination-over'
+		ctx.fillStyle = 'black'
+		ctx.fillRect(0, 0, map.width, map.height)
+		updateMap(map => map.$fogChangedAt = new Date())
+	}
+
 	const resetFog = () => {
-		//TODO: How do I update the game's State?
-		//game.fogRef.current.fill()
+		drawFog()
+	}
+
+	const fogErase = (x, y, r, r2, noEmit) => {
+		const ctx = getFogContext()
+		if (!ctx)
+			return
+		if (!r)
+			r = gameState.state.fogRadius
+		ctx.globalCompositeOperation = 'destination-out'
+		let gradient = ctx.createRadialGradient(x, y, r2||1, x, y, r*0.75)
+		gradient.addColorStop(0, 'rgba(0,0,0,255)')
+		gradient.addColorStop(1, 'rgba(0,0,0,0)')
+		ctx.fillStyle = gradient
+		ctx.fillRect(x-r, y-r, x+r, y+r)
+		ctx.globalCompositeOperation = 'destination-over'
+		updateMap(map => map.$fogChangedAt = new Date())
+		if (!noEmit)
+			websocket.pushFogErase(x, y, r, r2)
+	}
+
+	const draw = (x, y, opts, noEmit) => {
+		const ctx = getDrawingContext()
+		if (!ctx)
+			return
+		opts = Object.assign({
+			x: x,
+			y: y,
+			color: gameState.state.drawColor,
+			size: gameState.state.drawSize,
+			x0: gameState.state.lastX || x,
+			y0: gameState.state.lastY || y,
+		}, opts)
+		ctx.beginPath()
+		ctx.moveTo(opts.x0, opts.y0)
+		ctx.lineTo(x, y)
+		ctx.strokeStyle = opts.color
+		ctx.lineWidth = opts.size
+		ctx.stroke()
+		if (!noEmit) {
+			setGameState({
+				...gameState,
+				state: {
+					...gameState.state,
+					lastX: x,
+					lastY: y,
+				}
+			})
+			websocket.pushDraw(opts)
+		}
+	}
+
+	const erase = (x, y, r, noEmit) => {
+		const ctx = getDrawingContext()
+		if (!ctx)
+			return
+		const radius = r || gameState.state.drawSize
+		ctx.clearRect(x-radius, y-radius, radius*2, radius*2)
+		if (!noEmit)
+			websocket.pushErase(x, y, radius)
+	}
+
+	const drawOrErase = (x, y) => {
+		const isEraser = gameState.state.subtool === 'ereaser'
+		if (isEraser)
+			erase(x, y)
+		else
+			draw(x, y)
+		updateMap(map => map.$drawChangedAt = new Date())
+	}
+
+	const setPointerOutline = (x, y, color, radius) => {
+		if (color == null)
+			return
+		const ctx = gameState.overlayRef.current.getContext('2d')
+		ctx.strokeStyle = color
+		ctx.lineWidth = '3'
+		ctx.beginPath()
+		ctx.arc(x, y, radius, 0, 2*Math.PI)
+		ctx.stroke()
+		ctx.closePath()
+	}
+
+	const clearOverlay = () => {
+		const ctx = gameState.overlayRef.current.getContext('2d')
+		if (!ctx)
+			return
+		ctx.clearRect(0, 0, gameState.state.width, gameState.state.height);
 	}
 
 	/****************************************************
@@ -469,12 +591,16 @@ const Game = () => {
 			token.$y0 = token.y
 			return token
 		}, true, { lastX: undefined, lastY: undefined, })
-		//TODO: Verify where we have to update this state
-		/*
-		this.overlayRef.current.setState({
-			lastX: undefined, lastY: undefined,
+		setGameState({
+			...gameState,
+			state: {
+				...gameState.state,
+				lastX: undefined,
+				lastY: undefined,
+				downX: e.pageX,
+				downY: e.pageY,
+			}
 		})
-		*/
 	}
 
 	const onMouseDown = (e) => {
@@ -500,23 +626,6 @@ const Game = () => {
 		}
 	}
 
-	const setPointerOutline = (x, y, color, radius) => {
-		if (color == null)
-			return
-		const ctx = gameState.overlayRef.current.getContext('2d')
-		ctx.strokeStyle = color
-		ctx.lineWidth = '3'
-		ctx.beginPath()
-		ctx.arc(x, y, radius, 0, 2*Math.PI)
-		ctx.stroke()
-		ctx.closePath()
-	}
-
-	const clearOverlay = () => {
-		const ctx = gameState.overlayRef.current.getContext('2d')
-		ctx.clearRect(0, 0, gameState.state.width, gameState.state.height);
-	}
-
 	const onMouseMove = (e) => {
 		const overlay = gameState.overlayRef
 		if (!overlay)
@@ -526,12 +635,12 @@ const Game = () => {
 		switch (gameState.isHost ? gameState.state.tool : 'move') {
 			case 'fog':
 				if (e.buttons & 1)
-					overlay.fogErase(x, y)
+					fogErase(x, y)
 				setPointerOutline(x, y, 'yellow', gameState.state.fogRadius)
 				break
 			case 'draw':
 				if (e.buttons & 1)
-					overlay.drawOrErase(x, y)
+					drawOrErase(x, y)
 				setPointerOutline(x, y, gameState.state.drawColor, gameState.state.drawSize)
 				break
 			case 'move':
@@ -610,6 +719,7 @@ const Game = () => {
 	}
 
 	const loadFromLocalStorage = () => {
+		//TODO: Verify how come this does not work anymore
 		console.log('Loading game from local storage')
 		return fromJson(localStorage.getItem(gameState.room))
 	}
@@ -644,7 +754,6 @@ const Game = () => {
 				selectGameToken={ selectToken } 
 				updateMap={ updateMap } 
 				resetFog={ resetFog } 
-				overlayRef={ gameState.overlayRef }
 			/>
 		)
 	} catch (ex) {

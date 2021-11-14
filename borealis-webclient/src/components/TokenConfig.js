@@ -56,7 +56,7 @@ const TokenConfig = ({ gameState, setGameState, token, updateGameToken, selectGa
 		selectGameToken(token, undefined, true)
 	}
 
-	const maps = JSON.parse(JSON.stringify(gameState.state.maps || []))
+	const maps = gameState.state.maps
 
 	return (
 		<div>

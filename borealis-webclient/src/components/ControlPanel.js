@@ -40,7 +40,7 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 	}
 
 	const createMap = () => {
-		const maps = JSON.parse(JSON.stringify(gameState.state.maps || []))
+		const maps = gameState.state.maps
 		const mapId = maps.length
 		const newMap = {
 			name: controlPanelState.newMapName,
@@ -64,6 +64,7 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 			state: {
 				...gameState.state,
 				maps: newMaps,
+				mapId: gameState.state.mapId ? gameState.state.mapId : mapId
 			}
 		})
 		setControlPanelState({

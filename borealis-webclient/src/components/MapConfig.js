@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import MapConfigView from '../views/MapConfigView.js'
 
 const initialMapConfigState = (gameState, map) => {
-	const maps = JSON.parse(JSON.stringify(gameState.state.maps || []))
+	const maps = gameState.state.maps
 	const existingMap = maps.filter((mapElement) => mapElement.$id === map.$id)
 	const currentMap = existingMap ? existingMap : { name: undefined, url: undefined, w: undefined, h: undefined, }
 
@@ -37,9 +37,10 @@ const MapConfig = ({ gameState, setGameState, map, mapId, loadMap }) => {
 	}
 
 	const load = () => {
-		let maps = JSON.parse(JSON.stringify(gameState.state.maps))
+		let maps = gameState.state.maps
 		if (!maps)
 			return
+		//TODO: fix and keep old references!
 		const newMap = {
 			$id: mapConfigState.$id,
 			name: mapConfigState.name,
@@ -68,7 +69,7 @@ const MapConfig = ({ gameState, setGameState, map, mapId, loadMap }) => {
 
 	const deleteMap = () => {
 		if (window.confirm('Delete map?')) {
-			const maps = JSON.parse(JSON.stringify(gameState.state.maps))
+			const maps = gameState.state.maps
 			const newMaps = maps.filter((map) => map.$id !== mapId)
 			setGameState({
 				...gameState,

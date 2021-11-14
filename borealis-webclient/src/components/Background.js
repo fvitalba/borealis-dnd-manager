@@ -4,7 +4,7 @@ import Canvas from './Canvas.js'
 
 const Background = ({ gameState, setGameState, controlPanelState, setControlPanelState, updateTokens, updateMap }) => {
 	const map = gameState.state.maps ? gameState.state.maps[gameState.state.mapId] : undefined
-	
+
 	//TODO: Verify that this is actually needed
 	/*
 	const resizeCanvases = (w, h) => {

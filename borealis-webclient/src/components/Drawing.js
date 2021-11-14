@@ -1,8 +1,13 @@
 import React from 'react'
 import drawImage from '../controllers/drawImage.js'
-import Canvas from './Canvas.js'
 
-const Drawing = ({ gameState, setGameState }) => {
+const Drawing = ({ gameState, canvasRef }) => {
+	const map = gameState.state.maps ? gameState.state.maps[gameState.state.mapId] : undefined
+	const width = map ? map.width : gameState.state.width
+	const height = map ? map.height : gameState.state.height
+
+	/*
+	//TODO: The following function contains the LOAD function, not the DRAW function
 	const draw = (ctx) => {
 		const map = gameState.state.maps ? gameState.state.maps[gameState.state.mapId] : undefined
 		if (!map || !map.drawUrl) {
@@ -10,21 +15,16 @@ const Drawing = ({ gameState, setGameState }) => {
 		}
 		drawImage(map.drawUrl, 'drawing', undefined, ctx, undefined, undefined)
 	}
+	*/
 
-	return (
-		<Canvas 
-			id='drawing' 
+	return map ? (
+		<canvas 
+			id={ map ? `drawing_${map.$id}` : 'drawing' } 
+			ref={ canvasRef } 
 			className='passthrough' 
-			{
-			//TODO: Verify if we need the width & height parameters
-			/*
-			width={ gameState.state.width } 
-			height={ gameState.state.height } 
-			*/
-				...null
-			}
-			draw={ draw } />
-	)
+			width={ width } 
+			height={ height } />
+	) : null
 }
 
 export default Drawing

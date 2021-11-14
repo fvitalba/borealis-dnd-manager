@@ -6,11 +6,12 @@ import Token from '../components/Token.js'
 import Cursor from './Cursor.js'
 import ControlPanel from '../components/ControlPanel.js'
 
-const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, onMouseMove, onMouseUp, onMouseDown, fromJson, notify, token, initAsDev, loadMap, updateTokens, updateGameToken, selectGameToken, updateMap, resetFog, overlayRef }) => {
+const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, onMouseMove, onMouseUp, onMouseDown, fromJson, notify, initAsDev, loadMap, updateTokens, updateGameToken, selectGameToken, updateMap, resetFog }) => {
 	const goneClass = gameState.state.isFogLoaded ? null : 'gone'
 	const deadline = new Date() - 30000
 	const cursors = Object.assign({}, gameState.state.cursors)
 	const tokens = gameState.state.tokens.map(t => t)
+	const map = gameState.state.maps ? gameState.state.maps[gameState.state.mapId] : undefined
 
 	for (let name in cursors) {
 		let time = cursors[name].time
@@ -28,7 +29,10 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 					setControlPanelState={ setControlPanelState } 
 					updateTokens={ updateTokens } 
 					className={ goneClass } />
-				<Drawing gameState={ gameState } setGameState={ setGameState } />
+				{ map ?
+					<Drawing gameState={ gameState } canvasRef={ map ? map.drawingRef : undefined } />
+					: null
+				}
 				{ tokens ? 
 					<div id='tokens'>
 						{ tokens.map((token, $i) => (
@@ -37,7 +41,10 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 					</div>
 					: null
 				}
-				<Fog gameState={ gameState } setGameState={ setGameState } />
+				{ map ?
+					<Fog gameState={ gameState } canvasRef={ map ? map.fogRef : undefined } />
+					: null
+				}
 				{ cursors ?
 					<div id='cursors'>
 						{ Object.keys(cursors).map((key, $i) => (
@@ -47,11 +54,7 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 					: null
 				}
 				{/* Overlay: Holds outline for fog & draw tools */ }
-				<Overlay 
-					gameState={ gameState } 
-					canvasRef={ overlayRef }
-					updateMap={ updateMap } 
-					websocket={ websocket } /> 
+				<Overlay gameState={ gameState } /> 
 			</div>
 			<ControlPanel 
 				gameState={ gameState } 

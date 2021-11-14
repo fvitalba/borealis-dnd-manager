@@ -38,7 +38,7 @@ const Token = ({ gameState, token, selectGameToken }) => {
 	}
 	
 	//TODO: Verify if we can use a triple equal
-	if ([undefined, null].indexOf(token.mapId) >= 0 || mapId == token.mapId) /* eslint-disable-line eqeqeq */
+	if ([undefined, null].indexOf(token.mapId) >= 0 || mapId === token.mapId) /* eslint-disable-line eqeqeq */
 		showToken = true
 
 	return (
