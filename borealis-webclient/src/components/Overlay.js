@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import Canvas from './Canvas';
+import React from 'react';
 
 /****************************************************
  * Overlay Component                                *
@@ -7,16 +6,7 @@ import Canvas from './Canvas';
  * This Component contains the users drawings, the  *
  * fog and also the cursor identifiers              *
  ****************************************************/
-
-const initialOverlayState = () => {
-	return ({
-		lastX: 0,
-		lastY: 0,
-	})
-}
-
 const Overlay = ({ gameState, canvasRef, updateMap, websocket }) => {
-	const [overlayState, setOverlayState] = useState(initialOverlayState)
 	const maps = JSON.parse(JSON.stringify(gameState.state.maps || []))
 	const map = maps[gameState.state.mapId] || undefined
 

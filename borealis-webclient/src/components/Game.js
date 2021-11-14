@@ -11,10 +11,6 @@ const initialGameState = () => {
 		websocket: null,
 		isHost: params.get('host'),
 		room: params.get('room'),
-		controlPanelRef: React.createRef(),
-		backgroundRef: React.createRef(),
-		fogRef: React.createRef(),
-		drawingRef: React.createRef(),
 		overlayRef: React.createRef(),
 		tokens: React.createRef(),
 		state: {

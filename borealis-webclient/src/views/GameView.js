@@ -37,11 +37,7 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 					</div>
 					: null
 				}
-				<Fog 
-					gameState={ gameState } 
-					width={ undefined } 
-					height={ undefined } 
-					updateMap={ updateMap } />
+				<Fog gameState={ gameState } setGameState={ setGameState } />
 				{ cursors ?
 					<div id='cursors'>
 						{ Object.keys(cursors).map((key, $i) => (

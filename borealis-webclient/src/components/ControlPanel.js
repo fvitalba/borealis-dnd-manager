@@ -50,6 +50,8 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 			height: window.innerHeight,
 			x: 0,
 			y: 0,
+			fogRef: React.createRef(),
+			drawingRef: React.createRef(),
 			fogUrl: undefined,
 			$fogDumpedAt: undefined,
 			drawUrl: undefined,

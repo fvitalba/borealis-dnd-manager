@@ -1,9 +1,11 @@
 import React from 'react'
 import drawImage from '../controllers/drawImage.js'
 
-const Fog = ({ gameState, ref, width, height, updateMap }) => {
+const Fog = ({ gameState, ref, updateMap }) => {
 	//TODO: Verify if component is correct past refactoring
 	const fogOpacity = gameState.isHost ? gameState.state.fogOpacity : 1
+	const width = gameState.state.width
+	const height = gameState.state.height
 
 	const fill = () => {
 		const ctx = ref.current.getContext('2d')
