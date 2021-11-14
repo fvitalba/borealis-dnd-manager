@@ -1,7 +1,7 @@
 import Button from './Button.js'
 import ToggleButton from '../components/ToggleButton.js'
 import ToolSelectView from './ToolSelectView.js'
-import ToolControlsView from './ToolControlsView.js'
+import ToolControls from '../components/ToolControls.js'
 import MapToolView from './MapToolView.js'
 import TokenToolView from './TokenToolView.js'
 import UserToolView from './UserToolView.js'
@@ -32,7 +32,7 @@ const ControlPanelView = ({ gameState, setGameState, controlPanelState, setContr
 					gameState={ gameState } 
 					setGameState={ setGameState } />
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<ToolControlsView 
+				<ToolControls 
 					gameState={ gameState } 
 					setGameState={ setGameState } 
 					resetFog={ resetFog } />

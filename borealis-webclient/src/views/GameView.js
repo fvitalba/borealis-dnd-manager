@@ -10,6 +10,8 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 	const goneClass = gameState.state.isFogLoaded ? null : 'gone'
 	const deadline = new Date() - 30000
 	const cursors = Object.assign({}, gameState.state.cursors)
+	const tokens = gameState.state.tokens.map(t => t)
+
 	for (let name in cursors) {
 		let time = cursors[name].time
 		if (!time || time < deadline)
@@ -27,9 +29,9 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 					updateTokens={ updateTokens } 
 					className={ goneClass } />
 				<Drawing gameState={ gameState } setGameState={ setGameState } />
-				{ gameState.state.tokens ? 
+				{ tokens ? 
 					<div id='tokens'>
-						{ gameState.state.tokens.map((token, $i) => (
+						{ tokens.map((token, $i) => (
 							<Token key={ `Token${$i}` } token={ token } gameState={ gameState } selectGameToken={ selectGameToken } />
 						)) }
 					</div>
