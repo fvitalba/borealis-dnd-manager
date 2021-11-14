@@ -89,18 +89,6 @@ const Overlay = ({ gameState, canvasRef, updateMap, websocket }) => {
 		updateMap(map => map.$drawChangedAt = new Date())
 	}
 
-	const setPointerOutline = (x, y, color, radius) => {
-		if (color == null)
-			return
-		const ctx = canvasRef.current.getContext('2d')
-		ctx.strokeStyle = color
-		ctx.lineWidth = '3'
-		ctx.beginPath()
-		ctx.arc(x, y, radius, 0, 2*Math.PI)
-		ctx.stroke()
-		ctx.closePath()
-	}
-
 	let canvasClass
     switch (gameState.state.tool) {
 		case 'fog':
@@ -112,7 +100,7 @@ const Overlay = ({ gameState, canvasRef, updateMap, websocket }) => {
     }
 
 	return (
-		<Canvas 
+		<canvas 
 			id='overlay' 
 			ref={ canvasRef }
 			className={ canvasClass } 

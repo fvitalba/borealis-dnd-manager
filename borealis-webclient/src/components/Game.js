@@ -504,23 +504,39 @@ const Game = () => {
 		}
 	}
 
+	const setPointerOutline = (x, y, color, radius) => {
+		if (color == null)
+			return
+		const ctx = gameState.overlayRef.current.getContext('2d')
+		ctx.strokeStyle = color
+		ctx.lineWidth = '3'
+		ctx.beginPath()
+		ctx.arc(x, y, radius, 0, 2*Math.PI)
+		ctx.stroke()
+		ctx.closePath()
+	}
+
+	const clearOverlay = () => {
+		const ctx = gameState.overlayRef.current.getContext('2d')
+		ctx.clearRect(0, 0, gameState.state.width, gameState.state.height);
+	}
+
 	const onMouseMove = (e) => {
 		const overlay = gameState.overlayRef
 		if (!overlay)
 			return
-		if (overlay.canvasRef && overlay.canvasRef.current)
-			overlay.clear()
+		clearOverlay()
 		let x = e.pageX, y = e.pageY
 		switch (gameState.isHost ? gameState.state.tool : 'move') {
 			case 'fog':
 				if (e.buttons & 1)
 					overlay.fogErase(x, y)
-				overlay.setPointerOutline(x, y, 'yellow', gameState.state.fogRadius)
+				setPointerOutline(x, y, 'yellow', gameState.state.fogRadius)
 				break
 			case 'draw':
 				if (e.buttons & 1)
 					overlay.drawOrErase(x, y)
-				overlay.setPointerOutline(x, y, gameState.state.drawColor, gameState.state.drawSize)
+				setPointerOutline(x, y, gameState.state.drawColor, gameState.state.drawSize)
 				break
 			case 'move':
 				if (e.buttons & 1)
