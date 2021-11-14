@@ -10,8 +10,8 @@ const initialMapConfigState = (gameState, map) => {
 		$id: map.$id,
 		name: currentMap.name ? currentMap.name : map.name,
 		imageUrl: currentMap.url ? currentMap.url : '',
-		width: currentMap.w ? currentMap.w : window.innerWidth,
-		height: currentMap.h ? currentMap.h : window.innerHeight,
+		width: currentMap.width ? currentMap.width : window.innerWidth,
+		height: currentMap.height ? currentMap.height : window.innerHeight,
 		x: 0,
 		y: 0,	
 	}
@@ -44,8 +44,8 @@ const MapConfig = ({ gameState, setGameState, map, mapId, loadMap }) => {
 			$id: mapConfigState.$id,
 			name: mapConfigState.name,
 			url: mapConfigState.imageUrl,
-			w: mapConfigState.width,
-			h: mapConfigState.height,
+			width: mapConfigState.width,
+			height: mapConfigState.height,
 			x: mapConfigState.x,
 			y: mapConfigState.y,
 		}

@@ -4,7 +4,7 @@ const drawImage = (url, which, map, context, resizeCanvases, updateMap) => {
 		if (resizeCanvases) {
 			resizeCanvases()
 		} // Clear canvas
-		return Promise.resolve(map.w, map.h)
+		return Promise.resolve(map.width, map.height)
 	}
 
 	//Handle ordinary image
@@ -12,8 +12,8 @@ const drawImage = (url, which, map, context, resizeCanvases, updateMap) => {
 		const ctx = context
 		const img = new Image()
 		img.onload = () => {
-			let w = map.w
-			let h = map.h
+			let w = map.width
+			let h = map.height
 			if (!w && !h) {
 				w = img.width
 				h = img.height
@@ -50,8 +50,8 @@ const drawImageNew = (url, which, context, gameState, setGameState, updateMap) =
 	//Handle ordinary image
 	const img = new Image()
 	img.onload = () => {
-		let w = map.w
-		let h = map.h
+		let w = map.width
+		let h = map.height
 		if (!w && !h) {
 			w = img.width
 			h = img.height

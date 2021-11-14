@@ -59,6 +59,7 @@ const initialControlPanelState = () => {
 
 const Game = () => {
 	const [gameState, setGameState] = useState(initialGameState)
+	console.log('gameState', gameState)
 	const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
 	const websocket = gameState.websocket ? gameState.websocket : new GameSocket(gameState)
 	
@@ -211,8 +212,8 @@ const Game = () => {
 			name: 'kiwi',
 			url: '/dev/kiwi.jpeg',
 			$id: 1,
-			w: 500,
-			h: 500,
+			width: 500,
+			height: 500,
 		}
 		return new Promise(resolve => {
 			setGameState({
@@ -504,28 +505,23 @@ const Game = () => {
 	}
 
 	const onMouseMove = (e) => {
-		/*
 		const overlay = gameState.overlayRef.current
+		console.log('overlay',overlay)
 		if (!overlay)
 			return
 		if (overlay.canvasRef && overlay.canvasRef.current)
 			overlay.clear()
-		*/
 		let x = e.pageX, y = e.pageY
 		switch (gameState.isHost ? gameState.state.tool : 'move') {
 			case 'fog':
-				/*
 				if (e.buttons & 1)
 					overlay.fogErase(x, y)
 				overlay.setPointerOutline(x, y, 'yellow', gameState.state.fogRadius)
-				*/
 				break
 			case 'draw':
-				/*
 				if (e.buttons & 1)
 					overlay.drawOrErase(x, y)
 				overlay.setPointerOutline(x, y, gameState.state.drawColor, gameState.state.drawSize)
-				*/
 				break
 			case 'move':
 				if (e.buttons & 1)
@@ -636,7 +632,8 @@ const Game = () => {
 				updateGameToken={ updateToken } 
 				selectGameToken={ selectToken } 
 				updateMap={ updateMap } 
-				resetFog={ resetFog }
+				resetFog={ resetFog } 
+				overlayRef={ gameState.overlayRef }
 			/>
 		)
 	} catch (ex) {

@@ -6,7 +6,7 @@ import Token from '../components/Token.js'
 import Cursor from './Cursor.js'
 import ControlPanel from '../components/ControlPanel.js'
 
-const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, onMouseMove, onMouseUp, onMouseDown, fromJson, notify, token, initAsDev, loadMap, updateTokens, updateGameToken, selectGameToken, updateMap, resetFog }) => {
+const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, onMouseMove, onMouseUp, onMouseDown, fromJson, notify, token, initAsDev, loadMap, updateTokens, updateGameToken, selectGameToken, updateMap, resetFog, overlayRef }) => {
 	const goneClass = gameState.state.isFogLoaded ? null : 'gone'
 	const deadline = new Date() - 30000
 	const cursors = Object.assign({}, gameState.state.cursors)
@@ -50,9 +50,10 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 					</div>
 					: null
 				}
-				{/* Holds outline for fog & draw tools */}
+				{/* Overlay: Holds outline for fog & draw tools */ }
 				<Overlay 
 					gameState={ gameState } 
+					canvasRef={ overlayRef }
 					updateMap={ updateMap } 
 					websocket={ websocket } /> 
 			</div>

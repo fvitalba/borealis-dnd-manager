@@ -33,8 +33,8 @@ const Token = ({ gameState, token, selectGameToken }) => {
 		top: token.y || 0,
 	}
 	const imgStyle = {
-		width: token.w || undefined,
-		height: token.h || undefined,
+		width: token.width || undefined,
+		height: token.height || undefined,
 	}
 	
 	//TODO: Verify if we can use a triple equal

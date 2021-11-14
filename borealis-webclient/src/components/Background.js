@@ -10,9 +10,9 @@ const Background = ({ gameState, setGameState, controlPanelState, setControlPane
 	const resizeCanvases = (w, h) => {
 		return new Promise((resolve, reject) => {
 			if (!w)
-				w = (map && map.w) || window.innerWidth
+				w = (map && map.width) || window.innerWidth
 			if (!h)
-				h = (map && map.h) || window.innerHeight
+				h = (map && map.height) || window.innerHeight
 			let canvases = document.querySelectorAll('canvas')
 			const noChangeNeeded = Array.from(canvases).reduce((prev, canv) => (
 				prev && canv.width === w && canv.height === h
@@ -53,8 +53,8 @@ const Background = ({ gameState, setGameState, controlPanelState, setControlPane
 		<Canvas 
 			id='background' 
 			onClick={ handleOnClick } 
-			width={ map ? map.w : 0 } 
-			height={ map ? map.h : 0 } 
+			width={ map ? map.width : 0 } 
+			height={ map ? map.height : 0 } 
 			draw={ draw } />
 	)
 }

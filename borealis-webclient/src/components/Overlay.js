@@ -1,4 +1,12 @@
 import React, { useState } from 'react';
+import Canvas from './Canvas';
+
+/****************************************************
+ * Overlay Component                                *
+ *                                                  *
+ * This Component contains the users drawings, the  *
+ * fog and also the cursor identifiers              *
+ ****************************************************/
 
 const initialOverlayState = () => {
 	return ({
@@ -9,6 +17,8 @@ const initialOverlayState = () => {
 
 const Overlay = ({ gameState, canvasRef, updateMap, websocket }) => {
 	const [overlayState, setOverlayState] = useState(initialOverlayState)
+	const maps = JSON.parse(JSON.stringify(gameState.state.maps || []))
+	const map = maps[gameState.state.mapId] || undefined
 
 	const drawingControl = () => {
 		return gameState.drawingRef.current.getContext('2d')
@@ -34,6 +44,7 @@ const Overlay = ({ gameState, canvasRef, updateMap, websocket }) => {
 	}
 
 	const draw = (x, y, opts, noEmit) => {
+		/*
 		const ctx = drawingControl
 		opts = Object.assign({
 			x: x,
@@ -56,6 +67,7 @@ const Overlay = ({ gameState, canvasRef, updateMap, websocket }) => {
 			})
 			websocket.pushDraw(opts)
 		}
+		*/
 	}
 
 	const erase = (x, y, r, noEmit) => {
@@ -100,7 +112,13 @@ const Overlay = ({ gameState, canvasRef, updateMap, websocket }) => {
     }
 
 	return (
-		<canvas id='overlay' ref={ canvasRef } className={ canvasClass } width={ gameState.state.width } height={ gameState.state.height } />
+		<Canvas 
+			id='overlay' 
+			ref={ canvasRef }
+			className={ canvasClass } 
+			width={ map ? map.width : 0 } 
+			height={ map ? map.height : 0 } 
+			draw={ draw } />
 	)
 }
 
