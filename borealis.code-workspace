@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "socket-app"
+		},
+		{
+			"path": "borealis-webclient"
 		}
 	],
 	"settings": {}
