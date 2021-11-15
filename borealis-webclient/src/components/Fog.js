@@ -24,7 +24,7 @@ const Fog = ({ gameState, canvasRef }) => {
 
 	return map ? (
 		<canvas 
-			id={ map ? `fog_${map.$id}` : 'fog' } 
+			id='fog' 
 			ref={ canvasRef } 
 			className='passthrough' 
 			style={{ opacity: fogOpacity }} 

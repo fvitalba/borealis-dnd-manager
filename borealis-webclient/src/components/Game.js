@@ -28,6 +28,8 @@ const initialGameState = (overlayRef) => {
 			subtool: undefined,
 			username: params.get('host') ? 'DM' : 'PC',
 			'toggleOnShare mouse (cursor)': true,
+			lastX: undefined,
+			lastY: undefined,
 			downX: undefined,
 			downY: undefined,
 			mapId: undefined,
@@ -334,11 +336,16 @@ const Game = () => {
 		const downX = gameState.state.downX, downY = gameState.state.downY
 		updateTokens((token) => {
 			if (token.$selected) {
+				console.log('### DRAGGING ###')
+				console.log('downX',downX,'downY',downY)
+				console.log('token.x',token.x,'token.y',token.y)
+				console.log('e.pageX',e.pageX,'e.pageY',e.pageY)
 				token.x = token.$x0 + e.pageX - downX
 				token.y = token.$y0 + e.pageY - downY
 			}
 			return token
-		}, false, { lastX: e.pageX, lastY: e.pageY, })
+		}, false, /* { lastX: e.pageX, lastY: e.pageY, }*/ undefined)
+		console.log('tokens',gameState.state.tokens)
 	}
 
 	/****************************************************
@@ -403,6 +410,8 @@ const Game = () => {
 		const ctx = getDrawingContext()
 		if (!ctx)
 			return
+		console.log('current x',x,'current y',y)
+		console.log('gameState x',gameState.state.lastX,'gameState y',gameState.state.lastY)
 		opts = Object.assign({
 			x: x,
 			y: y,
@@ -417,15 +426,7 @@ const Game = () => {
 		ctx.strokeStyle = opts.color
 		ctx.lineWidth = opts.size
 		ctx.stroke()
-		if (!noEmit) {
-			setGameState({
-				...gameState,
-				state: {
-					...gameState.state,
-					lastX: x,
-					lastY: y,
-				}
-			})
+		if (!noEmit) {			
 			websocket.pushDraw(opts)
 		}
 	}
@@ -441,6 +442,8 @@ const Game = () => {
 	}
 
 	const drawOrErase = (x, y) => {
+		if (gameState.state.maps.length === 0)
+			return
 		const isEraser = gameState.state.subtool === 'ereaser'
 		if (isEraser)
 			erase(x, y)
@@ -483,7 +486,6 @@ const Game = () => {
 				return e
 		
 		const moveFactor = e.shiftKey ? 100 : 10
-		console.info('onKeyDown triggered')
 		const moveSelectedTokens = () => {
 			updateTokens(token => {
 				if (token.$selected) {
@@ -590,15 +592,15 @@ const Game = () => {
 			token.$x0 = token.x
 			token.$y0 = token.y
 			return token
-		}, true, { lastX: undefined, lastY: undefined, })
+		}, true, /*{ lastX: undefined, lastY: undefined, }*/ undefined)
 		setGameState({
 			...gameState,
 			state: {
 				...gameState.state,
-				lastX: undefined,
-				lastY: undefined,
-				downX: e.pageX,
-				downY: e.pageY,
+				lastX: e.pageX,
+				lastY: e.pageY,
+				downX: undefined,
+				downY: undefined,
 			}
 		})
 	}
@@ -611,14 +613,13 @@ const Game = () => {
 
 		if (e.buttons & 1) {
 			if (!/(\s|^)token(\s|$)/.test(e.target.getAttribute('class')))
-				//TOOD: Update to map function
-				updateTokens(tok => {delete tok.$selected})
+				//TODO: Update to map function
+				//TODO: also put $x0 = x and $y0 = y
+				updateTokens(tok => { delete tok.$selected })
 			setGameState({
 				...gameState,
 				state: {
 					...gameState.state,
-					lastX: e.pageX,
-					lastY: e.pageY,
 					downX: e.pageX,
 					downY: e.pageY,
 				}
@@ -649,6 +650,14 @@ const Game = () => {
 				break
 			default: break
 		}
+		setGameState({
+			...gameState,
+			state: {
+				...gameState.state,
+				lastX: x,
+				lastY: y,
+			}
+		})
 	}
 
 	/****************************************************

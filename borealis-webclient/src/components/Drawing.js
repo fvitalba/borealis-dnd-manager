@@ -19,7 +19,7 @@ const Drawing = ({ gameState, canvasRef }) => {
 
 	return map ? (
 		<canvas 
-			id={ map ? `drawing_${map.$id}` : 'drawing' } 
+			id='drawing' 
 			ref={ canvasRef } 
 			className='passthrough' 
 			width={ width } 
