@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import Gamesocket from './GameSocket.js'
 import GameView from '../views/GameView.js'
 import guid from '../controllers/guid.js'
-import GameSocket from './GameSocket.js'
+import GameSocket from './Gamesocket'
 
 const initialGameState = (overlayRef) => {
 	const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
@@ -405,19 +404,13 @@ const Game = () => {
 		const ctx = getDrawingContext()
 		if (!ctx)
 			return
-		opts = Object.assign({
-			x: x,
-			y: y,
-			color: gameState.state.drawColor,
-			size: gameState.state.drawSize,
-			x0: gameState.state.lastX || x,
-			y0: gameState.state.lastY || y,
-		}, opts)
+		
 		ctx.beginPath()
-		ctx.moveTo(opts.x0, opts.y0)
-		ctx.lineTo(x, y)
-		ctx.strokeStyle = opts.color
-		ctx.lineWidth = opts.size
+		ctx.arc(x, y, gameState.state.drawSize, 0, 2 * Math.PI, false)
+		ctx.fillStyle = gameState.state.drawColor
+		ctx.fill()
+		ctx.lineWidth = 5
+		ctx.strokeStyle = gameState.state.drawColor
 		ctx.stroke()
 		if (!noEmit) {			
 			websocket.pushDraw(opts)
@@ -429,7 +422,12 @@ const Game = () => {
 		if (!ctx)
 			return
 		const radius = r || gameState.state.drawSize
-		ctx.clearRect(x-radius, y-radius, radius*2, radius*2)
+		ctx.save()
+		ctx.globalCompositeOperation = 'destination-out'
+		ctx.beginPath()
+		ctx.arc(x, y, radius, 0, Math.PI*2, true)
+		ctx.fill()
+		ctx.restore()
 		if (!noEmit)
 			websocket.pushErase(x, y, radius)
 	}
@@ -437,7 +435,7 @@ const Game = () => {
 	const drawOrErase = (x, y) => {
 		if (gameState.state.maps.length === 0)
 			return
-		const isEraser = gameState.state.subtool === 'ereaser'
+		const isEraser = gameState.state.subtool === 'eraser'
 		if (isEraser)
 			erase(x, y)
 		else
@@ -613,8 +611,8 @@ const Game = () => {
 				...gameState,
 				state: {
 					...gameState.state,
-					lastX: e.pageX,
-					lastY: e.pageY,
+					lastX: undefined,
+					lastY: undefined,
 					downX: e.pageX,
 					downY: e.pageY,
 				}
