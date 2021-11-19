@@ -3,7 +3,7 @@ import GameView from '../views/GameView.js'
 import guid from '../controllers/guid.js'
 import GameSocket from './Gamesocket'
 
-const initialGameState = (overlayRef) => {
+const initialGameState = (overlayRef, fogRef, drawingRef) => {
 	const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
 
 	return {
@@ -11,6 +11,8 @@ const initialGameState = (overlayRef) => {
 		isHost: params.get('host'),
 		room: params.get('room'),
 		overlayRef: overlayRef,
+		fogRef: fogRef,
+		drawingRef: drawingRef,
 		state: {
 			maps: [],
 			tokens: [],
@@ -54,7 +56,9 @@ const initialControlPanelState = () => {
 
 const Game = () => {
 	const overlayRef = React.useRef()
-	const [gameState, setGameState] = useState(initialGameState(overlayRef))
+	const fogRef = React.useRef()
+	const drawingRef = React.useRef()
+	const [gameState, setGameState] = useState(initialGameState(overlayRef, fogRef, drawingRef))
 	const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
 	const websocket = gameState.websocket ? gameState.websocket : new GameSocket(gameState)
 	
@@ -120,7 +124,7 @@ const Game = () => {
 		//if (gameState.isHost && changedAt && (!dumpedAt || dumpedAt < changedAt)) {
 		if (gameState.isHost) {
 			const at = new Date()
-			const url = map[`${which}Ref`].current.buildDataUrl()
+			const url = gameState[`${which}Ref`].current.buildDataUrl()
 			return [url, at]
 		}
 		else
@@ -359,25 +363,19 @@ const Game = () => {
 	 * Drawing Functions                                *
 	 ****************************************************/
 	const getFogContext = () => {
-		const map = getMap()
-		if (!map)
+		if (!gameState.fogRef)
 			return undefined
-		if (!map.fogRef)
+		if (!gameState.fogRef.current)
 			return undefined
-		if (!map.fogRef.current)
-			return undefined
-		return map.fogRef.current.getContext('2d')
+		return gameState.fogRef.current.getContext('2d')
 	}
 
 	const getDrawingContext = () => {
-		const map = getMap()
-		if (!map)
+		if (!gameState.drawingRef)
 			return undefined
-		if (!map.drawingRef)
+		if (!gameState.drawingRef.current)
 			return undefined
-		if (!map.drawingRef.current)
-			return undefined
-		return map.drawingRef.current.getContext('2d')
+		return gameState.drawingRef.current.getContext('2d')
 	}
 
 	 const drawFog = () => {
