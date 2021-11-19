@@ -112,19 +112,26 @@ const Game = () => {
 	}
 
 	const dumpCanvas = (which) => {
-		console.log('### dumpCanvas ###, which',which,' ###')
-		console.log('gamestate maps',gameState.state.maps)
 		const map = getMap()
-		console.log('map',map)
-		console.log('searching for',`$${which}ChangedAt`,`$${which}DumpedAt`)
 		const changedAt = map[`$${which}ChangedAt`]
 		const dumpedAt = map[`$${which}DumpedAt`]
 		
-		console.log('changedAt',changedAt,'dumpedAt',dumpedAt)
 		//if (gameState.isHost && changedAt && (!dumpedAt || dumpedAt < changedAt)) {
 		if (gameState.isHost) {
 			const at = new Date()
-			const url = gameState[`${which}Ref`].current.buildDataUrl()
+			console.log(`${which}Ref`,gameState[`${which}Ref`])
+			let url
+			switch(which) {
+				case 'fog':
+					url = getFogContext().getImageData(0, 0, gameState.state.width, gameState.state.height)
+					break
+				case 'draw':
+					url = getDrawingContext().getImageData(0, 0, gameState.state.width, gameState.state.height)
+					break
+				default:
+					url = undefined
+					break
+			}
 			return [url, at]
 		}
 		else
@@ -140,8 +147,6 @@ const Game = () => {
 			[newMap.fogUrl, newMap.$fogDumpedAt] = dumpCanvas('fog')
 			[newMap.drawUrl, newMap.$drawDumpedAt] = dumpCanvas('draw')
 			//notify('Data urls readied', undefined, 'dumpMaps')
-			console.log('data urls readied','dumpMaps')
-			console.log('fogUrl',newMap.fogUrl,'drawUrl',newMap.drawUrl)
 		}
 		const mapsCopy = gameState.state.maps.map(map => {
 			return map.$id === newMap.$id ? newMap : map
@@ -164,15 +169,11 @@ const Game = () => {
 	}
 
 	const loadMap = (map, skipSave, noEmit) => {
-		console.log('### LOADMAP ###')
-		console.log('loadmap, gamestate maps',gameState.state.maps)
 		if (!map)
 			map = getMap()
 		if (!map)
 			return Promise.reject('no map')
 		const note = notify(`loading map ${map.$id}...`, 6000, 'loadMap')
-		//if (undefined === map.$id)
-		//	map.$id = Object.keys(gameState.state.maps).find(key => gameState.state.maps[key] === getMap())
 		const needsSave = gameState.isHost && gameState.state.isFirstLoadDone && !skipSave
 		const savePromise = needsSave ? saveMap() : Promise.resolve()
 		if (!noEmit && gameState.isHost && websocket)
@@ -203,27 +204,30 @@ const Game = () => {
 			{ name: 'arr', pc: 1 },
 			{ name: 'win', pc: 1, url: '/dev/redhead.jpg', y: 50, x: 90, w: 64, h:64 },
 		]
-		let defaultMap = {
-			url: '/dev/FFtri9T.png',
-			spawnX: 40,
-			spawnY: 80,
-			$id: 2,
-		}
-		let kiwiMap = {
-			name: 'kiwi',
-			url: '/dev/kiwi.jpeg',
-			$id: 1,
-			width: 500,
-			height: 500,
-		}
+		let maps = [
+			{
+				name: 'kiwi',
+				url: '/dev/kiwi.jpeg',
+				$id: 0,
+				width: 500,
+				height: 500,
+			},
+			{
+				name: 'default',
+				url: '/dev/FFtri9T.png',
+				spawnX: 40,
+				spawnY: 80,
+				$id: 1,
+			}
+		]
 		return new Promise(resolve => {
 			setGameState({
 				...gameState,
 				state: {
 					...gameState.state,
-					maps: Object.fromEntries([defaultMap, kiwiMap].map(m => [m.$id, m])),
+					maps: maps,
 					tokens: tokens,
-					mapId: kiwiMap.$id,
+					mapId: 0,
 				},
 			})
 			resolve()
@@ -379,13 +383,12 @@ const Game = () => {
 	}
 
 	 const drawFog = () => {
-		const map = getMap()
 		const ctx = getFogContext()
 		if (!ctx)
 			return
 		ctx.globalCompositeOperation = 'destination-over'
 		ctx.fillStyle = 'black'
-		ctx.fillRect(0, 0, map.width, map.height)
+		ctx.fillRect(0, 0, gameState.state.width, gameState.state.height)
 	}
 
 	const resetFog = () => {
@@ -442,8 +445,6 @@ const Game = () => {
 	}
 
 	const drawOrErase = (x, y) => {
-		if (gameState.state.maps.length === 0)
-			return
 		const isEraser = gameState.state.subtool === 'eraser'
 		if (isEraser)
 			erase(x, y)
@@ -456,22 +457,14 @@ const Game = () => {
 		const fogCtx = getFogContext()
 		const drawCtx = getDrawingContext()
 
+		drawFog()
 		if (map.fogUrl) {
-			let fogImage = new Image()
-			fogImage.onload = () => fogCtx.drawImage(fogImage,0,0)
-			fogImage.src = map.fogUrl
-			console.log('fogImage',fogImage)
-		}	else {
-			fogCtx.clearRect(0, 0, map.width, map.height);
+			fogCtx.putImageData(map.fogUrl, 0, 0)
 		}
-		
+
+		drawCtx.clearRect(0, 0, gameState.state.width, gameState.state.height)
 		if (map.drawUrl) {
-			let drawImage = new Image()
-			drawImage.onload = () => drawCtx.drawImage(drawImage,0,0)
-			drawImage.src = map.fogUrl
-			console.log('drawImage',drawImage)
-		}	else {
-			fogCtx.clearRect(0, 0, map.width, map.height);
+			drawCtx.putImageData(map.drawUrl, 0, 0)
 		}
 	}
 
@@ -647,7 +640,6 @@ const Game = () => {
 				...gameState,
 				state: {
 					...gameState.state,
-					//maps: updatedMapCanvasChangedAt(gameState.state.tool),
 					lastX: undefined,
 					lastY: undefined,
 					downX: e.pageX,
