@@ -108,7 +108,7 @@ const Game = () => {
 	}
 
 	const dumpCanvas = (which) => {
-		console.log('### dumpCanvas')
+		console.log('### dumpCanvas ###, which',which,' ###')
 		console.log('gamestate maps',gameState.state.maps)
 		const map = getMap()
 		console.log('map',map)
@@ -117,7 +117,8 @@ const Game = () => {
 		const dumpedAt = map[`$${which}DumpedAt`]
 		
 		console.log('changedAt',changedAt,'dumpedAt',dumpedAt)
-		if (gameState.isHost && changedAt && (!dumpedAt || dumpedAt < changedAt)) {
+		//if (gameState.isHost && changedAt && (!dumpedAt || dumpedAt < changedAt)) {
+		if (gameState.isHost) {
 			const at = new Date()
 			const url = map[`${which}Ref`].current.buildDataUrl()
 			return [url, at]
@@ -159,6 +160,7 @@ const Game = () => {
 	}
 
 	const loadMap = (map, skipSave, noEmit) => {
+		console.log('### LOADMAP ###')
 		console.log('loadmap, gamestate maps',gameState.state.maps)
 		if (!map)
 			map = getMap()
@@ -297,8 +299,10 @@ const Game = () => {
 
 	const updatedMapCanvasChangedAt = (canvasName) => {
 		let newMap = getMap()
-		if (!newMap || canvasName === 'move')
+		if (!newMap)
 			return []
+		if (canvasName === 'move')
+			return gameState.state.maps
 		newMap[`$${canvasName}ChangedAt`] = new Date()
 		const mapsCopy = gameState.state.maps.map(map => {
 			return map.mapId === gameState.state.mapId ? newMap : map
@@ -450,18 +454,27 @@ const Game = () => {
 	}
 
 	const updateFogAndDraw = (map) => {
+		console.log('### UPDATE FOG AND DRAW ###')
 		const fogCtx = getFogContext()
 		const drawCtx = getDrawingContext()
 
-		let fogImage = new Image()
-		fogImage.onload = () => fogCtx.drawImage(fogImage,0,0)
-		fogImage.src = map.fogUrl
-
-		let drawImage = new Image()
-		drawImage.onload = () => drawCtx.drawImage(drawImage,0,0)
-		drawImage.src = map.fogUrl
-		console.log('fogImage',fogImage)
-		console.log('drawImage',drawImage)
+		if (map.fogUrl) {
+			let fogImage = new Image()
+			fogImage.onload = () => fogCtx.drawImage(fogImage,0,0)
+			fogImage.src = map.fogUrl
+			console.log('fogImage',fogImage)
+		}	else {
+			fogCtx.clearRect(0, 0, map.width, map.height);
+		}
+		
+		if (map.drawUrl) {
+			let drawImage = new Image()
+			drawImage.onload = () => drawCtx.drawImage(drawImage,0,0)
+			drawImage.src = map.fogUrl
+			console.log('drawImage',drawImage)
+		}	else {
+			fogCtx.clearRect(0, 0, map.width, map.height);
+		}
 	}
 
 	const setPointerOutline = (x, y, color, radius) => {
@@ -600,6 +613,7 @@ const Game = () => {
 	}
 
 	const onMouseUp = (e) => {
+		console.log('### mouse up ###')
 		const updatedTokens = gameState.state.tokens.map(token => {
 			token.$x0 = token.x
 			token.$y0 = token.y
@@ -617,10 +631,11 @@ const Game = () => {
 				downY: undefined,
 			}
 		})
-		console.log('new GameState',gameState)
+		console.log('new GameState maps',gameState.state.maps)
 	}
 
 	const onMouseDown = (e) => {
+		console.log('### mouse down ###')
 		for (let x of [document.activeElement, e.target])
 			//TODO: Check if we can use triple equal
 			if ((x.tagName == 'INPUT' && (x.type === 'text' || x.type === 'number')) || (x.tagName == 'BUTTON')) /* eslint-disable-line eqeqeq */
@@ -641,7 +656,7 @@ const Game = () => {
 					downY: e.pageY,
 				}
 			})
-			console.log('new GameState',gameState)
+			console.log('new GameState maps',gameState.state.maps)
 		}
 	}
 

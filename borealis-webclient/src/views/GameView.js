@@ -29,10 +29,7 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 					setControlPanelState={ setControlPanelState } 
 					updateTokens={ updateTokens } 
 					className={ goneClass } />
-				{ map ?
-					<Drawing gameState={ gameState } canvasRef={ map ? map.drawingRef : undefined } />
-					: null
-				}
+				<Drawing gameState={ gameState } canvasRef={ map ? map.drawingRef : undefined } />
 				{ tokens ? 
 					<div id='tokens'>
 						{ tokens.map((token, $i) => (
@@ -41,10 +38,7 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 					</div>
 					: null
 				}
-				{ map ?
-					<Fog gameState={ gameState } canvasRef={ map ? map.fogRef : undefined } />
-					: null
-				}
+				<Fog gameState={ gameState } canvasRef={ map ? map.fogRef : undefined } />
 				{ cursors ?
 					<div id='cursors'>
 						{ Object.keys(cursors).map((key, $i) => (
