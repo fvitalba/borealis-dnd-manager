@@ -53,8 +53,10 @@ const MapConfig = ({ gameState, setGameState, map, mapId, loadMap }) => {
 			drawingRef: React.createRef(),
 			fogUrl: undefined,
 			$fogDumpedAt: undefined,
+			$fogChangedAt: undefined,
 			drawUrl: undefined,
 			$drawDumpedAt: undefined,
+			$drawChangedAt: undefined,
 		}
 		const newMaps = maps.map(currMap => currMap.$id === newMap.$id ? newMap : currMap)
 		setGameState({

@@ -54,8 +54,10 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 			drawingRef: React.createRef(),
 			fogUrl: undefined,
 			$fogDumpedAt: undefined,
+			$fogChangedAt: undefined,
 			drawUrl: undefined,
 			$drawDumpedAt: undefined,
+			$drawChangedAt: undefined,
 		}
 		maps[mapId] = newMap
 		const newMaps = maps.filter(map => map)
