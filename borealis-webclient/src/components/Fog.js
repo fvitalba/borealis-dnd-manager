@@ -3,9 +3,8 @@ import drawImage from '../controllers/drawImage.js'
 
 const Fog = ({ gameState, canvasRef }) => {
 	const fogOpacity = gameState.isHost ? gameState.state.fogOpacity : 1
-	const map = gameState.state.maps ? gameState.state.maps[gameState.state.mapId] : undefined
-	const width = map ? map.width : gameState.state.width
-	const height = map ? map.height : gameState.state.height
+	const width = gameState.state.width
+	const height = gameState.state.height
 
 	/*
 	const load = () => {
@@ -22,7 +21,7 @@ const Fog = ({ gameState, canvasRef }) => {
 	}
 	*/
 
-	return map ? (
+	return (
 		<canvas 
 			id='fog' 
 			ref={ canvasRef } 
@@ -30,7 +29,7 @@ const Fog = ({ gameState, canvasRef }) => {
 			style={{ opacity: fogOpacity }} 
 			width={ width } 
 			height={ height } />
-	) : null
+	)
 }
 
 export default Fog

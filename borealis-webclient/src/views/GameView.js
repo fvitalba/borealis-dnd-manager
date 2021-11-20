@@ -11,7 +11,6 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 	const deadline = new Date() - 30000
 	const cursors = Object.assign({}, gameState.state.cursors)
 	const tokens = gameState.state.tokens.map(t => t)
-	const map = gameState.state.maps ? gameState.state.maps[gameState.state.mapId] : undefined
 
 	for (let name in cursors) {
 		let time = cursors[name].time

@@ -2,9 +2,8 @@ import React from 'react'
 import drawImage from '../controllers/drawImage.js'
 
 const Drawing = ({ gameState, canvasRef }) => {
-	const map = gameState.state.maps ? gameState.state.maps[gameState.state.mapId] : undefined
-	const width = map ? map.width : gameState.state.width
-	const height = map ? map.height : gameState.state.height
+	const width = gameState.state.width
+	const height = gameState.state.height
 
 	/*
 	//TODO: The following function contains the LOAD function, not the DRAW function
@@ -17,14 +16,14 @@ const Drawing = ({ gameState, canvasRef }) => {
 	}
 	*/
 
-	return map ? (
+	return (
 		<canvas 
 			id='drawing' 
 			ref={ canvasRef } 
 			className='passthrough' 
 			width={ width } 
 			height={ height } />
-	) : null
+	)
 }
 
 export default Drawing
