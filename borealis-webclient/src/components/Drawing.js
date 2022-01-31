@@ -15,7 +15,35 @@ const Drawing = ({ gameState, canvasRef }) => {
 		drawImage(map.drawUrl, 'drawing', undefined, ctx, undefined, undefined)
 	}
 	*/
+	const getDrawingContext = () => {
+		if (!gameState.drawingRef)
+			return undefined
+		if (!gameState.drawingRef.current)
+			return undefined
+		return gameState.drawingRef.current.getContext('2d')
+	}
 
+	const getMap = () => {
+		if (gameState.state.maps.length === 0)
+			return undefined
+		const map = gameState.state.maps.filter(map => map.$id === gameState.state.mapId)
+		return map.length > 0 ? map[0] : gameState.state.maps[0]
+	}
+
+	const map = getMap()
+	const drawCtx = getDrawingContext()
+
+	if (map && drawCtx) {
+		//drawCtx.clearRect(0, 0, gameState.state.width, gameState.state.height)
+		if (map.drawUrl) {
+			let img = new Image()
+			img.onload = function(){
+				drawCtx.drawImage(img, 0, 0, gameState.state.width, gameState.state.height)
+			}
+			img.src = map.drawUrl
+		}
+	}
+	
 	return (
 		<canvas 
 			id='drawing' 

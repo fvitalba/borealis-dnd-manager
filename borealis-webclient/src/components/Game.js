@@ -181,19 +181,16 @@ const Game = () => {
 		const savePromise = needsSave ? saveMap() : Promise.resolve()
 		if (!noEmit && gameState.isHost && websocket)
 			websocket.pushMapId(map.$id)
-		updateFogAndDraw(map)
-		const newStateAttributes = {
-			mapId: map.$id,
-			isFirstLoadDone: true,
-			isFogLoaded: true,
-		}
 		setGameState({
 			...gameState,
 			state: {
 				...gameState.state,
-				...newStateAttributes,
+				mapId: map.$id,
+			isFirstLoadDone: true,
+			isFogLoaded: true,
 			}
 		})
+		updateFogAndDraw(map)
 		note && note.close()
 		notify('map loaded', undefined, 'loadMap')
 	}
@@ -469,6 +466,7 @@ const Game = () => {
 		}
 
 		drawCtx.clearRect(0, 0, gameState.state.width, gameState.state.height)
+		/*
 		if (map.drawUrl) {
 			let img = new Image()
 			img.onload = function(){
@@ -476,6 +474,7 @@ const Game = () => {
 			}
 			img.src = map.drawUrl
 		}
+		*/
 	}
 
 	const setPointerOutline = (x, y, color, radius) => {
