@@ -3,7 +3,7 @@ import GameView from '../views/GameView.js'
 import guid from '../controllers/guid.js'
 import GameSocket from './Gamesocket'
 
-const initialGameState = (overlayRef) => {
+const initialGameState = (overlayRef, fogRef, drawingRef) => {
 	const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
 
 	return {
@@ -11,13 +11,14 @@ const initialGameState = (overlayRef) => {
 		isHost: params.get('host'),
 		room: params.get('room'),
 		overlayRef: overlayRef,
+		fogRef: fogRef,
+		drawingRef: drawingRef,
 		state: {
 			maps: [],
 			tokens: [],
 			cursors: [],
 			cursorSize: 50,
 			fogOpacity: 0.5,
-			fogUrl: undefined, /* data url */
 			fogRadius: 33,
 			isFogLoaded: false,
 			isFirstLoadDone: false, /* Ensure we don't overwrite localStorage before load is done */
@@ -55,7 +56,9 @@ const initialControlPanelState = () => {
 
 const Game = () => {
 	const overlayRef = React.useRef()
-	const [gameState, setGameState] = useState(initialGameState(overlayRef))
+	const fogRef = React.useRef()
+	const drawingRef = React.useRef()
+	const [gameState, setGameState] = useState(initialGameState(overlayRef, fogRef, drawingRef))
 	const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
 	const websocket = gameState.websocket ? gameState.websocket : new GameSocket(gameState)
 	
@@ -109,14 +112,25 @@ const Game = () => {
 	}
 
 	const dumpCanvas = (which) => {
-		//TODO: This function is simply a mess. This surely needs to be revisited
 		const map = getMap()
 		const changedAt = map[`$${which}ChangedAt`]
 		const dumpedAt = map[`$${which}DumpedAt`]
-		if (gameState.isHost && changedAt && (!dumpedAt || dumpedAt < changedAt)) {
+		
+		//if (gameState.isHost && changedAt && (!dumpedAt || dumpedAt < changedAt)) {
+		if (gameState.isHost) {
 			const at = new Date()
-			const url = gameState[`${which}Ref`].current.buildDataUrl()
-			console.log('dumped', which, url)
+			let url
+			switch(which) {
+				case 'fog':
+					url = gameState.fogRef.current.toDataURL()
+					break
+				case 'draw':
+					url = gameState.drawingRef.current.toDataURL()
+					break
+				default:
+					url = undefined
+					break
+			}
 			return [url, at]
 		}
 		else
@@ -125,26 +139,21 @@ const Game = () => {
 
 	/* Copy maps and dump current data urls, suitable for save to state or localStorage */
 	const dumpMaps = () => {
-		let mapId = gameState.state.mapId
-
-		/* Infer map id if it's not set */
-		if (undefined === mapId)
-			mapId = 
-				Object
-					.keys(gameState.state.maps)
-					.find(key => gameState.state.maps[key] === gameState.map)
-		
-		const mapsCopy = gameState.state.maps
-		/*
-		//TODO: generate dumping functions
-		const map = mapsCopy[mapId]
-		if (map && gameState.state.isFirstLoadDone) { // Map may have been deleted
-			notify('Building data urls...', undefined, 'dumpMaps')
-			[map.fogUrl, map.$fogDumpedAt] = dumpCanvas('fog')
-			[map.drawUrl, map.$drawDumpedAt] = dumpCanvas('draw')
-			notify('Data urls readied', undefined, 'dumpMaps')
+		let newMap = getMap()
+		if (newMap && gameState.state.isFirstLoadDone) {
+			//TODO: Reenable notification for dumping of canvases
+			//notify('Building data urls...', undefined, 'dumpMaps')
+			let [url,dumpedAt] = dumpCanvas('draw')
+			newMap.fogUrl = url
+			newMap.$fogDumpedAt = dumpedAt
+			[url,dumpedAt] = dumpCanvas('draw')
+			newMap.drawUrl = url
+			newMap.$drawDumpedAt = dumpedAt
+			//notify('Data urls readied', undefined, 'dumpMaps')
 		}
-		*/
+		const mapsCopy = gameState.state.maps.map(map => {
+			return map.$id === newMap.$id ? newMap : map
+		})
 		return mapsCopy
 	}
 
@@ -168,24 +177,20 @@ const Game = () => {
 		if (!map)
 			return Promise.reject('no map')
 		const note = notify(`loading map ${map.$id}...`, 6000, 'loadMap')
-		if (undefined === map.$id)
-			map.$id = Object.keys(gameState.state.maps).find(key => gameState.state.maps[key] === getMap())
 		const needsSave = gameState.isHost && gameState.state.isFirstLoadDone && !skipSave
 		const savePromise = needsSave ? saveMap() : Promise.resolve()
 		if (!noEmit && gameState.isHost && websocket)
 			websocket.pushMapId(map.$id)
-		const newStateAttributes = {
-			mapId: map.$id,
-			isFirstLoadDone: true,
-			isFogLoaded: true,
-		}
 		setGameState({
 			...gameState,
 			state: {
 				...gameState.state,
-				...newStateAttributes,
+				mapId: map.$id,
+			isFirstLoadDone: true,
+			isFogLoaded: true,
 			}
 		})
+		updateFogAndDraw(map)
 		note && note.close()
 		notify('map loaded', undefined, 'loadMap')
 	}
@@ -199,27 +204,30 @@ const Game = () => {
 			{ name: 'arr', pc: 1 },
 			{ name: 'win', pc: 1, url: '/dev/redhead.jpg', y: 50, x: 90, w: 64, h:64 },
 		]
-		let defaultMap = {
-			url: '/dev/FFtri9T.png',
-			spawnX: 40,
-			spawnY: 80,
-			$id: 2,
-		}
-		let kiwiMap = {
-			name: 'kiwi',
-			url: '/dev/kiwi.jpeg',
-			$id: 1,
-			width: 500,
-			height: 500,
-		}
+		let maps = [
+			{
+				name: 'kiwi',
+				url: '/dev/kiwi.jpeg',
+				$id: 0,
+				width: 500,
+				height: 500,
+			},
+			{
+				name: 'default',
+				url: '/dev/FFtri9T.png',
+				spawnX: 40,
+				spawnY: 80,
+				$id: 1,
+			}
+		]
 		return new Promise(resolve => {
 			setGameState({
 				...gameState,
 				state: {
 					...gameState.state,
-					maps: Object.fromEntries([defaultMap, kiwiMap].map(m => [m.$id, m])),
+					maps: maps,
 					tokens: tokens,
-					mapId: kiwiMap.$id,
+					mapId: 0,
 				},
 			})
 			resolve()
@@ -297,6 +305,19 @@ const Game = () => {
 		})
 	}
 
+	const updatedMapCanvasChangedAt = (canvasName) => {
+		let newMap = getMap()
+		if (!newMap)
+			return []
+		if (canvasName === 'move')
+			return gameState.state.maps
+		newMap[`$${canvasName}ChangedAt`] = new Date()
+		const mapsCopy = gameState.state.maps.map(map => {
+			return map.mapId === gameState.state.mapId ? newMap : map
+		})
+		return mapsCopy
+	}
+
 	const toggleControlPanelVisibility = (key) => {
 		setControlPanelState({
 			...controlPanelState,
@@ -346,36 +367,28 @@ const Game = () => {
 	 * Drawing Functions                                *
 	 ****************************************************/
 	const getFogContext = () => {
-		const map = getMap()
-		if (!map)
+		if (!gameState.fogRef)
 			return undefined
-		if (!map.fogRef)
+		if (!gameState.fogRef.current)
 			return undefined
-		if (!map.fogRef.current)
-			return undefined
-		return map.fogRef.current.getContext('2d')
+		return gameState.fogRef.current.getContext('2d')
 	}
 
 	const getDrawingContext = () => {
-		const map = getMap()
-		if (!map)
+		if (!gameState.drawingRef)
 			return undefined
-		if (!map.drawingRef)
+		if (!gameState.drawingRef.current)
 			return undefined
-		if (!map.drawingRef.current)
-			return undefined
-		return map.drawingRef.current.getContext('2d')
+		return gameState.drawingRef.current.getContext('2d')
 	}
 
 	 const drawFog = () => {
-		const map = getMap()
 		const ctx = getFogContext()
 		if (!ctx)
 			return
 		ctx.globalCompositeOperation = 'destination-over'
 		ctx.fillStyle = 'black'
-		ctx.fillRect(0, 0, map.width, map.height)
-		updateMap(map => map.$fogChangedAt = new Date())
+		ctx.fillRect(0, 0, gameState.state.width, gameState.state.height)
 	}
 
 	const resetFog = () => {
@@ -395,7 +408,6 @@ const Game = () => {
 		ctx.fillStyle = gradient
 		ctx.fillRect(x-r, y-r, x+r, y+r)
 		ctx.globalCompositeOperation = 'destination-over'
-		updateMap(map => map.$fogChangedAt = new Date())
 		if (!noEmit)
 			websocket.pushFogErase(x, y, r, r2)
 	}
@@ -433,14 +445,36 @@ const Game = () => {
 	}
 
 	const drawOrErase = (x, y) => {
-		if (gameState.state.maps.length === 0)
-			return
 		const isEraser = gameState.state.subtool === 'eraser'
 		if (isEraser)
 			erase(x, y)
 		else
 			draw(x, y)
-		updateMap(map => map.$drawChangedAt = new Date())
+	}
+
+	const updateFogAndDraw = (map) => {
+		const fogCtx = getFogContext()
+		const drawCtx = getDrawingContext()
+
+		drawFog()
+		if (map.fogUrl) {
+			let img = new Image()
+			img.onload = function(){
+				fogCtx.drawImage(img, 0, 0, gameState.state.width, gameState.state.height)
+			}
+			img.src = map.fogUrl
+		}
+
+		drawCtx.clearRect(0, 0, gameState.state.width, gameState.state.height)
+		/*
+		if (map.drawUrl) {
+			let img = new Image()
+			img.onload = function(){
+				drawCtx.drawImage(img, 0, 0, gameState.state.width, gameState.state.height)
+			}
+			img.src = map.drawUrl
+		}
+		*/
 	}
 
 	const setPointerOutline = (x, y, color, radius) => {
@@ -589,6 +623,7 @@ const Game = () => {
 			state: {
 				...gameState.state,
 				tokens: updatedTokens,
+				maps: updatedMapCanvasChangedAt(gameState.state.tool),
 				lastX: e.pageX,
 				lastY: e.pageY,
 				downX: undefined,

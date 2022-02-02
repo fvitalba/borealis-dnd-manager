@@ -11,7 +11,6 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 	const deadline = new Date() - 30000
 	const cursors = Object.assign({}, gameState.state.cursors)
 	const tokens = gameState.state.tokens.map(t => t)
-	const map = gameState.state.maps ? gameState.state.maps[gameState.state.mapId] : undefined
 
 	for (let name in cursors) {
 		let time = cursors[name].time
@@ -29,10 +28,7 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 					setControlPanelState={ setControlPanelState } 
 					updateTokens={ updateTokens } 
 					className={ goneClass } />
-				{ map ?
-					<Drawing gameState={ gameState } canvasRef={ map ? map.drawingRef : undefined } />
-					: null
-				}
+				<Drawing gameState={ gameState } canvasRef={ gameState.drawingRef } />
 				{ tokens ? 
 					<div id='tokens'>
 						{ tokens.map((token, $i) => (
@@ -41,10 +37,7 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 					</div>
 					: null
 				}
-				{ map ?
-					<Fog gameState={ gameState } canvasRef={ map ? map.fogRef : undefined } />
-					: null
-				}
+				<Fog gameState={ gameState } canvasRef={ gameState.fogRef } />
 				{ cursors ?
 					<div id='cursors'>
 						{ Object.keys(cursors).map((key, $i) => (
