@@ -6,7 +6,7 @@ import Token from '../components/Token.js'
 import Cursor from './Cursor.js'
 import ControlPanel from '../components/ControlPanel.js'
 
-const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, onMouseMove, onMouseUp, onMouseDown, fromJson, notify, initAsDev, loadMap, updateTokens, updateGameToken, selectGameToken, updateMap, resetFog }) => {
+const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, onMouseMove, onMouseUp, onMouseDown, fromJson, notify, initAsDev, updateTokens, updateGameToken, selectGameToken, resetFog }) => {
 	const goneClass = gameState.state.isFogLoaded ? null : 'gone'
 	const deadline = new Date() - 30000
 	const cursors = Object.assign({}, gameState.state.cursors)
@@ -28,7 +28,7 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 					setControlPanelState={ setControlPanelState } 
 					updateTokens={ updateTokens } 
 					className={ goneClass } />
-				<Drawing gameState={ gameState } canvasRef={ gameState.drawingRef } />
+				<Drawing gameState={ gameState } />
 				{ tokens ? 
 					<div id='tokens'>
 						{ tokens.map((token, $i) => (
@@ -58,7 +58,6 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 				notify={ notify } 
 				fromJson={ fromJson } 
 				initAsDev={ initAsDev } 
-				loadMap={ loadMap } 
 				updateGameToken={ updateGameToken } 
 				selectGameToken={ selectGameToken } 
 				resetFog={ resetFog } />

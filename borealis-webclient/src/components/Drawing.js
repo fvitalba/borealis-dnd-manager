@@ -1,27 +1,9 @@
 import React from 'react'
-import drawImage from '../controllers/drawImage.js'
+import Canvas from './Canvas.js'
 
-const Drawing = ({ gameState, canvasRef }) => {
+const Drawing = ({ gameState }) => {
 	const width = gameState.state.width
 	const height = gameState.state.height
-
-	/*
-	//TODO: The following function contains the LOAD function, not the DRAW function
-	const draw = (ctx) => {
-		const map = gameState.state.maps ? gameState.state.maps[gameState.state.mapId] : undefined
-		if (!map || !map.drawUrl) {
-			return
-		}
-		drawImage(map.drawUrl, 'drawing', undefined, ctx, undefined, undefined)
-	}
-	*/
-	const getDrawingContext = () => {
-		if (!gameState.drawingRef)
-			return undefined
-		if (!gameState.drawingRef.current)
-			return undefined
-		return gameState.drawingRef.current.getContext('2d')
-	}
 
 	const getMap = () => {
 		if (gameState.state.maps.length === 0)
@@ -29,28 +11,75 @@ const Drawing = ({ gameState, canvasRef }) => {
 		const map = gameState.state.maps.filter(map => map.$id === gameState.state.mapId)
 		return map.length > 0 ? map[0] : gameState.state.maps[0]
 	}
-
 	const map = getMap()
-	const drawCtx = getDrawingContext()
 
-	if (map && drawCtx) {
-		//drawCtx.clearRect(0, 0, gameState.state.width, gameState.state.height)
-		if (map.drawUrl) {
-			let img = new Image()
-			img.onload = function(){
-				drawCtx.drawImage(img, 0, 0, gameState.state.width, gameState.state.height)
-			}
-			img.src = map.drawUrl
+	const renderDrawingLayer = (ctx) => {
+		if (!map) {
+			return
 		}
+		if (!ctx)
+			return
+		
+		console.debug('redrawing map', map)
+		ctx.beginPath()
+		ctx.clearRect(0, 0, width, height)
+		for(var pathId = 0; pathId < map.drawPaths.length; pathId++) {
+			const currPath = map.drawPaths[pathId]
+			console.log('drawing path',currPath)
+			const tool = currPath.length > 0 ? currPath[0].tool : ''
+			switch (tool) {
+				case 'draw': 
+					draw(ctx, currPath)
+					break;
+				case 'erease':
+					erease(ctx, currPath)
+					break;
+				default:
+					break;
+			}
+			ctx.stroke()
+		}
+	}
+
+	const draw = (ctx, currPath) => {
+		ctx.globalCompositeOperation = 'source-over'
+		ctx.beginPath()
+		for (var pointId = 0; pointId < currPath.length; pointId++) {
+			ctx.lineCap = 'round'
+			ctx.fillStyle = currPath[pointId].drawColor
+			ctx.lineWidth = currPath[pointId].drawSize
+			ctx.strokeStyle = currPath[pointId].drawColor
+			if (pointId === 0) {
+				ctx.moveTo(currPath[pointId].x, currPath[pointId].y)
+			} else {
+				ctx.lineTo(currPath[pointId].x, currPath[pointId].y)
+			}
+		}
+	}
+
+	const erease = (ctx, currPath) => {
+		//ctx.save()
+		ctx.globalCompositeOperation = 'destination-out'
+		ctx.beginPath()
+		for (var pointId = 0; pointId < currPath.length; pointId++) {
+			ctx.lineCap = 'round'
+			ctx.lineWidth = currPath[pointId].drawSize
+			if (pointId === 0) {
+				ctx.moveTo(currPath[pointId].x, currPath[pointId].y)
+			} else {
+				ctx.lineTo(currPath[pointId].x, currPath[pointId].y)
+			}
+		}
+		//ctx.restore()
 	}
 	
 	return (
-		<canvas 
+		<Canvas 
 			id='drawing' 
-			ref={ canvasRef } 
 			className='passthrough' 
 			width={ width } 
-			height={ height } />
+			height={ height } 
+			draw={ renderDrawingLayer } />
 	)
 }
 

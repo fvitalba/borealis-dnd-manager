@@ -17,7 +17,7 @@ const initialMapConfigState = (gameState, map) => {
 	}
 }
 
-const MapConfig = ({ gameState, setGameState, map, mapId, loadMap }) => {
+const MapConfig = ({ gameState, setGameState, map, mapId }) => {
 	const [mapConfigState, setMapConfigState] = useState(initialMapConfigState(gameState, map))
 	const isSelected = gameState.state.mapId === mapId
 
@@ -37,34 +37,17 @@ const MapConfig = ({ gameState, setGameState, map, mapId, loadMap }) => {
 	}
 
 	const load = () => {
-		let maps = gameState.state.maps
-		if (!maps)
-			return
-		//TODO: fix and keep old references!
-		const newMap = {
-			$id: mapConfigState.$id,
-			name: mapConfigState.name,
-			url: mapConfigState.imageUrl,
-			width: mapConfigState.width,
-			height: mapConfigState.height,
-			x: mapConfigState.x,
-			y: mapConfigState.y,
-			fogUrl: undefined,
-			$fogDumpedAt: undefined,
-			$fogChangedAt: undefined,
-			drawUrl: undefined,
-			$drawDumpedAt: undefined,
-			$drawChangedAt: undefined,
-		}
-		const newMaps = maps.map(currMap => currMap.$id === newMap.$id ? newMap : currMap)
+		console.log('loading map',mapId)
 		setGameState({
 			...gameState,
 			state: {
 				...gameState.state,
-				maps: newMaps,
-				mapId: newMap.$id,
+				mapId: mapId,
+				isFirstLoadDone: true,
+				isFogLoaded: true,
 			}
 		})
+		console.log('new gameState',gameState)
 	}
 
 	const deleteMap = () => {

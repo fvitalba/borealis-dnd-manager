@@ -2,7 +2,7 @@ import React from 'react'
 import guid from '../controllers/guid.js'
 import ControlPanelView from '../views/ControlPanelView.js'
 
-const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, notify, fromJson, initAsDev, loadMap, updateGameToken, selectGameToken, resetFog }) => {
+const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, notify, fromJson, initAsDev, updateGameToken, selectGameToken, resetFog }) => {
 	const toggleHidden = () => {
 		setControlPanelState({
 			...controlPanelState,
@@ -56,6 +56,7 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 			drawUrl: undefined,
 			$drawDumpedAt: undefined,
 			$drawChangedAt: undefined,
+			drawPaths: [],
 		}
 		maps[mapId] = newMap
 		const newMaps = maps.filter(map => map)
@@ -80,7 +81,7 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 		tokensCopy.push({
 			url: controlPanelState.newTokenUrl,
 			guid: guid(),
-			mapId: undefined,
+			mapId: gameState.state.mapId,
 			$selected: undefined,
 			name: undefined,
 			$x0: 0,
@@ -137,7 +138,7 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 		<ControlPanelView 
 			gameState={ gameState } 
 			setGameState={ setGameState } 
-			controlPanelState={ controlPanelState } 
+			controlPanelState={ controlPanelState } 
 			setControlPanelState={ setControlPanelState } 
 			websocket={ websocket } 
 			hidden={ controlPanelState.hidden } 
@@ -153,7 +154,6 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 			resetFog={ resetFog } 
 			onTextChange={ onTextChange } 
 			createMap={ createMap } 
-			loadMap={ loadMap } 
 			updateGameToken={ updateGameToken } 
 			selectGameToken={ selectGameToken } 
 			newTokenUrl={ controlPanelState.newTokenUrl } 

@@ -7,7 +7,7 @@ import TokenToolView from './TokenToolView.js'
 import UserToolView from './UserToolView.js'
 import SelectedTokensControlsView from './SelectedTokensControlsView.js'
 
-const ControlPanelView = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, hidden, toggleHidden, setGameInt, setGameText, socketRequestRefresh, initAsDev, toggleOnUser, toggleOnTokens, copyJson, pasteJson, resetFog, onTextChange, createMap, loadMap, updateGameToken, selectGameToken, newTokenUrl, createToken }) => {
+const ControlPanelView = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, hidden, toggleHidden, setGameInt, setGameText, socketRequestRefresh, initAsDev, toggleOnUser, toggleOnTokens, copyJson, pasteJson, resetFog, onTextChange, createMap, updateGameToken, selectGameToken, newTokenUrl, createToken }) => {
 	if (hidden)
 		return (
 			<div id='control-panel'>
@@ -41,8 +41,7 @@ const ControlPanelView = ({ gameState, setGameState, controlPanelState, setContr
 					setGameState={ setGameState } 
 					controlPanelState={ controlPanelState } 
 					onTextChange={ onTextChange } 
-					createMap={ createMap } 
-					loadMap={ loadMap } />
+					createMap={ createMap } />
 				<TokenToolView 
 					gameState={ gameState } 
 					setGameState={ setGameState } 
