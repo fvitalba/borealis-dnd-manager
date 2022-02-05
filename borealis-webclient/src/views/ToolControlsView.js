@@ -1,6 +1,6 @@
 import Button from './Button.js'
 
-const ToolControlsView = ({ gameState, resetFog, onTextChangeGame, setFogOpacity, setSubtool }) => {
+const ToolControlsView = ({ gameState, onTextChangeGame, setFogOpacity, setSubtool, resetFog, resetDrawing }) => {
 	switch (gameState.state.tool) {
 		case 'draw':
 			return (
@@ -10,6 +10,7 @@ const ToolControlsView = ({ gameState, resetFog, onTextChangeGame, setFogOpacity
 					<input size='3' title='draw size' value={ gameState.state.drawSize } onChange={ (e) => onTextChangeGame('drawSize', e) } type='number' step='3' min='1' />
 					<input size='3' title='draw color' value={ gameState.state.drawColor } onChange={ (e) => onTextChangeGame('drawColor', e) } />
 					<Button style={{ backgroundColor: gameState.state.drawColor }} value='&#x1f58c;' disabled />
+					<Button title='reset drawing' onClick={ resetDrawing } value='&#x1f300;' />
 				</span>
 			)
 		case 'move':

@@ -3,7 +3,7 @@ import GameView from '../views/GameView.js'
 import guid from '../controllers/guid.js'
 import GameSocket from './Gamesocket'
 
-const initialGameState = (overlayRef, fogRef, drawingRef) => {
+const initialGameState = (overlayRef) => {
 	const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
 
 	return {
@@ -11,8 +11,6 @@ const initialGameState = (overlayRef, fogRef, drawingRef) => {
 		isHost: params.get('host'),
 		room: params.get('room'),
 		overlayRef: overlayRef,
-		fogRef: fogRef,
-		drawingRef: drawingRef,
 		state: {
 			maps: [],
 			tokens: [],
@@ -56,11 +54,10 @@ const initialControlPanelState = () => {
 
 const Game = () => {
 	const overlayRef = React.useRef()
-	const fogRef = React.useRef()
-	const drawingRef = React.useRef()
-	const [gameState, setGameState] = useState(initialGameState(overlayRef, fogRef, drawingRef))
+	const [gameState, setGameState] = useState(initialGameState(overlayRef))
 	const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
 	const websocket = gameState.websocket ? gameState.websocket : new GameSocket(gameState)
+	var currentPath = []
 	
 	// On Mount
 	useEffect(() => {
@@ -85,15 +82,19 @@ const Game = () => {
 		}
 	},[])
 
+	/*
 	useEffect(() => {
 		if (websocket && gameState.state['toggleOnShare mouse (cursor)'])
 			websocket.pushCursor(gameState.state.lastX, gameState.state.lastY)
 	}, [gameState.state.lastX, gameState.state.lastY, gameState.state['toggleOnShare mouse (cursor)']])
+	*/
 
+	/*
 	useEffect(() => {
 		if (getMap())
 			loadMap(getMap(), false)
 	}, [gameState.state.mapId])
+	*/
 
 	useEffect(() => {
 		//TODO: reenable websocket push
@@ -104,81 +105,29 @@ const Game = () => {
 	/****************************************************
 	 * Map Functions                                    *
 	 ****************************************************/
-	const getMap = () => {
+	 const getMap = () => {
 		if (gameState.state.maps.length === 0)
 			return undefined
-		const map = gameState.state.maps.filter(map => map.$id === gameState.state.mapId)
-		return map.length > 0 ? map[0] : gameState.state.maps[0]
-	}
-
-	const dumpCanvas = (which) => {
-		const map = getMap()
-		const changedAt = map[`$${which}ChangedAt`]
-		const dumpedAt = map[`$${which}DumpedAt`]
-		
-		//if (gameState.isHost && changedAt && (!dumpedAt || dumpedAt < changedAt)) {
-		if (gameState.isHost) {
-			const at = new Date()
-			let url
-			switch(which) {
-				case 'fog':
-					url = gameState.fogRef.current.toDataURL()
-					break
-				case 'draw':
-					url = gameState.drawingRef.current.toDataURL()
-					break
-				default:
-					url = undefined
-					break
-			}
-			return [url, at]
-		}
-		else
-			return [map[`${which}Url`], dumpedAt]
+		const currMap = gameState.state.maps.filter((map) => parseInt(map.$id) === parseInt(gameState.state.mapId))
+		return currMap.length > 0 ? currMap[0] : gameState.state.maps[0]
 	}
 
 	/* Copy maps and dump current data urls, suitable for save to state or localStorage */
 	const dumpMaps = () => {
 		let newMap = getMap()
-		if (newMap && gameState.state.isFirstLoadDone) {
-			//TODO: Reenable notification for dumping of canvases
-			//notify('Building data urls...', undefined, 'dumpMaps')
-			let [url,dumpedAt] = dumpCanvas('draw')
-			newMap.fogUrl = url
-			newMap.$fogDumpedAt = dumpedAt
-			[url,dumpedAt] = dumpCanvas('draw')
-			newMap.drawUrl = url
-			newMap.$drawDumpedAt = dumpedAt
-			//notify('Data urls readied', undefined, 'dumpMaps')
-		}
 		const mapsCopy = gameState.state.maps.map(map => {
 			return map.$id === newMap.$id ? newMap : map
 		})
 		return mapsCopy
 	}
 
-	/* From playarea to state */
-	const saveMap = () => {
-		return new Promise((resolve, reject) => {
-			//TODO: Verify if ,resolve is really needed or working
-			setGameState({
-				...gameState,
-				state: {
-					...gameState.state,
-					maps: dumpMaps(),
-				},
-			}, resolve)
-		})
-	}
-
+	/*
 	const loadMap = (map, skipSave, noEmit) => {
 		if (!map)
 			map = getMap()
 		if (!map)
 			return Promise.reject('no map')
 		const note = notify(`loading map ${map.$id}...`, 6000, 'loadMap')
-		const needsSave = gameState.isHost && gameState.state.isFirstLoadDone && !skipSave
-		const savePromise = needsSave ? saveMap() : Promise.resolve()
 		if (!noEmit && gameState.isHost && websocket)
 			websocket.pushMapId(map.$id)
 		setGameState({
@@ -186,14 +135,15 @@ const Game = () => {
 			state: {
 				...gameState.state,
 				mapId: map.$id,
-			isFirstLoadDone: true,
-			isFogLoaded: true,
+				isFirstLoadDone: true,
+				isFogLoaded: true,
 			}
 		})
 		updateFogAndDraw(map)
 		note && note.close()
 		notify('map loaded', undefined, 'loadMap')
 	}
+	*/
 
 	const initAsDev = () => {
 		if (!window.confirm('Reset?'))
@@ -211,6 +161,16 @@ const Game = () => {
 				$id: 0,
 				width: 500,
 				height: 500,
+				x: 0,
+				y: 0,
+				fogUrl: undefined,
+				$fogDumpedAt: undefined,
+				$fogChangedAt: undefined,
+				drawUrl: undefined,
+				$drawDumpedAt: undefined,
+				$drawChangedAt: undefined,
+				drawPaths: [],
+				fogPaths: [],
 			},
 			{
 				name: 'default',
@@ -218,6 +178,16 @@ const Game = () => {
 				spawnX: 40,
 				spawnY: 80,
 				$id: 1,
+				x: 0,
+				y: 0,
+				fogUrl: undefined,
+				$fogDumpedAt: undefined,
+				$fogChangedAt: undefined,
+				drawUrl: undefined,
+				$drawDumpedAt: undefined,
+				$drawChangedAt: undefined,
+				drawPaths: [],
+				fogPaths: [],
 			}
 		]
 		return new Promise(resolve => {
@@ -366,117 +336,6 @@ const Game = () => {
 	/****************************************************
 	 * Drawing Functions                                *
 	 ****************************************************/
-	const getFogContext = () => {
-		if (!gameState.fogRef)
-			return undefined
-		if (!gameState.fogRef.current)
-			return undefined
-		return gameState.fogRef.current.getContext('2d')
-	}
-
-	const getDrawingContext = () => {
-		if (!gameState.drawingRef)
-			return undefined
-		if (!gameState.drawingRef.current)
-			return undefined
-		return gameState.drawingRef.current.getContext('2d')
-	}
-
-	 const drawFog = () => {
-		const ctx = getFogContext()
-		if (!ctx)
-			return
-		ctx.globalCompositeOperation = 'destination-over'
-		ctx.fillStyle = 'black'
-		ctx.fillRect(0, 0, gameState.state.width, gameState.state.height)
-	}
-
-	const resetFog = () => {
-		drawFog()
-	}
-
-	const fogErase = (x, y, r, r2, noEmit) => {
-		const ctx = getFogContext()
-		if (!ctx)
-			return
-		if (!r)
-			r = gameState.state.fogRadius
-		ctx.globalCompositeOperation = 'destination-out'
-		let gradient = ctx.createRadialGradient(x, y, r2||1, x, y, r*0.75)
-		gradient.addColorStop(0, 'rgba(0,0,0,255)')
-		gradient.addColorStop(1, 'rgba(0,0,0,0)')
-		ctx.fillStyle = gradient
-		ctx.fillRect(x-r, y-r, x+r, y+r)
-		ctx.globalCompositeOperation = 'destination-over'
-		if (!noEmit)
-			websocket.pushFogErase(x, y, r, r2)
-	}
-
-	const draw = (x, y, opts, noEmit) => {
-		const ctx = getDrawingContext()
-		if (!ctx)
-			return
-		
-		ctx.beginPath()
-		ctx.arc(x, y, gameState.state.drawSize, 0, 2 * Math.PI, false)
-		ctx.fillStyle = gameState.state.drawColor
-		ctx.fill()
-		ctx.lineWidth = 5
-		ctx.strokeStyle = gameState.state.drawColor
-		ctx.stroke()
-		if (!noEmit) {			
-			websocket.pushDraw(opts)
-		}
-	}
-
-	const erase = (x, y, r, noEmit) => {
-		const ctx = getDrawingContext()
-		if (!ctx)
-			return
-		const radius = r || gameState.state.drawSize
-		ctx.save()
-		ctx.globalCompositeOperation = 'destination-out'
-		ctx.beginPath()
-		ctx.arc(x, y, radius, 0, Math.PI*2, true)
-		ctx.fill()
-		ctx.restore()
-		if (!noEmit)
-			websocket.pushErase(x, y, radius)
-	}
-
-	const drawOrErase = (x, y) => {
-		const isEraser = gameState.state.subtool === 'eraser'
-		if (isEraser)
-			erase(x, y)
-		else
-			draw(x, y)
-	}
-
-	const updateFogAndDraw = (map) => {
-		const fogCtx = getFogContext()
-		const drawCtx = getDrawingContext()
-
-		drawFog()
-		if (map.fogUrl) {
-			let img = new Image()
-			img.onload = function(){
-				fogCtx.drawImage(img, 0, 0, gameState.state.width, gameState.state.height)
-			}
-			img.src = map.fogUrl
-		}
-
-		drawCtx.clearRect(0, 0, gameState.state.width, gameState.state.height)
-		/*
-		if (map.drawUrl) {
-			let img = new Image()
-			img.onload = function(){
-				drawCtx.drawImage(img, 0, 0, gameState.state.width, gameState.state.height)
-			}
-			img.src = map.drawUrl
-		}
-		*/
-	}
-
 	const setPointerOutline = (x, y, color, radius) => {
 		if (color == null)
 			return
@@ -489,6 +348,38 @@ const Game = () => {
 		ctx.closePath()
 	}
 
+	const updateCurrentDrawPath = () => {
+		const ctx = gameState.overlayRef.current.getContext('2d')
+		ctx.beginPath()
+		for (var pointId = 0; pointId < currentPath.length; pointId++) {
+			ctx.lineCap = 'round'
+			ctx.fillStyle = currentPath[pointId].drawColor
+			ctx.lineWidth = currentPath[pointId].drawSize
+			ctx.strokeStyle = currentPath[pointId].drawColor
+			if (pointId === 0) {
+				ctx.moveTo(currentPath[pointId].x, currentPath[pointId].y)
+			} else {
+				ctx.lineTo(currentPath[pointId].x, currentPath[pointId].y)
+			}
+		}
+		ctx.stroke()
+	}
+
+	const updateCurrentFogPath = () => {
+		const ctx = gameState.overlayRef.current.getContext('2d')
+		ctx.beginPath()
+		var gradient
+		for (var pointId = 0; pointId < currentPath.length; pointId++) {
+			gradient = ctx.createRadialGradient(currentPath[pointId].x, currentPath[pointId].y, currentPath[pointId].r2 || 1, currentPath[pointId].x, currentPath[pointId].y, currentPath[pointId].r*0.75)
+			ctx.lineCap = 'round'
+			gradient.addColorStop(0, 'rgba(255,255,255,255)')
+			gradient.addColorStop(1, 'rgba(255,255,255,0)')
+			ctx.fillStyle = gradient
+			ctx.fillRect(currentPath[pointId].x-currentPath[pointId].r, currentPath[pointId].y-currentPath[pointId].r, currentPath[pointId].x+currentPath[pointId].r, currentPath[pointId].y+currentPath[pointId].r)
+		}
+		ctx.stroke()
+	}
+
 	const clearOverlay = () => {
 		const ctx = gameState.overlayRef.current.getContext('2d')
 		if (!ctx)
@@ -496,12 +387,48 @@ const Game = () => {
 		ctx.clearRect(0, 0, gameState.state.width, gameState.state.height);
 	}
 
+	const resetFog = () => {
+		const currMap = getMap()
+		if (currMap && gameState.isHost) {
+			currentPath = []
+			const updatedMaps = gameState.state.maps.map((map) => {
+				return map.$id === currMap.$id ? {...currMap, fogPaths: [], } : map
+			})
+			
+			setGameState({
+				...gameState,
+				state: {
+					...gameState.state,
+					maps: updatedMaps,
+				}
+			})
+		}
+	}
+
+	const resetDrawing = () => {
+		const currMap = getMap()
+		if (currMap && gameState.isHost) {
+			currentPath = []
+			const updatedMaps = gameState.state.maps.map((map) => {
+				return map.$id === currMap.$id ? {...currMap, drawPaths: [], } : map
+			})
+			
+			setGameState({
+				...gameState,
+				state: {
+					...gameState.state,
+					maps: updatedMaps,
+				}
+			})
+		}
+	}
+
 	/****************************************************
 	 * Event Handlers                                   *
 	 ****************************************************/
 	/* Callback when the window resizes */
 	const onResize = () => {
-		loadMap(null, true, true)
+		//loadMap(null, true, true)
 	}
 
 	const onKeyDown = (e) => {
@@ -613,23 +540,32 @@ const Game = () => {
 	}
 
 	const onMouseUp = (e) => {
-		const updatedTokens = gameState.state.tokens.map(token => {
-			token.$x0 = token.x
-			token.$y0 = token.y
-			return token
-		})
-		setGameState({
-			...gameState,
-			state: {
-				...gameState.state,
-				tokens: updatedTokens,
-				maps: updatedMapCanvasChangedAt(gameState.state.tool),
-				lastX: e.pageX,
-				lastY: e.pageY,
-				downX: undefined,
-				downY: undefined,
+		const currMap = getMap()
+		if (currMap && gameState.isHost) {
+			const fogPaths = currMap.fogPaths
+			const drawPaths = currMap.drawPaths
+			switch (gameState.state.tool) {
+				case 'fog':
+					fogPaths.push(currentPath)
+					break
+				case 'draw':
+					drawPaths.push(currentPath)
+					break
+				default: break
 			}
-		})
+			currentPath = []
+			const updatedMaps = gameState.state.maps.map((map) => {
+				return map.$id === currMap.$id ? {...currMap, fogPaths: fogPaths, drawPaths: drawPaths, } : map
+			})
+			
+			setGameState({
+				...gameState,
+				state: {
+					...gameState.state,
+					maps: updatedMaps,
+				}
+			})
+		}
 	}
 
 	const onMouseDown = (e) => {
@@ -642,15 +578,15 @@ const Game = () => {
 			if (!/(\s|^)token(\s|$)/.test(e.target.getAttribute('class')))
 				//TODO: Update to map function
 				updateTokens(tok => { delete tok.$selected })
-			setGameState({
-				...gameState,
-				state: {
-					...gameState.state,
-					lastX: undefined,
-					lastY: undefined,
-					downX: e.pageX,
-					downY: e.pageY,
-				}
+			currentPath = []
+			currentPath.push({
+				x: e.pageX,
+				y: e.pageY,
+				r: gameState.state.fogRadius,
+				r2: undefined,
+				tool: currentTool(),
+				drawColor: gameState.state.drawColor,
+				drawSize: gameState.state.drawSize,
 			})
 		}
 	}
@@ -663,13 +599,11 @@ const Game = () => {
 		let x = e.pageX, y = e.pageY
 		switch (gameState.isHost ? gameState.state.tool : 'move') {
 			case 'fog':
-				if (e.buttons & 1)
-					fogErase(x, y)
+				updateCurrentFogPath()
 				setPointerOutline(x, y, 'yellow', gameState.state.fogRadius)
 				break
 			case 'draw':
-				if (e.buttons & 1)
-					drawOrErase(x, y)
+				updateCurrentDrawPath()
 				setPointerOutline(x, y, gameState.state.drawColor, gameState.state.drawSize)
 				break
 			case 'move':
@@ -679,14 +613,29 @@ const Game = () => {
 			default: break
 		}
 		if ((gameState.state.tool === 'fog' || gameState.state.tool === 'draw') && (e.buttons & 1)) {
-			setGameState({
-				...gameState,
-				state: {
-					...gameState.state,
-					lastX: x,
-					lastY: y,
-				}
+			currentPath.push({
+				x: x,
+				y: y,
+				r: gameState.state.fogRadius,
+				r2: undefined,
+				tool: currentTool(),
+				drawColor: gameState.state.drawColor,
+				drawSize: gameState.state.drawSize,
 			})
+		}
+	}
+
+	const currentTool = () => {
+		const isEraser = gameState.state.subtool === 'eraser'
+		switch (gameState.state.tool) {
+			case 'draw':
+				if (isEraser) {
+					return 'erease'
+				} else {
+					return 'draw'
+				}
+			default:
+				return gameState.state.tool
 		}
 	}
 
@@ -787,12 +736,12 @@ const Game = () => {
 				fromJson={ fromJson } 
 				notify={ notify } 
 				initAsDev={ initAsDev } 
-				loadMap={ loadMap } 
 				updateTokens={ updateTokens } 
 				updateGameToken={ updateToken } 
 				selectGameToken={ selectToken } 
 				updateMap={ updateMap } 
 				resetFog={ resetFog } 
+				resetDrawing={ resetDrawing } 
 			/>
 		)
 	} catch (ex) {
