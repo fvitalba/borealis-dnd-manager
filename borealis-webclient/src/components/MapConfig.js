@@ -17,7 +17,7 @@ const initialMapConfigState = (gameState, map) => {
 	}
 }
 
-const MapConfig = ({ gameState, setGameState, map, mapId }) => {
+const MapConfig = ({ gameState, setGameState, map, mapId, websocket }) => {
 	const [mapConfigState, setMapConfigState] = useState(initialMapConfigState(gameState, map))
 	const isSelected = gameState.state.mapId === mapId
 
@@ -37,7 +37,6 @@ const MapConfig = ({ gameState, setGameState, map, mapId }) => {
 	}
 
 	const load = () => {
-		console.log('loading map',mapId)
 		setGameState({
 			...gameState,
 			state: {
@@ -47,7 +46,7 @@ const MapConfig = ({ gameState, setGameState, map, mapId }) => {
 				isFogLoaded: true,
 			}
 		})
-		console.log('new gameState',gameState)
+		websocket.pushMapId(mapId)
 	}
 
 	const deleteMap = () => {

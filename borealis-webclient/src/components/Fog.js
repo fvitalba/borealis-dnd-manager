@@ -25,7 +25,7 @@ const Fog = ({ gameState }) => {
 		ctx.globalCompositeOperation = 'destination-over'
 		ctx.fillStyle = 'black'
 		ctx.fillRect(0, 0, width, height)
-		for(var pathId = 0; pathId < map.fogPaths.length; pathId++) {
+		for(let pathId = 0; pathId < map.fogPaths.length; pathId++) {
 			const currPath = map.fogPaths[pathId]
 			ereaseFog(ctx, currPath)
 			ctx.stroke()
@@ -35,8 +35,8 @@ const Fog = ({ gameState }) => {
 	const ereaseFog = (ctx, currPath) => {
 		ctx.beginPath()
 		ctx.globalCompositeOperation = 'destination-out'
-		var gradient
-		for (var pointId = 0; pointId < currPath.length; pointId++) {
+		let gradient
+		for (let pointId = 0; pointId < currPath.length; pointId++) {
 			gradient = ctx.createRadialGradient(currPath[pointId].x, currPath[pointId].y, currPath[pointId].r2 || 1, currPath[pointId].x, currPath[pointId].y, currPath[pointId].r*0.75)
 			gradient.addColorStop(0, 'rgba(0,0,0,255)')
 			gradient.addColorStop(1, 'rgba(0,0,0,0)')

@@ -22,18 +22,18 @@ const Drawing = ({ gameState }) => {
 		
 		ctx.beginPath()
 		ctx.clearRect(0, 0, width, height)
-		for(var pathId = 0; pathId < map.drawPaths.length; pathId++) {
+		for(let pathId = 0; pathId < map.drawPaths.length; pathId++) {
 			const currPath = map.drawPaths[pathId]
 			const tool = currPath.length > 0 ? currPath[0].tool : ''
 			switch (tool) {
 				case 'draw': 
 					draw(ctx, currPath)
-					break;
+					break
 				case 'erease':
 					erease(ctx, currPath)
-					break;
+					break
 				default:
-					break;
+					break
 			}
 			ctx.stroke()
 		}
@@ -42,7 +42,7 @@ const Drawing = ({ gameState }) => {
 	const draw = (ctx, currPath) => {
 		ctx.globalCompositeOperation = 'source-over'
 		ctx.beginPath()
-		for (var pointId = 0; pointId < currPath.length; pointId++) {
+		for (let pointId = 0; pointId < currPath.length; pointId++) {
 			ctx.lineCap = 'round'
 			ctx.fillStyle = currPath[pointId].drawColor
 			ctx.lineWidth = currPath[pointId].drawSize
@@ -58,7 +58,7 @@ const Drawing = ({ gameState }) => {
 	const erease = (ctx, currPath) => {
 		ctx.globalCompositeOperation = 'destination-out'
 		ctx.beginPath()
-		for (var pointId = 0; pointId < currPath.length; pointId++) {
+		for (let pointId = 0; pointId < currPath.length; pointId++) {
 			ctx.lineCap = 'round'
 			ctx.lineWidth = currPath[pointId].drawSize
 			if (pointId === 0) {

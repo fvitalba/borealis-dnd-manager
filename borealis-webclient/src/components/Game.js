@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import GameView from '../views/GameView.js'
 import guid from '../controllers/guid.js'
-import GameSocket from './Gamesocket'
+import GameSocket from './GameSocket.js'
 
 const initialGameState = (overlayRef) => {
 	const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
@@ -57,7 +57,7 @@ const Game = () => {
 	const [gameState, setGameState] = useState(initialGameState(overlayRef))
 	const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
 	const websocket = gameState.websocket ? gameState.websocket : new GameSocket(gameState)
-	var currentPath = []
+	let currentPath = []
 	
 	// On Mount
 	useEffect(() => {
@@ -217,6 +217,7 @@ const Game = () => {
 		})
 	}
 
+	/*
 	const updateCursors = (x, y, name, guid) => {
 		const cursors = Object.assign({}, gameState.state.cursors)
 		cursors[guid] = { x: x, y: y, time: new Date(), u: name }
@@ -228,6 +229,7 @@ const Game = () => {
 			},
 		})
 	}
+	*/
 
 	const updateMap = (callback) => {
 		return new Promise(resolve => {
@@ -307,7 +309,7 @@ const Game = () => {
 	const updateCurrentDrawPath = () => {
 		const ctx = gameState.overlayRef.current.getContext('2d')
 		ctx.beginPath()
-		for (var pointId = 0; pointId < currentPath.length; pointId++) {
+		for (let pointId = 0; pointId < currentPath.length; pointId++) {
 			ctx.lineCap = 'round'
 			ctx.fillStyle = currentPath[pointId].drawColor
 			ctx.lineWidth = currentPath[pointId].drawSize
@@ -324,8 +326,8 @@ const Game = () => {
 	const updateCurrentFogPath = () => {
 		const ctx = gameState.overlayRef.current.getContext('2d')
 		ctx.beginPath()
-		var gradient
-		for (var pointId = 0; pointId < currentPath.length; pointId++) {
+		let gradient
+		for (let pointId = 0; pointId < currentPath.length; pointId++) {
 			gradient = ctx.createRadialGradient(currentPath[pointId].x, currentPath[pointId].y, currentPath[pointId].r2 || 1, currentPath[pointId].x, currentPath[pointId].y, currentPath[pointId].r*0.75)
 			ctx.lineCap = 'round'
 			gradient.addColorStop(0, 'rgba(255,255,255,255)')
@@ -497,15 +499,19 @@ const Game = () => {
 
 	const onMouseUp = (e) => {
 		const currMap = getMap()
+		let fogWasChanged = false
+		let drawWasChanged = false
 		if (currMap && gameState.isHost) {
 			const fogPaths = currMap.fogPaths
 			const drawPaths = currMap.drawPaths
 			switch (gameState.state.tool) {
 				case 'fog':
 					fogPaths.push(currentPath)
+					fogWasChanged = true
 					break
 				case 'draw':
 					drawPaths.push(currentPath)
+					drawWasChanged = true
 					break
 				default: break
 			}
@@ -521,6 +527,11 @@ const Game = () => {
 					maps: updatedMaps,
 				}
 			})
+
+			if (fogWasChanged)
+				websocket.pushFog(currentPath)
+			if (drawWasChanged)
+				websocket.pushDraw(currentPath)
 		}
 	}
 

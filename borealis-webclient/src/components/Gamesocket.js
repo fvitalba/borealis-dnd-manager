@@ -9,7 +9,7 @@ const K_INTERVAL = 'gameWebSocketInterval'
 const socketRoom = () => ( window[K_SOCKET].url.match(/[^/]*$/)[0] )
 
 class GameSocket {
-	constructor (gameState) {
+	constructor(gameState) {
 		Object.defineProperty(this, 'gameState', {
 			value: gameState, 
 			writable: false,
@@ -17,19 +17,15 @@ class GameSocket {
 		this.setup()
 	}
 
-	setup () {
+	setup() {
 		let host = window.location.host.replace(/:\d+$/, '')
 		let room = this.gameState.room
 		const protocol = /https/.test(window.location.protocol) ? 'wss' : 'ws'
 		this.guid = guid()
-		//TODO: reenable log
-		//console.log('Trying to establish websocket connection', host, room)
 		if (window[K_INTERVAL])
 			clearInterval(window[K_INTERVAL])
 		if (window[K_SOCKET]) {
 			let socket = window[K_SOCKET]
-			//TODO: reenable log
-			//console.log('Closing extant websocket', socketRoom())
 			delete window[K_SOCKET] /* Delete, then close, s.t. cb doesn't re-open it */
 			socket.close()
 		}
@@ -37,13 +33,10 @@ class GameSocket {
 		this.addCallbacks()
 	}
 
-	addCallbacks () {
+	addCallbacks() {
 		let ws = window[K_SOCKET]
 		/* Connection callback */
 		ws.addEventListener('open', (a,b,c) => {
-			//TODO: reenable log
-			//console.log(`WebSocket opened (from ${this.guid})`, socketRoom())
-			// debugger
 			if (window[K_INTERVAL])
 				clearInterval(window[K_INTERVAL])
 			if (!this.gameState.isHost)
@@ -54,14 +47,12 @@ class GameSocket {
 		/* Closed callback */
 		let setup = this.setup.bind(this)
 		ws.addEventListener('close', () => {
-			//TODO: reenable error
-			//console.error(`WebSocket closed. Will retry in ${RETRY_INTERVAL}`)
 			window[K_INTERVAL] = setInterval(setup, RETRY_INTERVAL)
 		})
 	}
 
 	/* Send message to server*/
-	send (data) {
+	send(data) {
 		data.from = this.guid
 		if (window[K_SOCKET] && window[K_SOCKET].readyState === WebSocket.OPEN)
 			window[K_SOCKET].send(JSON.stringify(data))
@@ -70,25 +61,25 @@ class GameSocket {
 	}
 
 	/* Receive message from server */
-	receive (evt) {
+	receive(evt) {
 		let data = JSON.parse(evt.data)
-		if (data.from === this.guid) return /* ignore messages sent by self */
-		switch (data.t) {
-			case 'c': /* cursor push */
+		if (data.from === this.guid)
+			return /* ignore messages sent by self */
+		switch (data.messageType) {
+			case 'cursor': /* cursor push */
 				if (data.u !== this.gameState.state.username)
 					this.gameState.updateCursors(data.x, data.y, data.u, data.from)
 				break
-			case 'd': /* draw */
+			case 'draw': /* draw */
 				this.gameState.overlayRef.current.draw(data.x, data.y, data, true)
 				break
-			case 'e': /* erase */
-				this.gameState.overlayRef.current.erase(data.x, data.y, data.r, true)
-				break
-			case 'f': /* fog erasure */
+			case 'fog': /* fog erasure */
 				this.gameState.overlayRef.current.fogErase(data.x, data.y, data.r, data.r2, true)
 				break
 			case 'fogReset': /* fog reset */
 				this.gameState.fogRef.current.fill()
+				break
+			case 'drawReset':
 				break
 			case 't': /* token */
 				const local = this.gameState.state.tokens[data.i]
@@ -103,7 +94,7 @@ class GameSocket {
 				const tokens = data.tokens.map(tok => Object.assign({}, localTokensMap[tok.guid], tok))
 				this.gameState.setState({tokens: tokens})
 				break
-			case 'm': /* map id */
+			case 'map': /* map id */
 				const map = this.gameState.state.maps[data.i]
 				this.gameState.loadMap(map)
 				break
@@ -131,63 +122,67 @@ class GameSocket {
 		}
 	}
 
-	pushCursor (x, y) {
-		this.send({t: 'c', x: x, y: y, u: this.gameState.state.username})
+	pushCursor(x, y, username) {
+		this.send({
+			messageType: 'cursor', 
+			x: x, 
+			y: y, 
+			u: username,
+		})
 	}
 
-	pushDraw (data) {
-		this.send(Object.assign({t: 'd'}, data))
+	pushDraw(drawPath) {
+		this.send({
+			messageType: 'draw',
+			drawPath: drawPath,
+		})
 	}
 
-	pushErase (x, y, r) {
-		this.send({t: 'e', x: x, y: y, r: r})
+	pushFog(fogPath) {
+		this.send({
+			messageType: 'fog', 
+			fogPath: fogPath,
+		})
 	}
 
-	pushFogErase (x, y, r, r2) {
-		this.send({t: 'f', x: x, y: y, r: r, r2: r2})
-	}
-
-	pushMapId (mapId) {
-		this.send({t: 'm', i: mapId})
+	pushMapId(mapId) {
+		this.send({
+			messageType: 'map', 
+			i: mapId,
+		})
 	}
 
 	/* Push refresh */
-	pushRefresh (gameState, additionalAttrs) {
-		//TODO: Fix call to toJSON function
-		/*
-		const attrs = Object.assign({t: 'refresh'}, additionalAttrs)
-		let json = gameState.toJson(attrs)
-		this.send(JSON.parse(json))
-		*/
+	pushRefresh(gameState) {
+		this.send({
+			messageType: 'refresh',
+			state: gameState,
+		})
 	}
 
 	/* Push token update */
-	pushToken (index, token) {
+	pushToken(index, token) {
 		const tokenCopy = Object.assign({}, token)
 		this.scrubObject(tokenCopy)
-		const data = {t: 't', i: index, a: tokenCopy}
+		const data = {messageType: 't', i: index, a: tokenCopy}
 		this.send(data)
 	}
 
 	/* Push replacement of all tokens */
-	pushTokens (tokens) {
+	pushTokens(tokens) {
 		if (!tokens)
 			return
 		const tokensCopy = JSON.parse(JSON.stringify(tokens))
-		const data = { t: 'ts', tokens: tokensCopy }
+		const data = { messageType: 'ts', tokens: tokensCopy }
 		data.tokens.forEach(token => this.scrubObject(token))
 		this.send(data)
 	}
 
-	/* Send refresh request */
-	requestRefresh () {
-		this.send({t: 'refreshRequest'})
-	}
-
-	scrubObject (object) {
+	scrubObject(object) {
 		for (let key in object)
 			if (/^\$/.test(key) && key !== '$id')
 				delete object[key]
 	}
 }
+
 export default GameSocket
