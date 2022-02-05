@@ -2,7 +2,7 @@ import React from 'react'
 import guid from '../controllers/guid.js'
 import ControlPanelView from '../views/ControlPanelView.js'
 
-const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, notify, fromJson, initAsDev, updateGameToken, selectGameToken }) => {
+const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, notify, fromJson, initAsDev, updateGameToken, selectGameToken, resetFog, resetDrawing }) => {
 	const toggleHidden = () => {
 		setControlPanelState({
 			...controlPanelState,
@@ -157,7 +157,9 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 			updateGameToken={ updateGameToken } 
 			selectGameToken={ selectGameToken } 
 			newTokenUrl={ controlPanelState.newTokenUrl } 
-			createToken={ createToken } />
+			createToken={ createToken } 
+			resetFog={ resetFog } 
+			resetDrawing={ resetDrawing } />
 	)
 }
 

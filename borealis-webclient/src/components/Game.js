@@ -368,7 +368,6 @@ const Game = () => {
 	const updateCurrentFogPath = () => {
 		const ctx = gameState.overlayRef.current.getContext('2d')
 		ctx.beginPath()
-		ctx.globalCompositeOperation = 'destination-out'
 		var gradient
 		for (var pointId = 0; pointId < currentPath.length; pointId++) {
 			gradient = ctx.createRadialGradient(currentPath[pointId].x, currentPath[pointId].y, currentPath[pointId].r2 || 1, currentPath[pointId].x, currentPath[pointId].y, currentPath[pointId].r*0.75)
@@ -377,7 +376,6 @@ const Game = () => {
 			gradient.addColorStop(1, 'rgba(255,255,255,0)')
 			ctx.fillStyle = gradient
 			ctx.fillRect(currentPath[pointId].x-currentPath[pointId].r, currentPath[pointId].y-currentPath[pointId].r, currentPath[pointId].x+currentPath[pointId].r, currentPath[pointId].y+currentPath[pointId].r)
-			ctx.globalCompositeOperation = 'destination-over'
 		}
 		ctx.stroke()
 	}
@@ -387,6 +385,42 @@ const Game = () => {
 		if (!ctx)
 			return
 		ctx.clearRect(0, 0, gameState.state.width, gameState.state.height);
+	}
+
+	const resetFog = () => {
+		const currMap = getMap()
+		if (currMap && gameState.isHost) {
+			currentPath = []
+			const updatedMaps = gameState.state.maps.map((map) => {
+				return map.$id === currMap.$id ? {...currMap, fogPaths: [], } : map
+			})
+			
+			setGameState({
+				...gameState,
+				state: {
+					...gameState.state,
+					maps: updatedMaps,
+				}
+			})
+		}
+	}
+
+	const resetDrawing = () => {
+		const currMap = getMap()
+		if (currMap && gameState.isHost) {
+			currentPath = []
+			const updatedMaps = gameState.state.maps.map((map) => {
+				return map.$id === currMap.$id ? {...currMap, drawPaths: [], } : map
+			})
+			
+			setGameState({
+				...gameState,
+				state: {
+					...gameState.state,
+					maps: updatedMaps,
+				}
+			})
+		}
 	}
 
 	/****************************************************
@@ -706,6 +740,8 @@ const Game = () => {
 				updateGameToken={ updateToken } 
 				selectGameToken={ selectToken } 
 				updateMap={ updateMap } 
+				resetFog={ resetFog } 
+				resetDrawing={ resetDrawing } 
 			/>
 		)
 	} catch (ex) {

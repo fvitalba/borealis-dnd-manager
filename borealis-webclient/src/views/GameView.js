@@ -6,7 +6,7 @@ import Token from '../components/Token.js'
 import Cursor from './Cursor.js'
 import ControlPanel from '../components/ControlPanel.js'
 
-const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, onMouseMove, onMouseUp, onMouseDown, fromJson, notify, initAsDev, updateTokens, updateGameToken, selectGameToken }) => {
+const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, onMouseMove, onMouseUp, onMouseDown, fromJson, notify, initAsDev, updateTokens, updateGameToken, selectGameToken, resetFog, resetDrawing }) => {
 	const goneClass = gameState.state.isFogLoaded ? null : 'gone'
 	const deadline = new Date() - 30000
 	const cursors = Object.assign({}, gameState.state.cursors)
@@ -59,7 +59,9 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 				fromJson={ fromJson } 
 				initAsDev={ initAsDev } 
 				updateGameToken={ updateGameToken } 
-				selectGameToken={ selectGameToken } />
+				selectGameToken={ selectGameToken } 
+				resetFog={ resetFog } 
+				resetDrawing={ resetDrawing } />
 		</div>
 	)
 }
