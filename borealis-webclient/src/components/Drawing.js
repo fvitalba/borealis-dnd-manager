@@ -56,7 +56,6 @@ const Drawing = ({ gameState }) => {
 	}
 
 	const erease = (ctx, currPath) => {
-		//ctx.save()
 		ctx.globalCompositeOperation = 'destination-out'
 		ctx.beginPath()
 		for (var pointId = 0; pointId < currPath.length; pointId++) {
@@ -68,7 +67,6 @@ const Drawing = ({ gameState }) => {
 				ctx.lineTo(currPath[pointId].x, currPath[pointId].y)
 			}
 		}
-		//ctx.restore()
 	}
 	
 	return (

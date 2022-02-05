@@ -2,8 +2,7 @@ import React from 'react'
 import useCanvas from '../controllers/useCanvas.js'
 
 const Canvas = ({ id, draw, options, ...rest }) => {
-	//const { context, ...moreConfig } = options
-	const canvasRef = useCanvas(draw/*, {context}*/)
+	const canvasRef = useCanvas(draw)
 	
 	return (
 		<canvas id={ id } ref={ canvasRef } { ...rest } />

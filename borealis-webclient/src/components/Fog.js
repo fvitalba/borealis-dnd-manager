@@ -33,7 +33,6 @@ const Fog = ({ gameState }) => {
 	}
 
 	const ereaseFog = (ctx, currPath) => {
-		//ctx.save()
 		ctx.beginPath()
 		ctx.globalCompositeOperation = 'destination-out'
 		var gradient
@@ -44,7 +43,6 @@ const Fog = ({ gameState }) => {
 			ctx.fillStyle = gradient
 			ctx.fillRect(currPath[pointId].x-currPath[pointId].r, currPath[pointId].y-currPath[pointId].r, currPath[pointId].x+currPath[pointId].r, currPath[pointId].y+currPath[pointId].r)
 		}
-		//ctx.restore()
 	}
 
 	return (

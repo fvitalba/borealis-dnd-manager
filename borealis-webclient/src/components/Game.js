@@ -89,13 +89,6 @@ const Game = () => {
 	}, [gameState.state.lastX, gameState.state.lastY, gameState.state['toggleOnShare mouse (cursor)']])
 	*/
 
-	/*
-	useEffect(() => {
-		if (getMap())
-			loadMap(getMap(), false)
-	}, [gameState.state.mapId])
-	*/
-
 	useEffect(() => {
 		//TODO: reenable websocket push
 		//if (websocket)
@@ -120,30 +113,6 @@ const Game = () => {
 		})
 		return mapsCopy
 	}
-
-	/*
-	const loadMap = (map, skipSave, noEmit) => {
-		if (!map)
-			map = getMap()
-		if (!map)
-			return Promise.reject('no map')
-		const note = notify(`loading map ${map.$id}...`, 6000, 'loadMap')
-		if (!noEmit && gameState.isHost && websocket)
-			websocket.pushMapId(map.$id)
-		setGameState({
-			...gameState,
-			state: {
-				...gameState.state,
-				mapId: map.$id,
-				isFirstLoadDone: true,
-				isFogLoaded: true,
-			}
-		})
-		updateFogAndDraw(map)
-		note && note.close()
-		notify('map loaded', undefined, 'loadMap')
-	}
-	*/
 
 	const initAsDev = () => {
 		if (!window.confirm('Reset?'))
@@ -273,19 +242,6 @@ const Game = () => {
 				},
 			}, resolve)
 		})
-	}
-
-	const updatedMapCanvasChangedAt = (canvasName) => {
-		let newMap = getMap()
-		if (!newMap)
-			return []
-		if (canvasName === 'move')
-			return gameState.state.maps
-		newMap[`$${canvasName}ChangedAt`] = new Date()
-		const mapsCopy = gameState.state.maps.map(map => {
-			return map.mapId === gameState.state.mapId ? newMap : map
-		})
-		return mapsCopy
 	}
 
 	const toggleControlPanelVisibility = (key) => {
