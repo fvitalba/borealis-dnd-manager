@@ -1,6 +1,6 @@
 import Button from './Button.js'
 
-const ToolControlsView = ({ gameState, resetFog, onTextChangeGame, setFogOpacity, setSubtool }) => {
+const ToolControlsView = ({ gameState, onTextChangeGame, setFogOpacity, setSubtool }) => {
 	switch (gameState.state.tool) {
 		case 'draw':
 			return (
@@ -17,7 +17,7 @@ const ToolControlsView = ({ gameState, resetFog, onTextChangeGame, setFogOpacity
 		case 'fog':
 			return (
 				<span>
-					<Button title='reset fog' onClick={ resetFog } value='&#x1f300;' />
+					{ /* <Button title='reset fog' onClick={ resetFog } value='&#x1f300;' /> */ }
 					<input size='3' title='fog radius' value={ gameState.state.fogRadius || 0 } onChange={ (e) => onTextChangeGame('fogRadius', e) } type='number' step='5' min='1' />
 					<input size='3' title='fog opacity' step='0.05' min='0' max='1' value={ gameState.state.fogOpacity } onChange={ (e) => setFogOpacity(e) } type='number' />
 				</span>

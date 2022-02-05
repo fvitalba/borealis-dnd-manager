@@ -34,8 +34,7 @@ const ControlPanelView = ({ gameState, setGameState, controlPanelState, setContr
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<ToolControls 
 					gameState={ gameState } 
-					setGameState={ setGameState } 
-					resetFog={ resetFog } />
+					setGameState={ setGameState } />
 				<MapToolView 
 					gameState={ gameState } 
 					setGameState={ setGameState } 

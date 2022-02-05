@@ -3,7 +3,7 @@ import GameView from '../views/GameView.js'
 import guid from '../controllers/guid.js'
 import GameSocket from './Gamesocket'
 
-const initialGameState = (overlayRef, fogRef) => {
+const initialGameState = (overlayRef) => {
 	const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
 
 	return {
@@ -11,7 +11,6 @@ const initialGameState = (overlayRef, fogRef) => {
 		isHost: params.get('host'),
 		room: params.get('room'),
 		overlayRef: overlayRef,
-		fogRef: fogRef,
 		state: {
 			maps: [],
 			tokens: [],
@@ -55,8 +54,7 @@ const initialControlPanelState = () => {
 
 const Game = () => {
 	const overlayRef = React.useRef()
-	const fogRef = React.useRef()
-	const [gameState, setGameState] = useState(initialGameState(overlayRef, fogRef))
+	const [gameState, setGameState] = useState(initialGameState(overlayRef))
 	const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
 	const websocket = gameState.websocket ? gameState.websocket : new GameSocket(gameState)
 	var currentPath = []
@@ -172,6 +170,7 @@ const Game = () => {
 				$drawDumpedAt: undefined,
 				$drawChangedAt: undefined,
 				drawPaths: [],
+				fogPaths: [],
 			},
 			{
 				name: 'default',
@@ -188,6 +187,7 @@ const Game = () => {
 				$drawDumpedAt: undefined,
 				$drawChangedAt: undefined,
 				drawPaths: [],
+				fogPaths: [],
 			}
 		]
 		return new Promise(resolve => {
@@ -336,73 +336,6 @@ const Game = () => {
 	/****************************************************
 	 * Drawing Functions                                *
 	 ****************************************************/
-	const getFogContext = () => {
-		if (!gameState.fogRef)
-			return undefined
-		if (!gameState.fogRef.current)
-			return undefined
-		return gameState.fogRef.current.getContext('2d')
-	}
-
-	 const drawFog = () => {
-		const ctx = getFogContext()
-		if (!ctx)
-			return
-		ctx.globalCompositeOperation = 'destination-over'
-		ctx.fillStyle = 'black'
-		ctx.fillRect(0, 0, gameState.state.width, gameState.state.height)
-	}
-
-	const resetFog = () => {
-		drawFog()
-	}
-
-	const fogErase = (x, y, r, r2, noEmit) => {
-		/*
-		const ctx = getFogContext()
-		if (!ctx)
-			return
-		if (!r)
-			r = gameState.state.fogRadius
-		ctx.globalCompositeOperation = 'destination-out'
-		let gradient = ctx.createRadialGradient(x, y, r2||1, x, y, r*0.75)
-		gradient.addColorStop(0, 'rgba(0,0,0,255)')
-		gradient.addColorStop(1, 'rgba(0,0,0,0)')
-		ctx.fillStyle = gradient
-		ctx.fillRect(x-r, y-r, x+r, y+r)
-		ctx.globalCompositeOperation = 'destination-over'
-		if (!noEmit)
-			websocket.pushFogErase(x, y, r, r2)
-		*/
-	}
-
-	const updateFogAndDraw = (map) => {
-		/*
-		const fogCtx = getFogContext()
-		const drawCtx = getDrawingContext()
-
-		drawFog()
-		if (map.fogUrl) {
-			let img = new Image()
-			img.onload = function(){
-				fogCtx.drawImage(img, 0, 0, gameState.state.width, gameState.state.height)
-			}
-			img.src = map.fogUrl
-		}
-
-		drawCtx.clearRect(0, 0, gameState.state.width, gameState.state.height)
-		*/
-		/*
-		if (map.drawUrl) {
-			let img = new Image()
-			img.onload = function(){
-				drawCtx.drawImage(img, 0, 0, gameState.state.width, gameState.state.height)
-			}
-			img.src = map.drawUrl
-		}
-		*/
-	}
-
 	const setPointerOutline = (x, y, color, radius) => {
 		if (color == null)
 			return
@@ -428,6 +361,23 @@ const Game = () => {
 			} else {
 				ctx.lineTo(currentPath[pointId].x, currentPath[pointId].y)
 			}
+		}
+		ctx.stroke()
+	}
+
+	const updateCurrentFogPath = () => {
+		const ctx = gameState.overlayRef.current.getContext('2d')
+		ctx.beginPath()
+		ctx.globalCompositeOperation = 'destination-out'
+		var gradient
+		for (var pointId = 0; pointId < currentPath.length; pointId++) {
+			gradient = ctx.createRadialGradient(currentPath[pointId].x, currentPath[pointId].y, currentPath[pointId].r2 || 1, currentPath[pointId].x, currentPath[pointId].y, currentPath[pointId].r*0.75)
+			ctx.lineCap = 'round'
+			gradient.addColorStop(0, 'rgba(255,255,255,255)')
+			gradient.addColorStop(1, 'rgba(255,255,255,0)')
+			ctx.fillStyle = gradient
+			ctx.fillRect(currentPath[pointId].x-currentPath[pointId].r, currentPath[pointId].y-currentPath[pointId].r, currentPath[pointId].x+currentPath[pointId].r, currentPath[pointId].y+currentPath[pointId].r)
+			ctx.globalCompositeOperation = 'destination-over'
 		}
 		ctx.stroke()
 	}
@@ -557,14 +507,23 @@ const Game = () => {
 
 	const onMouseUp = (e) => {
 		const currMap = getMap()
-		if (currMap) {
+		if (currMap && gameState.isHost) {
+			const fogPaths = currMap.fogPaths
 			const drawPaths = currMap.drawPaths
-			drawPaths.push(currentPath)
+			switch (gameState.state.tool) {
+				case 'fog':
+					fogPaths.push(currentPath)
+					break
+				case 'draw':
+					drawPaths.push(currentPath)
+					break
+				default: break
+			}
 			currentPath = []
-
 			const updatedMaps = gameState.state.maps.map((map) => {
-				return map.$id === currMap.$id ? {...currMap, drawPaths: drawPaths, } : map
+				return map.$id === currMap.$id ? {...currMap, fogPaths: fogPaths, drawPaths: drawPaths, } : map
 			})
+			
 			setGameState({
 				...gameState,
 				state: {
@@ -589,6 +548,8 @@ const Game = () => {
 			currentPath.push({
 				x: e.pageX,
 				y: e.pageY,
+				r: gameState.state.fogRadius,
+				r2: undefined,
 				tool: currentTool(),
 				drawColor: gameState.state.drawColor,
 				drawSize: gameState.state.drawSize,
@@ -604,8 +565,7 @@ const Game = () => {
 		let x = e.pageX, y = e.pageY
 		switch (gameState.isHost ? gameState.state.tool : 'move') {
 			case 'fog':
-				if (e.buttons & 1)
-					fogErase(x, y)
+				updateCurrentFogPath()
 				setPointerOutline(x, y, 'yellow', gameState.state.fogRadius)
 				break
 			case 'draw':
@@ -622,6 +582,8 @@ const Game = () => {
 			currentPath.push({
 				x: x,
 				y: y,
+				r: gameState.state.fogRadius,
+				r2: undefined,
 				tool: currentTool(),
 				drawColor: gameState.state.drawColor,
 				drawSize: gameState.state.drawSize,
@@ -744,7 +706,6 @@ const Game = () => {
 				updateGameToken={ updateToken } 
 				selectGameToken={ selectToken } 
 				updateMap={ updateMap } 
-				resetFog={ resetFog } 
 			/>
 		)
 	} catch (ex) {

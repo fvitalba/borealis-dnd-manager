@@ -1,6 +1,6 @@
 import ToolControlsView from "../views/ToolControlsView.js"
 
-const ToolControls = ({ gameState, setGameState, resetFog }) => {
+const ToolControls = ({ gameState, setGameState }) => {
 	const setSubtool = (subtool) => {
 		setGameState({
 			...gameState,
@@ -37,7 +37,6 @@ const ToolControls = ({ gameState, setGameState, resetFog }) => {
 		<span>
 			<ToolControlsView 
 				gameState={ gameState } 
-				resetFog={ resetFog } 
 				onTextChangeGame={ onTextChangeGame } 
 				setFogOpacity={ setFogOpacity } 
 				setSubtool={ setSubtool } />
