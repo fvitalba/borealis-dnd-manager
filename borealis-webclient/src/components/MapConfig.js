@@ -53,7 +53,7 @@ const MapConfig = ({ gameState, setGameState, map, mapId }) => {
 	const deleteMap = () => {
 		if (window.confirm('Delete map?')) {
 			const maps = gameState.state.maps
-			const newMaps = maps.filter((map) => map.$id !== mapId)
+			const newMaps = maps.filter((map) => parseInt(map.$id) !== parseInt(mapId))
 			setGameState({
 				...gameState,
 				state: {
