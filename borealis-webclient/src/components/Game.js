@@ -415,6 +415,23 @@ const Game = () => {
 		ctx.closePath()
 	}
 
+	const updateCurrentDrawPath = () => {
+		const ctx = gameState.overlayRef.current.getContext('2d')
+		ctx.beginPath()
+		for (var pointId = 0; pointId < currentPath.length; pointId++) {
+			ctx.lineCap = 'round'
+			ctx.fillStyle = currentPath[pointId].drawColor
+			ctx.lineWidth = currentPath[pointId].drawSize
+			ctx.strokeStyle = currentPath[pointId].drawColor
+			if (pointId === 0) {
+				ctx.moveTo(currentPath[pointId].x, currentPath[pointId].y)
+			} else {
+				ctx.lineTo(currentPath[pointId].x, currentPath[pointId].y)
+			}
+		}
+		ctx.stroke()
+	}
+
 	const clearOverlay = () => {
 		const ctx = gameState.overlayRef.current.getContext('2d')
 		if (!ctx)
@@ -592,6 +609,7 @@ const Game = () => {
 				setPointerOutline(x, y, 'yellow', gameState.state.fogRadius)
 				break
 			case 'draw':
+				updateCurrentDrawPath()
 				setPointerOutline(x, y, gameState.state.drawColor, gameState.state.drawSize)
 				break
 			case 'move':
