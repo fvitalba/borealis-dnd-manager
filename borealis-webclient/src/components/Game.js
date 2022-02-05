@@ -107,11 +107,11 @@ const Game = () => {
 	/****************************************************
 	 * Map Functions                                    *
 	 ****************************************************/
-	const getMap = () => {
+	 const getMap = () => {
 		if (gameState.state.maps.length === 0)
 			return undefined
-		const map = gameState.state.maps.filter(map => map.$id === gameState.state.mapId)
-		return map.length > 0 ? map[0] : gameState.state.maps[0]
+		const currMap = gameState.state.maps.filter((map) => parseInt(map.$id) === parseInt(gameState.state.mapId))
+		return currMap.length > 0 ? currMap[0] : gameState.state.maps[0]
 	}
 
 	/* Copy maps and dump current data urls, suitable for save to state or localStorage */

@@ -8,8 +8,8 @@ const Drawing = ({ gameState }) => {
 	const getMap = () => {
 		if (gameState.state.maps.length === 0)
 			return undefined
-		const map = gameState.state.maps.filter(map => map.$id === gameState.state.mapId)
-		return map.length > 0 ? map[0] : gameState.state.maps[0]
+		const currMap = gameState.state.maps.filter((map) => parseInt(map.$id) === parseInt(gameState.state.mapId))
+		return currMap.length > 0 ? currMap[0] : gameState.state.maps[0]
 	}
 	const map = getMap()
 
@@ -20,12 +20,10 @@ const Drawing = ({ gameState }) => {
 		if (!ctx)
 			return
 		
-		console.debug('redrawing map', map)
 		ctx.beginPath()
 		ctx.clearRect(0, 0, width, height)
 		for(var pathId = 0; pathId < map.drawPaths.length; pathId++) {
 			const currPath = map.drawPaths[pathId]
-			console.log('drawing path',currPath)
 			const tool = currPath.length > 0 ? currPath[0].tool : ''
 			switch (tool) {
 				case 'draw': 
