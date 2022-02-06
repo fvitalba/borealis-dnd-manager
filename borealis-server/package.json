@@ -1,0 +1,16 @@
+{
+  "name": "borealis-server",
+  "version": "1.0.0",
+  "description": "Websockets application for Tabletop Maps Interactive",
+  "main": "index.js",
+  "scripts": {
+    "daemon": ">/dev/null nohup node index.js &",
+    "kill": "kill $(cat pid.tmp) && rm pid.tmp",
+    "start": "node index.js"
+  },
+  "author": "Markham Anderson and Fabio Vitalba",
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^7.4.6"
+  }
+}
