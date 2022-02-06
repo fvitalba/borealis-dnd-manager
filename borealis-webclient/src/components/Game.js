@@ -56,11 +56,16 @@ const Game = () => {
 	const overlayRef = React.useRef()
 	const [gameState, setGameState] = useState(initialGameState(overlayRef))
 	const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
-	const websocket = gameState.websocket ? gameState.websocket : new GameSocket(gameState)
+	const websocket = gameState.websocket ? gameState.websocket : new GameSocket(gameState, setGameState)
+	console.log('current websocket', websocket)
+	if (websocket)
+		websocket.send({from: websocket.guid, test: 'test'})
 	let currentPath = []
 	
 	// On Mount
 	useEffect(() => {
+		console.log('websocket',websocket)
+		console.log('gameState.websocket',gameState.websocket)
 		if (gameState.websocket !== websocket)
 			setGameState({
 				...gameState,
@@ -98,7 +103,7 @@ const Game = () => {
 	/****************************************************
 	 * Map Functions                                    *
 	 ****************************************************/
-	 const getMap = () => {
+	const getMap = () => {
 		if (gameState.state.maps.length === 0)
 			return undefined
 		const currMap = gameState.state.maps.filter((map) => parseInt(map.$id) === parseInt(gameState.state.mapId))
@@ -499,19 +504,17 @@ const Game = () => {
 
 	const onMouseUp = (e) => {
 		const currMap = getMap()
-		let fogWasChanged = false
-		let drawWasChanged = false
 		if (currMap && gameState.isHost) {
 			const fogPaths = currMap.fogPaths
 			const drawPaths = currMap.drawPaths
 			switch (gameState.state.tool) {
 				case 'fog':
 					fogPaths.push(currentPath)
-					fogWasChanged = true
+					websocket.pushFog(currentPath)
 					break
 				case 'draw':
 					drawPaths.push(currentPath)
-					drawWasChanged = true
+					websocket.pushDraw(currentPath)
 					break
 				default: break
 			}
@@ -527,11 +530,6 @@ const Game = () => {
 					maps: updatedMaps,
 				}
 			})
-
-			if (fogWasChanged)
-				websocket.pushFog(currentPath)
-			if (drawWasChanged)
-				websocket.pushDraw(currentPath)
 		}
 	}
 
