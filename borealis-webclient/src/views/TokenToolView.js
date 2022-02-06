@@ -18,7 +18,7 @@ const TokenToolView = ({ gameState, setGameState, toggleOnTokens, onTextChange, 
 			</div>
 		)
 	else
-		return SelectedTokensControls
+		return <SelectedTokensControls gameState={ gameState } setGameState={ setGameState } updateGameToken={ updateGameToken } selectGameToken={ selectGameToken } />
 }
 
 export default TokenToolView
