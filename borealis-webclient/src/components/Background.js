@@ -35,7 +35,6 @@ const Background = ({ gameState, setGameState, controlPanelState, setControlPane
 
 	const draw = (ctx) => {
 		if (!map) {
-			console.error('No map is selected.')
 			return
 		}
 		drawImage(map.url, map.name, map, ctx, null, updateMap)
