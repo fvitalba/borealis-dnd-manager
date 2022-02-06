@@ -597,13 +597,16 @@ const Game = ({ websocket }) => {
 	 * Receiving Data                                   *
 	 ****************************************************/
 	const receiveData = (evt) => {
-		console.log('received data from server',evt.data)
 		let data = JSON.parse(evt.data)
 		console.log('parsed data', data)
-		if (data.from === websocket.guid)
+		if (data.from === websocket.guid) {
+			console.log('data was sent by self')
 			return // ignore messages sent by self
-		if (!data.to || (data.to !== websocket.guid))
+		}
+		if (data.to && (data.to !== websocket.guid)) {
+			console.log('data was not directed at me')
 			return	// ignore dedicated messages not directed to self
+		}
 		switch (data.messageType) {
 			case 'cursor':
 				/*
@@ -661,13 +664,17 @@ const Game = ({ websocket }) => {
 					return
 				}
 				console.log('starting refresh & updating state')
-				setGameState({
+				console.log('current gameState',gameState)
+				const newGameState = {
 					...gameState,
 					state: {
-						...data.gameState.state,
+						...gameState.state,
+						...data.state.state,
 						username: gameState.state.username,
 					},
-				})
+				}
+				console.log('new GameState', newGameState)
+				setGameState(newGameState)
 				break
 			case 'refreshRequest': /* refresh request from player */
 				if (gameState.isHost) {

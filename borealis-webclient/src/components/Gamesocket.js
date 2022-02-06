@@ -6,6 +6,19 @@ const RETRY_INTERVAL = 250000
 const K_SOCKET = 'gameWebSocket'
 const K_INTERVAL = 'gameWebSocketInterval'
 
+const getCircularReplacer = () => {
+	const seen = new WeakSet;
+	return (key, value) => {
+	  if (typeof value === "object" && value !== null) {
+		if (seen.has(value)) {
+		  return;
+		}
+		seen.add(value);
+	  }
+	  return value;
+	};
+  };
+
 class GameSocket {
 	setup( room ) {
 		let host = window.location.host.replace(/:\d+$/, '')
@@ -43,7 +56,7 @@ class GameSocket {
 	send(data) {
 		data.from = this.guid
 		if (window[K_SOCKET] && window[K_SOCKET].readyState === WebSocket.OPEN)
-			window[K_SOCKET].send(JSON.stringify(data))
+			window[K_SOCKET].send(JSON.stringify(data, getCircularReplacer()))
 		else
 			console.error('no websocket')
 	}
