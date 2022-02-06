@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import GameView from '../views/GameView.js'
 import guid from '../controllers/guid.js'
-import GameSocket from './GameSocket.js'
 
 const initialGameState = (overlayRef) => {
 	const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
@@ -52,29 +51,19 @@ const initialControlPanelState = () => {
 	}
 }
 
-const Game = () => {
+const Game = ({ websocket }) => {
 	const overlayRef = React.useRef()
 	const [gameState, setGameState] = useState(initialGameState(overlayRef))
 	const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
-	const websocket = gameState.websocket ? gameState.websocket : new GameSocket(gameState, setGameState)
-	console.log('current websocket', websocket)
-	if (websocket)
-		websocket.send({from: websocket.guid, test: 'test'})
 	let currentPath = []
-	
+
 	// On Mount
 	useEffect(() => {
-		console.log('websocket',websocket)
-		console.log('gameState.websocket',gameState.websocket)
-		if (gameState.websocket !== websocket)
-			setGameState({
-				...gameState,
-				websocket: websocket,
-			})
 		window.addEventListener('beforeunload', saveToLocalStorage)
 		window.addEventListener('resize', onResize)
 		window.addEventListener('keypress', onKeyPress)
 		window.addEventListener('keydown', onKeyDown)
+		websocket.addCallbacks( gameState.state.isHost, receiveData )
 		loadFromLocalStorage()
 
 		// On Unmount
@@ -601,6 +590,93 @@ const Game = () => {
 				}
 			default:
 				return gameState.state.tool
+		}
+	}
+
+	/****************************************************
+	 * Receiving Data                                   *
+	 ****************************************************/
+	const receiveData = (evt) => {
+		console.log('received data from server',evt.data)
+		let data = JSON.parse(evt.data)
+		console.log('parsed data', data)
+		if (data.from === websocket.guid)
+			return // ignore messages sent by self
+		if (!data.to || (data.to !== websocket.guid))
+			return	// ignore dedicated messages not directed to self
+		switch (data.messageType) {
+			case 'cursor':
+				/*
+				if (data.u !== this.gameState.state.username)
+					this.gameState.updateCursors(data.x, data.y, data.u, data.from)
+				*/
+				break
+			case 'draw':
+				const currMap = getMap()
+				const updatedMaps = gameState.state.maps.map((map) => {
+					return map.$id === currMap.$id ? {...currMap, drawPaths: data.drawPath, } : map
+				})
+				setGameState({
+					...gameState,
+					state: {
+						...gameState.state,
+						maps: updatedMaps,
+					}
+				})
+				break
+			case 'fog': /* fog erasure */
+				//this.gameState.overlayRef.current.fogErase(data.x, data.y, data.r, data.r2, true)
+				break
+			case 'fogReset': /* fog reset */
+				//this.gameState.fogRef.current.fill()
+				break
+			case 'drawReset':
+				break
+			case 't': /* token */
+				/*
+				const local = this.gameState.state.tokens[data.i]
+				const token = Object.assign(local, data.a) // Keep and `$` attrs like `$selected`
+				this.gameState.updateTokenByIndex(data.i, token, true)
+				*/
+				break
+			case 'ts': /* all tokens */
+				/*
+				const localTokensMap = this.gameState.state.tokens.reduce((out, tok) => {
+					out[tok.guid] = tok
+					return out
+				}, {})
+				const tokens = data.tokens.map(tok => Object.assign({}, localTokensMap[tok.guid], tok))
+				this.gameState.setState({tokens: tokens})
+				*/
+				break
+			case 'map': /* map id */
+				/*
+				const map = this.gameState.state.maps[data.i]
+				this.gameState.loadMap(map)
+				*/
+				break
+			case 'refresh': /* refresh from host */
+				if (data.to && data.to !== websocket.guid) {
+					console.log(`Will not apply refresh from ${data.to} (self)`)
+					return
+				}
+				console.log('starting refresh & updating state')
+				setGameState({
+					...gameState,
+					state: {
+						...data.gameState.state,
+						username: gameState.state.username,
+					},
+				})
+				break
+			case 'refreshRequest': /* refresh request from player */
+				if (gameState.isHost) {
+					console.log('Got refresh request', data.from)
+					websocket.pushRefresh(gameState, { to: data.from, })
+				}
+				break
+			default:
+				console.error(`Unrecognized websocket message type: ${data.t}`)
 		}
 	}
 
