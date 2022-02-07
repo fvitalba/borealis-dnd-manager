@@ -2,14 +2,14 @@ import React, { useState } from 'react'
 import MapConfigView from '../views/MapConfigView.js'
 
 const initialMapConfigState = (gameState, map) => {
-	const maps = gameState.state.maps
+	const maps = gameState.game.maps
 	const existingMap = maps.filter((mapElement) => mapElement.$id === map.$id)
 	const currentMap = existingMap ? existingMap : { name: undefined, url: undefined, w: undefined, h: undefined, }
 
 	return {
 		$id: map.$id,
 		name: currentMap.name ? currentMap.name : map.name,
-		imageUrl: currentMap.url ? currentMap.url : '',
+		imageUrl: currentMap.imageUrl ? currentMap.imageUrl : '',
 		width: currentMap.width ? currentMap.width : window.innerWidth,
 		height: currentMap.height ? currentMap.height : window.innerHeight,
 		x: 0,
@@ -17,9 +17,9 @@ const initialMapConfigState = (gameState, map) => {
 	}
 }
 
-const MapConfig = ({ gameState, setGameState, map, mapId }) => {
+const MapConfig = ({ gameState, setGameState, map, mapId, websocket }) => {
 	const [mapConfigState, setMapConfigState] = useState(initialMapConfigState(gameState, map))
-	const isSelected = gameState.state.mapId === mapId
+	const isSelected = gameState.game.mapId === mapId
 
 	const onTextChange = (key, evt) => {
 		setMapConfigState({
@@ -37,29 +37,31 @@ const MapConfig = ({ gameState, setGameState, map, mapId }) => {
 	}
 
 	const load = () => {
-		console.log('loading map',mapId)
+		const updatedMaps = gameState.game.maps.map((map) => {
+			return parseInt(mapId) === map.$id ? { ...map, imageUrl: mapConfigState.imageUrl, width: mapConfigState.width, height: mapConfigState.height, } : map
+		})
 		setGameState({
 			...gameState,
-			state: {
-				...gameState.state,
-				mapId: mapId,
+			game: {
+				...gameState.game,
+				maps: updatedMaps,
+				mapId: parseInt(mapId),
 				isFirstLoadDone: true,
 				isFogLoaded: true,
 			}
 		})
-		console.log('new gameState',gameState)
 	}
 
 	const deleteMap = () => {
 		if (window.confirm('Delete map?')) {
-			const maps = gameState.state.maps
+			const maps = gameState.game.maps
 			const newMaps = maps.filter((map) => parseInt(map.$id) !== parseInt(mapId))
 			setGameState({
 				...gameState,
-				state: {
-					...gameState.state,
+				game: {
+					...gameState.game,
 					maps: newMaps,
-					mapId: mapId === gameState.state.mapId ? undefined : gameState.state.mapId,
+					mapId: parseInt(mapId) === gameState.game.mapId ? undefined : gameState.game.mapId,
 				},
 			})
 		}

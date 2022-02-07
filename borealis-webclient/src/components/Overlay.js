@@ -7,10 +7,10 @@ import React from 'react';
  * fog and also the cursor identifiers              *
  ****************************************************/
 const Overlay = ({ gameState }) => {
-	const maps = gameState.state.maps
-	const map = maps[gameState.state.mapId] || undefined
-	const width = map ? map.width : gameState.state.width
-	const height = map ? map.height : gameState.state.height
+	const maps = gameState.game.maps
+	const map = maps[gameState.game.mapId] || undefined
+	const width = map ? map.width : gameState.game.width
+	const height = map ? map.height : gameState.game.height
 	const canvasRef = gameState.overlayRef
 
 	return (

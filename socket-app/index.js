@@ -16,7 +16,7 @@ fs.writeFile('pid.tmp', process.pid.toString(), err => {
 	console.log(`process id ${process.pid}`);
 });
 
-var httpServer;
+let httpServer;
 
 /* Check SSL files & create HTTPS server */
 if (fs.existsSync(PRIVATE_KEY_FILE) && fs.existsSync(SSl_CERTIFICATE_FILE)) {

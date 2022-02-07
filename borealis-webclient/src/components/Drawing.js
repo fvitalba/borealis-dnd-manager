@@ -2,14 +2,14 @@ import React from 'react'
 import Canvas from './Canvas.js'
 
 const Drawing = ({ gameState }) => {
-	const width = gameState.state.width
-	const height = gameState.state.height
+	const width = gameState.game.width
+	const height = gameState.game.height
 
 	const getMap = () => {
-		if (gameState.state.maps.length === 0)
+		if (gameState.game.maps.length === 0)
 			return undefined
-		const currMap = gameState.state.maps.filter((map) => parseInt(map.$id) === parseInt(gameState.state.mapId))
-		return currMap.length > 0 ? currMap[0] : gameState.state.maps[0]
+		const currMap = gameState.game.maps.filter((map) => parseInt(map.$id) === parseInt(gameState.game.mapId))
+		return currMap.length > 0 ? currMap[0] : gameState.game.maps[0]
 	}
 	const map = getMap()
 
@@ -22,18 +22,18 @@ const Drawing = ({ gameState }) => {
 		
 		ctx.beginPath()
 		ctx.clearRect(0, 0, width, height)
-		for(var pathId = 0; pathId < map.drawPaths.length; pathId++) {
+		for(let pathId = 0; pathId < map.drawPaths.length; pathId++) {
 			const currPath = map.drawPaths[pathId]
 			const tool = currPath.length > 0 ? currPath[0].tool : ''
 			switch (tool) {
 				case 'draw': 
 					draw(ctx, currPath)
-					break;
+					break
 				case 'erease':
 					erease(ctx, currPath)
-					break;
+					break
 				default:
-					break;
+					break
 			}
 			ctx.stroke()
 		}
@@ -42,7 +42,7 @@ const Drawing = ({ gameState }) => {
 	const draw = (ctx, currPath) => {
 		ctx.globalCompositeOperation = 'source-over'
 		ctx.beginPath()
-		for (var pointId = 0; pointId < currPath.length; pointId++) {
+		for (let pointId = 0; pointId < currPath.length; pointId++) {
 			ctx.lineCap = 'round'
 			ctx.fillStyle = currPath[pointId].drawColor
 			ctx.lineWidth = currPath[pointId].drawSize
@@ -56,10 +56,9 @@ const Drawing = ({ gameState }) => {
 	}
 
 	const erease = (ctx, currPath) => {
-		//ctx.save()
 		ctx.globalCompositeOperation = 'destination-out'
 		ctx.beginPath()
-		for (var pointId = 0; pointId < currPath.length; pointId++) {
+		for (let pointId = 0; pointId < currPath.length; pointId++) {
 			ctx.lineCap = 'round'
 			ctx.lineWidth = currPath[pointId].drawSize
 			if (pointId === 0) {
@@ -68,7 +67,6 @@ const Drawing = ({ gameState }) => {
 				ctx.lineTo(currPath[pointId].x, currPath[pointId].y)
 			}
 		}
-		//ctx.restore()
 	}
 	
 	return (

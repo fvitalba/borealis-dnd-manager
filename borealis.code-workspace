@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "borealis-webclient"
+		},
+		{
+			"path": "borealis-server"
 		}
 	],
 	"settings": {}

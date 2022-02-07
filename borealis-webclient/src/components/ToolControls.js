@@ -4,8 +4,8 @@ const ToolControls = ({ gameState, setGameState, resetFog, resetDrawing }) => {
 	const setSubtool = (subtool) => {
 		setGameState({
 			...gameState,
-			state: {
-				...gameState.state,
+			settings: {
+				...gameState.settings,
 				subtool: subtool,
 			}
 		})
@@ -14,8 +14,8 @@ const ToolControls = ({ gameState, setGameState, resetFog, resetDrawing }) => {
 	const onTextChangeGame = (key, e) => {
 		setGameState({
 			...gameState,
-			state: {
-				...gameState.state,
+			settings: {
+				...gameState.settings,
 				[key]: e.target.value,
 			}
 		})
@@ -26,8 +26,8 @@ const ToolControls = ({ gameState, setGameState, resetFog, resetDrawing }) => {
 		if (!isNaN(newOpacity))
 			setGameState({
 				...gameState,
-				state: {
-					...gameState.state,
+				settings: {
+					...gameState.settings,
 					fogOpacity: newOpacity,
 				}
 			})
