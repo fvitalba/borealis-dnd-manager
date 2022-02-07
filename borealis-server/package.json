@@ -3,14 +3,17 @@
   "version": "1.0.0",
   "description": "Websockets application for Tabletop Maps Interactive",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "daemon": ">/dev/null nohup node index.js &",
     "kill": "kill $(cat pid.tmp) && rm pid.tmp",
     "start": "node index.js"
   },
-  "author": "Markham Anderson and Fabio Vitalba",
+  "author": "Fabio Vitalba",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.17.2",
+    "query-string": "^7.1.1",
     "ws": "^7.4.6"
   }
 }

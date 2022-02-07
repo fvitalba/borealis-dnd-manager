@@ -1,78 +1,43 @@
-/* cf.
-https://github.com/websockets/ws/tree/master/examples
-https://github.com/theturtle32/WebSocket-Node/blob/master/docs/index.md
-https://blog.zackad.dev/en/2017/08/19/create-websocket-with-nodejs.html
-*/
+import express from 'express'
+import http from 'http'
+import WebSocket from 'ws'
+import queryString from 'query-string'
 
-const PRIVATE_KEY_FILE = 'privkey.pem'
-const SSl_CERTIFICATE_FILE = 'fullchain.pem'
-const SOCKET_SERVER_PORT = 8000
 
-const fs = require('fs')
+const app = express()
 
-/* Write pid file*/
-fs.writeFile('pid.tmp', process.pid.toString(), err => {
-	if (err)
-        return console.log(err)
-	console.log(`process id ${process.pid}`)
-})
+const serverPort = process.env.PORT || 8000
 
-let httpServer
+app.use(express.static('build'))
 
-/* Check SSL files & create HTTPS server */
-if (fs.existsSync(PRIVATE_KEY_FILE) && fs.existsSync(SSl_CERTIFICATE_FILE)) {
-	const privateKey = fs.readFileSync(PRIVATE_KEY_FILE, 'utf-8')
-	const certificate = fs.readFileSync(SSl_CERTIFICATE_FILE, 'utf-8')
-	const https = require('https')
-	httpServer = https.createServer({
-        key: privateKey, 
-        cert: certificate,
+const server = http.createServer(app);
+
+//initialize the WebSocket server instance
+const wss = new WebSocket.Server({ server })
+
+wss.on('connection', function connection(websocketConnection, connectionRequest) {
+    const [_path, params] = connectionRequest?.url?.split('?')
+    const connectionParams = queryString.parse(params)
+    
+    websocketConnection.room = connectionParams.room
+    websocketConnection.guid = connectionParams.guid
+
+    websocketConnection.on('message', (message) => {
+        const parsedMessage = JSON.parse(message)
+        /* Forward message to all other clients (for this room) */
+        wss.clients.forEach(client => {
+            if (client.readyState === WebSocket.OPEN) {
+                if (client.room !== this.room)
+                    return /* Don't send to other rooms */
+                if (client === this)
+                    return /* Don't send back to sender */
+                    client.send(JSON.stringify(parsedMessage))
+            }
+        })
     })
-} else {
-    /* Create HTTP server*/
-	const http = require('http')
-	httpServer = http.createServer()
-}
-
-const webSocketServer = require('ws').Server
-const WebSocket = require('ws')
-const ws = new webSocketServer({
-    server: httpServer,
-    autoAcceptConnections: true,
 })
 
-ws.on('connection', function (connection, request) {
-    connection.on('message', onMessage)
-    let [room, params] = request.url.split('?')
-    connection.room = room
-    params = new URLSearchParams(params)
-    connection.guid = params.get('guid')
+//start our server
+server.listen(serverPort, () => {
+    console.log(`Server started on port ${server.address().port}.`)
 })
-
-
-function isExpired (obj) {
-    if (!obj)
-        return true
-    let then = obj.createdAt
-    if (!then)
-        return true
-    let now = new Date()
-    return now - then > 1000 * 60 * 60 * 3
-}
-
-function onMessage (msg) {
-    const data = JSON.parse(msg)
-    /* Forward message to all other clients (for this room) */
-    ws.clients.forEach(conn => {
-        if (conn.readyState === WebSocket.OPEN) {
-            if (conn.room !== this.room)
-                return /* Don't send to other rooms */
-            if (conn === this)
-                return /* Don't send back to sender */
-            conn.send(JSON.stringify(data))
-        }
-    })
-}
-
-console.log('starting...')
-httpServer.listen(SOCKET_SERVER_PORT)

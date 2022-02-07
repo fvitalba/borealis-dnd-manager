@@ -18,7 +18,7 @@ class GameSocket {
 			delete window[K_SOCKET] /* Delete, then close, s.t. cb doesn't re-open it */
 			socket.close()
 		}
-		window[K_SOCKET] = new WebSocket(`${protocol}://${host}:${SOCKET_SERVER_PORT}/${room}?guid=${this.guid}`)
+		window[K_SOCKET] = new WebSocket(`${protocol}://${host}:${SOCKET_SERVER_PORT}/?room=${room}?guid=${this.guid}`)
 	}
 
 	addCallbacks( isHost, receiveCallback ) {
