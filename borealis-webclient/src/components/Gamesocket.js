@@ -1,7 +1,6 @@
 import guid from '../controllers/guid.js'
 
-// TODO: reset to 2500
-const RETRY_INTERVAL = 250000
+const RETRY_INTERVAL = 2500
 
 const K_SOCKET = 'gameWebSocket'
 const K_INTERVAL = 'gameWebSocketInterval'
@@ -69,6 +68,14 @@ class GameSocket {
 		this.send({
 			messageType: 'fog', 
 			fogPath: fogPath,
+		})
+	}
+
+	pushMaps(maps, mapId) {
+		this.send({
+			messageType: 'maps',
+			maps: maps,
+			mapId: mapId,
 		})
 	}
 

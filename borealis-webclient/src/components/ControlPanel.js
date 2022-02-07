@@ -43,7 +43,7 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 		const newMap = {
 			name: controlPanelState.newMapName,
 			$id: mapId,
-			backgroundImageUrl: '',
+			imageUrl: '',
 			x: 0,
 			y: 0,
 			width: window.innerWidth,

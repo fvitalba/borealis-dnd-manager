@@ -93,6 +93,11 @@ const Game = ({ websocket }) => {
 		//	websocket.pushTokens(gameState.game.tokens)
 	}, [gameState.game.tokens])
 
+	useEffect(() => {
+		if (websocket && gameState.metadata.isHost)
+			websocket.pushMaps(gameState.game.maps, gameState.game.mapId)
+	}, [gameState.game.mapId])
+
 	/****************************************************
 	 * Map Functions                                    *
 	 ****************************************************/
@@ -164,7 +169,7 @@ const Game = ({ websocket }) => {
 	 ****************************************************/
 	const updateTokens = (callback, noEmit, additionalStateProperties) => {
 		const tokens = JSON.parse(JSON.stringify(gameState.game.tokens || []))
-		if (!tokens || !Array.isArray(tokens))
+		if (!tokens || !Array.isArray(tokens))
 			return
 		const tokensCopy = tokens.map(callback)
 		setGameState({
@@ -596,6 +601,7 @@ const Game = ({ websocket }) => {
 		if (data.to && (data.to !== websocket.guid)) {
 			return	// ignore dedicated messages not directed to self
 		}
+		const currMap = getMap()
 		switch (data.messageType) {
 			case 'cursor':
 				/*
@@ -604,25 +610,52 @@ const Game = ({ websocket }) => {
 				*/
 				break
 			case 'draw':
-				const currMap = getMap()
-				const updatedMaps = gameState.game.maps.map((map) => {
+				const updatedMapsWithDraw = gameState.game.maps.map((map) => {
 					return map.$id === currMap.$id ? {...currMap, drawPaths: data.drawPath, } : map
 				})
 				setGameState({
 					...gameState,
-					settings: {
-						...gameState.settings,
-						maps: updatedMaps,
+					game: {
+						...gameState.game,
+						maps: updatedMapsWithDraw,
 					}
 				})
 				break
 			case 'fog': /* fog erasure */
-				//this.gameState.overlayRef.current.fogErase(data.x, data.y, data.r, data.r2, true)
+				const updatedMapsWithFog = gameState.game.maps.map((map) => {
+					return map.$id === currMap.$id ? {...currMap, fogPaths: data.fogPath, } : map
+				})
+				setGameState({
+					...gameState,
+					game: {
+						...gameState.game,
+						maps: updatedMapsWithFog,
+					}
+				})
 				break
 			case 'fogReset': /* fog reset */
-				//this.gameState.fogRef.current.fill()
+				const updatedMapsWithFogReset = gameState.game.maps.map((map) => {
+					return map.$id === currMap.$id ? {...currMap, fogPaths: [], } : map
+				})
+				setGameState({
+					...gameState,
+					game: {
+						...gameState.game,
+						maps: updatedMapsWithFogReset,
+					}
+				})
 				break
 			case 'drawReset':
+				const updatedMapsWithDrawReset = gameState.game.maps.map((map) => {
+					return map.$id === currMap.$id ? {...currMap, drawPaths: [], } : map
+				})
+				setGameState({
+					...gameState,
+					game: {
+						...gameState.game,
+						maps: updatedMapsWithDrawReset,
+					}
+				})
 				break
 			case 't': /* token */
 				/*
@@ -642,7 +675,6 @@ const Game = ({ websocket }) => {
 				*/
 				break
 			case 'map': /* map id */
-				console.log('loading map with id:',data.id)
 				setGameState({
 					...gameState,
 					game: {
@@ -651,14 +683,20 @@ const Game = ({ websocket }) => {
 					}
 				})
 				break
+			case 'maps':
+				setGameState({
+					...gameState,
+					game: {
+						...gameState.game,
+						maps: data.maps,
+					}
+				})
+				break
 			case 'refresh': /* refresh from host */
 				if (data.to && data.to !== websocket.guid) {
 					console.log(`Will not apply refresh from ${data.to} (self)`)
 					return
 				}
-				console.log('starting refresh & updating state')
-				console.log('current gameState',gameState)
-				console.log('received data: ',data)
 				const newGameState = {
 					...gameState,
 					game: {
@@ -666,12 +704,10 @@ const Game = ({ websocket }) => {
 						...data.game,
 					},
 				}
-				console.log('new GameState', newGameState)
 				setGameState(newGameState)
 				break
 			case 'refreshRequest': /* refresh request from player */
 				if (gameState.metadata.isHost) {
-					console.log('pushing requested refresh. curr gamestate:', gameState)
 					websocket.pushRefresh(gameState, { to: data.from, })
 				}
 				break

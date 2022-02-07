@@ -37,16 +37,19 @@ const MapConfig = ({ gameState, setGameState, map, mapId, websocket }) => {
 	}
 
 	const load = () => {
+		const updatedMaps = gameState.game.maps.map((map) => {
+			return parseInt(mapId) === map.$id ? { ...map, imageUrl: mapConfigState.imageUrl, width: mapConfigState.width, height: mapConfigState.height, } : map
+		})
 		setGameState({
 			...gameState,
 			game: {
 				...gameState.game,
+				maps: updatedMaps,
 				mapId: parseInt(mapId),
 				isFirstLoadDone: true,
 				isFogLoaded: true,
 			}
 		})
-		websocket.pushMapId(mapId)
 	}
 
 	const deleteMap = () => {
