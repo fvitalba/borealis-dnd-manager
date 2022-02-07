@@ -17,7 +17,7 @@ const initialGameState = (overlayRef) => {
 			tool: 'move',
 			subtool: undefined,
 			username: params.get('host') ? 'DM' : 'PC',
-			'toggleOnShare mouse (cursor)': true,
+			shareMouse: true,
 		},
 		metadata: {
 			isHost: params.get('host'),
@@ -82,9 +82,9 @@ const Game = ({ websocket }) => {
 
 	/*
 	useEffect(() => {
-		if (websocket && gameState.settings['toggleOnShare mouse (cursor)'])
+		if (websocket && gameState.settings.shareMouse)
 			websocket.pushCursor(gameState.metadata.lastX, gameState.metadata.lastY)
-	}, [gameState.metadata.lastX, gameState.metadata.lastY, gameState.settings['toggleOnShare mouse (cursor)']])
+	}, [gameState.metadata.lastX, gameState.metadata.lastY, gameState.settings.shareMouse])
 	*/
 
 	useEffect(() => {
