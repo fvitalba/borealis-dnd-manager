@@ -75,7 +75,7 @@ class GameSocket {
 	pushMapId(mapId) {
 		this.send({
 			messageType: 'map', 
-			i: mapId,
+			id: mapId,
 		})
 	}
 

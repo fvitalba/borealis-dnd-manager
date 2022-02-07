@@ -58,7 +58,7 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 			game: {
 				...gameState.game,
 				maps: newMaps,
-				mapId: gameState.game.mapId ? gameState.game.mapId : mapId
+				mapId: gameState.game.mapId ? gameState.game.mapId : parseInt(mapId)
 			}
 		})
 		setControlPanelState({

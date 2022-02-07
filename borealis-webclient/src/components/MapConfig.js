@@ -41,7 +41,7 @@ const MapConfig = ({ gameState, setGameState, map, mapId, websocket }) => {
 			...gameState,
 			game: {
 				...gameState.game,
-				mapId: mapId,
+				mapId: parseInt(mapId),
 				isFirstLoadDone: true,
 				isFogLoaded: true,
 			}
@@ -58,7 +58,7 @@ const MapConfig = ({ gameState, setGameState, map, mapId, websocket }) => {
 				game: {
 					...gameState.game,
 					maps: newMaps,
-					mapId: mapId === gameState.game.mapId ? undefined : gameState.game.mapId,
+					mapId: parseInt(mapId) === gameState.game.mapId ? undefined : gameState.game.mapId,
 				},
 			})
 		}

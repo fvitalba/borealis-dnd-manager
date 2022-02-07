@@ -642,10 +642,14 @@ const Game = ({ websocket }) => {
 				*/
 				break
 			case 'map': /* map id */
-				/*
-				const map = this.gameState.game.maps[data.i]
-				this.gameState.loadMap(map)
-				*/
+				console.log('loading map with id:',data.id)
+				setGameState({
+					...gameState,
+					game: {
+						...gameState.game,
+						mapId: parseInt(data.id),
+					}
+				})
 				break
 			case 'refresh': /* refresh from host */
 				if (data.to && data.to !== websocket.guid) {
@@ -667,6 +671,7 @@ const Game = ({ websocket }) => {
 				break
 			case 'refreshRequest': /* refresh request from player */
 				if (gameState.metadata.isHost) {
+					console.log('pushing requested refresh. curr gamestate:', gameState)
 					websocket.pushRefresh(gameState, { to: data.from, })
 				}
 				break
