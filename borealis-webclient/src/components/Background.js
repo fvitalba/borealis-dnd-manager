@@ -3,7 +3,7 @@ import drawImage from '../controllers/drawImage.js'
 import Canvas from './Canvas.js'
 
 const Background = ({ gameState, setGameState, controlPanelState, setControlPanelState, updateTokens, updateMap }) => {
-	const map = gameState.state.maps ? gameState.state.maps[gameState.state.mapId] : undefined
+	const map = gameState.game.maps ? gameState.game.maps[gameState.game.mapId] : undefined
 
 	//TODO: Verify that this is actually needed
 	/*
@@ -22,8 +22,8 @@ const Background = ({ gameState, setGameState, controlPanelState, setControlPane
 			else
 				setGameState({
 					...gameState,
-					state: {
-						...gameState.state,
+					game: {
+						...gameState.game,
 						width: w,
 						height: h,
 						isFogLoaded: false,
@@ -37,7 +37,7 @@ const Background = ({ gameState, setGameState, controlPanelState, setControlPane
 		if (!map) {
 			return
 		}
-		drawImage(map.url, map.name, map, ctx, null, updateMap)
+		drawImage(map.imageUrl, map.name, map, ctx, null, updateMap)
 	}
 
 	const handleOnClick = (e) => {

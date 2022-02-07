@@ -10,23 +10,21 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 		})
 	}
 
-	const setGameInt = (key, e) => {
-		//TODO: What does debugger do here?
-		debugger
+	const setGameSettingsInt = (key, e) => {
 		setGameState({
 			...gameState,
-			state: {
-				...gameState.state,
+			settings: {
+				...gameState.settings,
 				[key]: parseInt(e.target.value) || undefined,	
 			}
 		})
 	}
 
-	const setGameText = (key, e) => {
+	const setGameSettingsText = (key, e) => {
 		setGameState({
 			...gameState,
-			state: {
-				...gameState.state,
+			settings: {
+				...gameState.settings,
 				[key]: e.target.value,
 			}
 		})
@@ -40,22 +38,16 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 	}
 
 	const createMap = () => {
-		const maps = gameState.state.maps
+		const maps = gameState.game.maps
 		const mapId = maps.length
 		const newMap = {
 			name: controlPanelState.newMapName,
 			$id: mapId,
-			url: '',
-			width: window.innerWidth,
-			height: window.innerHeight,
+			backgroundImageUrl: '',
 			x: 0,
 			y: 0,
-			fogUrl: undefined,
-			$fogDumpedAt: undefined,
-			$fogChangedAt: undefined,
-			drawUrl: undefined,
-			$drawDumpedAt: undefined,
-			$drawChangedAt: undefined,
+			width: window.innerWidth,
+			height: window.innerHeight,
 			drawPaths: [],
 			fogPaths: [],
 		}
@@ -63,10 +55,10 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 		const newMaps = maps.filter(map => map)
 		setGameState({
 			...gameState,
-			state: {
-				...gameState.state,
+			game: {
+				...gameState.game,
 				maps: newMaps,
-				mapId: gameState.state.mapId ? gameState.state.mapId : mapId
+				mapId: gameState.game.mapId ? gameState.game.mapId : mapId
 			}
 		})
 		setControlPanelState({
@@ -76,13 +68,13 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 	}
 
 	const createToken = () => {
-		const tokensCopy = JSON.parse(JSON.stringify(gameState.state.tokens || []))
+		const tokensCopy = JSON.parse(JSON.stringify(gameState.game.tokens || []))
 		if (!controlPanelState.newTokenUrl)
 			return
 		tokensCopy.push({
 			url: controlPanelState.newTokenUrl,
 			guid: guid(),
-			mapId: gameState.state.mapId,
+			mapId: gameState.game.mapId,
 			$selected: undefined,
 			name: undefined,
 			$x0: 0,
@@ -96,8 +88,8 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 		})
 		setGameState({
 			...gameState,
-			state: {
-				...gameState.state,
+			game: {
+				...gameState.game,
 				tokens: tokensCopy,
 			}
 		})
@@ -144,8 +136,8 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 			websocket={ websocket } 
 			hidden={ controlPanelState.hidden } 
 			toggleHidden={ toggleHidden } 
-			setGameInt={ setGameInt } 
-			setGameText={ setGameText } 
+			setGameSettingsInt={ setGameSettingsInt } 
+			setGameSettingsText={ setGameSettingsText } 
 			socketRequestRefresh={ socketRequestRefresh } 
 			initAsDev={ initAsDev } 
 			toggleOnUser={ controlPanelState.toggleOnUser } 

@@ -2,14 +2,14 @@ import React from 'react'
 import Canvas from './Canvas.js'
 
 const Drawing = ({ gameState }) => {
-	const width = gameState.state.width
-	const height = gameState.state.height
+	const width = gameState.game.width
+	const height = gameState.game.height
 
 	const getMap = () => {
-		if (gameState.state.maps.length === 0)
+		if (gameState.game.maps.length === 0)
 			return undefined
-		const currMap = gameState.state.maps.filter((map) => parseInt(map.$id) === parseInt(gameState.state.mapId))
-		return currMap.length > 0 ? currMap[0] : gameState.state.maps[0]
+		const currMap = gameState.game.maps.filter((map) => parseInt(map.$id) === parseInt(gameState.game.mapId))
+		return currMap.length > 0 ? currMap[0] : gameState.game.maps[0]
 	}
 	const map = getMap()
 

@@ -7,7 +7,7 @@ import TokenToolView from './TokenToolView.js'
 import UserToolView from './UserToolView.js'
 import SelectedTokensControlsView from './SelectedTokensControlsView.js'
 
-const ControlPanelView = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, hidden, toggleHidden, setGameInt, setGameText, socketRequestRefresh, initAsDev, toggleOnUser, toggleOnTokens, copyJson, pasteJson, onTextChange, createMap, updateGameToken, selectGameToken, newTokenUrl, createToken, resetFog, resetDrawing }) => {
+const ControlPanelView = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, hidden, toggleHidden, setGameSettingsInt, setGameSettingsText, socketRequestRefresh, initAsDev, toggleOnUser, toggleOnTokens, copyJson, pasteJson, onTextChange, createMap, updateGameToken, selectGameToken, newTokenUrl, createToken, resetFog, resetDrawing }) => {
 	if (hidden)
 		return (
 			<div id='control-panel'>
@@ -17,7 +17,7 @@ const ControlPanelView = ({ gameState, setGameState, controlPanelState, setContr
 			</div>
 		)
 	
-	if (gameState.isHost)
+	if (gameState.metadata.isHost)
 		return (
 			<div id='control-panel'>
 				&nbsp;&nbsp;&nbsp;&nbsp;
@@ -62,17 +62,17 @@ const ControlPanelView = ({ gameState, setGameState, controlPanelState, setContr
 					toggleOnUser={ toggleOnUser } 
 					copyJson={ copyJson } 
 					pasteJson={ pasteJson } 
-					setGameInt={ setGameInt } 
-					setGameText={ setGameText } />
+					setGameSettingsInt={ setGameSettingsInt } 
+					setGameSettingsText={ setGameSettingsText } />
 			</div>
 		)
 	else
 		return (
 			<div id='control-panel'>
 				<Button value='&#x1f441;' onClick={ toggleHidden } title='show/hide control panel' />
-				<input title='User name' placeholder='User name' value={ gameState.state.username || '' } onChange={ (e) => setGameText('username', e) } />
+				<input title='User name' placeholder='User name' value={ gameState.settings.username || '' } onChange={ (e) => setGameSettingsText('username', e) } />
 				<ToggleButton title='Share mouse (cursor)' value='&#x1f401;' controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
-				<input title='Cursor size' value={ gameState.state.cursorSize || '' } onChange={ (e) => setGameInt('cursorSize', e) } type='number' min='0' />
+				<input title='Cursor size' value={ gameState.metadata.cursorsize || '' } onChange={ (e) => setGameSettingsInt('cursorSize', e) } type='number' min='0' />
 				<Button title='Request gameboard refresh from host' onClick={ socketRequestRefresh } value='&#x1f4ab;' />
 				<SelectedTokensControlsView 
 					gameState={ gameState }

@@ -8,26 +8,26 @@ const TokenConfig = ({ gameState, setGameState, token, updateGameToken, selectGa
 	}
 
 	const deleteToken = () => {
-		const tokens = gameState.state.tokens.map(t => t)
+		const tokens = gameState.game.tokens.map(t => t)
 		const index = tokens.indexOf(token)
 		tokens.splice(index, 1)
 		setGameState({
 			...gameState,
-			state: {
-				...gameState.state,
+			game: {
+				...gameState.game,
 				tokens: tokens,
 			}
 		})
 	}
 	
 	const copy = () => {
-		const tokens = gameState.state.tokens.map(t => t)
+		const tokens = gameState.game.tokens.map(t => t)
 		const index = tokens.indexOf(token)
 		tokens.splice(index + 1, 0, copy)
 		setGameState({
 			...gameState,
-			state: {
-				...gameState.state,
+			game: {
+				...gameState.game,
 				tokens: tokens,
 			}
 		})
@@ -35,7 +35,7 @@ const TokenConfig = ({ gameState, setGameState, token, updateGameToken, selectGa
 
 	const onMapSelect = (e) => {
 		let value = e.target.value
-		if (Object.keys(gameState.state.maps).indexOf(value) < 0)
+		if (Object.keys(gameState.game.maps).indexOf(value) < 0)
 			value = undefined
 		update(token => token.mapId = value)
 	}
@@ -56,12 +56,12 @@ const TokenConfig = ({ gameState, setGameState, token, updateGameToken, selectGa
 		selectGameToken(token, undefined, true)
 	}
 
-	const maps = gameState.state.maps
+	const maps = gameState.game.maps
 
 	return (
 		<div>
 			{ token ?
-				gameState.isHost ?
+				gameState.metadata.isHost ?
 				<HostTokenConfig 
 					maps={ maps } 
 					token={ token } 

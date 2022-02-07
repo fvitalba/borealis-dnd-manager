@@ -4,7 +4,7 @@ import Button from './Button.js'
 const MapToolView = ({ gameState, setGameState, controlPanelState, onTextChange, createMap, websocket }) => {
 	if (!controlPanelState.toggleOnMaps)
 		return null
-	const maps = gameState.state.maps
+	const maps = gameState.game.maps
 	const keys = maps && Object.keys(maps)
 
 	return (

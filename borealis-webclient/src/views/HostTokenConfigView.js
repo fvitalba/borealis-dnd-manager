@@ -19,7 +19,7 @@ const HostTokenConfigView = ({ maps, token, copy, onToggle, selectToken, onTextC
 				<option>(all)</option>
 				{ Object.keys(maps).map((key, $i) => (
 					<option key={ $i } value={ key }>
-						{ maps[key].name || maps[key].url || '(unnamed)' }
+						{ maps[key].name || maps[key].imageUrl || '(unnamed)' }
 					</option>
 				))}
 			</select>

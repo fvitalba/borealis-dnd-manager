@@ -7,10 +7,10 @@ import Cursor from './Cursor.js'
 import ControlPanel from '../components/ControlPanel.js'
 
 const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelState, websocket, onMouseMove, onMouseUp, onMouseDown, fromJson, notify, initAsDev, updateTokens, updateGameToken, selectGameToken, resetFog, resetDrawing }) => {
-	const goneClass = gameState.state.isFogLoaded ? null : 'gone'
+	const goneClass = gameState.game.isFogLoaded ? null : 'gone'
 	const deadline = new Date() - 30000
-	const cursors = Object.assign({}, gameState.state.cursors)
-	const tokens = gameState.state.tokens.map(t => t)
+	const cursors = Object.assign({}, gameState.metadata.cursors)
+	const tokens = gameState.game.tokens.map(t => t)
 
 	for (let name in cursors) {
 		let time = cursors[name].time
@@ -41,7 +41,7 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 				{ cursors ?
 					<div id='cursors'>
 						{ Object.keys(cursors).map((key, $i) => (
-							<Cursor key={ `cursor${$i}` } name={ key } cursor={ gameState.state.cursors[key] } size={ gameState.state.cursorSize } />
+							<Cursor key={ `cursor${$i}` } name={ key } cursor={ gameState.metadata.cursors[key] } size={ gameState.metadata.cursorsize } />
 						)) }
 					</div>
 					: null

@@ -6,19 +6,6 @@ const RETRY_INTERVAL = 250000
 const K_SOCKET = 'gameWebSocket'
 const K_INTERVAL = 'gameWebSocketInterval'
 
-const getCircularReplacer = () => {
-	const seen = new WeakSet;
-	return (key, value) => {
-	  if (typeof value === "object" && value !== null) {
-		if (seen.has(value)) {
-		  return;
-		}
-		seen.add(value);
-	  }
-	  return value;
-	};
-  };
-
 class GameSocket {
 	setup( room ) {
 		let host = window.location.host.replace(/:\d+$/, '')
@@ -55,8 +42,9 @@ class GameSocket {
 	// Send message to server
 	send(data) {
 		data.from = this.guid
+		console.log('sending the following data:',data)
 		if (window[K_SOCKET] && window[K_SOCKET].readyState === WebSocket.OPEN)
-			window[K_SOCKET].send(JSON.stringify(data, getCircularReplacer()))
+			window[K_SOCKET].send(JSON.stringify(data))
 		else
 			console.error('no websocket')
 	}
@@ -93,10 +81,9 @@ class GameSocket {
 
 	/* Push refresh */
 	pushRefresh(gameState) {
-		console.log('pushing refresh')
 		this.send({
 			messageType: 'refresh',
-			state: gameState,
+			game: gameState.game,
 		})
 	}
 
@@ -123,7 +110,6 @@ class GameSocket {
 	}
 
 	requestRefresh () {
-		console.log('requesting refresh')
 		this.send({
 			messageType: 'refreshRequest',
 		})

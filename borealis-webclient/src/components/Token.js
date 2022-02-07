@@ -3,7 +3,7 @@ import TokenView from '../views/TokenView.js'
 
 const Token = ({ gameState, token, selectGameToken }) => {
 	const isMoveTool = () => {
-		return gameState.state.tool === 'move'
+		return gameState.settings.tool === 'move'
 	}
 
 	const onMouseDown = (e) => {
@@ -14,8 +14,8 @@ const Token = ({ gameState, token, selectGameToken }) => {
 			selectGameToken(token, true, e.metaKey)
 	}
 
-	const isHost = gameState.isHost
-	const mapId = gameState.state.mapId
+	const isHost = gameState.metadata.isHost
+	const mapId = gameState.game.mapId
 	let showToken = false
 
 	if (!token.url || !token.url.trim())
