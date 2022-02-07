@@ -4,6 +4,7 @@ const RETRY_INTERVAL = 2500
 
 const K_SOCKET = 'gameWebSocket'
 const K_INTERVAL = 'gameWebSocketInterval'
+const SOCKET_SERVER_PORT = process.env.PORT || 8000
 
 class GameSocket {
 	setup( room ) {
@@ -17,7 +18,7 @@ class GameSocket {
 			delete window[K_SOCKET] /* Delete, then close, s.t. cb doesn't re-open it */
 			socket.close()
 		}
-		window[K_SOCKET] = new WebSocket(`${protocol}://${host}:8000/${room}?guid=${this.guid}`)
+		window[K_SOCKET] = new WebSocket(`${protocol}://${host}:${SOCKET_SERVER_PORT}/${room}?guid=${this.guid}`)
 	}
 
 	addCallbacks( isHost, receiveCallback ) {
