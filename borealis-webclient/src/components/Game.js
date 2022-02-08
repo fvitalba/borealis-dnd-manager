@@ -595,6 +595,7 @@ const Game = ({ websocket }) => {
 	 ****************************************************/
 	const receiveData = (evt) => {
 		let data = JSON.parse(evt.data)
+		console.log('receiving the following data', data)
 		if (data.from === websocket.guid) {
 			return // ignore messages sent by self
 		}

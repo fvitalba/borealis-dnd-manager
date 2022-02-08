@@ -15,10 +15,10 @@ class GameSocket {
 			clearInterval(window[K_INTERVAL])
 		if (window[K_SOCKET]) {
 			let socket = window[K_SOCKET]
-			delete window[K_SOCKET] /* Delete, then close, s.t. cb doesn't re-open it */
+			delete window[K_SOCKET] // Delete, then close, s.t. cb doesn't re-open it
 			socket.close()
 		}
-		window[K_SOCKET] = new WebSocket(`${protocol}://${host}:${SOCKET_SERVER_PORT}/?room=${room}?guid=${this.guid}`)
+		window[K_SOCKET] = new WebSocket(`${protocol}://${host}:${SOCKET_SERVER_PORT}/${room}?guid=${this.guid}`)
 	}
 
 	addCallbacks( isHost, receiveCallback ) {
