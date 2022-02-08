@@ -5,6 +5,7 @@ const RETRY_INTERVAL = 2500
 
 const K_SOCKET = 'gameWebSocket'
 const K_INTERVAL = 'gameWebSocketInterval'
+const K_DEBUG = process.env.REACT_APP_DEBUG || false
 const SOCKET_SERVER_PORT = process.env.PORT || process.env.REACT_APP_PORT || 8000
 
 class GameSocket {
@@ -19,7 +20,11 @@ class GameSocket {
 			delete window[K_SOCKET] // Delete, then close, s.t. cb doesn't re-open it
 			socket.close()
 		}
-		window[K_SOCKET] = new WebSocket(`${protocol}://${host}:${SOCKET_SERVER_PORT}/${room}?guid=${this.guid}`)
+		if (K_DEBUG) {
+			window[K_SOCKET] = new WebSocket(`${protocol}://${host}:${SOCKET_SERVER_PORT}/${room}?guid=${this.guid}`)
+		} else {
+			window[K_SOCKET] = new WebSocket(`${protocol}://${host}/${room}?guid=${this.guid}`)
+		}
 	}
 
 	addCallbacks( isHost, receiveCallback ) {
