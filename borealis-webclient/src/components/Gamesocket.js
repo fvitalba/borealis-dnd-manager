@@ -1,4 +1,5 @@
 import guid from '../controllers/guid.js'
+require('dotenv').config()
 
 const RETRY_INTERVAL = 2500
 
