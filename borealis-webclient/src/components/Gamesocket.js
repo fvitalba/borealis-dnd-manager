@@ -5,7 +5,7 @@ const RETRY_INTERVAL = 2500
 
 const K_SOCKET = 'gameWebSocket'
 const K_INTERVAL = 'gameWebSocketInterval'
-const SOCKET_SERVER_PORT = process.env.PORT || 8000
+const SOCKET_SERVER_PORT = process.env.PORT || process.env.REACT_APP_PORT || 8000
 
 class GameSocket {
 	setup( room ) {
