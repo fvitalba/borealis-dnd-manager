@@ -20,6 +20,8 @@ class GameSocket {
 			delete window[K_SOCKET] // Delete, then close, s.t. cb doesn't re-open it
 			socket.close()
 		}
+
+		console.log('debug mode:',K_DEBUG)
 		if (K_DEBUG) {
 			window[K_SOCKET] = new WebSocket(`${protocol}://${host}:${SOCKET_SERVER_PORT}/${room}?guid=${this.guid}`)
 		} else {
