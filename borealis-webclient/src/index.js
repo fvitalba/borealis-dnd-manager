@@ -7,7 +7,7 @@ import GameSocket from './components/GameSocket.js'
 import * as serviceWorker from './serviceWorker.js'
 
 const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
-const websocket = new GameSocket()
+let websocket = new GameSocket()
 websocket.setup(params.get('room'))
 
 ReactDOM.render(
