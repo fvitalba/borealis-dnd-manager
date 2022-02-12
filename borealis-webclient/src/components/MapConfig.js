@@ -7,7 +7,7 @@ const initialMapConfigState = (gameState, map) => {
 	const currentMap = existingMap ? existingMap : { name: undefined, url: undefined, w: undefined, h: undefined, }
 
 	return {
-		$id: map.$id,
+		$id: parseInt(map.$id),
 		name: currentMap.name ? currentMap.name : map.name,
 		imageUrl: currentMap.imageUrl ? currentMap.imageUrl : '',
 		width: currentMap.width ? currentMap.width : window.innerWidth,

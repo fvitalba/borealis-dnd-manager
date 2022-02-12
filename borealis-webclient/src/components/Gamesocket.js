@@ -21,8 +21,6 @@ class GameSocket {
 			socket.close()
 		}
 
-		console.log('debug mode:',K_DEBUG)
-		console.log('socket_server_port',SOCKET_SERVER_PORT)
 		if (K_DEBUG) {
 			window[K_SOCKET] = new WebSocket(`${protocol}://${host}:${SOCKET_SERVER_PORT}/${room}?guid=${this.guid}`)
 		} else {
@@ -92,7 +90,7 @@ class GameSocket {
 	pushMapId(mapId) {
 		this.send({
 			messageType: 'map', 
-			id: mapId,
+			mapId: mapId,
 		})
 	}
 

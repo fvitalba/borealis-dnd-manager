@@ -12,7 +12,7 @@ const initialGameState = (overlayRef) => {
 			cursorSize: 50,
 			fogOpacity: 0.5,
 			fogRadius: 33,
-			drawColor: 'purple',
+			drawColor: 'white',
 			drawSize: 8,
 			tool: 'move',
 			subtool: undefined,
@@ -89,16 +89,20 @@ const Game = ({ websocket }) => {
 	}, [gameState.metadata.lastX, gameState.metadata.lastY, gameState.settings.shareMouse])
 	*/
 
+	/*
 	useEffect(() => {
 		//TODO: reenable websocket push
 		//if (websocket)
 		//	websocket.pushTokens(gameState.game.tokens)
 	}, [gameState.game.tokens])
+	*/
 
+	/*
 	useEffect(() => {
 		if (websocket && gameState.metadata.isHost)
 			websocket.pushMaps(gameState.game.maps, gameState.game.mapId)
 	}, [gameState.game.mapId])
+	*/
 
 	/****************************************************
 	 * Map Functions                                    *
@@ -513,8 +517,8 @@ const Game = ({ websocket }) => {
 			
 			setGameState({
 				...gameState,
-				settings: {
-					...gameState.settings,
+				game: {
+					...gameState.game,
 					maps: updatedMaps,
 				}
 			})
@@ -527,20 +531,22 @@ const Game = ({ websocket }) => {
 			if ((x.tagName == 'INPUT' && (x.type === 'text' || x.type === 'number')) || (x.tagName == 'BUTTON')) /* eslint-disable-line eqeqeq */
 				return e
 
-		if (e.buttons & 1) {
-			if (!/(\s|^)token(\s|$)/.test(e.target.getAttribute('class')))
-				//TODO: Update to map function
-				updateTokens(tok => { delete tok.$selected })
-			currentPath = []
-			currentPath.push({
-				x: e.pageX,
-				y: e.pageY,
-				r: gameState.settings.fogRadius,
-				r2: undefined,
-				tool: currentTool(),
-				drawColor: gameState.settings.drawColor,
-				drawSize: gameState.settings.drawSize,
-			})
+		if (gameState.metadata.isHost) {
+			if (e.buttons & 1) {
+				if (!/(\s|^)token(\s|$)/.test(e.target.getAttribute('class')))
+					//TODO: Update to map function
+					updateTokens(tok => { delete tok.$selected })
+				currentPath = []
+				currentPath.push({
+					x: e.pageX,
+					y: e.pageY,
+					r: gameState.settings.fogRadius,
+					r2: undefined,
+					tool: currentTool(),
+					drawColor: gameState.settings.drawColor,
+					drawSize: gameState.settings.drawSize,
+				})
+			}
 		}
 	}
 
@@ -548,6 +554,7 @@ const Game = ({ websocket }) => {
 		const overlay = gameState.overlayRef
 		if (!overlay)
 			return
+
 		clearOverlay()
 		let x = e.pageX, y = e.pageY
 		switch (gameState.metadata.isHost ? gameState.settings.tool : 'move') {
@@ -601,10 +608,12 @@ const Game = ({ websocket }) => {
 		if (data.from === websocket.guid) {
 			return // ignore messages sent by self
 		}
-		if (data.to && (data.to !== websocket.guid)) {
-			return	// ignore dedicated messages not directed to self
+		if (data.to && data.to !== websocket.guid) {
+			return // ignore messages sent to different recipients
 		}
+
 		const currMap = getMap()
+		console.log('current map',currMap)
 		switch (data.messageType) {
 			case 'cursor':
 				/*
@@ -614,8 +623,10 @@ const Game = ({ websocket }) => {
 				break
 			case 'draw':
 				const updatedMapsWithDraw = gameState.game.maps.map((map) => {
-					return map.$id === currMap.$id ? {...currMap, drawPaths: data.drawPath, } : map
+					return map.$id === currMap.$id ? { ...currMap, drawPaths: data.drawPath, } : map
 				})
+				console.log('updated maps',updatedMapsWithDraw)
+				console.log('current game map id',gameState.game.mapId)
 				setGameState({
 					...gameState,
 					game: {
@@ -626,7 +637,7 @@ const Game = ({ websocket }) => {
 				break
 			case 'fog': /* fog erasure */
 				const updatedMapsWithFog = gameState.game.maps.map((map) => {
-					return map.$id === currMap.$id ? {...currMap, fogPaths: data.fogPath, } : map
+					return map.$id === currMap.$id ? { ...currMap, fogPaths: data.fogPath, } : map
 				})
 				setGameState({
 					...gameState,
@@ -682,7 +693,7 @@ const Game = ({ websocket }) => {
 					...gameState,
 					game: {
 						...gameState.game,
-						mapId: parseInt(data.id),
+						mapId: parseInt(data.mapId),
 					}
 				})
 				break
@@ -692,19 +703,17 @@ const Game = ({ websocket }) => {
 					game: {
 						...gameState.game,
 						maps: data.maps,
+						mapId: data.mapId,
 					}
 				})
 				break
 			case 'refresh': /* refresh from host */
-				if (data.to && data.to !== websocket.guid) {
-					console.log(`Will not apply refresh from ${data.to} (self)`)
-					return
-				}
 				const newGameState = {
 					...gameState,
 					game: {
 						...gameState.game,
 						...data.game,
+						mapId: parseInt(data.game.mapId),
 					},
 				}
 				setGameState(newGameState)

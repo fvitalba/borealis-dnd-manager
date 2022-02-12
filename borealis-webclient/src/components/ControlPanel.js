@@ -39,7 +39,7 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 
 	const createMap = () => {
 		const maps = gameState.game.maps
-		const mapId = maps.length
+		const mapId = parseInt(maps.length)
 		const newMap = {
 			name: controlPanelState.newMapName,
 			$id: mapId,
@@ -58,7 +58,7 @@ const ControlPanel = ({ gameState, setGameState, controlPanelState, setControlPa
 			game: {
 				...gameState.game,
 				maps: newMaps,
-				mapId: gameState.game.mapId ? gameState.game.mapId : parseInt(mapId)
+				mapId: gameState.game.mapId ? gameState.game.mapId : mapId
 			}
 		})
 		setControlPanelState({
