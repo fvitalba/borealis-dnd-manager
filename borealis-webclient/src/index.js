@@ -2,17 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './styles/index.css'
 import './styles/Game.css'
-import Game from './components/Game.js'
-import GameSocket from './components/GameSocket.js'
+import App from './components/App'
 import * as serviceWorker from './serviceWorker.js'
-
-const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
-let websocket = new GameSocket()
-websocket.setup(params.get('room'))
 
 ReactDOM.render(
 	<React.StrictMode>
-		<Game websocket={ websocket } />
+		<App />
 	</React.StrictMode>,
 	document.getElementById('root')
 )
