@@ -9,7 +9,7 @@ const UserToolView = ({ gameState, controlPanelState, setControlPanelState, init
 			<hr />
 			<input title='User name' placeholder='User name' value={ gameState.settings.username || ''} onChange={ (e) => setGameSettingsText('username', e) } />
 			<ToggleButton title='Share mouse (cursor)' value='&#x1f401;' controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
-			<input title='Cursor size' value={ gameState.metadata.cursorsize || '' } onChange={ (e) => setGameSettingsInt('cursorSize', e) } type='number' min='0' />
+			<input title='Cursor size' value={ gameState.settings.cursorSize || '' } onChange={ (e) => setGameSettingsInt('cursorSize', e) } type='number' min='0' />
 			<hr />
 			<Button title='Redo as dev' value='&#x1f530;' onClick={ initAsDev } />
 			<Button title='Copy JSON to clipboard' value='&#x1f46f;' onClick={ copyJson } />

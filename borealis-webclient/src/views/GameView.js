@@ -41,7 +41,7 @@ const GameView = ({ gameState, setGameState, controlPanelState, setControlPanelS
 				{ cursors ?
 					<div id='cursors'>
 						{ Object.keys(cursors).map((key, $i) => (
-							<Cursor key={ `cursor${$i}` } name={ key } cursor={ gameState.metadata.cursors[key] } size={ gameState.metadata.cursorsize } />
+							<Cursor key={ `cursor${$i}` } name={ key } cursor={ gameState.metadata.cursors[key] } size={ gameState.settings.cursorSize } />
 						)) }
 					</div>
 					: null

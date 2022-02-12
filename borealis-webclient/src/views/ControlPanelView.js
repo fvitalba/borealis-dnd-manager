@@ -72,7 +72,7 @@ const ControlPanelView = ({ gameState, setGameState, controlPanelState, setContr
 				<Button value='&#x1f441;' onClick={ toggleHidden } title='show/hide control panel' />
 				<input title='User name' placeholder='User name' value={ gameState.settings.username || '' } onChange={ (e) => setGameSettingsText('username', e) } />
 				<ToggleButton title='Share mouse (cursor)' value='&#x1f401;' controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
-				<input title='Cursor size' value={ gameState.metadata.cursorsize || '' } onChange={ (e) => setGameSettingsInt('cursorSize', e) } type='number' min='0' />
+				<input title='Cursor size' value={ gameState.settings.cursorSize || '' } onChange={ (e) => setGameSettingsInt('cursorSize', e) } type='number' min='0' />
 				<Button title='Request gameboard refresh from host' onClick={ socketRequestRefresh } value='&#x1f4ab;' />
 				<SelectedTokensControlsView 
 					gameState={ gameState }
