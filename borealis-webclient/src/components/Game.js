@@ -70,6 +70,8 @@ const Game = ({ websocket }) => {
 		websocket.addCallbacks( gameState.metadata.isHost, receiveData )
 		loadFromLocalStorage()
 
+		document.title = `Borealis D&D, Room: ${gameState.metadata.room}`
+
 		// On Unmount
 		return () => {
 			saveToLocalStorage()
