@@ -41,7 +41,7 @@ const gameReducer = (state = initialGameState, action) => {
         case LOAD_MAP:
             return {
                 ...state,
-                mapId: action.mapId,
+                mapId: parseInt(action.mapId),
             }
         case INCREMENT_GEN:
             return {
@@ -65,7 +65,7 @@ const gameReducer = (state = initialGameState, action) => {
                 mapId: state.mapId ? state.mapId : undefined,
             }
         case ADD_MAP:
-            const newMapId = parseInt(state.maps.length)
+            const newMapId = state.maps.length
             const mapsWithNewMap = maps.concat({
                 ...action.map,
                 $id: newMapId,

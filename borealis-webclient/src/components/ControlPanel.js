@@ -37,6 +37,7 @@ const ControlPanel = ({ websocket, game, settings, metadata, setUsername, setCur
 	}
 
 	const pushRefreshToPlayers = () => {
+		console.log('pushing game', game)
 		websocket.pushRefresh(game)
 	}
 

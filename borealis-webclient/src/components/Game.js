@@ -63,7 +63,7 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, overwriteG
 	const getMap = () => {
 		if (game.maps.length === 0)
 			return undefined
-		const currMap = game.maps.filter((map) => parseInt(map.$id) === parseInt(game.mapId))
+		const currMap = game.maps.filter((map) => map.$id === game.mapId)
 		return currMap.length > 0 ? currMap[0] : game.maps[0]
 	}
 

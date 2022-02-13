@@ -115,6 +115,7 @@ const UserTool = ({ toggleOnUser, settings, setUsername, setCursorSize }) => {
 const mapStateToProps = (state) => {
 	return {
 		game: state.game,
+        settings: state.settings,
 	}
 }
 
