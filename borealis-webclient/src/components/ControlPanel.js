@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { setUsername, setCursorSize } from '../reducers/settingsReducer.js' 
 import ControlPanelView from '../views/ControlPanelView.js'
 
@@ -14,7 +14,6 @@ const initialControlPanelState = () => {
 
 const ControlPanel = ({ websocket, settings, metadata, setUsername, setCursorSize }) => {
 	const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
-	const dispatch = useDispatch()
 
 	const toggleHidden = () => {
 		setControlPanelState({
@@ -24,13 +23,13 @@ const ControlPanel = ({ websocket, settings, metadata, setUsername, setCursorSiz
 	}
 
 	const updateUsername = (e) => {
-		dispatch(setUsername(e.target.value))
+		setUsername(e.target.value)
 	}
 
 	const updateCursorSize = (e) => {
 		const newSize = e.target.value
 		if (!isNaN(newSize))
-			dispatch(setCursorSize(newSize))
+			setCursorSize(newSize)
 	}
 
 	const socketRequestRefresh = () => {

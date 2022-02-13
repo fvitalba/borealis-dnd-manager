@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import GameView from '../views/GameView.js'
 import { setGameSettings } from '../reducers/metadataReducer.js'
 import { updateMaps, loadMap, incrementGen } from '../reducers/gameReducer.js'
@@ -14,7 +14,6 @@ const initialGameState = (overlayRef) => {
 const Game = ({ websocket, metadata, game, settings, setGameSettings, loadMap, updateMaps, incrementGen }) => {
 	const overlayRef = React.useRef()
 	const [gameState, setGameState] = useState(initialGameState(overlayRef))
-	const dispatch = useDispatch()
 	let currentPath = []
 
 	// On Mount
@@ -30,7 +29,7 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, loadMap, u
 			websocket: websocket,
 		})
 		const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
-		dispatch(setGameSettings(params.get('host'), params.get('room')))
+		setGameSettings(params.get('host'), params.get('room'))
 
 		// On Unmount
 		return () => {
@@ -313,7 +312,7 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, loadMap, u
 				return map.$id === currMap.$id ? {...currMap, fogPaths: fogPaths, drawPaths: drawPaths, } : map
 			})
 			
-			dispatch(updateMaps(updatedMaps))
+			updateMaps(updatedMaps)
 		}
 	}
 
@@ -421,25 +420,25 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, loadMap, u
 				})
 				console.log('updated maps',updatedMapsWithDraw)
 				console.log('current game map id',game.mapId)
-				dispatch(updateMaps(updatedMapsWithDraw))
+				updateMaps(updatedMapsWithDraw)
 				break
 			case 'fog': /* fog erasure */
 				const updatedMapsWithFog = game.maps.map((map) => {
 					return map.$id === currMap.$id ? { ...currMap, fogPaths: data.fogPath, } : map
 				})
-				dispatch(updateMaps(updatedMapsWithFog))
+				updateMaps(updatedMapsWithFog)
 				break
 			case 'fogReset': /* fog reset */
 				const updatedMapsWithFogReset = game.maps.map((map) => {
 					return map.$id === currMap.$id ? {...currMap, fogPaths: [], } : map
 				})
-				dispatch(updateMaps(updatedMapsWithFogReset))
+				updateMaps(updatedMapsWithFogReset)
 				break
 			case 'drawReset':
 				const updatedMapsWithDrawReset = game.maps.map((map) => {
 					return map.$id === currMap.$id ? {...currMap, drawPaths: [], } : map
 				})
-				dispatch(updateMaps(updatedMapsWithDrawReset))
+				updateMaps(updatedMapsWithDrawReset)
 				break
 			case 't': /* token */
 				/*
@@ -459,11 +458,11 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, loadMap, u
 				*/
 				break
 			case 'map': /* map id */
-				dispatch(loadMap(data.mapId))
+				loadMap(data.mapId)
 				break
 			case 'maps':
-				dispatch(updateMaps(data.maps))
-				dispatch(loadMap(data.mapId))
+				updateMaps(data.maps)
+				loadMap(data.mapId)
 				break
 			case 'refresh': /* refresh from host */
 				//TODO: Implement refresh

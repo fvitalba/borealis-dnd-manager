@@ -1,42 +1,41 @@
-import { connect, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { setToolSettings, setDrawToolSettings, setFogToolSettings } from '../reducers/settingsReducer.js'
 import { resetFog, resetDraw } from '../reducers/gameReducer.js'
 import ToolControlsView from "../views/ToolControlsView.js"
 
 const ToolControls = ({ settings, setToolSettings, setFogToolSettings, resetFog, resetDraw }) => {
-	const dispatch = useDispatch()
 	const setSubtool = (subtool) => {
 		setToolSettings(settings.tool, subtool)
 	}
 
 	const setDrawColor = (e) => {
-		dispatch(setDrawToolSettings(e.target.value, settings.drawSize))
+		setDrawToolSettings(e.target.value, settings.drawSize)
 	}
 
 	const setDrawSize = (e) => {
 		const newSize = e.target.value
 		if (!isNaN(newSize))
-			dispatch(setDrawToolSettings(settings.drawColor, newSize))
+			setDrawToolSettings(settings.drawColor, newSize)
 	}
 
 	const setFogOpacity = (e) => {
 		const newOpacity = e.target.value
 		if (!isNaN(newOpacity))
-			dispatch(setFogToolSettings(newOpacity, settings.fogRadius))
+			setFogToolSettings(newOpacity, settings.fogRadius)
 	}
 
 	const setFogRadius = (e) => {
 		const newRadius = e.target.value
 		if (!isNaN(newRadius))
-			dispatch(setFogToolSettings(settings.fogOpacity, newRadius))
+			setFogToolSettings(settings.fogOpacity, newRadius)
 	}
 
 	const resetFogOnCurrentMap = () => {
-		dispatch(resetFog())
+		resetFog()
 	}
 
 	const resetDrawOnCurrentMap = () => {
-		dispatch(resetDraw())
+		resetDraw()
 	}
 
 	return (

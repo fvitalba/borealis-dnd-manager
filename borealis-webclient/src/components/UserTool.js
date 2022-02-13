@@ -1,20 +1,19 @@
-import { connect, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { setUsername, setCursorSize } from '../reducers/settingsReducer.js'
 import UserToolView from '../views/UserToolView.js'
 
 const UserTool = ({ toggleOnUser, settings, setUsername, setCursorSize }) => {
-    const dispatch = useDispatch()
 	if (!toggleOnUser)
 		return null
 
     const updateUsername = (e) => {
-        dispatch(setUsername(e.target.value))
+        setUsername(e.target.value)
     }
 
     const updateCursorSize = (e) => {
         const newSize = e.target.value
 		if (!isNaN(newSize))
-			dispatch(setCursorSize(newSize))
+			setCursorSize(newSize)
     }
 
     const initAsDev = () => {

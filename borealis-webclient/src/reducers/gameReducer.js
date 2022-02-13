@@ -29,6 +29,8 @@ const initialGameState = {
 }
 
 const gameReducer = (state = initialGameState, action) => {
+    const maps = JSON.parse(JSON.stringify(state.maps))
+    const tokens = JSON.parse(JSON.stringify(state.tokens))
     switch (action.type) {
         case LOAD_MAP:
             return {
@@ -57,17 +59,20 @@ const gameReducer = (state = initialGameState, action) => {
             }
         case ADD_MAP:
             const newMapId = parseInt(state.maps.length)
-            
+            const mapsWithNewMap = maps.concat({
+                ...action.map,
+                $id: newMapId,
+            })
+            console.log('current maps',state.maps)
+            console.log('new maps',mapsWithNewMap)
             return {
                 ...state,
-                maps: state.maps.concat({
-                    ...action.map,
-                    $id: newMapId,
-                }),
+                maps: mapsWithNewMap,
                 mapId: state.mapId ? state.mapId : newMapId,
+                isFirstLoadDone: true,
+                isFogLoaded: true,
             }
         case DELETE_MAP:
-            const maps = state.maps
 			const newMaps = maps.filter((map) => map.$id !== parseInt(action.mapId))
             return {
                 ...state,
@@ -85,7 +90,6 @@ const gameReducer = (state = initialGameState, action) => {
                 tokens: state.tokens.concat(action.token)
             }
         case DELETE_TOKEN:
-            const tokens = state.tokens
             const newTokens = tokens.filter((token) => token.guid !== action.tokenGuid)
             return {
                 ...state,
@@ -185,6 +189,7 @@ export const updateMaps = (newMaps) => {
 }
 
 export const addMap = (mapName, width, height) => {
+    console.log('dispatching addMap')
     const newMap = {
         name: mapName,
         $id: 0,

@@ -1,11 +1,10 @@
 import React from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { deleteToken, copyToken, updateTokenValue, toggleTokenValue, updateTokens } from '../reducers/gameReducer.js'
 import HostTokenConfig from '../views/HostTokenConfigView.js'
 import GuestTokenConfigView from '../views/GuestTokenConfigView.js'
 
 const TokenConfig = ({ token, game, metadata, deleteToken, copyToken, updateTokenValue, toggleTokenValue }) => {
-	const dispatch = useDispatch()
 	const selectToken = (token, tokenSelected) => {
 		if (!token.pc && !metadata.isHost)
 			return
@@ -20,34 +19,34 @@ const TokenConfig = ({ token, game, metadata, deleteToken, copyToken, updateToke
 				}
 				: currToken
 		})
-		dispatch(updateTokens(updatedTokens))
+		updateTokens(updatedTokens)
 	}
 
 	const deleteCurrToken = () => {
-		dispatch(deleteToken(token.guid))
+		deleteToken(token.guid)
 	}
 	
 	const copy = () => {
-		dispatch(copyToken(token.guid))
+		copyToken(token.guid)
 	}
 
 	const onMapSelect = (e) => {
 		let value = parseInt(e.target.value)
 		if (value < 0)
 			value = undefined
-		dispatch(updateTokenValue(token.guid, 'mapId', value))
+		updateTokenValue(token.guid, 'mapId', value)
 	}
 
 	const onToggle = (key) => {
-		dispatch(toggleTokenValue(token.guid, key))
+		toggleTokenValue(token.guid, key)
 	}
 
 	const onIntegerChange = (key, e) => {
-		dispatch(updateTokenValue(token.guid, key, parseInt(e.target.value) || undefined))
+		updateTokenValue(token.guid, key, parseInt(e.target.value) || undefined)
 	}
 
 	const onTextChange = (key, e) => {
-		dispatch(updateTokenValue(token.guid, key, e.target.value))
+		updateTokenValue(token.guid, key, e.target.value)
 	}
 
 	return (

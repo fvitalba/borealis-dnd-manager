@@ -1,12 +1,11 @@
 import { useState } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { addToken } from '../reducers/gameReducer.js'
 import TokenToolView from '../views/TokenToolView.js'
 import SelectedTokensControls from './SelectedTokensControls.js'
 
 const TokenTool = ({ toggleOnTokens, game, addToken, metadata }) => {
     const [newTokenUrl, setNewTokenUrl] = useState('')
-    const dispatch = useDispatch()
 
 	if (!metadata.isHost)
 		return null
@@ -14,7 +13,7 @@ const TokenTool = ({ toggleOnTokens, game, addToken, metadata }) => {
     const createToken = () => {
         if (!newTokenUrl)
             return
-        dispatch(addToken(undefined, newTokenUrl, game.mapId))
+        addToken(undefined, newTokenUrl, game.mapId)
         setNewTokenUrl('')
     }
 

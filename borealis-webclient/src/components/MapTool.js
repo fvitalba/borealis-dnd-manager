@@ -1,16 +1,15 @@
 import { useState } from 'react'
-import { connect, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { addMap } from '../reducers/gameReducer.js'
 import MapToolView from '../views/MapToolView.js'
 
 const MapTool = ({ toggleOnMaps, websocket, game, addMap }) => {
     const [newMapName, setNewMapName] = useState('')
-    const dispatch = useDispatch()
 
 	const maps = game.maps
 
     const createMap = () => {
-		dispatch(addMap(newMapName, window.innerWidth, window.innerHeight))
+		addMap(newMapName, window.innerWidth, window.innerHeight)
 		setNewMapName('')
 	}
 
