@@ -1,51 +1,29 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { updateTokens } from '../reducers/gameReducer'
 import drawImage from '../controllers/drawImage.js'
 import Canvas from './Canvas.js'
 
-const Background = ({ gameState, setGameState, controlPanelState, setControlPanelState, updateTokens, updateMap }) => {
-	const map = gameState.game.maps ? gameState.game.maps[gameState.game.mapId] : undefined
 
-	//TODO: Verify that this is actually needed
-	/*
-	const resizeCanvases = (w, h) => {
-		return new Promise((resolve, reject) => {
-			if (!w)
-				w = (map && map.width) || window.innerWidth
-			if (!h)
-				h = (map && map.height) || window.innerHeight
-			let canvases = document.querySelectorAll('canvas')
-			const noChangeNeeded = Array.from(canvases).reduce((prev, canv) => (
-				prev && canv.width === w && canv.height === h
-			), true)
-			if (noChangeNeeded)
-				resolve(w, h)
-			else
-				setGameState({
-					...gameState,
-					game: {
-						...gameState.game,
-						width: w,
-						height: h,
-						isFogLoaded: false,
-					}
-				})
-		})
-	}
-	*/
+const Background = ({ game, updateTokens }) => {
+	const map = game.maps ? game.maps[game.mapId] : undefined
 
 	const draw = (ctx) => {
 		if (!map) {
 			return
 		}
-		drawImage(map.imageUrl, map.name, map, ctx, null, updateMap)
+		drawImage(map.imageUrl, map.name, map, ctx, null)
 	}
 
 	const handleOnClick = (e) => {
+		//TODO: Handle onClick of Maps
+		/*
 		setControlPanelState({
 			...controlPanelState,
 			toggleOnMaps: false,
 			toggleOnTokens: false,
 		}, () => updateTokens(token => token.$selected = false))
+		*/
 	}
 
 	return (
@@ -58,4 +36,14 @@ const Background = ({ gameState, setGameState, controlPanelState, setControlPane
 	)
 }
 
-export default Background
+const mapStateToProps = (state) => {
+	return {
+		game: state.game,
+	}
+}
+
+const mapDispatchToProps = {
+	updateTokens,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Background)

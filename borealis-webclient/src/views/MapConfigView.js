@@ -1,9 +1,9 @@
 import Button from './Button.js'
 
-const MapConfigView = ({ isSelected, mapConfigState, mapId, load, onTextChange, onIntegerChange, deleteMap }) => {
+const MapConfigView = ({ isSelected, mapConfigState, load, onTextChange, onIntegerChange, deleteMap }) => {
 	return (
 		<div className={ isSelected ? 'selected' : null }>
-			{ mapId } - { mapConfigState.name }
+			{ mapConfigState.name }
 			<input value={ mapConfigState.imageUrl || '' } placeholder='Map url' size='8' onChange={ (e) => onTextChange('imageUrl', e) } />
 			w:
 			<input value={ mapConfigState.width || 0 } placeholder='width' className='text3' onChange={ (e) => onIntegerChange('width', e) } type='number' min='0' step='10' title='width' />

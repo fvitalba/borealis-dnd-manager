@@ -59,10 +59,11 @@ const settingsReducer = (state = initialSettingsState, action) => {
     }
 }
 
+//#region Action Creators
 export const setCursorSize = (newCursorSize) => {
     return {
         type: CHANGE_CURSORSIZE,
-        cursorSize: newCursorSize,
+        cursorSize: parseInt(newCursorSize),
     }
 }
 
@@ -70,7 +71,7 @@ export const setFogToolSettings = (newFogOpacity, newFogRadius) => {
     return {
         type: CHANGE_FOG_SETTINGS,
         fogOpacity: newFogOpacity,
-        fogRadius: newFogRadius,
+        fogRadius: parseInt(newFogRadius),
     }
 }
 
@@ -78,7 +79,7 @@ export const setDrawToolSettings = (newDrawColor, newDrawSize) => {
     return {
         type: CHANGE_DRAW_SETTINGS,
         drawColor: newDrawColor,
-        drawSize: newDrawSize,
+        drawSize: parseInt(newDrawSize),
     }
 }
 
@@ -102,5 +103,6 @@ export const toggleMousesharing = () => {
         type: TOGGLE_MOUSESHARING,
     }
 }
+//#endregion Action Creators
 
 export default settingsReducer

@@ -1,69 +1,61 @@
 import React from 'react'
+import { connect, useDispatch } from 'react-redux'
+import { deleteToken, copyToken, updateTokenValue, toggleTokenValue, updateTokens } from '../reducers/gameReducer.js'
 import HostTokenConfig from '../views/HostTokenConfigView.js'
 import GuestTokenConfigView from '../views/GuestTokenConfigView.js'
 
-const TokenConfig = ({ gameState, setGameState, token, updateGameToken, selectGameToken }) => {
-	const update = (callback) => {
-		updateGameToken(token, callback)
+const TokenConfig = ({ token, game, metadata, deleteToken, copyToken, updateTokenValue, toggleTokenValue }) => {
+	const dispatch = useDispatch()
+	const selectToken = (token, tokenSelected) => {
+		if (!token.pc && !metadata.isHost)
+			return
+		const updatedTokens = game.tokens.map((currToken) => {
+			//TODO: Handle Multiselection / singleselection
+			return (currToken.guid === token.guid) ?
+				{
+					...currToken,
+					$selected: tokenSelected ? tokenSelected : !currToken.$selected,
+					$x0: currToken.x,	//TODO: these coordinates should only be set, if selected = true
+					$y0: currToken.y,	//TODO: these coordinates should only be set, if selected = true
+				}
+				: currToken
+		})
+		dispatch(updateTokens(updatedTokens))
 	}
 
-	const deleteToken = () => {
-		const tokens = gameState.game.tokens.map(t => t)
-		const index = tokens.indexOf(token)
-		tokens.splice(index, 1)
-		setGameState({
-			...gameState,
-			game: {
-				...gameState.game,
-				tokens: tokens,
-			}
-		})
+	const deleteCurrToken = () => {
+		dispatch(deleteToken(token.guid))
 	}
 	
 	const copy = () => {
-		const tokens = gameState.game.tokens.map(t => t)
-		const index = tokens.indexOf(token)
-		tokens.splice(index + 1, 0, copy)
-		setGameState({
-			...gameState,
-			game: {
-				...gameState.game,
-				tokens: tokens,
-			}
-		})
+		dispatch(copyToken(token.guid))
 	}
 
 	const onMapSelect = (e) => {
-		let value = e.target.value
-		if (Object.keys(gameState.game.maps).indexOf(value) < 0)
+		let value = parseInt(e.target.value)
+		if (value < 0)
 			value = undefined
-		update(token => token.mapId = value)
+		dispatch(updateTokenValue(token.guid, 'mapId', value))
 	}
 
 	const onToggle = (key) => {
-		update(token => token[key] = !token[key])
+		dispatch(toggleTokenValue(token.guid, key))
 	}
 
 	const onIntegerChange = (key, e) => {
-		update(token => token[key] = parseInt(e.target.value) || undefined)
+		dispatch(updateTokenValue(token.guid, key, parseInt(e.target.value) || undefined))
 	}
 
 	const onTextChange = (key, e) => {
-		update(token => token[key] = e.target.value)
+		dispatch(updateTokenValue(token.guid, key, e.target.value))
 	}
-
-	const selectToken = (token, e) => {
-		selectGameToken(token, undefined, true)
-	}
-
-	const maps = gameState.game.maps
 
 	return (
 		<div>
 			{ token ?
-				gameState.metadata.isHost ?
+				metadata.isHost ?
 				<HostTokenConfig 
-					maps={ maps } 
+					maps={ game.maps } 
 					token={ token } 
 					copy={ copy } 
 					onToggle={ onToggle } 
@@ -71,7 +63,7 @@ const TokenConfig = ({ gameState, setGameState, token, updateGameToken, selectGa
 					onTextChange={ onTextChange } 
 					onIntegerChange={ onIntegerChange } 
 					onMapSelect={ onMapSelect } 
-					deleteToken={ deleteToken }
+					deleteToken={ deleteCurrToken }
 				/>
 				:
 				<GuestTokenConfigView 
@@ -85,4 +77,19 @@ const TokenConfig = ({ gameState, setGameState, token, updateGameToken, selectGa
 	)
 }
 
-export default TokenConfig
+const mapStateToProps = (state) => {
+	return {
+		game: state.game,
+		metadata: state.metadata,
+	}
+}
+
+const mapDispatchToProps = {
+	deleteToken,
+	copyToken,
+	updateTokenValue,
+	toggleTokenValue,
+	updateTokens,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TokenConfig)

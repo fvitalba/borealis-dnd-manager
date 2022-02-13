@@ -1,15 +1,16 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import Canvas from './Canvas.js'
 
-const Drawing = ({ gameState }) => {
-	const width = gameState.game.width
-	const height = gameState.game.height
+const Drawing = ({ game }) => {
+	const width = game.width
+	const height = game.height
 
 	const getMap = () => {
-		if (gameState.game.maps.length === 0)
+		if (game.maps.length === 0)
 			return undefined
-		const currMap = gameState.game.maps.filter((map) => parseInt(map.$id) === parseInt(gameState.game.mapId))
-		return currMap.length > 0 ? currMap[0] : gameState.game.maps[0]
+		const currMap = game.maps.filter((map) => parseInt(map.$id) === parseInt(game.mapId))
+		return currMap.length > 0 ? currMap[0] : game.maps[0]
 	}
 	const map = getMap()
 
@@ -79,4 +80,10 @@ const Drawing = ({ gameState }) => {
 	)
 }
 
-export default Drawing
+const mapStateToProps = (state) => {
+	return {
+		game: state.game,
+	}
+}
+
+export default connect(mapStateToProps, undefined)(Drawing)

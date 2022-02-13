@@ -60,6 +60,7 @@ const metadataReducer = (state = initialMetadataState, action) => {
     }
 }
 
+//#region Action Creators
 export const setGameSettings = (newIsHost, newRoom) => {
     return {
         type: SET_GAMESETTINGS,
@@ -107,5 +108,6 @@ export const setDownCoordinates = (newDownX, newDownY) => {
         downY: newDownY,
     }
 }
+//#endregion Action Creators
 
 export default metadataReducer
