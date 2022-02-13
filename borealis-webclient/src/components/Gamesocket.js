@@ -95,10 +95,14 @@ class GameSocket {
 	}
 
 	/* Push refresh */
-	pushRefresh(gameState) {
+	pushRefresh(game, additionalAttrs) {
+		console.log('sending game', game)
+		if (additionalAttrs)
+			console.log('additional attributes', additionalAttrs)
 		this.send({
 			messageType: 'refresh',
-			game: gameState.game,
+			game: game,
+			...additionalAttrs,
 		})
 	}
 

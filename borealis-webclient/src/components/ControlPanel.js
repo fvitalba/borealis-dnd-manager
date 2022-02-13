@@ -12,7 +12,7 @@ const initialControlPanelState = () => {
 	}
 }
 
-const ControlPanel = ({ websocket, settings, metadata, setUsername, setCursorSize }) => {
+const ControlPanel = ({ websocket, game, settings, metadata, setUsername, setCursorSize }) => {
 	const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
 
 	const toggleHidden = () => {
@@ -37,8 +37,7 @@ const ControlPanel = ({ websocket, settings, metadata, setUsername, setCursorSiz
 	}
 
 	const pushRefreshToPlayers = () => {
-		//TODO: implement pushRefreshToplayers
-		//websocket.pushRefresh(gameState)
+		websocket.pushRefresh(game)
 	}
 
 	return (
@@ -60,6 +59,7 @@ const ControlPanel = ({ websocket, settings, metadata, setUsername, setCursorSiz
 
 const mapStateToProps = (state) => {
 	return {
+		game: state.game,
 		settings: state.settings,
 		metadata: state.metadata,
 	}

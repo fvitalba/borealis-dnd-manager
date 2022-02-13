@@ -1,9 +1,5 @@
 const initialControlPanelState = () => {
 	return {
-		name: undefined,
-		url: undefined,
-		newTokenUrl: undefined,
-		newMapName: undefined,
 		hidden: false,
 		toggleOnMaps: false,
 		toggleOnUser: false,

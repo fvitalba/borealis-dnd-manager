@@ -1,4 +1,5 @@
 import {
+    OVERWRITE_GAME,
     LOAD_MAP, 
     INCREMENT_GEN, 
     SET_ISFIRSTLOADDONE, 
@@ -32,6 +33,11 @@ const gameReducer = (state = initialGameState, action) => {
     const maps = JSON.parse(JSON.stringify(state.maps))
     const tokens = JSON.parse(JSON.stringify(state.tokens))
     switch (action.type) {
+        case OVERWRITE_GAME:
+            return {
+                ...state,
+                ...action.game,
+            }
         case LOAD_MAP:
             return {
                 ...state,
@@ -56,6 +62,7 @@ const gameReducer = (state = initialGameState, action) => {
             return {
                 ...state,
                 maps: action.maps,
+                mapId: state.mapId ? state.mapId : undefined,
             }
         case ADD_MAP:
             const newMapId = parseInt(state.maps.length)
@@ -63,8 +70,6 @@ const gameReducer = (state = initialGameState, action) => {
                 ...action.map,
                 $id: newMapId,
             })
-            console.log('current maps',state.maps)
-            console.log('new maps',mapsWithNewMap)
             return {
                 ...state,
                 maps: mapsWithNewMap,
@@ -154,6 +159,13 @@ const gameReducer = (state = initialGameState, action) => {
 }
 
 //#region Action Creators
+export const overwriteGame = (newGame) => {
+    return {
+        type: OVERWRITE_GAME,
+        game: newGame,
+    }
+}
+
 export const loadMap = (newMapId) => {
     return {
         type: LOAD_MAP,

@@ -1,19 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import GameView from '../views/GameView.js'
 import { setGameSettings } from '../reducers/metadataReducer.js'
-import { updateMaps, loadMap, incrementGen } from '../reducers/gameReducer.js'
+import { overwriteGame, updateMaps, loadMap, incrementGen } from '../reducers/gameReducer.js'
 
-const initialGameState = (overlayRef) => {
-	return {
-		websocket: null,
-		overlayRef: overlayRef,
-	}
-}
-
-const Game = ({ websocket, metadata, game, settings, setGameSettings, loadMap, updateMaps, incrementGen }) => {
+const Game = ({ websocket, metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, incrementGen }) => {
 	const overlayRef = React.useRef()
-	const [gameState, setGameState] = useState(initialGameState(overlayRef))
 	let currentPath = []
 
 	// On Mount
@@ -24,10 +16,6 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, loadMap, u
 		//window.addEventListener('keypress', onKeyPress)
 		window.addEventListener('keydown', onKeyDown)
 		//TODO: loadFromLocalStorage()
-		setGameState({
-			...gameState,
-			websocket: websocket,
-		})
 		const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
 		setGameSettings(params.get('host'), params.get('room'))
 
@@ -42,10 +30,10 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, loadMap, u
 	}, []) // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
-		if (gameState.websocket)
-			gameState.websocket.addCallbacks( metadata.isHost, receiveData )
+		if (websocket)
+			websocket.addCallbacks( metadata.isHost, receiveData )
 		document.title = `Borealis D&D, Room: ${metadata.room}`
-	}, [metadata.isHost, metadata.room, gameState.websocket]) // eslint-disable-line react-hooks/exhaustive-deps
+	}, [metadata.isHost, metadata.room]) // eslint-disable-line react-hooks/exhaustive-deps
 
 	/*
 	useEffect(() => {
@@ -122,7 +110,7 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, loadMap, u
 	const setPointerOutline = (x, y, color, radius) => {
 		if (color == null)
 			return
-		const ctx = gameState.overlayRef.current.getContext('2d')
+		const ctx = overlayRef.current.getContext('2d')
 		ctx.strokeStyle = color
 		ctx.lineWidth = '3'
 		ctx.beginPath()
@@ -132,7 +120,7 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, loadMap, u
 	}
 
 	const updateCurrentDrawPath = () => {
-		const ctx = gameState.overlayRef.current.getContext('2d')
+		const ctx = overlayRef.current.getContext('2d')
 		ctx.beginPath()
 		for (let pointId = 0; pointId < currentPath.length; pointId++) {
 			ctx.lineCap = 'round'
@@ -149,7 +137,7 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, loadMap, u
 	}
 
 	const updateCurrentFogPath = () => {
-		const ctx = gameState.overlayRef.current.getContext('2d')
+		const ctx = overlayRef.current.getContext('2d')
 		ctx.beginPath()
 		let gradient
 		for (let pointId = 0; pointId < currentPath.length; pointId++) {
@@ -164,7 +152,7 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, loadMap, u
 	}
 
 	const clearOverlay = () => {
-		const ctx = gameState.overlayRef.current.getContext('2d')
+		const ctx = overlayRef.current.getContext('2d')
 		if (!ctx)
 			return
 		ctx.clearRect(0, 0, game.width, game.height);
@@ -299,11 +287,11 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, loadMap, u
 			switch (settings.tool) {
 				case 'fog':
 					fogPaths.push(currentPath)
-					gameState.websocket.pushFog(currentPath)
+					websocket.pushFog(currentPath)
 					break
 				case 'draw':
 					drawPaths.push(currentPath)
-					gameState.websocket.pushDraw(currentPath)
+					websocket.pushDraw(currentPath)
 					break
 				default: break
 			}
@@ -398,10 +386,10 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, loadMap, u
 	const receiveData = (evt) => {
 		let data = JSON.parse(evt.data)
 		console.log('receiving the following data', data)
-		if (data.from === gameState.websocket.guid) {
+		if (data.from === websocket.guid) {
 			return // ignore messages sent by self
 		}
-		if (data.to && data.to !== gameState.websocket.guid) {
+		if (data.to && data.to !== websocket.guid) {
 			return // ignore messages sent to different recipients
 		}
 
@@ -416,19 +404,17 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, loadMap, u
 				break
 			case 'draw':
 				const updatedMapsWithDraw = game.maps.map((map) => {
-					return map.$id === currMap.$id ? { ...currMap, drawPaths: data.drawPath, } : map
+					return map.$id === currMap.$id ? { ...currMap, drawPaths: map.drawPaths.push(data.drawPath), } : map
 				})
-				console.log('updated maps',updatedMapsWithDraw)
-				console.log('current game map id',game.mapId)
 				updateMaps(updatedMapsWithDraw)
 				break
-			case 'fog': /* fog erasure */
+			case 'fog':
 				const updatedMapsWithFog = game.maps.map((map) => {
-					return map.$id === currMap.$id ? { ...currMap, fogPaths: data.fogPath, } : map
+					return map.$id === currMap.$id ? { ...currMap, fogPaths: map.fogPaths.push(data.fogPath), } : map
 				})
 				updateMaps(updatedMapsWithFog)
 				break
-			case 'fogReset': /* fog reset */
+			case 'fogReset':
 				const updatedMapsWithFogReset = game.maps.map((map) => {
 					return map.$id === currMap.$id ? {...currMap, fogPaths: [], } : map
 				})
@@ -457,31 +443,20 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, loadMap, u
 				this.gameState.setState({tokens: tokens})
 				*/
 				break
-			case 'map': /* map id */
+			case 'map':
 				loadMap(data.mapId)
 				break
 			case 'maps':
 				updateMaps(data.maps)
 				loadMap(data.mapId)
 				break
-			case 'refresh': /* refresh from host */
-				//TODO: Implement refresh
-				/*
-				const newGameState = {
-					...gameState,
-					game: {
-						...gameState.game,
-						...data.game,
-						mapId: parseInt(data.game.mapId),
-					},
-				}
-				setGameState(newGameState)
-				*/
+			case 'refresh': // refresh from host
+				console.log('receiving gamedata', data.game)
+				overwriteGame(data.game)
 				break
-			case 'refreshRequest': /* refresh request from player */
+			case 'refreshRequest': // refresh request from player
 				if (metadata.isHost) {
-					//TODO: Implement push refresh
-					//websocket.pushRefresh(gameState, { to: data.from, })
+					websocket.pushRefresh(game, { to: data.from, })
 				}
 				break
 			default:
@@ -593,7 +568,7 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, loadMap, u
 				cursors={ cursorsCopy } 
 				cursorSize={ settings.cursorSize } 
 				tokens={ game.tokens } 
-				websocket={ gameState.websocket } 
+				websocket={ websocket } 
 				onMouseMove={ onMouseMove } 
 				onMouseUp={ onMouseUp } 
 				onMouseDown={ onMouseDown } 
@@ -615,6 +590,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
 	setGameSettings,
+	overwriteGame,
 	loadMap,
 	updateMaps,
 	incrementGen,

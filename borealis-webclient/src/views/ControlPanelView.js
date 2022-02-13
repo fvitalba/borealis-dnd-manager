@@ -26,7 +26,7 @@ const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, tog
 				<ToggleButton title='User' value='&#x1f9d9;&#x200d;&#x2642;&#xfe0f;' controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
 				<ToggleButton title='Maps' value='&#x1f5fa;' controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
 				<ToggleButton title='Tokens' value='&#x265f;' controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
-				<Button title='Push refresh to players' value='&#x1f4ab;' onClick={ () => pushRefreshToPlayers } />
+				<Button title='Push refresh to players' value='&#x1f4ab;' onClick={ pushRefreshToPlayers } />
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<ToolSelectView />
 				&nbsp;&nbsp;&nbsp;&nbsp;
