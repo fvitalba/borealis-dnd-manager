@@ -6,7 +6,7 @@ import Token from '../components/Token.js'
 import Cursor from './Cursor.js'
 import ControlPanel from '../components/ControlPanel.js'
 
-const GameView = ({ isHost, overlayRef, isFogLoaded, cursors, cursorSize, tokens, websocket, onMouseMove, onMouseUp, onMouseDown }) => {
+const GameView = ({ isHost, overlayRef, isFogLoaded, cursors, cursorSize, tokens, onMouseMove, onMouseUp, onMouseDown }) => {
 	const goneClass = isFogLoaded ? null : 'gone'
 
 	return (
@@ -34,7 +34,7 @@ const GameView = ({ isHost, overlayRef, isFogLoaded, cursors, cursorSize, tokens
 				{/* Overlay: Holds outline for fog & draw tools */ }
 				<Overlay overlayRef={ overlayRef } /> 
 			</div>
-			<ControlPanel websocket={ websocket } />
+			<ControlPanel />
 		</div>
 	)
 }

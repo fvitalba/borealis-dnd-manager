@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { addMap } from '../reducers/gameReducer.js'
 import MapToolView from '../views/MapToolView.js'
 
-const MapTool = ({ toggleOnMaps, websocket, game, addMap }) => {
+const MapTool = ({ toggleOnMaps, game, addMap }) => {
     const [newMapName, setNewMapName] = useState('')
 
 	const maps = game.maps
@@ -15,7 +15,7 @@ const MapTool = ({ toggleOnMaps, websocket, game, addMap }) => {
 
 	return (
         toggleOnMaps ?
-		    <MapToolView maps={ maps } newMapName={ newMapName } setNewMapName={ setNewMapName } createMap={ createMap } websocket={ websocket } />
+		    <MapToolView maps={ maps } newMapName={ newMapName } setNewMapName={ setNewMapName } createMap={ createMap } />
             : null
 	)
 }

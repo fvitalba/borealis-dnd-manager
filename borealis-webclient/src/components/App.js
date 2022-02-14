@@ -1,17 +1,14 @@
 import React from 'react'
 import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
-
-import Game from './Game'
-import GameSocket from './GameSocket'
 import settingsReducer from '../reducers/settingsReducer'
 import metadataReducer from '../reducers/metadataReducer'
 import gameReducer from '../reducers/gameReducer'
+import { WebSocketProvider } from '../contexts/WebSocketProvider'
+import Game from './Game'
 
 const App = () => {
     const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
-    let websocket = new GameSocket()
-    websocket.setup(params.get('room'))
 
     const combinedReducer = combineReducers({
         settings: settingsReducer,
@@ -22,7 +19,9 @@ const App = () => {
 
     return(
         <Provider store={ store } >
-            <Game websocket={ websocket } />
+            <WebSocketProvider room={ params.get('room') }>
+                <Game />
+            </WebSocketProvider>
         </Provider>
     )
 }

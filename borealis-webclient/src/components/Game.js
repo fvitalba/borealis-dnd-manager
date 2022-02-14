@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import GameView from '../views/GameView.js'
 import { setGameSettings } from '../reducers/metadataReducer.js'
 import { overwriteGame, updateMaps, loadMap, incrementGen } from '../reducers/gameReducer.js'
+import { pushDrawPath, pushFogPath, pushGameRefresh, useWebSocket } from '../hooks/useSocket.js'
+import GameView from '../views/GameView.js'
 
-const Game = ({ websocket, metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, incrementGen }) => {
+const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, incrementGen }) => {
 	const overlayRef = React.useRef()
+	const [webSocket, wsSettings] = useWebSocket()
 	let currentPath = []
 
 	// On Mount
@@ -30,10 +32,14 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, overwriteG
 	}, []) // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
-		if (websocket)
-			websocket.addCallbacks( metadata.isHost, receiveData )
+		if (webSocket)
+			webSocket.addEventListener('message', receiveData)
 		document.title = `Borealis D&D, Room: ${metadata.room}`
-	}, [metadata.isHost, metadata.room]) // eslint-disable-line react-hooks/exhaustive-deps
+
+		return () => {
+			webSocket.removeEventListener('message', receiveData)
+		}
+	}, [metadata.room, webSocket])
 
 	/*
 	useEffect(() => {
@@ -287,11 +293,11 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, overwriteG
 			switch (settings.tool) {
 				case 'fog':
 					fogPaths.push(currentPath)
-					websocket.pushFog(currentPath)
+					pushFogPath(webSocket, wsSettings.guid, currentPath)
 					break
 				case 'draw':
 					drawPaths.push(currentPath)
-					websocket.pushDraw(currentPath)
+					pushDrawPath(webSocket, wsSettings.guid, currentPath)
 					break
 				default: break
 			}
@@ -386,54 +392,54 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, overwriteG
 	const receiveData = (evt) => {
 		let data = JSON.parse(evt.data)
 		console.log('receiving the following data', data)
-		if (data.from === websocket.guid) {
+		if (data.from === wsSettings.guid) {
 			return // ignore messages sent by self
 		}
-		if (data.to && data.to !== websocket.guid) {
+		if (data.to && data.to !== wsSettings.guid) {
 			return // ignore messages sent to different recipients
 		}
 
 		const currMap = getMap()
 		console.log('current map',currMap)
-		switch (data.messageType) {
-			case 'cursor':
+		switch (data.type) {
+			case 'pushCursor':
 				/*
 				if (data.u !== this.gameState.settings.username)
 					this.gameState.updateCursors(data.x, data.y, data.u, data.from)
 				*/
 				break
-			case 'draw':
+			case 'pushDrawPath':
 				const updatedMapsWithDraw = game.maps.map((map) => {
 					return map.$id === currMap.$id ? { ...currMap, drawPaths: map.drawPaths.push(data.drawPath), } : map
 				})
 				updateMaps(updatedMapsWithDraw)
 				break
-			case 'fog':
-				const updatedMapsWithFog = game.maps.map((map) => {
-					return map.$id === currMap.$id ? { ...currMap, fogPaths: map.fogPaths.push(data.fogPath), } : map
-				})
-				updateMaps(updatedMapsWithFog)
-				break
-			case 'fogReset':
-				const updatedMapsWithFogReset = game.maps.map((map) => {
-					return map.$id === currMap.$id ? {...currMap, fogPaths: [], } : map
-				})
-				updateMaps(updatedMapsWithFogReset)
-				break
-			case 'drawReset':
+			case 'pushDrawReset':
 				const updatedMapsWithDrawReset = game.maps.map((map) => {
 					return map.$id === currMap.$id ? {...currMap, drawPaths: [], } : map
 				})
 				updateMaps(updatedMapsWithDrawReset)
 				break
-			case 't': /* token */
+			case 'pushFogPath':
+				const updatedMapsWithFog = game.maps.map((map) => {
+					return map.$id === currMap.$id ? { ...currMap, fogPaths: map.fogPaths.push(data.fogPath), } : map
+				})
+				updateMaps(updatedMapsWithFog)
+				break
+			case 'pushFogReset':
+				const updatedMapsWithFogReset = game.maps.map((map) => {
+					return map.$id === currMap.$id ? {...currMap, fogPaths: [], } : map
+				})
+				updateMaps(updatedMapsWithFogReset)
+				break
+			case 'pushSingleToken':
 				/*
 				const local = this.gameState.game.tokens[data.i]
 				const token = Object.assign(local, data.a) // Keep and `$` attrs like `$selected`
 				this.gameState.updateTokenByIndex(data.i, token, true)
 				*/
 				break
-			case 'ts': /* all tokens */
+			case 'pushTokens':
 				/*
 				const localTokensMap = this.gameState.game.tokens.reduce((out, tok) => {
 					out[tok.guid] = tok
@@ -443,24 +449,24 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, overwriteG
 				this.gameState.setState({tokens: tokens})
 				*/
 				break
-			case 'map':
+			case 'pushMapId':
 				loadMap(data.mapId)
 				break
-			case 'maps':
+			case 'pushMapState':
 				updateMaps(data.maps)
 				loadMap(data.mapId)
 				break
-			case 'refresh': // refresh from host
+			case 'pushGameRefresh': // refresh from host
 				console.log('receiving gamedata', data.game)
 				overwriteGame(data.game)
 				break
-			case 'refreshRequest': // refresh request from player
+			case 'requestRefresh': // refresh request from player
 				if (metadata.isHost) {
-					websocket.pushRefresh(game, { to: data.from, })
+					pushGameRefresh(webSocket, wsSettings.guid, game, { to: data.from, })
 				}
 				break
 			default:
-				console.error(`Unrecognized websocket message type: ${data.t}`)
+				console.error(`Unrecognized websocket message type: ${data.type}`)
 		}
 	}
 
@@ -484,7 +490,7 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, overwriteG
 		//TODO: rewrite toJson
 		/*
 		const map = getMap()
-		dispatch(incrementGen())
+		incrementGen()
 		const tokens = game.tokens.map(token => ({...token}))
 		tokens.forEach(token => websocket.scrubObject(token))
 		const maps = game.maps
@@ -568,7 +574,6 @@ const Game = ({ websocket, metadata, game, settings, setGameSettings, overwriteG
 				cursors={ cursorsCopy } 
 				cursorSize={ settings.cursorSize } 
 				tokens={ game.tokens } 
-				websocket={ websocket } 
 				onMouseMove={ onMouseMove } 
 				onMouseUp={ onMouseUp } 
 				onMouseDown={ onMouseDown } 

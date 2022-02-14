@@ -201,7 +201,6 @@ export const updateMaps = (newMaps) => {
 }
 
 export const addMap = (mapName, width, height) => {
-    console.log('dispatching addMap')
     const newMap = {
         name: mapName,
         $id: 0,

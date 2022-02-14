@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { loadMap, updateMaps, deleteMap, setIsFogLoaded, setIsFirstLoadDone } from '../reducers/gameReducer.js'
+import { pushMapId, useWebSocket } from '../hooks/useSocket.js'
 import MapConfigView from '../views/MapConfigView.js'
 
 const initialMapConfigState = (map, game) => {
@@ -19,8 +20,9 @@ const initialMapConfigState = (map, game) => {
 	}
 }
 
-const MapConfig = ({ websocket, map, game, loadMap, updateMaps, deleteMap, setIsFogLoaded, setIsFirstLoadDone }) => {
+const MapConfig = ({ map, game, loadMap, updateMaps, deleteMap, setIsFogLoaded, setIsFirstLoadDone }) => {
 	const [mapConfigState, setMapConfigState] = useState(initialMapConfigState(map, game))
+	const [webSocket, wsSettings] = useWebSocket()
 	const isSelected = game.mapId === map.$id
 
 	const onTextChange = (key, evt) => {
@@ -46,7 +48,7 @@ const MapConfig = ({ websocket, map, game, loadMap, updateMaps, deleteMap, setIs
 		loadMap(map.$id)
 		setIsFogLoaded(true)
 		setIsFirstLoadDone(true)
-		websocket.pushMapId(map.$id)
+		pushMapId(webSocket, wsSettings.guid, map.$id)
 	}
 
 	const deleteCurrentMap = () => {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { setUsername, setCursorSize } from '../reducers/settingsReducer.js' 
+import { pushGameRefresh, requestRefresh, useWebSocket } from '../hooks/useSocket.js'
 import ControlPanelView from '../views/ControlPanelView.js'
 
 const initialControlPanelState = () => {
@@ -12,8 +13,9 @@ const initialControlPanelState = () => {
 	}
 }
 
-const ControlPanel = ({ websocket, game, settings, metadata, setUsername, setCursorSize }) => {
+const ControlPanel = ({ game, settings, metadata, setUsername, setCursorSize }) => {
 	const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
+	const [webSocket, wsSettings] = useWebSocket()
 
 	const toggleHidden = () => {
 		setControlPanelState({
@@ -33,12 +35,12 @@ const ControlPanel = ({ websocket, game, settings, metadata, setUsername, setCur
 	}
 
 	const socketRequestRefresh = () => {
-		websocket.requestRefresh()
+		requestRefresh()
 	}
 
 	const pushRefreshToPlayers = () => {
 		console.log('pushing game', game)
-		websocket.pushRefresh(game)
+		pushGameRefresh(webSocket, wsSettings.guid, game)
 	}
 
 	return (
@@ -52,7 +54,6 @@ const ControlPanel = ({ websocket, game, settings, metadata, setUsername, setCur
 			setUsername={ updateUsername } 
 			cursorSize={ settings.cursorSize } 
 			setCursorSize={ updateCursorSize } 
-			websocket={ websocket } 
 			socketRequestRefresh={ socketRequestRefresh } 
 			pushRefreshToPlayers={ pushRefreshToPlayers } />
 	)
