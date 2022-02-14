@@ -15,7 +15,7 @@ const initialControlPanelState = () => {
 
 const ControlPanel = ({ game, settings, metadata, setUsername, setCursorSize }) => {
 	const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
-	const [webSocket, wsSettings] = useWebSocket()
+	const [webSocket, wsSettings, setWsSettings] = useWebSocket()
 
 	const toggleHidden = () => {
 		setControlPanelState({
@@ -26,6 +26,10 @@ const ControlPanel = ({ game, settings, metadata, setUsername, setCursorSize }) 
 
 	const updateUsername = (value) => {
 		setUsername(value)
+		setWsSettings({
+			...wsSettings,
+			username: value,
+		})
 	}
 
 	const updateCursorSize = (value) => {
@@ -35,12 +39,12 @@ const ControlPanel = ({ game, settings, metadata, setUsername, setCursorSize }) 
 	}
 
 	const socketRequestRefresh = () => {
-		requestRefresh()
+		requestRefresh(webSocket, wsSettings)
 	}
 
 	const pushRefreshToPlayers = () => {
 		console.log('pushing game', game)
-		pushGameRefresh(webSocket, wsSettings.guid, game)
+		pushGameRefresh(webSocket, wsSettings, game)
 	}
 
 	return (

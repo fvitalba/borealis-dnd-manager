@@ -10,61 +10,6 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 	const [webSocket, wsSettings] = useWebSocket()
 	let currentPath = []
 
-	// On Mount
-	useEffect(() => {
-		window.addEventListener('beforeunload', saveToLocalStorage)
-		window.addEventListener('resize', onResize)
-		//TODO: reenable keypresses
-		//window.addEventListener('keypress', onKeyPress)
-		window.addEventListener('keydown', onKeyDown)
-		//TODO: loadFromLocalStorage()
-		const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
-		setGameSettings(params.get('host'), params.get('room'))
-
-		// On Unmount
-		return () => {
-			//TODO: saveToLocalStorage()
-			window.removeEventListener('beforeunload', saveToLocalStorage)
-			window.removeEventListener('resize', onResize)
-			//window.removeEventListener('keypress', onKeyPress)
-			window.removeEventListener('keydown', onKeyDown)
-		}
-	}, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-	useEffect(() => {
-		if (webSocket)
-			webSocket.addEventListener('message', receiveData)
-		document.title = `Borealis D&D, Room: ${metadata.room}`
-		if (!metadata.isHost)
-			requestRefresh(webSocket, wsSettings.guid)
-
-		return () => {
-			webSocket.removeEventListener('message', receiveData)
-		}
-	}, [metadata.isHost, metadata.room, webSocket])
-
-	/*
-	useEffect(() => {
-		if (websocket && gameState.settings.shareMouse)
-			websocket.pushCursor(gameState.metadata.lastX, gameState.metadata.lastY)
-	}, [gameState.metadata.lastX, gameState.metadata.lastY, gameState.settings.shareMouse])
-	*/
-
-	/*
-	useEffect(() => {
-		//TODO: reenable websocket push
-		//if (websocket)
-		//	websocket.pushTokens(gameState.game.tokens)
-	}, [gameState.game.tokens])
-	*/
-
-	/*
-	useEffect(() => {
-		if (websocket && gameState.metadata.isHost)
-			websocket.pushMaps(gameState.game.maps, gameState.game.mapId)
-	}, [gameState.game.mapId])
-	*/
-
 	/****************************************************
 	 * Map Functions                                    *
 	 ****************************************************/
@@ -295,11 +240,11 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 			switch (settings.tool) {
 				case 'fog':
 					fogPaths.push(currentPath)
-					pushFogPath(webSocket, wsSettings.guid, currentPath)
+					pushFogPath(webSocket, wsSettings, currentPath)
 					break
 				case 'draw':
 					drawPaths.push(currentPath)
-					pushDrawPath(webSocket, wsSettings.guid, currentPath)
+					pushDrawPath(webSocket, wsSettings, currentPath)
 					break
 				default: break
 			}
@@ -464,7 +409,7 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 				break
 			case 'requestRefresh': // refresh request from player
 				if (metadata.isHost) {
-					pushGameRefresh(webSocket, wsSettings.guid, game, { to: data.from, })
+					pushGameRefresh(webSocket, wsSettings, game, { to: data.from, })
 				}
 				break
 			default:
@@ -554,6 +499,68 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 		localStorage.removeItem(metadata.room)
 		window.alert('Fatal error. Local storage cleared.')
 	}
+
+	/****************************************************
+	 * React Hooks                                      *
+	 ****************************************************/
+	// On Mount
+	useEffect(() => {
+		window.addEventListener('beforeunload', saveToLocalStorage)
+		window.addEventListener('resize', onResize)
+		//TODO: reenable keypresses
+		//window.addEventListener('keypress', onKeyPress)
+		window.addEventListener('keydown', onKeyDown)
+		//TODO: loadFromLocalStorage()
+		const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
+		setGameSettings(params.get('host'), params.get('room'))
+
+		// On Unmount
+		return () => {
+			//TODO: saveToLocalStorage()
+			window.removeEventListener('beforeunload', saveToLocalStorage)
+			window.removeEventListener('resize', onResize)
+			//window.removeEventListener('keypress', onKeyPress)
+			window.removeEventListener('keydown', onKeyDown)
+		}
+	}, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+	// attach all the event listeners for receiving of data
+	useEffect(() => {
+		if (webSocket)
+			webSocket.addEventListener('message', receiveData)
+		document.title = `Borealis D&D, Room: ${metadata.room}`
+		return () => {
+			webSocket.removeEventListener('message', receiveData)
+		}
+	}, [, metadata.room, webSocket, receiveData])
+
+	// Request the host to send a refresh to you
+	useEffect(() => {
+		if (!metadata.isHost && webSocket)
+			requestRefresh(webSocket, wsSettings)
+	}, [metadata.isHost, webSocket])
+
+	/*
+	useEffect(() => {
+		if (websocket && gameState.settings.shareMouse)
+			websocket.pushCursor(gameState.metadata.lastX, gameState.metadata.lastY)
+	}, [gameState.metadata.lastX, gameState.metadata.lastY, gameState.settings.shareMouse])
+	*/
+
+	/*
+	useEffect(() => {
+		//TODO: reenable websocket push
+		//if (websocket)
+		//	websocket.pushTokens(gameState.game.tokens)
+	}, [gameState.game.tokens])
+	*/
+
+	/*
+	useEffect(() => {
+		if (websocket && gameState.metadata.isHost)
+			websocket.pushMaps(gameState.game.maps, gameState.game.mapId)
+	}, [gameState.game.mapId])
+	*/
 
 	/****************************************************
 	 * Component Render                                 *

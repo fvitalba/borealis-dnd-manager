@@ -48,7 +48,7 @@ const MapConfig = ({ map, game, loadMap, updateMaps, deleteMap, setIsFogLoaded, 
 		loadMap(map.$id)
 		setIsFogLoaded(true)
 		setIsFirstLoadDone(true)
-		pushMapId(webSocket, wsSettings.guid, map.$id)
+		pushMapId(webSocket, wsSettings, map.$id)
 	}
 
 	const deleteCurrentMap = () => {

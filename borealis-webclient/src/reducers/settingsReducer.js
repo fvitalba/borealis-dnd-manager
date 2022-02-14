@@ -7,19 +7,22 @@ import {
     TOGGLE_MOUSESHARING 
 } from '../redux/constants'
 
-const initialSettingsState = {
-    cursorSize: 50,
-    fogOpacity: 0.5,
-    fogRadius: 75,
-    drawColor: 'white',
-    drawSize: 8,
-    tool: 'move',
-    subtool: undefined,
-    username: 'PC', //TODO: /*params.get('host') ? 'DM' : 'PC'*/
-    shareMouse: true,
+const initialSettingsState = () => {
+    const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
+    return {
+        cursorSize: 50,
+        fogOpacity: 0.5,
+        fogRadius: 75,
+        drawColor: 'white',
+        drawSize: 8,
+        tool: 'move',
+        subtool: undefined,
+        username: params.get('host') ? 'DM' : 'PC',
+        shareMouse: true,
+    }
 }
 
-const settingsReducer = (state = initialSettingsState, action) => {
+const settingsReducer = (state = initialSettingsState(), action) => {
     switch (action.type) {
         case CHANGE_CURSORSIZE:
             return {

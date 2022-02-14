@@ -28,13 +28,14 @@ export const WebSocketProvider = ({ children, room }) => {
     const [wsSettings, setWsSettings] = useState({
         room: room, 
         guid: guid(),
+        username: '',
     })
     const [ws, setWs] = useState(createWebSocket(wsSettings.room, wsSettings.guid))
 
     useEffect(() => {
         const onClose = () => {
             setTimeout(() => {
-                setWs(createWebSocket(room, guid))
+                setWs(createWebSocket(wsSettings.room, wsSettings.guid))
             }, SOCKET_RECONNECTION_TIMEOUT)
         }
 
@@ -43,9 +44,9 @@ export const WebSocketProvider = ({ children, room }) => {
         return () => {
             ws.removeEventListener('close', onClose)
         }
-    }, [ws, setWs])
+    }, [ws, setWs, wsSettings.room, wsSettings.guid])
 
     return (
-        <WebSocketContext.Provider value={ [ws, wsSettings] }>{ children }</WebSocketContext.Provider>
+        <WebSocketContext.Provider value={ [ws, wsSettings, setWsSettings] }>{ children }</WebSocketContext.Provider>
     )
 }

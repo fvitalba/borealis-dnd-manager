@@ -13,73 +13,80 @@ const sendData = (webSocket, data) => {
         console.error('no websocket')
 }
 
-export const pushCursor = (webSocket, webSocketGuid, x, y, username) => {
+export const pushCursor = (webSocket, wsSettings, x, y, username) => {
     sendData(webSocket, {
         type: 'pushCursor',
-        from: webSocketGuid,
-        username: username,
+        from: wsSettings.guid,
+        username: wsSettings.username,
         x: x,
         y: y,
     })
 }
 
-export const pushDrawPath = (webSocket, webSocketGuid, newDrawPath) => {
+export const pushDrawPath = (webSocket, wsSettings, newDrawPath) => {
     sendData(webSocket, {
         type: 'pushDrawPath',
-        from: webSocketGuid,
+        from: wsSettings.guid,
+        username: wsSettings.username,
         drawPath: newDrawPath,
     })
 }
 
-export const pushDrawReset = (webSocket, webSocketGuid) => {
+export const pushDrawReset = (webSocket, wsSettings) => {
     sendData(webSocket, {
         type: 'pushDrawReset',
-        from: webSocketGuid,
+        from: wsSettings.guid,
+        username: wsSettings.username,
     })
 }
 
-export const pushFogPath = (webSocket, webSocketGuid, newFogPath) => {
+export const pushFogPath = (webSocket, wsSettings, newFogPath) => {
     sendData(webSocket, {
         type: 'pushFogPath',
-        from: webSocketGuid,
+        from: wsSettings.guid,
+        username: wsSettings.username,
         fogPath: newFogPath,
     })
 }
 
-export const pushFogReset = (webSocket, webSocketGuid) => {
+export const pushFogReset = (webSocket, wsSettings) => {
     sendData(webSocket, {
         type: 'pushFogReset',
-        from: webSocketGuid,
+        from: wsSettings.guid,
+        username: wsSettings.username,
     })
 }
 
-export const pushMapState = (webSocket, webSocketGuid, maps, mapId) => {
+export const pushMapState = (webSocket, wsSettings, maps, mapId) => {
     sendData(webSocket, {
         type: 'pushMapState',
-        from: webSocketGuid,
+        from: wsSettings.guid,
+        username: wsSettings.username,
         maps: maps,
         mapId: mapId,
     })
 }
 
-export const pushMapId = (webSocket, webSocketGuid, mapId) => {
+export const pushMapId = (webSocket, wsSettings, mapId) => {
     sendData(webSocket, {
         type: 'pushMapId',
-        from: webSocketGuid,
+        from: wsSettings.guid,
+        username: wsSettings.username,
         mapId: mapId,
     })
 }
 
-export const pushGameRefresh = (webSocket, webSocketGuid, game, additionalAttributes) => {
+export const pushGameRefresh = (webSocket, wsSettings, game, additionalAttributes) => {
     sendData(webSocket, {
         type: 'pushGameRefresh',
-        from: webSocketGuid,
+        from: wsSettings.guid,
+        username: wsSettings.username,
         game: game,
         ...additionalAttributes,
     })
 }
 
-export const pushSingleToken = (webSocket, webSocketGuid, token) => {
+export const pushSingleToken = (webSocket, wsSettings, token) => {
     //TODO: pushSingleToken
     /*
     const tokenCopy = Object.assign({}, token)
@@ -89,7 +96,7 @@ export const pushSingleToken = (webSocket, webSocketGuid, token) => {
     */
 }
 
-export const pushTokens = (webSocket, webSocketGuid, tokens) => {
+export const pushTokens = (webSocket, wsSettings, tokens) => {
     //TODO: pushTokens
     /*
     if (!tokens)
@@ -101,9 +108,10 @@ export const pushTokens = (webSocket, webSocketGuid, tokens) => {
     */
 }
 
-export const requestRefresh = (webSocket, webSocketGuid) => {
+export const requestRefresh = (webSocket, wsSettings) => {
     sendData(webSocket, {
         type: 'requestRefresh',
-        from: webSocketGuid,
+        from: wsSettings.guid,
+        username: wsSettings.username,
     })
 }

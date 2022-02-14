@@ -1,13 +1,19 @@
 import { connect } from 'react-redux'
 import { setUsername, setCursorSize } from '../reducers/settingsReducer.js'
+import { useWebSocket } from '../hooks/useSocket.js'
 import UserToolView from '../views/UserToolView.js'
 
 const UserTool = ({ toggleOnUser, settings, setUsername, setCursorSize }) => {
+    const [_webSocket, wsSettings, setWsSettings] = useWebSocket()
 	if (!toggleOnUser)
 		return null
 
     const updateUsername = (value) => {
         setUsername(value)
+        setWsSettings({
+			...wsSettings,
+			username: value,
+		})
     }
 
     const updateCursorSize = (value) => {
