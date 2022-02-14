@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { setGameSettings } from '../reducers/metadataReducer.js'
 import { overwriteGame, updateMaps, loadMap, incrementGen } from '../reducers/gameReducer.js'
-import { pushDrawPath, pushFogPath, pushGameRefresh, useWebSocket } from '../hooks/useSocket.js'
+import { pushDrawPath, pushFogPath, pushGameRefresh, requestRefresh, useWebSocket } from '../hooks/useSocket.js'
 import GameView from '../views/GameView.js'
 
 const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, incrementGen }) => {
@@ -35,11 +35,13 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 		if (webSocket)
 			webSocket.addEventListener('message', receiveData)
 		document.title = `Borealis D&D, Room: ${metadata.room}`
+		if (!metadata.isHost)
+			requestRefresh(webSocket, wsSettings.guid)
 
 		return () => {
 			webSocket.removeEventListener('message', receiveData)
 		}
-	}, [metadata.room, webSocket])
+	}, [metadata.isHost, metadata.room, webSocket])
 
 	/*
 	useEffect(() => {

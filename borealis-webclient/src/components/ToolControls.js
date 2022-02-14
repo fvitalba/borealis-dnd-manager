@@ -3,29 +3,29 @@ import { setToolSettings, setDrawToolSettings, setFogToolSettings } from '../red
 import { resetFog, resetDraw } from '../reducers/gameReducer.js'
 import ToolControlsView from "../views/ToolControlsView.js"
 
-const ToolControls = ({ settings, setToolSettings, setFogToolSettings, resetFog, resetDraw }) => {
+const ToolControls = ({ settings, setToolSettings, setDrawToolSettings, setFogToolSettings, resetFog, resetDraw }) => {
 	const setSubtool = (subtool) => {
 		setToolSettings(settings.tool, subtool)
 	}
 
-	const setDrawColor = (e) => {
-		setDrawToolSettings(e.target.value, settings.drawSize)
+	const setDrawColor = (value) => {
+		setDrawToolSettings(value, settings.drawSize)
 	}
 
-	const setDrawSize = (e) => {
-		const newSize = e.target.value
+	const setDrawSize = (value) => {
+		const newSize = value
 		if (!isNaN(newSize))
 			setDrawToolSettings(settings.drawColor, newSize)
 	}
 
-	const setFogOpacity = (e) => {
-		const newOpacity = e.target.value
+	const setFogOpacity = (value) => {
+		const newOpacity = value
 		if (!isNaN(newOpacity))
 			setFogToolSettings(newOpacity, settings.fogRadius)
 	}
 
-	const setFogRadius = (e) => {
-		const newRadius = e.target.value
+	const setFogRadius = (value) => {
+		const newRadius = value
 		if (!isNaN(newRadius))
 			setFogToolSettings(settings.fogOpacity, newRadius)
 	}

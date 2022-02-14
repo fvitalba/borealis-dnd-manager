@@ -6,12 +6,12 @@ const UserTool = ({ toggleOnUser, settings, setUsername, setCursorSize }) => {
 	if (!toggleOnUser)
 		return null
 
-    const updateUsername = (e) => {
-        setUsername(e.target.value)
+    const updateUsername = (value) => {
+        setUsername(value)
     }
 
-    const updateCursorSize = (e) => {
-        const newSize = e.target.value
+    const updateCursorSize = (value) => {
+        const newSize = value
 		if (!isNaN(newSize))
 			setCursorSize(newSize)
     }
