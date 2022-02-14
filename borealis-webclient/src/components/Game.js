@@ -510,13 +510,13 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 		//TODO: reenable keypresses
 		//window.addEventListener('keypress', onKeyPress)
 		window.addEventListener('keydown', onKeyDown)
-		//TODO: loadFromLocalStorage()
+		loadFromLocalStorage()
 		const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
 		setGameSettings(params.get('host'), params.get('room'))
 
 		// On Unmount
 		return () => {
-			//TODO: saveToLocalStorage()
+			saveToLocalStorage()
 			window.removeEventListener('beforeunload', saveToLocalStorage)
 			window.removeEventListener('resize', onResize)
 			//window.removeEventListener('keypress', onKeyPress)
