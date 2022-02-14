@@ -356,8 +356,10 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 				*/
 				break
 			case 'pushDrawPath':
+				const newDrawPath = currMap.drawPaths ? currMap.drawPaths : []
+				newDrawPath.push(data.drawPath)
 				const updatedMapsWithDraw = game.maps.map((map) => {
-					return map.$id === currMap.$id ? { ...currMap, drawPaths: map.drawPaths.push(data.drawPath), } : map
+					return map.$id === currMap.$id ? { ...currMap, drawPaths: newDrawPath, } : map
 				})
 				updateMaps(updatedMapsWithDraw)
 				break
@@ -368,8 +370,10 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 				updateMaps(updatedMapsWithDrawReset)
 				break
 			case 'pushFogPath':
+				const newFogPath = currMap.fogPaths ? currMap.fogPaths : []
+				newFogPath.push(data.fogPath)
 				const updatedMapsWithFog = game.maps.map((map) => {
-					return map.$id === currMap.$id ? { ...currMap, fogPaths: map.fogPaths.push(data.fogPath), } : map
+					return map.$id === currMap.$id ? { ...currMap, fogPaths: newFogPath, } : map
 				})
 				updateMaps(updatedMapsWithFog)
 				break
@@ -532,13 +536,13 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 		return () => {
 			webSocket.removeEventListener('message', receiveData)
 		}
-	}, [, metadata.room, webSocket, receiveData])
+	}, [ metadata.room, webSocket, receiveData])
 
 	// Request the host to send a refresh to you
 	useEffect(() => {
 		if (!metadata.isHost && webSocket)
 			requestRefresh(webSocket, wsSettings)
-	}, [metadata.isHost, webSocket])
+	}, [metadata.isHost, webSocket, wsSettings])
 
 	/*
 	useEffect(() => {
