@@ -1,22 +1,21 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import TokenView from '../views/TokenView.js'
 
-const Token = ({ gameState, token, selectGameToken }) => {
+const Token = ({ token, isHost, game, settings }) => {
 	const isMoveTool = () => {
-		return gameState.settings.tool === 'move'
+		return settings.tool === 'move'
 	}
 
 	const onMouseDown = (e) => {
 		if (!isMoveTool())
 			return
 		//TODO: Fix multi token selection
+		/*
 		if (!token.$selected)
 			selectGameToken(token, true, e.metaKey)
+		*/
 	}
-
-	const isHost = gameState.metadata.isHost
-	const mapId = gameState.game.mapId
-	let showToken = false
 
 	if (!token.url || !token.url.trim())
 		return null
@@ -36,10 +35,7 @@ const Token = ({ gameState, token, selectGameToken }) => {
 		width: token.width || undefined,
 		height: token.height || undefined,
 	}
-	
-	//TODO: Verify if we can use a triple equal
-	if ([undefined, null].indexOf(token.mapId) >= 0 || mapId === token.mapId) /* eslint-disable-line eqeqeq */
-		showToken = true
+	const showToken = ((token.mapId === undefined) || (game.mapId === token.mapId))
 
 	return (
 		showToken ?
@@ -54,4 +50,15 @@ const Token = ({ gameState, token, selectGameToken }) => {
 	)
 }
 
-export default Token
+const mapStateToProps = (state) => {
+	return {
+		game: state.game,
+		settings: state.settings,
+	}
+}
+
+const mapDispatchToProps = {
+	
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Token)

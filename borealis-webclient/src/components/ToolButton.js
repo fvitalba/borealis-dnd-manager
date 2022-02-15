@@ -1,19 +1,25 @@
 import Button from '../views/Button.js'
+import { connect } from 'react-redux'
+import { setToolSettings } from '../reducers/settingsReducer.js'
 
-function ToolButton({ gameState, setGameState, title, value }) {
-	const isSelected = title === gameState.settings.tool
+function ToolButton({ title, value, settings, setToolSettings }) {
+	const isSelected = title === settings.tool
 	const onClick = () => {
-		setGameState({
-			...gameState,
-			settings: {
-				...gameState.settings,
-				tool: title,
-			}
-		})
+		setToolSettings(title, undefined)
 	}
 	return (
 		<Button title={ title } value={ value.toString() } onClick={ onClick } isSelected={ isSelected } />
 	)
 }
 
-export default ToolButton
+const mapStateToProps = (state) => {
+	return {
+		settings: state.settings,
+	}
+}
+
+const mapDispatchToProps = {
+	setToolSettings,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ToolButton)

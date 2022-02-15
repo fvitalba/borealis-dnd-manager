@@ -42,9 +42,11 @@ wss.on('connection', function connection(websocketConnection, connectionRequest)
     
     websocketConnection.room = path
     websocketConnection.guid = connectionParams.guid
+    console.log('client connecting: room:',websocketConnection.room,', guid:',websocketConnection.guid)
 
     websocketConnection.on('message', (message) => {
         const parsedMessage = JSON.parse(message)
+        console.log('data received', parsedMessage)
         // Forward message to all other clients (for this room)
         wss.clients.forEach(client => {
             if (client.readyState === WebSocket.OPEN) {
@@ -52,6 +54,7 @@ wss.on('connection', function connection(websocketConnection, connectionRequest)
                     return // Don't send to other rooms
                 if (client === websocketConnection)
                     return // Don't send back to sender
+                console.log('sending received data to', client.guid)
                 client.send(JSON.stringify(parsedMessage))
             }
         })

@@ -1,212 +1,28 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
+import { connect } from 'react-redux'
+import { setGameSettings } from '../reducers/metadataReducer.js'
+import { overwriteGame, updateMaps, loadMap, incrementGen } from '../reducers/gameReducer.js'
+import { pushDrawPath, pushFogPath, pushGameRefresh, useWebSocket } from '../hooks/useSocket.js'
 import GameView from '../views/GameView.js'
-import guid from '../controllers/guid.js'
 
-const initialGameState = (overlayRef) => {
-	const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
-
-	return {
-		websocket: null,
-		overlayRef: overlayRef,
-		settings: {
-			cursorSize: 50,
-			fogOpacity: 0.5,
-			fogRadius: 33,
-			drawColor: 'purple',
-			drawSize: 8,
-			tool: 'move',
-			subtool: undefined,
-			username: params.get('host') ? 'DM' : 'PC',
-			shareMouse: true,
-		},
-		metadata: {
-			isHost: params.get('host'),
-			room: params.get('room'),
-			cursors: [],
-			lastX: undefined,
-			lastY: undefined,
-			downX: undefined,
-			downY: undefined,
-		},
-		game: {
-			mapId: undefined,
-			gen: 0,
-			width: window.innerWidth,
-			height: window.innerHeight,
-			isFogLoaded: false,
-			isFirstLoadDone: false, /* Ensure we don't overwrite localStorage before load is done */
-			maps: [],
-			tokens: [],
-		}
-	}
-}
-
-const initialControlPanelState = () => {
-	return {
-		name: undefined,
-		url: undefined,
-		newTokenUrl: undefined,
-		newMapName: undefined,
-		hidden: false,
-		toggleOnMaps: false,
-		toggleOnUser: false,
-		toggleOnTokens: false,
-		fogDiameter: 33,
-	}
-}
-
-const Game = ({ websocket }) => {
+const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, incrementGen }) => {
 	const overlayRef = React.useRef()
-	const [gameState, setGameState] = useState(initialGameState(overlayRef))
-	const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
+	const [webSocket, wsSettings] = useWebSocket()
 	let currentPath = []
-
-	// On Mount
-	useEffect(() => {
-		window.addEventListener('beforeunload', saveToLocalStorage)
-		window.addEventListener('resize', onResize)
-		window.addEventListener('keypress', onKeyPress)
-		window.addEventListener('keydown', onKeyDown)
-		websocket.addCallbacks( gameState.metadata.isHost, receiveData )
-		loadFromLocalStorage()
-
-		// On Unmount
-		return () => {
-			saveToLocalStorage()
-			window.removeEventListener('beforeunload', saveToLocalStorage)
-			window.removeEventListener('resize', onResize)
-			window.removeEventListener('keypress', onKeyPress)
-			window.removeEventListener('keydown', onKeyDown)
-		}
-	},[])
-
-	/*
-	useEffect(() => {
-		if (websocket && gameState.settings.shareMouse)
-			websocket.pushCursor(gameState.metadata.lastX, gameState.metadata.lastY)
-	}, [gameState.metadata.lastX, gameState.metadata.lastY, gameState.settings.shareMouse])
-	*/
-
-	useEffect(() => {
-		//TODO: reenable websocket push
-		//if (websocket)
-		//	websocket.pushTokens(gameState.game.tokens)
-	}, [gameState.game.tokens])
-
-	useEffect(() => {
-		if (websocket && gameState.metadata.isHost)
-			websocket.pushMaps(gameState.game.maps, gameState.game.mapId)
-	}, [gameState.game.mapId])
 
 	/****************************************************
 	 * Map Functions                                    *
 	 ****************************************************/
 	const getMap = () => {
-		if (gameState.game.maps.length === 0)
+		if (game.maps.length === 0)
 			return undefined
-		const currMap = gameState.game.maps.filter((map) => parseInt(map.$id) === parseInt(gameState.game.mapId))
-		return currMap.length > 0 ? currMap[0] : gameState.game.maps[0]
-	}
-
-	/* Copy maps and dump current data urls, suitable for save to state or localStorage */
-	const dumpMaps = () => {
-		let newMap = getMap()
-		const mapsCopy = gameState.game.maps.map(map => {
-			return map.$id === newMap.$id ? newMap : map
-		})
-		return mapsCopy
-	}
-
-	const initAsDev = () => {
-		if (!window.confirm('Reset?'))
-			return null
-		let tokens = [
-			{ name: 'bar', pc: 0 },
-			{ name: 'foo', url: '/dev/belmont.jpg' },
-			{ name: 'arr', pc: 1 },
-			{ name: 'win', pc: 1, url: '/dev/redhead.jpg', y: 50, x: 90, w: 64, h:64 },
-		]
-		let maps = [
-			{
-				name: 'kiwi',
-				imageUrl: '/dev/kiwi.jpeg',
-				$id: 0,
-				width: 500,
-				height: 500,
-				x: 0,
-				y: 0,
-				drawPaths: [],
-				fogPaths: [],
-			},
-			{
-				name: 'default',
-				imageUrl: '/dev/FFtri9T.png',
-				spawnX: 40,
-				spawnY: 80,
-				$id: 1,
-				x: 0,
-				y: 0,
-				drawPaths: [],
-				fogPaths: [],
-			}
-		]
-		return new Promise(resolve => {
-			setGameState({
-				...gameState,
-				game: {
-					...gameState.game,
-					maps: maps,
-					tokens: tokens,
-					mapId: 0,
-				},
-			})
-			resolve()
-		})
+		const currMap = game.maps.filter((map) => map.$id === game.mapId)
+		return currMap.length > 0 ? currMap[0] : game.maps[0]
 	}
 
 	/****************************************************
 	 * Update Functions                                 *
 	 ****************************************************/
-	const updateTokens = (callback, noEmit, additionalStateProperties) => {
-		const tokens = JSON.parse(JSON.stringify(gameState.game.tokens || []))
-		if (!tokens || !Array.isArray(tokens))
-			return
-		const tokensCopy = tokens.map(callback)
-		setGameState({
-			...gameState,
-			game: {
-				...gameState.game,
-				...additionalStateProperties,	//TODO: Verify these state properties are put in the correct place
-				tokens: tokensCopy,
-			},
-		})
-	}
-
-	const updateToken = (token, callback, noEmit) => {
-		const tokenIdx = gameState.game.tokens.indexOf(token)
-		const tokensCopy = JSON.parse(JSON.stringify(gameState.game.tokens || []))
-		const tokenCopy = tokensCopy[tokenIdx]
-		callback(tokenCopy, tokenIdx, tokensCopy)
-		setGameState({
-			...gameState,
-			game: {
-				...gameState.game,
-				tokens: tokensCopy,
-			},
-		})
-	}
-
-	const updateTokenByIndex = (index, attrs, noEmit) => {
-		const tokensCopy = JSON.parse(JSON.stringify(gameState.game.tokens || []))
-		const tokenCopy = Object.assign(tokensCopy[index], attrs)
-		setGameState({
-			...gameState,
-			game: {
-				...gameState.game,
-				tokens: tokensCopy,
-			},
-		})
-	}
 
 	/*
 	const updateCursors = (x, y, name, guid) => {
@@ -222,54 +38,12 @@ const Game = ({ websocket }) => {
 	}
 	*/
 
-	const updateMap = (callback) => {
-		return new Promise(resolve => {
-			const mapsCopy = gameState.game.maps
-			callback(mapsCopy[gameState.game.mapId])
-			//TODO: Verify if ,resolve is really needed or working
-			setGameState({
-				...gameState,
-				game: {
-					...gameState.game,
-					maps: mapsCopy,
-				},
-			}, resolve)
-		})
-	}
-
-	const toggleControlPanelVisibility = (key) => {
-		setControlPanelState({
-			...controlPanelState,
-			[key]: !controlPanelState[key],
-		})
-	}
-
 	/****************************************************
 	 * Control Functions                                *
 	 ****************************************************/
-	const selectToken = (token, tokenSelected, multiSelect) => {
-		if (!token.pc && !gameState.metadata.isHost)
-			return
-		const tokenIdx = gameState.game.tokens.indexOf(token)
-		updateTokens((copy, $i) => {
-			if (tokenIdx === $i) {
-				if (tokenSelected === undefined || tokenSelected === null)
-					tokenSelected = !copy.$selected
-				copy.$selected = tokenSelected
-			} else if (!multiSelect)
-				copy.$selected = false
-			
-			// set initial coords (for drag)
-			//TODO: fix initial records, tokens jump on selection through mousekey
-			if (copy.$selected) {
-				copy.$x0 = copy.x
-				copy.$y0 = copy.y
-			}
-			return copy
-		}, true)
-	}
-
 	const dragSelectedTokens = (e) => {
+		//TODO: Update dragSelectedTokens
+		/*
 		if (gameState.settings.tool !== 'move')
 			return
 		const downX = gameState.metadata.downX, downY = gameState.metadata.downY
@@ -280,6 +54,7 @@ const Game = ({ websocket }) => {
 			}
 			return token
 		}, false, undefined)
+		*/
 	}
 
 	/****************************************************
@@ -288,7 +63,7 @@ const Game = ({ websocket }) => {
 	const setPointerOutline = (x, y, color, radius) => {
 		if (color == null)
 			return
-		const ctx = gameState.overlayRef.current.getContext('2d')
+		const ctx = overlayRef.current.getContext('2d')
 		ctx.strokeStyle = color
 		ctx.lineWidth = '3'
 		ctx.beginPath()
@@ -298,7 +73,7 @@ const Game = ({ websocket }) => {
 	}
 
 	const updateCurrentDrawPath = () => {
-		const ctx = gameState.overlayRef.current.getContext('2d')
+		const ctx = overlayRef.current.getContext('2d')
 		ctx.beginPath()
 		for (let pointId = 0; pointId < currentPath.length; pointId++) {
 			ctx.lineCap = 'round'
@@ -315,7 +90,7 @@ const Game = ({ websocket }) => {
 	}
 
 	const updateCurrentFogPath = () => {
-		const ctx = gameState.overlayRef.current.getContext('2d')
+		const ctx = overlayRef.current.getContext('2d')
 		ctx.beginPath()
 		let gradient
 		for (let pointId = 0; pointId < currentPath.length; pointId++) {
@@ -330,46 +105,10 @@ const Game = ({ websocket }) => {
 	}
 
 	const clearOverlay = () => {
-		const ctx = gameState.overlayRef.current.getContext('2d')
+		const ctx = overlayRef.current.getContext('2d')
 		if (!ctx)
 			return
-		ctx.clearRect(0, 0, gameState.game.width, gameState.game.height);
-	}
-
-	const resetFog = () => {
-		const currMap = getMap()
-		if (currMap && gameState.metadata.isHost) {
-			currentPath = []
-			const updatedMaps = gameState.game.maps.map((map) => {
-				return map.$id === currMap.$id ? {...currMap, fogPaths: [], } : map
-			})
-			
-			setGameState({
-				...gameState,
-				game: {
-					...gameState.game,
-					maps: updatedMaps,
-				}
-			})
-		}
-	}
-
-	const resetDrawing = () => {
-		const currMap = getMap()
-		if (currMap && gameState.metadata.isHost) {
-			currentPath = []
-			const updatedMaps = gameState.game.maps.map((map) => {
-				return map.$id === currMap.$id ? {...currMap, drawPaths: [], } : map
-			})
-			
-			setGameState({
-				...gameState,
-				game: {
-					...gameState.game,
-					maps: updatedMaps,
-				}
-			})
-		}
+		ctx.clearRect(0, 0, game.width, game.height);
 	}
 
 	/****************************************************
@@ -381,9 +120,11 @@ const Game = ({ websocket }) => {
 	}
 
 	const onKeyDown = (e) => {
+		//TODO: Update onKeyDown function
+		/*
 		for (let x of [document.activeElement, e.target])
 			//TODO: Check if we can use triple equal
-			if (x.tagName == 'INPUT' && (x.type === 'text' || x.type === 'number')) /* eslint-disable-line eqeqeq */
+			if (x.tagName == 'INPUT' && (x.type === 'text' || x.type === 'number')) // eslint-disable-line eqeqeq
 				return e
 		
 		const moveFactor = e.shiftKey ? 100 : 10
@@ -391,19 +132,19 @@ const Game = ({ websocket }) => {
 			updateTokens(token => {
 				if (token.$selected) {
 					switch (e.keyCode) {
-						case 27: /* escape */
+						case 27: // escape
 							token.$selected = false
 							break
-						case 37: /* left */
+						case 37: // left
 							token.x -= moveFactor
 							break
-						case 38: /* up */
+						case 38: // up
 							token.y -= moveFactor
 							break
-						case 39: /* right */
+						case 39: // right
 							token.x += moveFactor
 							break
-						case 40: /* down */
+						case 40: // down
 							token.y += moveFactor
 							break
 						default: return
@@ -423,14 +164,16 @@ const Game = ({ websocket }) => {
 				break
 			default: return
 		}
+		*/
 	}
 
+	/*
 	const onKeyPress = (e) => {
 		if (!gameState.metadata.isHost)
 			return e
 		for (let x of [document.activeElement, e.target])
 			//TODO: Check if we can use triple equal
-			if ((x.tagName == 'INPUT' && (x.type === 'text' || x.type === 'number')) || (x.tagName == 'BUTTON')) /* eslint-disable-line eqeqeq */
+			if ((x.tagName == 'INPUT' && (x.type === 'text' || x.type === 'number')) || (x.tagName == 'BUTTON'))
 				return e
 
 		const cp = gameState.cpRef.current
@@ -487,35 +230,30 @@ const Game = ({ websocket }) => {
 			default: return
 		}
 	}
+	*/
 
 	const onMouseUp = (e) => {
 		const currMap = getMap()
-		if (currMap && gameState.metadata.isHost) {
+		if (currMap && metadata.isHost) {
 			const fogPaths = currMap.fogPaths
 			const drawPaths = currMap.drawPaths
-			switch (gameState.settings.tool) {
+			switch (settings.tool) {
 				case 'fog':
 					fogPaths.push(currentPath)
-					websocket.pushFog(currentPath)
+					pushFogPath(webSocket, wsSettings, currentPath)
 					break
 				case 'draw':
 					drawPaths.push(currentPath)
-					websocket.pushDraw(currentPath)
+					pushDrawPath(webSocket, wsSettings, currentPath)
 					break
 				default: break
 			}
 			currentPath = []
-			const updatedMaps = gameState.game.maps.map((map) => {
+			const updatedMaps = game.maps.map((map) => {
 				return map.$id === currMap.$id ? {...currMap, fogPaths: fogPaths, drawPaths: drawPaths, } : map
 			})
 			
-			setGameState({
-				...gameState,
-				settings: {
-					...gameState.settings,
-					maps: updatedMaps,
-				}
-			})
+			updateMaps(updatedMaps)
 		}
 	}
 
@@ -525,37 +263,42 @@ const Game = ({ websocket }) => {
 			if ((x.tagName == 'INPUT' && (x.type === 'text' || x.type === 'number')) || (x.tagName == 'BUTTON')) /* eslint-disable-line eqeqeq */
 				return e
 
-		if (e.buttons & 1) {
-			if (!/(\s|^)token(\s|$)/.test(e.target.getAttribute('class')))
-				//TODO: Update to map function
-				updateTokens(tok => { delete tok.$selected })
-			currentPath = []
-			currentPath.push({
-				x: e.pageX,
-				y: e.pageY,
-				r: gameState.settings.fogRadius,
-				r2: undefined,
-				tool: currentTool(),
-				drawColor: gameState.settings.drawColor,
-				drawSize: gameState.settings.drawSize,
-			})
+		if (metadata.isHost) {
+			if (e.buttons & 1) {
+				/*
+				if (!/(\s|^)token(\s|$)/.test(e.target.getAttribute('class')))
+					//TODO: Update to map function
+					updateTokens(tok => { delete tok.$selected })
+				*/
+				currentPath = []
+				currentPath.push({
+					x: e.pageX,
+					y: e.pageY,
+					r: settings.fogRadius,
+					r2: undefined,
+					tool: currentTool(),
+					drawColor: settings.drawColor,
+					drawSize: settings.drawSize,
+				})
+			}
 		}
 	}
 
 	const onMouseMove = (e) => {
-		const overlay = gameState.overlayRef
+		const overlay = overlayRef
 		if (!overlay)
 			return
+
 		clearOverlay()
 		let x = e.pageX, y = e.pageY
-		switch (gameState.metadata.isHost ? gameState.settings.tool : 'move') {
+		switch (metadata.isHost ? settings.tool : 'move') {
 			case 'fog':
 				updateCurrentFogPath()
-				setPointerOutline(x, y, 'yellow', gameState.settings.fogRadius)
+				setPointerOutline(x, y, 'yellow', settings.fogRadius)
 				break
 			case 'draw':
 				updateCurrentDrawPath()
-				setPointerOutline(x, y, gameState.settings.drawColor, gameState.settings.drawSize)
+				setPointerOutline(x, y, settings.drawColor, settings.drawSize)
 				break
 			case 'move':
 				if (e.buttons & 1)
@@ -563,22 +306,22 @@ const Game = ({ websocket }) => {
 				break
 			default: break
 		}
-		if ((gameState.settings.tool === 'fog' || gameState.settings.tool === 'draw') && (e.buttons & 1)) {
+		if ((settings.tool === 'fog' || settings.tool === 'draw') && (e.buttons & 1)) {
 			currentPath.push({
 				x: x,
 				y: y,
-				r: gameState.settings.fogRadius,
+				r: settings.fogRadius,
 				r2: undefined,
 				tool: currentTool(),
-				drawColor: gameState.settings.drawColor,
-				drawSize: gameState.settings.drawSize,
+				drawColor: settings.drawColor,
+				drawSize: settings.drawSize,
 			})
 		}
 	}
 
 	const currentTool = () => {
-		const isEraser = gameState.settings.subtool === 'eraser'
-		switch (gameState.settings.tool) {
+		const isEraser = settings.subtool === 'eraser'
+		switch (settings.tool) {
 			case 'draw':
 				if (isEraser) {
 					return 'erease'
@@ -586,7 +329,7 @@ const Game = ({ websocket }) => {
 					return 'draw'
 				}
 			default:
-				return gameState.settings.tool
+				return settings.tool
 		}
 	}
 
@@ -596,76 +339,58 @@ const Game = ({ websocket }) => {
 	const receiveData = (evt) => {
 		let data = JSON.parse(evt.data)
 		console.log('receiving the following data', data)
-		if (data.from === websocket.guid) {
+		if (data.from === wsSettings.guid) {
 			return // ignore messages sent by self
 		}
-		if (data.to && (data.to !== websocket.guid)) {
-			return	// ignore dedicated messages not directed to self
+		if (data.to && data.to !== wsSettings.guid) {
+			return // ignore messages sent to different recipients
 		}
+
 		const currMap = getMap()
-		switch (data.messageType) {
-			case 'cursor':
+		console.log('current map',currMap)
+		switch (data.type) {
+			case 'pushCursor':
 				/*
 				if (data.u !== this.gameState.settings.username)
 					this.gameState.updateCursors(data.x, data.y, data.u, data.from)
 				*/
 				break
-			case 'draw':
-				const updatedMapsWithDraw = gameState.game.maps.map((map) => {
-					return map.$id === currMap.$id ? {...currMap, drawPaths: data.drawPath, } : map
+			case 'pushDrawPath':
+				const newDrawPath = currMap.drawPaths ? currMap.drawPaths : []
+				newDrawPath.push(data.drawPath)
+				const updatedMapsWithDraw = game.maps.map((map) => {
+					return map.$id === currMap.$id ? { ...currMap, drawPaths: newDrawPath, } : map
 				})
-				setGameState({
-					...gameState,
-					game: {
-						...gameState.game,
-						maps: updatedMapsWithDraw,
-					}
-				})
+				updateMaps(updatedMapsWithDraw)
 				break
-			case 'fog': /* fog erasure */
-				const updatedMapsWithFog = gameState.game.maps.map((map) => {
-					return map.$id === currMap.$id ? {...currMap, fogPaths: data.fogPath, } : map
-				})
-				setGameState({
-					...gameState,
-					game: {
-						...gameState.game,
-						maps: updatedMapsWithFog,
-					}
-				})
-				break
-			case 'fogReset': /* fog reset */
-				const updatedMapsWithFogReset = gameState.game.maps.map((map) => {
-					return map.$id === currMap.$id ? {...currMap, fogPaths: [], } : map
-				})
-				setGameState({
-					...gameState,
-					game: {
-						...gameState.game,
-						maps: updatedMapsWithFogReset,
-					}
-				})
-				break
-			case 'drawReset':
-				const updatedMapsWithDrawReset = gameState.game.maps.map((map) => {
+			case 'pushDrawReset':
+				const updatedMapsWithDrawReset = game.maps.map((map) => {
 					return map.$id === currMap.$id ? {...currMap, drawPaths: [], } : map
 				})
-				setGameState({
-					...gameState,
-					game: {
-						...gameState.game,
-						maps: updatedMapsWithDrawReset,
-					}
-				})
+				updateMaps(updatedMapsWithDrawReset)
 				break
-			case 't': /* token */
+			case 'pushFogPath':
+				const newFogPath = currMap.fogPaths ? currMap.fogPaths : []
+				newFogPath.push(data.fogPath)
+				const updatedMapsWithFog = game.maps.map((map) => {
+					return map.$id === currMap.$id ? { ...currMap, fogPaths: newFogPath, } : map
+				})
+				updateMaps(updatedMapsWithFog)
+				break
+			case 'pushFogReset':
+				const updatedMapsWithFogReset = game.maps.map((map) => {
+					return map.$id === currMap.$id ? {...currMap, fogPaths: [], } : map
+				})
+				updateMaps(updatedMapsWithFogReset)
+				break
+			case 'pushSingleToken':
 				/*
 				const local = this.gameState.game.tokens[data.i]
 				const token = Object.assign(local, data.a) // Keep and `$` attrs like `$selected`
 				this.gameState.updateTokenByIndex(data.i, token, true)
 				*/
 				break
-			case 'ts': /* all tokens */
+			case 'pushTokens':
 				/*
 				const localTokensMap = this.gameState.game.tokens.reduce((out, tok) => {
 					out[tok.guid] = tok
@@ -675,45 +400,24 @@ const Game = ({ websocket }) => {
 				this.gameState.setState({tokens: tokens})
 				*/
 				break
-			case 'map': /* map id */
-				setGameState({
-					...gameState,
-					game: {
-						...gameState.game,
-						mapId: parseInt(data.id),
-					}
-				})
+			case 'pushMapId':
+				loadMap(data.mapId)
 				break
-			case 'maps':
-				setGameState({
-					...gameState,
-					game: {
-						...gameState.game,
-						maps: data.maps,
-					}
-				})
+			case 'pushMapState':
+				updateMaps(data.maps)
+				loadMap(data.mapId)
 				break
-			case 'refresh': /* refresh from host */
-				if (data.to && data.to !== websocket.guid) {
-					console.log(`Will not apply refresh from ${data.to} (self)`)
-					return
-				}
-				const newGameState = {
-					...gameState,
-					game: {
-						...gameState.game,
-						...data.game,
-					},
-				}
-				setGameState(newGameState)
+			case 'pushGameRefresh': // refresh from host
+				console.log('receiving gamedata', data.game)
+				overwriteGame(data.game)
 				break
-			case 'refreshRequest': /* refresh request from player */
-				if (gameState.metadata.isHost) {
-					websocket.pushRefresh(gameState, { to: data.from, })
+			case 'requestRefresh': // refresh request from player
+				if (metadata.isHost) {
+					pushGameRefresh(webSocket, wsSettings, game, { to: data.from, })
 				}
 				break
 			default:
-				console.error(`Unrecognized websocket message type: ${data.t}`)
+				console.error(`Unrecognized websocket message type: ${data.type}`)
 		}
 	}
 
@@ -734,31 +438,27 @@ const Game = ({ websocket }) => {
 	}
 
 	const toJson = (additionalAttrs) => {
+		//TODO: rewrite toJson
+		/*
 		const map = getMap()
-		const newGeneration = 1 + (gameState.game.gen || 0)
-		/* Generation is tracked so that we don't get refresh loops when multiple DMs exist. */
-		if (gameState.metadata.isHost)
-			setGameState({
-				...gameState,
-				game: {
-					...gameState.game,
-					gen: newGeneration,
-				},
-			})
-		const tokens = gameState.game.tokens.map(token => ({...token}))
+		incrementGen()
+		const tokens = game.tokens.map(token => ({...token}))
 		tokens.forEach(token => websocket.scrubObject(token))
-		const maps = dumpMaps()
+		const maps = game.maps
 		Object.values(maps).forEach(map => websocket.scrubObject(map))
 		const data = Object.assign({
-			gen: newGeneration,
+			gen: game.gen,
 			maps: maps,
 			mapId: map && map.$id,
 			tokens: tokens,
 		}, additionalAttrs)
 		return JSON.stringify(data)
+		*/
 	}
 
 	const fromJson = (json) => {
+		//TODO: rewrite fromJson
+		/*
 		const data = Object.assign(JSON.parse(json)||{})
 		if (data.tokens) {
 			data.tokens.forEach(token => {
@@ -775,51 +475,109 @@ const Game = ({ websocket }) => {
 			})
 			resolve()
 		})
+		*/
 	}
 
 	const saveToLocalStorage = () => {
-		if (gameState.game.isFirstLoadDone) {
+		//TODO: Reenable after we've fixed toJson
+		/*
+		if (game.isFirstLoadDone) {
 			console.log('Saving game to local storage')
-			localStorage.setItem(gameState.room, toJson())
+			localStorage.setItem(metadata.room, toJson())
 		}
+		*/
 	}
 
 	const loadFromLocalStorage = () => {
+		//TODO: reenable after we've fixed fromJson
+		/*
 		//TODO: Verify how come this does not work anymore
 		console.log('Loading game from local storage')
-		return fromJson(localStorage.getItem(gameState.room))
+		return fromJson(localStorage.getItem(metadata.room))
+		*/
 	}
 
 	function handleError (ex) {
 		console.error(ex)
 		console.error('Exception in `render`. Clearing localStorage...')
-		localStorage.removeItem(gameState.room)
+		localStorage.removeItem(metadata.room)
 		window.alert('Fatal error. Local storage cleared.')
 	}
 
 	/****************************************************
+	 * React Hooks                                      *
+	 ****************************************************/
+	// On Mount
+	useEffect(() => {
+		window.addEventListener('beforeunload', saveToLocalStorage)
+		window.addEventListener('resize', onResize)
+		//TODO: reenable keypresses
+		//window.addEventListener('keypress', onKeyPress)
+		window.addEventListener('keydown', onKeyDown)
+		loadFromLocalStorage()
+		const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
+		setGameSettings(params.get('host'), params.get('room'))
+
+		// On Unmount
+		return () => {
+			saveToLocalStorage()
+			window.removeEventListener('beforeunload', saveToLocalStorage)
+			window.removeEventListener('resize', onResize)
+			//window.removeEventListener('keypress', onKeyPress)
+			window.removeEventListener('keydown', onKeyDown)
+		}
+	}, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+	// attach all the event listeners for receiving of data
+	useEffect(() => {
+		if (webSocket)
+			webSocket.addEventListener('message', receiveData)
+		document.title = `Borealis D&D, Room: ${metadata.room}`
+		return () => {
+			webSocket.removeEventListener('message', receiveData)
+		}
+	}, [ metadata.room, webSocket, receiveData])
+	
+	/*
+	useEffect(() => {
+		if (websocket && gameState.settings.shareMouse)
+			websocket.pushCursor(gameState.metadata.lastX, gameState.metadata.lastY)
+	}, [gameState.metadata.lastX, gameState.metadata.lastY, gameState.settings.shareMouse])
+	*/
+
+	/*
+	useEffect(() => {
+		//TODO: reenable websocket push
+		//if (websocket)
+		//	websocket.pushTokens(gameState.game.tokens)
+	}, [gameState.game.tokens])
+	*/
+
+	/****************************************************
 	 * Component Render                                 *
 	 ****************************************************/
+	const deadline = new Date() - 30000
+	const cursorsCopy = metadata.cursors
+
+	for (let name in cursorsCopy) {
+		let time = cursorsCopy[name].time
+		if (!time || time < deadline)
+			delete cursorsCopy[name]
+	}
+
 	try {
 		return (
 			<GameView 
-				gameState={ gameState } 
-				setGameState={ setGameState } 
-				controlPanelState={ controlPanelState } 
-				setControlPanelState={ setControlPanelState } 
-				websocket={ websocket }
+				isHost={ metadata.isHost } 
+				overlayRef={ overlayRef } 
+				isFogLoaded={ game.isFogLoaded } 
+				cursors={ cursorsCopy } 
+				cursorSize={ settings.cursorSize } 
+				tokens={ game.tokens } 
 				onMouseMove={ onMouseMove } 
 				onMouseUp={ onMouseUp } 
 				onMouseDown={ onMouseDown } 
-				fromJson={ fromJson } 
-				notify={ notify } 
-				initAsDev={ initAsDev } 
-				updateTokens={ updateTokens } 
-				updateGameToken={ updateToken } 
-				selectGameToken={ selectToken } 
-				updateMap={ updateMap } 
-				resetFog={ resetFog } 
-				resetDrawing={ resetDrawing } 
+				/* TODO: reenable notify={ notify } */
 			/>
 		)
 	} catch (ex) {
@@ -827,4 +585,20 @@ const Game = ({ websocket }) => {
 	}
 }
 
-export default Game
+const mapStateToProps = (state) => {
+	return {
+		metadata: state.metadata,
+		game: state.game,
+		settings: state.settings,
+	}
+}
+
+const mapDispatchToProps = {
+	setGameSettings,
+	overwriteGame,
+	loadMap,
+	updateMaps,
+	incrementGen,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Game)

@@ -1,16 +1,17 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import Canvas from './Canvas.js'
 
-const Fog = ({ gameState }) => {
-	const fogOpacity = gameState.metadata.isHost ? gameState.settings.fogOpacity : 1
-	const width = gameState.game.width
-	const height = gameState.game.height
+const Fog = ({ game, metadata, settings }) => {
+	const fogOpacity = metadata.isHost ? settings.fogOpacity : 1
+	const width = game.width
+	const height = game.height
 
 	const getMap = () => {
-		if (gameState.game.maps.length === 0)
+		if (game.maps.length === 0)
 			return undefined
-		const currMap = gameState.game.maps.filter((map) => parseInt(map.$id) === parseInt(gameState.game.mapId))
-		return currMap.length > 0 ? currMap[0] : gameState.game.maps[0]
+		const currMap = game.maps.filter((map) => parseInt(map.$id) === parseInt(game.mapId))
+		return currMap.length > 0 ? currMap[0] : game.maps[0]
 	}
 	const map = getMap()
 
@@ -56,4 +57,12 @@ const Fog = ({ gameState }) => {
 	)
 }
 
-export default Fog
+const mapStateToProps = (state) => {
+	return {
+		game: state.game,
+		settings: state.settings,
+		metadata: state.metadata,
+	}
+}
+
+export default connect(mapStateToProps, undefined)(Fog)

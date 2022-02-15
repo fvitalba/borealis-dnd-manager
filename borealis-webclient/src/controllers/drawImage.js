@@ -1,4 +1,4 @@
-const drawImage = (url, which, map, context, resizeCanvases, updateMap) => {
+const drawImage = (url, which, map, context, resizeCanvases) => {
 	// Handle 'whiteboard' (no bg img)
 	if (!url || url.trim().length === 0) {
 		if (resizeCanvases) {
@@ -29,10 +29,6 @@ const drawImage = (url, which, map, context, resizeCanvases, updateMap) => {
 		}
 		img.onerror = (err) => {
 			console.error(`Unable to draw image.`, img.src)
-			if (which) {
-				console.error(`Deleting ${which}Url...`)
-				updateMap(map => delete map[`${which}Url`])
-			}
 			reject(`Unable to draw ${which}Url`)
 		}
 		img.src = url

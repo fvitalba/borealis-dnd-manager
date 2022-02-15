@@ -1,13 +1,16 @@
 import React, { useState } from 'react'
+import { connect } from 'react-redux'
+import { loadMap, updateMaps, deleteMap, setIsFogLoaded, setIsFirstLoadDone } from '../reducers/gameReducer.js'
+import { pushMapId, useWebSocket } from '../hooks/useSocket.js'
 import MapConfigView from '../views/MapConfigView.js'
 
-const initialMapConfigState = (gameState, map) => {
-	const maps = gameState.game.maps
+const initialMapConfigState = (map, game) => {
+	const maps = game.maps
 	const existingMap = maps.filter((mapElement) => mapElement.$id === map.$id)
 	const currentMap = existingMap ? existingMap : { name: undefined, url: undefined, w: undefined, h: undefined, }
 
 	return {
-		$id: map.$id,
+		$id: parseInt(map.$id),
 		name: currentMap.name ? currentMap.name : map.name,
 		imageUrl: currentMap.imageUrl ? currentMap.imageUrl : '',
 		width: currentMap.width ? currentMap.width : window.innerWidth,
@@ -17,9 +20,10 @@ const initialMapConfigState = (gameState, map) => {
 	}
 }
 
-const MapConfig = ({ gameState, setGameState, map, mapId, websocket }) => {
-	const [mapConfigState, setMapConfigState] = useState(initialMapConfigState(gameState, map))
-	const isSelected = gameState.game.mapId === mapId
+const MapConfig = ({ map, game, loadMap, updateMaps, deleteMap, setIsFogLoaded, setIsFirstLoadDone }) => {
+	const [mapConfigState, setMapConfigState] = useState(initialMapConfigState(map, game))
+	const [webSocket, wsSettings] = useWebSocket()
+	const isSelected = game.mapId === map.$id
 
 	const onTextChange = (key, evt) => {
 		setMapConfigState({
@@ -37,33 +41,19 @@ const MapConfig = ({ gameState, setGameState, map, mapId, websocket }) => {
 	}
 
 	const load = () => {
-		const updatedMaps = gameState.game.maps.map((map) => {
-			return parseInt(mapId) === map.$id ? { ...map, imageUrl: mapConfigState.imageUrl, width: mapConfigState.width, height: mapConfigState.height, } : map
+		const updatedMaps = game.maps.map((currMap) => {
+			return map.$id === currMap.$id ? { ...currMap, imageUrl: mapConfigState.imageUrl, width: mapConfigState.width, height: mapConfigState.height, } : currMap
 		})
-		setGameState({
-			...gameState,
-			game: {
-				...gameState.game,
-				maps: updatedMaps,
-				mapId: parseInt(mapId),
-				isFirstLoadDone: true,
-				isFogLoaded: true,
-			}
-		})
+		updateMaps(updatedMaps)
+		loadMap(map.$id)
+		setIsFogLoaded(true)
+		setIsFirstLoadDone(true)
+		pushMapId(webSocket, wsSettings, map.$id)
 	}
 
-	const deleteMap = () => {
+	const deleteCurrentMap = () => {
 		if (window.confirm('Delete map?')) {
-			const maps = gameState.game.maps
-			const newMaps = maps.filter((map) => parseInt(map.$id) !== parseInt(mapId))
-			setGameState({
-				...gameState,
-				game: {
-					...gameState.game,
-					maps: newMaps,
-					mapId: parseInt(mapId) === gameState.game.mapId ? undefined : gameState.game.mapId,
-				},
-			})
+			deleteMap(map.$id)
 		}
 	}
 
@@ -71,15 +61,29 @@ const MapConfig = ({ gameState, setGameState, map, mapId, websocket }) => {
 		map ?
 			<MapConfigView 
 				isSelected={ isSelected } 
-				mapConfigState={ mapConfigState } 
-				mapId={ mapId } 
+				mapConfigState={ mapConfigState }  
 				load={ load } 
 				onTextChange={ onTextChange } 
 				onIntegerChange={ onIntegerChange } 
-				deleteMap={ deleteMap }
+				deleteMap={ deleteCurrentMap }
 			/>
 		: null
 	)
 }
 
-export default MapConfig
+
+const mapStateToProps = (state) => {
+	return {
+		game: state.game,
+	}
+}
+
+const mapDispatchToProps = {
+	loadMap,
+	updateMaps,
+	deleteMap,
+	setIsFogLoaded,
+	setIsFirstLoadDone,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MapConfig)

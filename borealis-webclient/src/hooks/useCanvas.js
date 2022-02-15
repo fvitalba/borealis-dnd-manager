@@ -8,7 +8,7 @@ const useCanvas = (draw, gameState, options={}) => {
 		const context = canvas.getContext(options.context || '2d')
 		
 		draw(context)
-	}, [draw])
+	}, [draw]) // eslint-disable-line react-hooks/exhaustive-deps
 
 	return canvasRef
 }

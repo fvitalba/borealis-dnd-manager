@@ -15,12 +15,10 @@ const HostTokenConfigView = ({ maps, token, copy, onToggle, selectToken, onTextC
 			xy:
 			<input value={ token.x || '' } placeholder='x' className='text3' onChange={ (e) => onIntegerChange('x', e) } type='number' step='5' title='x coord' />
 			<input value={ token.y || '' } placeholder='y' className='text3' onChange={ (e) => onIntegerChange('y', e) } type='number' step='5' title='y coord' />
-			<select defaultValue={ token.mapId } onChange={ (e) => onMapSelect(e) } title='which map(s)'>
-				<option>(all)</option>
-				{ Object.keys(maps).map((key, $i) => (
-					<option key={ $i } value={ key }>
-						{ maps[key].name || maps[key].imageUrl || '(unnamed)' }
-					</option>
+			<select defaultValue={ token.mapId } onChange={ (e) => onMapSelect(e) } title='which map'>
+				<option key={ -1 } value={ -1 }>(all)</option>
+				{ maps.map((map) => (
+					<option key={ map.$id } value={ map.name }>{ maps.name }</option>
 				))}
 			</select>
 			<Button title='Delete token' value='&#x1f5d1;' onClick={ deleteToken } />
