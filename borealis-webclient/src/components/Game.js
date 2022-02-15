@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { setGameSettings } from '../reducers/metadataReducer.js'
 import { overwriteGame, updateMaps, loadMap, incrementGen } from '../reducers/gameReducer.js'
-import { pushDrawPath, pushFogPath, pushGameRefresh, requestRefresh, useWebSocket } from '../hooks/useSocket.js'
+import { pushDrawPath, pushFogPath, pushGameRefresh, useWebSocket } from '../hooks/useSocket.js'
 import GameView from '../views/GameView.js'
 
 const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, incrementGen }) => {
@@ -537,13 +537,7 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 			webSocket.removeEventListener('message', receiveData)
 		}
 	}, [ metadata.room, webSocket, receiveData])
-
-	// Request the host to send a refresh to you
-	useEffect(() => {
-		if (!metadata.isHost && webSocket)
-			requestRefresh(webSocket, wsSettings)
-	}, [metadata.isHost, webSocket, wsSettings])
-
+	
 	/*
 	useEffect(() => {
 		if (websocket && gameState.settings.shareMouse)
@@ -557,13 +551,6 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 		//if (websocket)
 		//	websocket.pushTokens(gameState.game.tokens)
 	}, [gameState.game.tokens])
-	*/
-
-	/*
-	useEffect(() => {
-		if (websocket && gameState.metadata.isHost)
-			websocket.pushMaps(gameState.game.maps, gameState.game.mapId)
-	}, [gameState.game.mapId])
 	*/
 
 	/****************************************************

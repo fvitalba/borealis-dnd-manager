@@ -1,5 +1,7 @@
 import React, { useEffect, useState, createContext } from 'react'
+import { connect } from 'react-redux'
 import guid from '../controllers/guid.js'
+import { requestRefresh } from '../hooks/useSocket.js'
 require('dotenv').config()
 
 const DEBUG_MODE = process.env.REACT_APP_DEBUG ? process.env.REACT_APP_DEBUG : false
@@ -24,9 +26,10 @@ const createWebSocket = (room, guid) => {
 
 export const WebSocketContext = createContext(createWebSocket('',''))
 
-export const WebSocketProvider = ({ children, room }) => {
+const WebSocketProvider = ({ children, metadata }) => {
     const [wsSettings, setWsSettings] = useState({
-        room: room, 
+        room: metadata.room, 
+        isHost: metadata.isHost,
         guid: guid(),
         username: '',
     })
@@ -39,14 +42,30 @@ export const WebSocketProvider = ({ children, room }) => {
             }, SOCKET_RECONNECTION_TIMEOUT)
         }
 
+        const onOpen = () => {
+            if (!wsSettings.isHost) {
+                requestRefresh(ws, wsSettings)
+            }
+        }
+
         ws.addEventListener('close', onClose)
+        ws.addEventListener('open', onOpen)
 
         return () => {
             ws.removeEventListener('close', onClose)
+            ws.removeEventListener('open', onOpen)
         }
-    }, [ws, setWs, wsSettings.room, wsSettings.guid])
+    }, [ws, setWs, wsSettings])
 
     return (
         <WebSocketContext.Provider value={ [ws, wsSettings, setWsSettings] }>{ children }</WebSocketContext.Provider>
     )
 }
+
+const mapStateToProps = (state) => {
+	return {
+		metadata: state.metadata,
+	}
+}
+
+export default connect(mapStateToProps, undefined)(WebSocketProvider)
