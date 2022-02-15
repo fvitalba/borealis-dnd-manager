@@ -43,7 +43,6 @@ const ControlPanel = ({ game, settings, metadata, setUsername, setCursorSize }) 
 	}
 
 	const pushRefreshToPlayers = () => {
-		console.log('pushing game', game)
 		pushGameRefresh(webSocket, wsSettings, game)
 	}
 

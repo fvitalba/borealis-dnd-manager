@@ -23,7 +23,6 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 	/****************************************************
 	 * Update Functions                                 *
 	 ****************************************************/
-
 	/*
 	const updateCursors = (x, y, name, guid) => {
 		const cursors = Object.assign({}, gameState.metadata.cursors)

@@ -19,24 +19,26 @@ const generateWebSocketUrl = (room, guid) => {
 }
 
 const createWebSocket = (room, guid) => {
-    console.log('creating websocket, room:',room,'guid:',guid)
-    const webSocketUrl = generateWebSocketUrl(room, guid)
-    console.log('connecting to: ',webSocketUrl)
-    return new WebSocket(webSocketUrl)
+	if (room) {
+		const webSocketUrl = generateWebSocketUrl(room, guid)
+		console.log('Creating Websocket with url',webSocketUrl)
+		return new WebSocket(webSocketUrl)
+	} else {
+		return undefined
+	}
 }
 
 export const WebSocketContext = createContext(createWebSocket('',''))
 
-const WebSocketProvider = ({ children, metadata, game, overwriteGame, loadMap, updateMaps }) => {
+const WebSocketProvider = ({ children, metadata, game, settings, overwriteGame, loadMap, updateMaps }) => {
     const [wsSettings, setWsSettings] = useState({
         guid: guid(),
-        username: '',
+        username: settings.username,
     })
     const [ws, setWs] = useState(createWebSocket(metadata.room, wsSettings.guid))
 
     const receiveData = useCallback((evt) => {
 		let data = JSON.parse(evt.data)
-		console.log('receiving the following data', data)
 		if (data.from === wsSettings.guid) {
 			return // ignore messages sent by self
 		}
@@ -52,7 +54,6 @@ const WebSocketProvider = ({ children, metadata, game, overwriteGame, loadMap, u
         }
 
 		const currMap = getMap()
-		console.log('current map',currMap)
 		switch (data.type) {
 			case 'pushCursor':
 				/*
@@ -113,7 +114,6 @@ const WebSocketProvider = ({ children, metadata, game, overwriteGame, loadMap, u
 				loadMap(data.mapId)
 				break
 			case 'pushGameRefresh': // refresh from host
-				console.log('receiving gamedata', data.game)
 				overwriteGame(data.game)
 				break
 			case 'requestRefresh': // refresh request from player
@@ -139,16 +139,20 @@ const WebSocketProvider = ({ children, metadata, game, overwriteGame, loadMap, u
             }
         }
 
-        ws.addEventListener('close', onClose)
-        ws.addEventListener('open', onOpen)
-        ws.addEventListener('message', receiveData)
+		if (ws) {
+			ws.addEventListener('close', onClose)
+			ws.addEventListener('open', onOpen)
+			ws.addEventListener('message', receiveData)
+		}
 
         return () => {
-            ws.removeEventListener('close', onClose)
-            ws.removeEventListener('open', onOpen)
-            ws.removeEventListener('message', receiveData)
+			if (ws) {
+				ws.removeEventListener('close', onClose)
+				ws.removeEventListener('open', onOpen)
+				ws.removeEventListener('message', receiveData)
+			}
         }
-    }, [ws, setWs, wsSettings, metadata, receiveData])
+    }, [ ws, setWs, wsSettings, metadata, receiveData ])
 
     return (
         <WebSocketContext.Provider value={ [ws, wsSettings, setWsSettings] }>{ children }</WebSocketContext.Provider>
@@ -158,6 +162,7 @@ const WebSocketProvider = ({ children, metadata, game, overwriteGame, loadMap, u
 const mapStateToProps = (state) => {
 	return {
 		metadata: state.metadata,
+        settings: state.settings,
         game: state.game,
 	}
 }
@@ -167,4 +172,5 @@ const mapDispatchToProps = {
 	loadMap,
 	updateMaps,
 }
+
 export default connect(mapStateToProps, mapDispatchToProps)(WebSocketProvider)
