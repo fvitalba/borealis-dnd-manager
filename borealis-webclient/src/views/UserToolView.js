@@ -1,6 +1,6 @@
 import Button from './Button.js'
 
-const UserToolView = ({ initAsDev, copyJson, pasteJson, username, updateUsername, cursorSize, updateCursorSize }) => {
+const UserToolView = ({ initAsDev, toggleFog, copyJson, pasteJson, username, updateUsername, cursorSize, updateCursorSize }) => {
 	return (
 		<div>
 			<hr />
@@ -9,6 +9,7 @@ const UserToolView = ({ initAsDev, copyJson, pasteJson, username, updateUsername
 			<input title='Cursor size' value={ cursorSize } onChange={ (e) => updateCursorSize(e.target.value) } type='number' min='0' />
 			<hr />
 			<Button title='Redo as dev' value='&#x1f530;' onClick={ initAsDev } />
+			<Button title='Toggle fog' value='&#127787;' onClick={ toggleFog } />
 			<Button title='Copy JSON to clipboard' value='&#x1f46f;' onClick={ copyJson } />
 			<Button title='Paste JSON from clipboard' value='&#x1f4cb;' onClick={ pasteJson } />
 		</div>
