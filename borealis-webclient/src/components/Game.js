@@ -334,94 +334,6 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 	}
 
 	/****************************************************
-	 * Receiving Data                                   *
-	 ****************************************************/
-	const receiveData = (evt) => {
-		let data = JSON.parse(evt.data)
-		console.log('receiving the following data', data)
-		if (data.from === wsSettings.guid) {
-			return // ignore messages sent by self
-		}
-		if (data.to && data.to !== wsSettings.guid) {
-			return // ignore messages sent to different recipients
-		}
-
-		const currMap = getMap()
-		console.log('current map',currMap)
-		switch (data.type) {
-			case 'pushCursor':
-				/*
-				if (data.u !== this.gameState.settings.username)
-					this.gameState.updateCursors(data.x, data.y, data.u, data.from)
-				*/
-				break
-			case 'pushDrawPath':
-				const newDrawPath = currMap.drawPaths ? currMap.drawPaths : []
-				newDrawPath.push(data.drawPath)
-				const updatedMapsWithDraw = game.maps.map((map) => {
-					return map.$id === currMap.$id ? { ...currMap, drawPaths: newDrawPath, } : map
-				})
-				updateMaps(updatedMapsWithDraw)
-				break
-			case 'pushDrawReset':
-				const updatedMapsWithDrawReset = game.maps.map((map) => {
-					return map.$id === currMap.$id ? {...currMap, drawPaths: [], } : map
-				})
-				updateMaps(updatedMapsWithDrawReset)
-				break
-			case 'pushFogPath':
-				const newFogPath = currMap.fogPaths ? currMap.fogPaths : []
-				newFogPath.push(data.fogPath)
-				const updatedMapsWithFog = game.maps.map((map) => {
-					return map.$id === currMap.$id ? { ...currMap, fogPaths: newFogPath, } : map
-				})
-				updateMaps(updatedMapsWithFog)
-				break
-			case 'pushFogReset':
-				const updatedMapsWithFogReset = game.maps.map((map) => {
-					return map.$id === currMap.$id ? {...currMap, fogPaths: [], } : map
-				})
-				updateMaps(updatedMapsWithFogReset)
-				break
-			case 'pushSingleToken':
-				/*
-				const local = this.gameState.game.tokens[data.i]
-				const token = Object.assign(local, data.a) // Keep and `$` attrs like `$selected`
-				this.gameState.updateTokenByIndex(data.i, token, true)
-				*/
-				break
-			case 'pushTokens':
-				/*
-				const localTokensMap = this.gameState.game.tokens.reduce((out, tok) => {
-					out[tok.guid] = tok
-					return out
-				}, {})
-				const tokens = data.tokens.map(tok => Object.assign({}, localTokensMap[tok.guid], tok))
-				this.gameState.setState({tokens: tokens})
-				*/
-				break
-			case 'pushMapId':
-				loadMap(data.mapId)
-				break
-			case 'pushMapState':
-				updateMaps(data.maps)
-				loadMap(data.mapId)
-				break
-			case 'pushGameRefresh': // refresh from host
-				console.log('receiving gamedata', data.game)
-				overwriteGame(data.game)
-				break
-			case 'requestRefresh': // refresh request from player
-				if (metadata.isHost) {
-					pushGameRefresh(webSocket, wsSettings, game, { to: data.from, })
-				}
-				break
-			default:
-				console.error(`Unrecognized websocket message type: ${data.type}`)
-		}
-	}
-
-	/****************************************************
 	 * Helper Functions                                 *
 	 ****************************************************/
 	const notify = (msg, ttl, tag) => {
@@ -528,15 +440,9 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 		}
 	}, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-	// attach all the event listeners for receiving of data
 	useEffect(() => {
-		if (webSocket)
-			webSocket.addEventListener('message', receiveData)
 		document.title = `Borealis D&D, Room: ${metadata.room}`
-		return () => {
-			webSocket.removeEventListener('message', receiveData)
-		}
-	}, [ metadata.room, webSocket, receiveData])
+	}, [ metadata.room ])
 	
 	/*
 	useEffect(() => {
