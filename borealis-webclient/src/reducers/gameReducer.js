@@ -2,6 +2,7 @@ import {
     OVERWRITE_GAME,
     LOAD_MAP, 
     INCREMENT_GEN, 
+    SET_FOG_ENABLED,
     SET_ISFIRSTLOADDONE, 
     SET_ISFOGLOADED, 
     UPDATE_MAPS, 
@@ -23,6 +24,7 @@ const initialGameState = {
     gen: 0,
     width: window.innerWidth,
     height: window.innerHeight,
+    fogEnabled: false,
     isFogLoaded: false,
     isFirstLoadDone: false, /* Ensure we don't overwrite localStorage before load is done */
     maps: [],
@@ -48,6 +50,11 @@ const gameReducer = (state = initialGameState, action) => {
                 ...state,
                 gen: state.gen + 1,
             }
+        case SET_FOG_ENABLED:
+            return {
+                ...state,
+                fogEnabled: action.fogEnabled,
+            }
         case SET_ISFOGLOADED:
             return {
                 ...state,
@@ -62,7 +69,7 @@ const gameReducer = (state = initialGameState, action) => {
             return {
                 ...state,
                 maps: action.maps,
-                mapId: state.mapId ? state.mapId : undefined,
+                mapId: !isNaN(state.mapId) ? state.mapId : undefined,
             }
         case ADD_MAP:
             const newMapId = state.maps.length
@@ -73,7 +80,7 @@ const gameReducer = (state = initialGameState, action) => {
             return {
                 ...state,
                 maps: mapsWithNewMap,
-                mapId: state.mapId ? state.mapId : newMapId,
+                mapId: !isNaN(state.mapId) ? state.mapId : newMapId,
                 isFirstLoadDone: true,
                 isFogLoaded: true,
             }
@@ -176,6 +183,13 @@ export const loadMap = (newMapId) => {
 export const incrementGen = () => {
     return {
         type: INCREMENT_GEN,
+    }
+}
+
+export const setFogEnabled = (newFogEnabled) => {
+    return {
+        type: SET_FOG_ENABLED,
+        fogEnabled: newFogEnabled,
     }
 }
 

@@ -43,7 +43,6 @@ const ControlPanel = ({ game, settings, metadata, setUsername, setCursorSize }) 
 	}
 
 	const pushRefreshToPlayers = () => {
-		console.log('pushing game', game)
 		pushGameRefresh(webSocket, wsSettings, game)
 	}
 
@@ -53,6 +52,7 @@ const ControlPanel = ({ game, settings, metadata, setUsername, setCursorSize }) 
 			setControlPanelState={ setControlPanelState } 
 			hidden={ controlPanelState.hidden } 
 			toggleHidden={ toggleHidden } 
+			fogEnabled={ game.fogEnabled }
 			isHost={ metadata.isHost } 
 			username={ settings.username } 
 			setUsername={ updateUsername } 

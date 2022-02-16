@@ -7,7 +7,7 @@ import SelectedTokensControls from '../components/SelectedTokensControls.js'
 import ToolSelectView from './ToolSelectView.js'
 import Button from './Button.js'
 
-const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, toggleHidden, isHost, username, setUsername, cursorSize, setCursorSize, socketRequestRefresh, pushRefreshToPlayers }) => {
+const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, toggleHidden, fogEnabled, isHost, username, setUsername, cursorSize, setCursorSize, socketRequestRefresh, pushRefreshToPlayers }) => {
 	if (hidden)
 		return (
 			<div id='control-panel'>
@@ -28,7 +28,7 @@ const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, tog
 				<ToggleButton title='Tokens' value='&#x265f;' controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
 				<Button title='Push refresh to players' value='&#x1f4ab;' onClick={ pushRefreshToPlayers } />
 				&nbsp;&nbsp;&nbsp;&nbsp;
-				<ToolSelectView />
+				<ToolSelectView fogEnabled={ fogEnabled } />
 				&nbsp;&nbsp;&nbsp;&nbsp;
 				<ToolControls />
 				<MapTool toggleOnMaps={ controlPanelState.toggleOnMaps } />

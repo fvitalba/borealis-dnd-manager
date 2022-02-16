@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
 import { setGameSettings } from '../reducers/metadataReducer.js'
-import { overwriteGame, updateMaps, loadMap, incrementGen } from '../reducers/gameReducer.js'
+import { overwriteGame, updateMaps, loadMap, addMap, incrementGen, setFogEnabled } from '../reducers/gameReducer.js'
 import { pushDrawPath, pushFogPath, pushGameRefresh, useWebSocket } from '../hooks/useSocket.js'
 import GameView from '../views/GameView.js'
 
-const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, incrementGen }) => {
+const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, addMap, incrementGen, setFogEnabled }) => {
 	const overlayRef = React.useRef()
-	const [webSocket, wsSettings] = useWebSocket()
+	const [webSocket, wsSettings, setWsSettings] = useWebSocket()
 	let currentPath = []
 
 	/****************************************************
@@ -23,7 +23,6 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 	/****************************************************
 	 * Update Functions                                 *
 	 ****************************************************/
-
 	/*
 	const updateCursors = (x, y, name, guid) => {
 		const cursors = Object.assign({}, gameState.metadata.cursors)
@@ -334,94 +333,6 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 	}
 
 	/****************************************************
-	 * Receiving Data                                   *
-	 ****************************************************/
-	const receiveData = (evt) => {
-		let data = JSON.parse(evt.data)
-		console.log('receiving the following data', data)
-		if (data.from === wsSettings.guid) {
-			return // ignore messages sent by self
-		}
-		if (data.to && data.to !== wsSettings.guid) {
-			return // ignore messages sent to different recipients
-		}
-
-		const currMap = getMap()
-		console.log('current map',currMap)
-		switch (data.type) {
-			case 'pushCursor':
-				/*
-				if (data.u !== this.gameState.settings.username)
-					this.gameState.updateCursors(data.x, data.y, data.u, data.from)
-				*/
-				break
-			case 'pushDrawPath':
-				const newDrawPath = currMap.drawPaths ? currMap.drawPaths : []
-				newDrawPath.push(data.drawPath)
-				const updatedMapsWithDraw = game.maps.map((map) => {
-					return map.$id === currMap.$id ? { ...currMap, drawPaths: newDrawPath, } : map
-				})
-				updateMaps(updatedMapsWithDraw)
-				break
-			case 'pushDrawReset':
-				const updatedMapsWithDrawReset = game.maps.map((map) => {
-					return map.$id === currMap.$id ? {...currMap, drawPaths: [], } : map
-				})
-				updateMaps(updatedMapsWithDrawReset)
-				break
-			case 'pushFogPath':
-				const newFogPath = currMap.fogPaths ? currMap.fogPaths : []
-				newFogPath.push(data.fogPath)
-				const updatedMapsWithFog = game.maps.map((map) => {
-					return map.$id === currMap.$id ? { ...currMap, fogPaths: newFogPath, } : map
-				})
-				updateMaps(updatedMapsWithFog)
-				break
-			case 'pushFogReset':
-				const updatedMapsWithFogReset = game.maps.map((map) => {
-					return map.$id === currMap.$id ? {...currMap, fogPaths: [], } : map
-				})
-				updateMaps(updatedMapsWithFogReset)
-				break
-			case 'pushSingleToken':
-				/*
-				const local = this.gameState.game.tokens[data.i]
-				const token = Object.assign(local, data.a) // Keep and `$` attrs like `$selected`
-				this.gameState.updateTokenByIndex(data.i, token, true)
-				*/
-				break
-			case 'pushTokens':
-				/*
-				const localTokensMap = this.gameState.game.tokens.reduce((out, tok) => {
-					out[tok.guid] = tok
-					return out
-				}, {})
-				const tokens = data.tokens.map(tok => Object.assign({}, localTokensMap[tok.guid], tok))
-				this.gameState.setState({tokens: tokens})
-				*/
-				break
-			case 'pushMapId':
-				loadMap(data.mapId)
-				break
-			case 'pushMapState':
-				updateMaps(data.maps)
-				loadMap(data.mapId)
-				break
-			case 'pushGameRefresh': // refresh from host
-				console.log('receiving gamedata', data.game)
-				overwriteGame(data.game)
-				break
-			case 'requestRefresh': // refresh request from player
-				if (metadata.isHost) {
-					pushGameRefresh(webSocket, wsSettings, game, { to: data.from, })
-				}
-				break
-			default:
-				console.error(`Unrecognized websocket message type: ${data.type}`)
-		}
-	}
-
-	/****************************************************
 	 * Helper Functions                                 *
 	 ****************************************************/
 	const notify = (msg, ttl, tag) => {
@@ -505,6 +416,105 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 	}
 
 	/****************************************************
+	 * Receiving Data                                   *
+	 ****************************************************/
+	const receiveData = useCallback((evt) => {
+		let data = JSON.parse(evt.data)
+		if (data.from === wsSettings.guid) {
+			return // ignore messages sent by self
+		}
+		if (data.to && data.to !== wsSettings.guid) {
+			return // ignore messages sent to different recipients
+		}
+
+        const getMap = () => {
+            if (game.maps.length === 0)
+                return undefined
+            const currMap = game.maps.filter((map) => map.$id === game.mapId)
+            return currMap.length > 0 ? currMap[0] : game.maps[0]
+        }
+
+		const currMap = getMap()
+		switch (data.type) {
+			case 'pushCursor':
+				/*
+				if (data.u !== this.gameState.settings.username)
+					this.gameState.updateCursors(data.x, data.y, data.u, data.from)
+				*/
+				break
+			case 'pushDrawPath':
+				const newDrawPath = currMap.drawPaths ? currMap.drawPaths : []
+				newDrawPath.push(data.drawPath)
+				const updatedMapsWithDraw = game.maps.map((map) => {
+					return map.$id === currMap.$id ? { ...currMap, drawPaths: newDrawPath, } : map
+				})
+				updateMaps(updatedMapsWithDraw)
+				break
+			case 'pushDrawReset':
+				const updatedMapsWithDrawReset = game.maps.map((map) => {
+					return map.$id === currMap.$id ? {...currMap, drawPaths: [], } : map
+				})
+				updateMaps(updatedMapsWithDrawReset)
+				break
+			case 'pushFogPath':
+				const newFogPath = currMap.fogPaths ? currMap.fogPaths : []
+				newFogPath.push(data.fogPath)
+				const updatedMapsWithFog = game.maps.map((map) => {
+					return map.$id === currMap.$id ? { ...currMap, fogPaths: newFogPath, } : map
+				})
+				updateMaps(updatedMapsWithFog)
+				break
+			case 'pushFogReset':
+				const updatedMapsWithFogReset = game.maps.map((map) => {
+					return map.$id === currMap.$id ? {...currMap, fogPaths: [], } : map
+				})
+				updateMaps(updatedMapsWithFogReset)
+				break
+			case 'pushSingleToken':
+				/*
+				const local = this.gameState.game.tokens[data.i]
+				const token = Object.assign(local, data.a) // Keep and `$` attrs like `$selected`
+				this.gameState.updateTokenByIndex(data.i, token, true)
+				*/
+				break
+			case 'pushTokens':
+				/*
+				const localTokensMap = this.gameState.game.tokens.reduce((out, tok) => {
+					out[tok.guid] = tok
+					return out
+				}, {})
+				const tokens = data.tokens.map(tok => Object.assign({}, localTokensMap[tok.guid], tok))
+				this.gameState.setState({tokens: tokens})
+				*/
+				break
+			case 'pushMapId':
+				loadMap(data.mapId)
+				break
+			case 'pushMapState':
+				updateMaps(data.maps)
+				loadMap(data.mapId)
+				break
+			case 'pushCreateMap':
+				addMap(data.mapName, data.width, data.height)
+				break
+			case 'pushFogEnabled':
+				console.log('receiving fog enabled',data)
+				setFogEnabled(data.fogEnabled)
+				break
+			case 'pushGameRefresh': // refresh from host
+				overwriteGame(data.game)
+				break
+			case 'requestRefresh': // refresh request from player
+				if (metadata.isHost) {
+					pushGameRefresh(webSocket, wsSettings, game, { to: data.from, })
+				}
+				break
+			default:
+				console.error(`Unrecognized websocket message type: ${data.type}`)
+		}
+	},[ game, metadata.isHost, loadMap, overwriteGame, updateMaps, addMap, webSocket, wsSettings ])
+
+	/****************************************************
 	 * React Hooks                                      *
 	 ****************************************************/
 	// On Mount
@@ -528,15 +538,22 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 		}
 	}, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-	// attach all the event listeners for receiving of data
 	useEffect(() => {
-		if (webSocket)
-			webSocket.addEventListener('message', receiveData)
 		document.title = `Borealis D&D, Room: ${metadata.room}`
-		return () => {
-			webSocket.removeEventListener('message', receiveData)
+	}, [ metadata.room ])
+
+	useEffect(() => {
+		if (webSocket) {
+			webSocket.addEventListener('message', receiveData)
+			if (wsSettings.username === '')
+				setWsSettings({ ...wsSettings, username: settings.username })
 		}
-	}, [ metadata.room, webSocket, receiveData])
+
+		return () => {
+			if (webSocket)
+				webSocket.removeEventListener('message', receiveData)
+		}
+	}, [webSocket, wsSettings, setWsSettings, receiveData, settings.username])
 	
 	/*
 	useEffect(() => {
@@ -598,7 +615,9 @@ const mapDispatchToProps = {
 	overwriteGame,
 	loadMap,
 	updateMaps,
+	addMap,
 	incrementGen,
+	setFogEnabled,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game)

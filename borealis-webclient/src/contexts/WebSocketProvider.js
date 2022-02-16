@@ -1,10 +1,10 @@
 import React, { useEffect, useState, createContext } from 'react'
 import { connect } from 'react-redux'
-import guid from '../controllers/guid.js'
 import { requestRefresh } from '../hooks/useSocket.js'
+import guid from '../controllers/guid.js'
 require('dotenv').config()
 
-const DEBUG_MODE = process.env.REACT_APP_DEBUG ? process.env.REACT_APP_DEBUG : false
+const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
 const SOCKET_RECONNECTION_TIMEOUT = 2500
 const SOCKET_SERVER_PORT = process.env.PORT || process.env.REACT_APP_PORT || 8000
 
@@ -18,44 +18,59 @@ const generateWebSocketUrl = (room, guid) => {
 }
 
 const createWebSocket = (room, guid) => {
-    console.log('creating websocket, room:',room,'guid:',guid)
-    const webSocketUrl = generateWebSocketUrl(room, guid)
-    console.log('connecting to: ',webSocketUrl)
-    return new WebSocket(webSocketUrl)
+	if (room) {
+		const webSocketUrl = generateWebSocketUrl(room, guid)
+		return new WebSocket(webSocketUrl)
+	} else {
+		return undefined
+	}
 }
 
 export const WebSocketContext = createContext(createWebSocket('',''))
 
 const WebSocketProvider = ({ children, metadata }) => {
     const [wsSettings, setWsSettings] = useState({
-        room: metadata.room, 
-        isHost: metadata.isHost,
         guid: guid(),
         username: '',
     })
-    const [ws, setWs] = useState(createWebSocket(wsSettings.room, wsSettings.guid))
+    const [ws, setWs] = useState(createWebSocket(metadata.room, wsSettings.guid))
+
+	useEffect(() => {
+		setWs(createWebSocket(metadata.room, wsSettings.guid))
+	}, [metadata.room, wsSettings.guid])
 
     useEffect(() => {
         const onClose = () => {
             setTimeout(() => {
-                setWs(createWebSocket(wsSettings.room, wsSettings.guid))
+				console.log('Socket Timeout, recreating WebSocket')
+                setWs(createWebSocket(metadata.room, wsSettings.guid))
             }, SOCKET_RECONNECTION_TIMEOUT)
         }
 
         const onOpen = () => {
-            if (!wsSettings.isHost) {
+            if (!metadata.isHost) {
                 requestRefresh(ws, wsSettings)
             }
         }
 
-        ws.addEventListener('close', onClose)
-        ws.addEventListener('open', onOpen)
+		const onError = (err) => {
+			console.error('WebSocket could not be created. Error: ',err)
+		}
+
+		if (ws) {
+			ws.addEventListener('close', onClose)
+			ws.addEventListener('open', onOpen)
+			ws.addEventListener('error', onError)
+		}
 
         return () => {
-            ws.removeEventListener('close', onClose)
-            ws.removeEventListener('open', onOpen)
+			if (ws) {
+				ws.removeEventListener('close', onClose)
+				ws.removeEventListener('open', onOpen)
+				ws.removeEventListener('error', onError)
+			}
         }
-    }, [ws, setWs, wsSettings])
+    }, [ ws, setWs, wsSettings, metadata ])
 
     return (
         <WebSocketContext.Provider value={ [ws, wsSettings, setWsSettings] }>{ children }</WebSocketContext.Provider>

@@ -6,7 +6,6 @@ import WebSocket from 'ws'
 import queryString from 'query-string'
 
 const app = express()
-
 const privateKeyFilename = 'privkey.pem'
 const SslCertificateFilename = 'fullchain.pem'
 const serverPort = process.env.PORT || 8000
@@ -33,20 +32,20 @@ const createServer = () => {
 }
 const server = createServer()
 
-//initialize the WebSocket server instance
+// Initialize the WebSocket server instance
 const wss = new WebSocket.Server({ server: server, autoAcceptConnections: true, })
 
-wss.on('connection', function connection(websocketConnection, connectionRequest) {
+wss.on('connection', (websocketConnection, connectionRequest) => {
     const [path, params] = connectionRequest?.url?.split('?')
     const connectionParams = queryString.parse(params)
     
     websocketConnection.room = path
     websocketConnection.guid = connectionParams.guid
-    console.log('client connecting: room:',websocketConnection.room,', guid:',websocketConnection.guid)
+    console.log(`Client connecting --- Room: ${websocketConnection.room}, guid: ${websocketConnection.guid}`)
 
     websocketConnection.on('message', (message) => {
         const parsedMessage = JSON.parse(message)
-        console.log('data received', parsedMessage)
+        console.log(`Received message  --- (Room: ${websocketConnection.room}) From: ${parsedMessage.username}, Message Type: ${parsedMessage.type}`)
         // Forward message to all other clients (for this room)
         wss.clients.forEach(client => {
             if (client.readyState === WebSocket.OPEN) {
@@ -54,14 +53,14 @@ wss.on('connection', function connection(websocketConnection, connectionRequest)
                     return // Don't send to other rooms
                 if (client === websocketConnection)
                     return // Don't send back to sender
-                console.log('sending received data to', client.guid)
+                console.log(`Sending message   --- Sending to guid: ${client.guid} in Room: ${client.room}`)
                 client.send(JSON.stringify(parsedMessage))
             }
         })
     })
 })
 
-//start our server
+// Start server
 server.listen(serverPort, () => {
     console.log(`Server started on port ${server.address().port}.`)
 })
