@@ -8,18 +8,7 @@ const TokenConfig = ({ token, game, metadata, deleteToken, copyToken, updateToke
 	const selectToken = (token, tokenSelected) => {
 		if (!token.pc && !metadata.isHost)
 			return
-		const updatedTokens = game.tokens.map((currToken) => {
-			//TODO: Handle Multiselection / singleselection
-			return (currToken.guid === token.guid) ?
-				{
-					...currToken,
-					$selected: tokenSelected ? tokenSelected : !currToken.$selected,
-					$x0: currToken.x,	//TODO: these coordinates should only be set, if selected = true
-					$y0: currToken.y,	//TODO: these coordinates should only be set, if selected = true
-				}
-				: currToken
-		})
-		updateTokens(updatedTokens)
+		toggleTokenValue(token.guid, '$selected')
 	}
 
 	const deleteCurrToken = () => {

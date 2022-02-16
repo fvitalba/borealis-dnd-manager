@@ -1,13 +1,14 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
 import { setGameSettings } from '../reducers/metadataReducer.js'
-import { overwriteGame, updateMaps, loadMap, addMap, incrementGen, setFogEnabled } from '../reducers/gameReducer.js'
-import { pushDrawPath, pushFogPath, pushGameRefresh, useWebSocket } from '../hooks/useSocket.js'
+import { overwriteGame, updateMaps, loadMap, addMap, incrementGen, setFogEnabled, updateTokens } from '../reducers/gameReducer.js'
+import { pushDrawPath, pushFogPath, pushGameRefresh, pushTokens, useWebSocket } from '../hooks/useSocket.js'
 import GameView from '../views/GameView.js'
 
-const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, addMap, incrementGen, setFogEnabled }) => {
+const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, addMap, updateTokens, incrementGen, setFogEnabled }) => {
 	const overlayRef = React.useRef()
 	const [webSocket, wsSettings, setWsSettings] = useWebSocket()
+	const [mousePosition, setMousePosition] = useState({ downX: 0, downY: 0})
 	let currentPath = []
 
 	/****************************************************
@@ -41,19 +42,17 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 	 * Control Functions                                *
 	 ****************************************************/
 	const dragSelectedTokens = (e) => {
-		//TODO: Update dragSelectedTokens
-		/*
-		if (gameState.settings.tool !== 'move')
+		if (settings.tool !== 'move')
 			return
-		const downX = gameState.metadata.downX, downY = gameState.metadata.downY
-		updateTokens((token) => {
-			if (token.$selected) {
-				token.x = token.$x0 + e.pageX - downX
-				token.y = token.$y0 + e.pageY - downY
+
+		const newTokens = game.tokens.map((token) => {
+			return !token.$selected ? token : {
+				...token,
+				x: token.$x0 + (e.pageX - mousePosition.downX),
+				y: token.$y0 + (e.pageY - mousePosition.downY),
 			}
-			return token
-		}, false, undefined)
-		*/
+		})
+		updateTokens(newTokens)
 	}
 
 	/****************************************************
@@ -254,21 +253,19 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 			
 			updateMaps(updatedMaps)
 		}
+
+		const selectedTokens = game.tokens.filter((token) => token.$selected)
+		if (selectedTokens.length > 0)
+			pushTokens(webSocket, wsSettings, game.tokens)
 	}
 
 	const onMouseDown = (e) => {
 		for (let x of [document.activeElement, e.target])
-			//TODO: Check if we can use triple equal
-			if ((x.tagName == 'INPUT' && (x.type === 'text' || x.type === 'number')) || (x.tagName == 'BUTTON')) /* eslint-disable-line eqeqeq */
+			if ((x.tagName.toUpperCase() == 'INPUT' && (x.type.toUpperCase() === 'TEXT' || x.type.toUpperCase() === 'NUMBER')) || (x.tagName.toUpperCase() === 'BUTTON')) /* eslint-disable-line eqeqeq */
 				return e
 
 		if (metadata.isHost) {
 			if (e.buttons & 1) {
-				/*
-				if (!/(\s|^)token(\s|$)/.test(e.target.getAttribute('class')))
-					//TODO: Update to map function
-					updateTokens(tok => { delete tok.$selected })
-				*/
 				currentPath = []
 				currentPath.push({
 					x: e.pageX,
@@ -281,6 +278,8 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 				})
 			}
 		}
+
+		setMousePosition({ downX: parseInt(e.pageX), downY: parseInt(e.pageY) })
 	}
 
 	const onMouseMove = (e) => {
@@ -471,21 +470,23 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 				updateMaps(updatedMapsWithFogReset)
 				break
 			case 'pushSingleToken':
-				/*
-				const local = this.gameState.game.tokens[data.i]
-				const token = Object.assign(local, data.a) // Keep and `$` attrs like `$selected`
-				this.gameState.updateTokenByIndex(data.i, token, true)
-				*/
+				const updatedTokens = game.tokens.map((token) => {
+					return token.guid !== data.token.guid ? token : {
+						...data.token,
+						$selected: token.$selected,
+					}
+				})
+				updateTokens(updatedTokens)
 				break
 			case 'pushTokens':
-				/*
-				const localTokensMap = this.gameState.game.tokens.reduce((out, tok) => {
-					out[tok.guid] = tok
-					return out
-				}, {})
-				const tokens = data.tokens.map(tok => Object.assign({}, localTokensMap[tok.guid], tok))
-				this.gameState.setState({tokens: tokens})
-				*/
+				const selectionFixedTokens = data.tokens.map((token) => {
+					let tokenSelected = false
+					const currentToken = game.tokens.filter((token2) => token2.guid === token.guid)
+					if (currentToken.length > 0)
+						tokenSelected = currentToken.$selected
+					return { ...token, $selected: tokenSelected, }
+				})
+				updateTokens(selectionFixedTokens)
 				break
 			case 'pushMapId':
 				loadMap(data.mapId)
@@ -512,7 +513,7 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 			default:
 				console.error(`Unrecognized websocket message type: ${data.type}`)
 		}
-	},[ game, metadata.isHost, loadMap, overwriteGame, updateMaps, addMap, webSocket, wsSettings ])
+	},[ game, metadata.isHost, loadMap, overwriteGame, setFogEnabled, updateMaps, addMap, updateTokens, webSocket, wsSettings ])
 
 	/****************************************************
 	 * React Hooks                                      *
@@ -560,14 +561,6 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 		if (websocket && gameState.settings.shareMouse)
 			websocket.pushCursor(gameState.metadata.lastX, gameState.metadata.lastY)
 	}, [gameState.metadata.lastX, gameState.metadata.lastY, gameState.settings.shareMouse])
-	*/
-
-	/*
-	useEffect(() => {
-		//TODO: reenable websocket push
-		//if (websocket)
-		//	websocket.pushTokens(gameState.game.tokens)
-	}, [gameState.game.tokens])
 	*/
 
 	/****************************************************
@@ -618,6 +611,7 @@ const mapDispatchToProps = {
 	addMap,
 	incrementGen,
 	setFogEnabled,
+	updateTokens,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game)

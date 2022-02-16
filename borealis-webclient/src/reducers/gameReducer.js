@@ -14,6 +14,7 @@ import {
     COPY_TOKEN,
     UPDATE_TOKEN_VALUE,
     TOGGLE_TOKEN_VALUE,
+    SET_TOKEN_ORIGIN,
     RESET_FOG,
     RESET_DRAW
 } from '../redux/constants'
@@ -29,6 +30,82 @@ const initialGameState = {
     isFirstLoadDone: false, /* Ensure we don't overwrite localStorage before load is done */
     maps: [],
     tokens: [],
+}
+
+const defaultGameState = {
+    ...initialGameState,
+    mapId: 0,
+    isFogLoaded: true,
+    isFirstLoadDone: true,
+    width: 795,
+    height: 555,
+    maps: [{
+        name: 'Dragon\'s Lair',
+        $id: 0,
+        imageUrl: 'https://mk0a2minutetabl7hq7i.kinstacdn.com/wp-content/uploads/2022/02/Arena-of-Fire-battle-map-Main-preview-Night.jpg',
+        x: 0,
+        y: 0,
+        width: 795,
+        height: 555,
+        drawPaths: [],
+        fogPaths: [],
+    },
+    {
+        name: 'Mage Tower',
+        $id: 1,
+        imageUrl: 'https://2minutetabletop.com/wp-content/uploads/2022/01/Wizarding-School-Classroom-Basic-Light-16x22-1.jpg',
+        x: 0,
+        y: 0,
+        width: 795,
+        height: 555,
+        drawPaths: [],
+        fogPaths: [],
+    }],
+    tokens: [{
+        guid: guid(),
+        name: 'Adult Black Dragon',
+        url: 'https://i.imgur.com/H2dyKur.png',
+        mapId: 0,
+        $selected: false,
+        $x0: 0,
+        $y0: 0,
+        x: 350,
+        y: 210,
+        ko: false,
+        pc: false,
+        width: 100,
+        height: 100,
+    },
+    {
+        guid: guid(),
+        name: 'Mighty Paladin',
+        url: 'https://i.imgur.com/ccQxtZ7.png',
+        mapId: 0,
+        $selected: false,
+        $x0: 0,
+        $y0: 0,
+        x: 50,
+        y: 180,
+        ko: false,
+        pc: true,
+        width: 50,
+        height: 50,       
+    },
+    {
+        guid: guid(),
+        name: 'Misterious Wizard',
+        url: 'https://i.imgur.com/82s9UPR.png',
+        mapId: 1,
+        $selected: false,
+        $x0: 0,
+        $y0: 0,
+        x: 620,
+        y: 250,
+        ko: false,
+        pc: false,
+        width: 50,
+        height: 50,        
+    }]
 }
 
 const gameReducer = (state = initialGameState, action) => {
@@ -109,10 +186,13 @@ const gameReducer = (state = initialGameState, action) => {
             }
         case COPY_TOKEN:
             const tokenCopy = state.tokens.filter((token) => token.guid === action.tokenGuid)
-            tokenCopy.guid = guid()
+            const newToken = {
+                ...tokenCopy[0],
+                guid: guid()
+            }
             return {
                 ...state,
-                tokens: state.tokens.concat(tokenCopy)
+                tokens: state.tokens.concat(newToken)
             }
         case UPDATE_TOKEN_VALUE:
             const tokensCopy = state.tokens.map((token) => {
@@ -135,6 +215,19 @@ const gameReducer = (state = initialGameState, action) => {
             return {
                 ...state,
                 tokens: tokensCopy2,
+            }
+        case SET_TOKEN_ORIGIN:
+            console.log('setting token origin')
+            const tokensCopy3 = state.tokens.map((token) => {
+                return token.guid !== action.tokenGuid ? token : {
+                    ...token,
+                    $x0: action.xOrigin,
+                    $y0: action.yOrigin,
+                }
+            })
+            return {
+                ...state,
+                tokens: tokensCopy3,
             }
         case RESET_FOG:
 			const fogResetMaps = state.maps.map((map) => {
@@ -170,6 +263,13 @@ export const overwriteGame = (newGame) => {
     return {
         type: OVERWRITE_GAME,
         game: newGame,
+    }
+}
+
+export const loadDefaultBattleGame = () => {
+    return {
+        type: OVERWRITE_GAME,
+        game: defaultGameState,
     }
 }
 
@@ -253,13 +353,13 @@ export const addToken = (tokenName, tokenUrl, mapId) => {
         name: tokenName,
         url: tokenUrl,
         mapId: mapId,
-        $selected: undefined,
+        $selected: false,
         $x0: 0,
         $y0: 0,
         x: 0,
         y: 0,
-        ko: undefined,
-        pc: undefined,
+        ko: false,
+        pc: false,
         w: 0,
         h: 0,
     }
@@ -298,6 +398,15 @@ export const toggleTokenValue = (tokenGuidToUpdate, key) => {
         type: TOGGLE_TOKEN_VALUE,
         tokenGuid: tokenGuidToUpdate,
         key: key,
+    }
+}
+
+export const setTokenOrigin = (tokenGuidToUpdate, xOrigin, yOrigin) => {
+    return {
+        type: SET_TOKEN_ORIGIN,
+        tokenGuid: tokenGuidToUpdate,
+        xOrigin: parseInt(xOrigin),
+        yOrigin: parseInt(yOrigin),
     }
 }
 

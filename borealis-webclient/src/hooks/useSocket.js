@@ -105,25 +105,19 @@ export const pushGameRefresh = (webSocket, wsSettings, game, additionalAttribute
 }
 
 export const pushSingleToken = (webSocket, wsSettings, token) => {
-    //TODO: pushSingleToken
-    /*
-    const tokenCopy = Object.assign({}, token)
-    this.scrubObject(tokenCopy)
-    const data = {type: 'pushSingleToken', i: index, a: tokenCopy}
-    this.send(data)
-    */
+    sendData(webSocket, {
+        type: 'pushSingleToken',
+        from: wsSettings.guid,
+        token: token,
+    })
 }
 
 export const pushTokens = (webSocket, wsSettings, tokens) => {
-    //TODO: pushTokens
-    /*
-    if (!tokens)
-        return
-    const tokensCopy = JSON.parse(JSON.stringify(tokens))
-    const data = { type: 'pushTokens', tokens: tokensCopy }
-    data.tokens.forEach(token => this.scrubObject(token))
-    this.send(data)
-    */
+    sendData(webSocket, {
+        type: 'pushTokens',
+        from: wsSettings.guid,
+        tokens: tokens,
+    })
 }
 
 export const requestRefresh = (webSocket, wsSettings) => {

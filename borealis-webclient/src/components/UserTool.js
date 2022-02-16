@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
-import { setFogEnabled } from '../reducers/gameReducer.js'
+import { loadDefaultBattleGame, setFogEnabled } from '../reducers/gameReducer.js'
 import { setUsername, setCursorSize, setToolSettings } from '../reducers/settingsReducer.js'
 import { pushFogEnabled, useWebSocket } from '../hooks/useSocket.js'
 import UserToolView from '../views/UserToolView.js'
 
-const UserTool = ({ toggleOnUser, game, settings, setFogEnabled, setUsername, setCursorSize, setToolSettings }) => {
+const UserTool = ({ toggleOnUser, game, settings, setFogEnabled, setUsername, setCursorSize, setToolSettings, loadDefaultBattleGame }) => {
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()
 	if (!toggleOnUser)
 		return null
@@ -24,55 +24,7 @@ const UserTool = ({ toggleOnUser, game, settings, setFogEnabled, setUsername, se
     }
 
     const initAsDev = () => {
-        //TODO: implement new init as dev
-        /*
-        const initAsDev = () => {
-            if (!window.confirm('Reset?'))
-                return null
-            let tokens = [
-                { name: 'bar', pc: 0 },
-                { name: 'foo', url: '/dev/belmont.jpg' },
-                { name: 'arr', pc: 1 },
-                { name: 'win', pc: 1, url: '/dev/redhead.jpg', y: 50, x: 90, w: 64, h:64 },
-            ]
-            let maps = [
-                {
-                    name: 'kiwi',
-                    imageUrl: '/dev/kiwi.jpeg',
-                    $id: 0,
-                    width: 500,
-                    height: 500,
-                    x: 0,
-                    y: 0,
-                    drawPaths: [],
-                    fogPaths: [],
-                },
-                {
-                    name: 'default',
-                    imageUrl: '/dev/FFtri9T.png',
-                    spawnX: 40,
-                    spawnY: 80,
-                    $id: 1,
-                    x: 0,
-                    y: 0,
-                    drawPaths: [],
-                    fogPaths: [],
-                }
-            ]
-            return new Promise(resolve => {
-                setGameState({
-                    ...gameState,
-                    game: {
-                        ...gameState.game,
-                        maps: maps,
-                        tokens: tokens,
-                        mapId: 0,
-                    },
-                })
-                resolve()
-            })
-        }
-        */
+        loadDefaultBattleGame()
     }
 
     const toggleFog = () => {
@@ -139,6 +91,7 @@ const mapDispatchToProps = {
 	setCursorSize,
     setFogEnabled,
     setToolSettings,
+    loadDefaultBattleGame,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserTool)
