@@ -16,14 +16,13 @@ const Background = ({ game, updateTokens }) => {
 	}
 
 	const handleOnClick = (e) => {
-		//TODO: Handle onClick of Maps
-		/*
-		setControlPanelState({
-			...controlPanelState,
-			toggleOnMaps: false,
-			toggleOnTokens: false,
-		}, () => updateTokens(token => token.$selected = false))
-		*/
+		const deselectedTokens = game.tokens.map((token) => {
+			return !token.$selected ? token : {
+				...token,
+				$selected: false,
+			}
+		})
+		updateTokens(deselectedTokens)
 	}
 
 	return (
