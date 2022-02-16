@@ -14,6 +14,7 @@ import {
     COPY_TOKEN,
     UPDATE_TOKEN_VALUE,
     TOGGLE_TOKEN_VALUE,
+    SET_TOKEN_ORIGIN,
     RESET_FOG,
     RESET_DRAW
 } from '../redux/constants'
@@ -215,6 +216,19 @@ const gameReducer = (state = initialGameState, action) => {
                 ...state,
                 tokens: tokensCopy2,
             }
+        case SET_TOKEN_ORIGIN:
+            console.log('setting token origin')
+            const tokensCopy3 = state.tokens.map((token) => {
+                return token.guid !== action.tokenGuid ? token : {
+                    ...token,
+                    $x0: action.xOrigin,
+                    $y0: action.yOrigin,
+                }
+            })
+            return {
+                ...state,
+                tokens: tokensCopy3,
+            }
         case RESET_FOG:
 			const fogResetMaps = state.maps.map((map) => {
                 return map.$id === state.mapId ? {
@@ -384,6 +398,15 @@ export const toggleTokenValue = (tokenGuidToUpdate, key) => {
         type: TOGGLE_TOKEN_VALUE,
         tokenGuid: tokenGuidToUpdate,
         key: key,
+    }
+}
+
+export const setTokenOrigin = (tokenGuidToUpdate, xOrigin, yOrigin) => {
+    return {
+        type: SET_TOKEN_ORIGIN,
+        tokenGuid: tokenGuidToUpdate,
+        xOrigin: parseInt(xOrigin),
+        yOrigin: parseInt(yOrigin),
     }
 }
 

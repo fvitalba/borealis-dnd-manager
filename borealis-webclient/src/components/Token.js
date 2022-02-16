@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { toggleTokenValue } from '../reducers/gameReducer'
+import { setTokenOrigin, toggleTokenValue } from '../reducers/gameReducer'
 import TokenView from '../views/TokenView.js'
 
-const Token = ({ token, isHost, game, settings, toggleTokenValue }) => {
+const Token = ({ token, isHost, game, settings, toggleTokenValue, setTokenOrigin }) => {
 	const isMoveTool = () => {
 		return settings.tool === 'move'
 	}
@@ -13,6 +13,7 @@ const Token = ({ token, isHost, game, settings, toggleTokenValue }) => {
 			return
 		if (!token.$selected)
 			toggleTokenValue(token.guid, '$selected')
+		setTokenOrigin(token.guid, token.x, token.y)
 	}
 
 	if (!token.url || !token.url.trim())
@@ -57,6 +58,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
 	toggleTokenValue,
+	setTokenOrigin,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Token)

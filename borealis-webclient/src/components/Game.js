@@ -1,13 +1,14 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
 import { setGameSettings } from '../reducers/metadataReducer.js'
-import { overwriteGame, updateMaps, loadMap, addMap, incrementGen, setFogEnabled } from '../reducers/gameReducer.js'
+import { overwriteGame, updateMaps, loadMap, addMap, incrementGen, setFogEnabled, updateTokens } from '../reducers/gameReducer.js'
 import { pushDrawPath, pushFogPath, pushGameRefresh, useWebSocket } from '../hooks/useSocket.js'
 import GameView from '../views/GameView.js'
 
-const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, addMap, incrementGen, setFogEnabled }) => {
+const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, addMap, updateTokens, incrementGen, setFogEnabled }) => {
 	const overlayRef = React.useRef()
 	const [webSocket, wsSettings, setWsSettings] = useWebSocket()
+	const [mousePosition, setMousePosition] = useState({ downX: 0, downY: 0})
 	let currentPath = []
 
 	/****************************************************
@@ -41,19 +42,17 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 	 * Control Functions                                *
 	 ****************************************************/
 	const dragSelectedTokens = (e) => {
-		//TODO: Update dragSelectedTokens
-		/*
-		if (gameState.settings.tool !== 'move')
+		if (settings.tool !== 'move')
 			return
-		const downX = gameState.metadata.downX, downY = gameState.metadata.downY
-		updateTokens((token) => {
-			if (token.$selected) {
-				token.x = token.$x0 + e.pageX - downX
-				token.y = token.$y0 + e.pageY - downY
+
+		const newTokens = game.tokens.map((token) => {
+			return !token.$selected ? token : {
+				...token,
+				x: token.$x0 + (e.pageX - mousePosition.downX),
+				y: token.$y0 + (e.pageY - mousePosition.downY),
 			}
-			return token
-		}, false, undefined)
-		*/
+		})
+		updateTokens(newTokens)
 	}
 
 	/****************************************************
@@ -263,11 +262,6 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 
 		if (metadata.isHost) {
 			if (e.buttons & 1) {
-				/*
-				if (!/(\s|^)token(\s|$)/.test(e.target.getAttribute('class')))
-					//TODO: Update to map function
-					updateTokens(tok => { delete tok.$selected })
-				*/
 				currentPath = []
 				currentPath.push({
 					x: e.pageX,
@@ -280,6 +274,8 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 				})
 			}
 		}
+
+		setMousePosition({ downX: parseInt(e.pageX), downY: parseInt(e.pageY) })
 	}
 
 	const onMouseMove = (e) => {
@@ -609,6 +605,7 @@ const mapDispatchToProps = {
 	addMap,
 	incrementGen,
 	setFogEnabled,
+	updateTokens,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game)
