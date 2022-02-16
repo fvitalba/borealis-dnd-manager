@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
 import { setGameSettings } from '../reducers/metadataReducer.js'
 import { overwriteGame, updateMaps, loadMap, addMap, incrementGen, setFogEnabled, updateTokens } from '../reducers/gameReducer.js'
-import { pushDrawPath, pushFogPath, pushGameRefresh, useWebSocket } from '../hooks/useSocket.js'
+import { pushDrawPath, pushFogPath, pushGameRefresh, pushTokens, useWebSocket } from '../hooks/useSocket.js'
 import GameView from '../views/GameView.js'
 
 const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, addMap, updateTokens, incrementGen, setFogEnabled }) => {
@@ -253,6 +253,10 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 			
 			updateMaps(updatedMaps)
 		}
+
+		const selectedTokens = game.tokens.filter((token) => token.$selected)
+		if (selectedTokens.length > 0)
+			pushTokens(webSocket, wsSettings, game.tokens)
 	}
 
 	const onMouseDown = (e) => {
@@ -466,21 +470,23 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 				updateMaps(updatedMapsWithFogReset)
 				break
 			case 'pushSingleToken':
-				/*
-				const local = this.gameState.game.tokens[data.i]
-				const token = Object.assign(local, data.a) // Keep and `$` attrs like `$selected`
-				this.gameState.updateTokenByIndex(data.i, token, true)
-				*/
+				const updatedTokens = game.tokens.map((token) => {
+					return token.guid !== data.token.guid ? token : {
+						...data.token,
+						$selected: token.$selected,
+					}
+				})
+				updateTokens(updatedTokens)
 				break
 			case 'pushTokens':
-				/*
-				const localTokensMap = this.gameState.game.tokens.reduce((out, tok) => {
-					out[tok.guid] = tok
-					return out
-				}, {})
-				const tokens = data.tokens.map(tok => Object.assign({}, localTokensMap[tok.guid], tok))
-				this.gameState.setState({tokens: tokens})
-				*/
+				const selectionFixedTokens = data.tokens.map((token) => {
+					let tokenSelected = false
+					const currentToken = game.tokens.filter((token2) => token2.guid === token.guid)
+					if (currentToken.length > 0)
+						tokenSelected = currentToken.$selected
+					return { ...token, $selected: tokenSelected, }
+				})
+				updateTokens(selectionFixedTokens)
 				break
 			case 'pushMapId':
 				loadMap(data.mapId)
@@ -507,7 +513,7 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 			default:
 				console.error(`Unrecognized websocket message type: ${data.type}`)
 		}
-	},[ game, metadata.isHost, loadMap, overwriteGame, setFogEnabled, updateMaps, addMap, webSocket, wsSettings ])
+	},[ game, metadata.isHost, loadMap, overwriteGame, setFogEnabled, updateMaps, addMap, updateTokens, webSocket, wsSettings ])
 
 	/****************************************************
 	 * React Hooks                                      *
