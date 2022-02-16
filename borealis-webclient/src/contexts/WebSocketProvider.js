@@ -20,7 +20,6 @@ const generateWebSocketUrl = (room, guid) => {
 const createWebSocket = (room, guid) => {
 	if (room) {
 		const webSocketUrl = generateWebSocketUrl(room, guid)
-		console.log('Creating Websocket with url',webSocketUrl)
 		return new WebSocket(webSocketUrl)
 	} else {
 		return undefined
@@ -43,6 +42,7 @@ const WebSocketProvider = ({ children, metadata }) => {
     useEffect(() => {
         const onClose = () => {
             setTimeout(() => {
+				console.log('Socket Timeout, recreating WebSocket')
                 setWs(createWebSocket(metadata.room, wsSettings.guid))
             }, SOCKET_RECONNECTION_TIMEOUT)
         }

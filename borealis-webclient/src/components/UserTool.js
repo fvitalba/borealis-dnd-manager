@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
 import { setFogEnabled } from '../reducers/gameReducer.js'
-import { setUsername, setCursorSize } from '../reducers/settingsReducer.js'
+import { setUsername, setCursorSize, setToolSettings } from '../reducers/settingsReducer.js'
 import { useWebSocket } from '../hooks/useSocket.js'
 import UserToolView from '../views/UserToolView.js'
 
-const UserTool = ({ toggleOnUser, game, settings, setFogEnabled, setUsername, setCursorSize }) => {
+const UserTool = ({ toggleOnUser, game, settings, setFogEnabled, setUsername, setCursorSize, setToolSettings }) => {
     const [_webSocket, wsSettings, setWsSettings] = useWebSocket()
 	if (!toggleOnUser)
 		return null
@@ -77,6 +77,8 @@ const UserTool = ({ toggleOnUser, game, settings, setFogEnabled, setUsername, se
 
     const toggleFog = () => {
         setFogEnabled(!game.fogEnabled)
+        if (settings.tool === 'fog')
+            setToolSettings('move','')
     }
 
     const copyJson = () => {
@@ -135,6 +137,7 @@ const mapDispatchToProps = {
     setUsername,
 	setCursorSize,
     setFogEnabled,
+    setToolSettings,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserTool)
