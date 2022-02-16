@@ -512,7 +512,7 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 			default:
 				console.error(`Unrecognized websocket message type: ${data.type}`)
 		}
-	},[ game, metadata.isHost, loadMap, overwriteGame, updateMaps, addMap, webSocket, wsSettings ])
+	},[ game, metadata.isHost, loadMap, overwriteGame, setFogEnabled, updateMaps, addMap, webSocket, wsSettings ])
 
 	/****************************************************
 	 * React Hooks                                      *
@@ -560,14 +560,6 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 		if (websocket && gameState.settings.shareMouse)
 			websocket.pushCursor(gameState.metadata.lastX, gameState.metadata.lastY)
 	}, [gameState.metadata.lastX, gameState.metadata.lastY, gameState.settings.shareMouse])
-	*/
-
-	/*
-	useEffect(() => {
-		//TODO: reenable websocket push
-		//if (websocket)
-		//	websocket.pushTokens(gameState.game.tokens)
-	}, [gameState.game.tokens])
 	*/
 
 	/****************************************************
