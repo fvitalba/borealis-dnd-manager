@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { loadMap, updateMaps, deleteMap, setIsFogLoaded, setIsFirstLoadDone } from '../reducers/gameReducer.js'
-import { pushMapId, useWebSocket } from '../hooks/useSocket.js'
+import { pushMapState, useWebSocket } from '../hooks/useSocket.js'
 import MapConfigView from '../views/MapConfigView.js'
 
 const initialMapConfigState = (map, game) => {
-	const maps = game.maps
-	const existingMap = maps.filter((mapElement) => mapElement.$id === map.$id)
-	const currentMap = existingMap ? existingMap : { name: undefined, url: undefined, w: undefined, h: undefined, }
+	const existingMap = game.maps.filter((mapElement) => mapElement.$id === map.$id)
+	const currentMap = existingMap.length > 0 ? existingMap[0] : { name: undefined, imageUrl: undefined, w: undefined, h: undefined, }
 
 	return {
 		$id: parseInt(map.$id),
@@ -48,7 +47,7 @@ const MapConfig = ({ map, game, loadMap, updateMaps, deleteMap, setIsFogLoaded, 
 		loadMap(map.$id)
 		setIsFogLoaded(true)
 		setIsFirstLoadDone(true)
-		pushMapId(webSocket, wsSettings, map.$id)
+		pushMapState(webSocket, wsSettings, updatedMaps, map.$id)
 	}
 
 	const deleteCurrentMap = () => {

@@ -69,7 +69,7 @@ const gameReducer = (state = initialGameState, action) => {
             return {
                 ...state,
                 maps: action.maps,
-                mapId: state.mapId ? state.mapId : undefined,
+                mapId: !isNaN(state.mapId) ? state.mapId : undefined,
             }
         case ADD_MAP:
             const newMapId = state.maps.length
@@ -80,7 +80,7 @@ const gameReducer = (state = initialGameState, action) => {
             return {
                 ...state,
                 maps: mapsWithNewMap,
-                mapId: state.mapId ? state.mapId : newMapId,
+                mapId: !isNaN(state.mapId) ? state.mapId : newMapId,
                 isFirstLoadDone: true,
                 isFogLoaded: true,
             }

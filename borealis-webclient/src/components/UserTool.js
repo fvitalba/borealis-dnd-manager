@@ -1,11 +1,11 @@
 import { connect } from 'react-redux'
 import { setFogEnabled } from '../reducers/gameReducer.js'
 import { setUsername, setCursorSize, setToolSettings } from '../reducers/settingsReducer.js'
-import { useWebSocket } from '../hooks/useSocket.js'
+import { pushFogEnabled, useWebSocket } from '../hooks/useSocket.js'
 import UserToolView from '../views/UserToolView.js'
 
 const UserTool = ({ toggleOnUser, game, settings, setFogEnabled, setUsername, setCursorSize, setToolSettings }) => {
-    const [_webSocket, wsSettings, setWsSettings] = useWebSocket()
+    const [webSocket, wsSettings, setWsSettings] = useWebSocket()
 	if (!toggleOnUser)
 		return null
 
@@ -77,6 +77,7 @@ const UserTool = ({ toggleOnUser, game, settings, setFogEnabled, setUsername, se
 
     const toggleFog = () => {
         setFogEnabled(!game.fogEnabled)
+        pushFogEnabled(webSocket, wsSettings, !game.fogEnabled)
         if (settings.tool === 'fog')
             setToolSettings('move','')
     }

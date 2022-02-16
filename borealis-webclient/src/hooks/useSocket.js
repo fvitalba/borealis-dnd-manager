@@ -76,6 +76,24 @@ export const pushMapId = (webSocket, wsSettings, mapId) => {
     })
 }
 
+export const pushCreateMap = (webSocket, wsSettings, newMapName, newWidth, newHeight) => {
+    sendData(webSocket, {
+        type: 'pushCreateMap',
+        from: wsSettings.guid,
+        mapName: newMapName,
+        width: newWidth,
+        height: newHeight,
+    })
+}
+
+export const pushFogEnabled = (webSocket, wsSettings, newFogEnabled) => {
+    sendData(webSocket, {
+        type: 'pushFogEnabled',
+        from: wsSettings.guid,
+        fogEnabled: newFogEnabled,
+    })
+}
+
 export const pushGameRefresh = (webSocket, wsSettings, game, additionalAttributes) => {
     sendData(webSocket, {
         type: 'pushGameRefresh',

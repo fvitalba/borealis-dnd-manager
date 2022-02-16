@@ -1,11 +1,11 @@
 import React, { useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
 import { setGameSettings } from '../reducers/metadataReducer.js'
-import { overwriteGame, updateMaps, loadMap, incrementGen } from '../reducers/gameReducer.js'
+import { overwriteGame, updateMaps, loadMap, addMap, incrementGen, setFogEnabled } from '../reducers/gameReducer.js'
 import { pushDrawPath, pushFogPath, pushGameRefresh, useWebSocket } from '../hooks/useSocket.js'
 import GameView from '../views/GameView.js'
 
-const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, incrementGen }) => {
+const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, addMap, incrementGen, setFogEnabled }) => {
 	const overlayRef = React.useRef()
 	const [webSocket, wsSettings, setWsSettings] = useWebSocket()
 	let currentPath = []
@@ -494,6 +494,13 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 				updateMaps(data.maps)
 				loadMap(data.mapId)
 				break
+			case 'pushCreateMap':
+				addMap(data.mapName, data.width, data.height)
+				break
+			case 'pushFogEnabled':
+				console.log('receiving fog enabled',data)
+				setFogEnabled(data.fogEnabled)
+				break
 			case 'pushGameRefresh': // refresh from host
 				overwriteGame(data.game)
 				break
@@ -505,7 +512,7 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 			default:
 				console.error(`Unrecognized websocket message type: ${data.type}`)
 		}
-	},[ game, loadMap, metadata.isHost, overwriteGame, updateMaps, webSocket, wsSettings ])
+	},[ game, metadata.isHost, loadMap, overwriteGame, updateMaps, addMap, webSocket, wsSettings ])
 
 	/****************************************************
 	 * React Hooks                                      *
@@ -608,7 +615,9 @@ const mapDispatchToProps = {
 	overwriteGame,
 	loadMap,
 	updateMaps,
+	addMap,
 	incrementGen,
+	setFogEnabled,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game)
