@@ -24,7 +24,7 @@ const initialGameState = {
     gen: 0,
     width: window.innerWidth,
     height: window.innerHeight,
-    fogEnabled: true,
+    fogEnabled: false,
     isFogLoaded: false,
     isFirstLoadDone: false, /* Ensure we don't overwrite localStorage before load is done */
     maps: [],

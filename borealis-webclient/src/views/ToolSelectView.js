@@ -1,11 +1,11 @@
 import ToolButton from '../components/ToolButton.js'
 
-const ToolSelectView = () => {
+const ToolSelectView = ({ fogEnabled }) => {
 	return (
 		<span id='tools'>
 			<ToolButton title='move' value='&#x1f9f3;' />
 			<ToolButton title='draw' value='&#x1f58d;' />
-			<ToolButton title='fog'  value='&#x1f32c;' />
+			{ fogEnabled ? <ToolButton title='fog'  value='&#x1f32c;' /> : null }
 		</span>
 	)
 }
