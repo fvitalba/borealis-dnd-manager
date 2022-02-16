@@ -1,8 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { toggleTokenValue } from '../reducers/gameReducer'
 import TokenView from '../views/TokenView.js'
 
-const Token = ({ token, isHost, game, settings }) => {
+const Token = ({ token, isHost, game, settings, toggleTokenValue }) => {
 	const isMoveTool = () => {
 		return settings.tool === 'move'
 	}
@@ -10,11 +11,8 @@ const Token = ({ token, isHost, game, settings }) => {
 	const onMouseDown = (e) => {
 		if (!isMoveTool())
 			return
-		//TODO: Fix multi token selection
-		/*
 		if (!token.$selected)
-			selectGameToken(token, true, e.metaKey)
-		*/
+			toggleTokenValue(token.guid, '$selected')
 	}
 
 	if (!token.url || !token.url.trim())
@@ -58,7 +56,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-	
+	toggleTokenValue,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Token)

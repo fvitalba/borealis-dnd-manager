@@ -185,10 +185,13 @@ const gameReducer = (state = initialGameState, action) => {
             }
         case COPY_TOKEN:
             const tokenCopy = state.tokens.filter((token) => token.guid === action.tokenGuid)
-            tokenCopy.guid = guid()
+            const newToken = {
+                ...tokenCopy[0],
+                guid: guid()
+            }
             return {
                 ...state,
-                tokens: state.tokens.concat(tokenCopy)
+                tokens: state.tokens.concat(newToken)
             }
         case UPDATE_TOKEN_VALUE:
             const tokensCopy = state.tokens.map((token) => {

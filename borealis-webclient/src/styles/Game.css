@@ -56,7 +56,7 @@ canvas, #control-panel {
 #control-panel input[type=number] { width: 40px; }
 #control-panel button {
 	background: grey;
-  font-family: "Noto Color Emoji";
+	font-family: "Noto Color Emoji";
 	font-size: 16pt;
 	margin: 2px;
 }
@@ -105,7 +105,10 @@ canvas#fog {
 	display: block;
 	transform: rotate(90deg);
 }
-canvas#overlay { z-index: var(--z-overlay); }
+canvas#overlay {
+	z-index: var(--z-overlay);
+	pointer-events: none;
+}
 div#tokens { position: relative; }
 div.token.pc { z-index: var(--z-pc-img); }
 div.token.pc .label { z-index: var(--z-pc-lbl) }
@@ -114,6 +117,9 @@ div.token.npc .label { z-index: var(--z-npc-lbl) }
 div.token {
 	position: absolute;
 	pointer-events: all;
+}
+div.token.selected {
+	border: yellow dotted 3px;
 }
 div.token.pc, div.token.grabbable { cursor: grab; }
 div.token img {

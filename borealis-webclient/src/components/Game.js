@@ -258,8 +258,7 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 
 	const onMouseDown = (e) => {
 		for (let x of [document.activeElement, e.target])
-			//TODO: Check if we can use triple equal
-			if ((x.tagName == 'INPUT' && (x.type === 'text' || x.type === 'number')) || (x.tagName == 'BUTTON')) /* eslint-disable-line eqeqeq */
+			if ((x.tagName.toUpperCase() == 'INPUT' && (x.type.toUpperCase() === 'TEXT' || x.type.toUpperCase() === 'NUMBER')) || (x.tagName.toUpperCase() === 'BUTTON')) /* eslint-disable-line eqeqeq */
 				return e
 
 		if (metadata.isHost) {
