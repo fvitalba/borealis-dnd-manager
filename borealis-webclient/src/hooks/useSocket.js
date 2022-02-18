@@ -1,5 +1,5 @@
-import { useContext } from "react";
-import { WebSocketContext } from "../contexts/WebSocketProvider";
+import { useContext } from 'react'
+import { WebSocketContext } from '../contexts/WebSocketProvider'
 
 export const useWebSocket = () => {
     const webSocket = useContext(WebSocketContext)
@@ -13,7 +13,7 @@ const sendData = (webSocket, data) => {
         console.error('no websocket')
 }
 
-export const pushCursor = (webSocket, wsSettings, x, y, username) => {
+export const pushCursor = (webSocket, wsSettings, x, y) => {
     sendData(webSocket, {
         type: 'pushCursor',
         from: wsSettings.guid,

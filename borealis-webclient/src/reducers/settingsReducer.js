@@ -1,10 +1,10 @@
-import { 
+import {
     CHANGE_CURSORSIZE,
     CHANGE_FOG_SETTINGS,
-    CHANGE_DRAW_SETTINGS, 
+    CHANGE_DRAW_SETTINGS,
     CHANGE_TOOL,
     CHANGE_USERNAME,
-    TOGGLE_MOUSESHARING 
+    TOGGLE_MOUSESHARING
 } from '../redux/constants'
 
 const initialSettingsState = () => {

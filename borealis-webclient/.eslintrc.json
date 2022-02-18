@@ -1,5 +1,6 @@
 {
     "env": {
+        "node": true,
         "browser": true,
         "es2021": true
     },
@@ -33,6 +34,23 @@
         "semi": [
             "error",
             "never"
-        ]
+        ],
+        "react/react-in-jsx-scope": "off",
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts"] }],
+        "react/prop-types": "off",
+        "eqeqeq": "error",
+        "no-trailing-spaces": "error",
+        "object-curly-spacing": [
+            "error", "always"
+        ],
+        "arrow-spacing": [
+            "error", { "before": true, "after": true }
+        ],
+        "no-console": 0
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
     }
 }

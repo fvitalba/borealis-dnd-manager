@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import Canvas from './Canvas.js'
+import Canvas from './Canvas'
 
 const Fog = ({ game, metadata, settings }) => {
     const fogOpacity = metadata.isHost ? settings.fogOpacity : 1
@@ -21,7 +21,7 @@ const Fog = ({ game, metadata, settings }) => {
         }
         if (!ctx)
             return
-        
+
         ctx.beginPath()
         ctx.globalCompositeOperation = 'destination-over'
         ctx.fillStyle = 'black'
@@ -48,12 +48,12 @@ const Fog = ({ game, metadata, settings }) => {
 
     return (
         game.fogEnabled ?
-            <Canvas 
-                id='fog' 
-                className='passthrough' 
-                style={{ opacity: fogOpacity }} 
-                width={ width } 
-                height={ height } 
+            <Canvas
+                id='fog'
+                className='passthrough'
+                style={{ opacity: fogOpacity }}
+                width={ width }
+                height={ height }
                 draw={ renderFogLayer } />
             : null
     )

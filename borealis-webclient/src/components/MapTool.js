@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { connect } from 'react-redux'
-import { pushCreateMap, useWebSocket } from '../hooks/useSocket.js'
-import { addMap } from '../reducers/gameReducer.js'
-import MapToolView from '../views/MapToolView.js'
+import { pushCreateMap, useWebSocket } from '../hooks/useSocket'
+import { addMap } from '../reducers/gameReducer'
+import MapToolView from '../views/MapToolView'
 
 const MapTool = ({ toggleOnMaps, game, addMap }) => {
     const [newMapName, setNewMapName] = useState('')
-    const [webSocket, wsSettings, _setWsSettings] = useWebSocket()
+    const [webSocket, wsSettings] = useWebSocket()
 
     const maps = game.maps
 

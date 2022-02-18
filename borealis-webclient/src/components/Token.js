@@ -1,14 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { setTokenOrigin, updateTokens } from '../reducers/gameReducer'
-import TokenView from '../views/TokenView.js'
+import TokenView from '../views/TokenView'
 
 const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) => {
     const isMoveTool = () => {
         return settings.tool === 'move'
     }
 
-    const onMouseDown = (e) => {
+    const onMouseDown = () => {
         if (!isMoveTool())
             return
         if (!isHost && (!token.pc))
@@ -45,11 +45,11 @@ const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) 
 
     return (
         showToken ?
-            <TokenView 
-                divStyle={ divStyle } 
-                token={ token } 
-                classes={ classes } 
-                imgStyle={ imgStyle } 
+            <TokenView
+                divStyle={ divStyle }
+                token={ token }
+                classes={ classes }
+                imgStyle={ imgStyle }
                 onMouseDown={ onMouseDown }
             />
             : null

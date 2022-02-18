@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
-import { setGameSettings } from '../reducers/metadataReducer.js'
-import { overwriteGame, updateMaps, loadMap, addMap, incrementGen, setFogEnabled, updateTokens, toggleTokenValue } from '../reducers/gameReducer.js'
-import { pushDrawPath, pushFogPath, pushGameRefresh, pushTokens, useWebSocket } from '../hooks/useSocket.js'
-import GameView from '../views/GameView.js'
+import { setGameSettings } from '../reducers/metadataReducer'
+import { overwriteGame, updateMaps, loadMap, addMap, incrementGen, setFogEnabled, updateTokens, toggleTokenValue } from '../reducers/gameReducer'
+import { pushDrawPath, pushFogPath, pushGameRefresh, pushTokens, useWebSocket } from '../hooks/useSocket'
+import GameView from '../views/GameView'
 
-const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, incrementGen, setFogEnabled }) => {
+const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, /*incrementGen, */ setFogEnabled }) => {
     const overlayRef = React.useRef()
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()
-    const [mousePosition, setMousePosition] = useState({ downX: 0, downY: 0})
+    const [mousePosition, setMousePosition] = useState({ downX: 0, downY: 0 })
     let currentPath = []
 
     /****************************************************
@@ -62,7 +62,7 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
      * Drawing Functions                                *
      ****************************************************/
     const setPointerOutline = (x, y, color, radius) => {
-        if (color == null)
+        if (color === null)
             return
         const ctx = overlayRef.current.getContext('2d')
         ctx.strokeStyle = color
@@ -109,7 +109,7 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
         const ctx = overlayRef.current.getContext('2d')
         if (!ctx)
             return
-        ctx.clearRect(0, 0, game.width, game.height);
+        ctx.clearRect(0, 0, game.width, game.height)
     }
 
     /****************************************************
@@ -120,14 +120,14 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
         //loadMap(null, true, true)
     }
 
-    const onKeyDown = (e) => {
+    const onKeyDown = (/*e*/) => {
         //TODO: Update onKeyDown function
         /*
         for (let x of [document.activeElement, e.target])
             //TODO: Check if we can use triple equal
             if (x.tagName == 'INPUT' && (x.type === 'text' || x.type === 'number')) // eslint-disable-line eqeqeq
                 return e
-        
+
         const moveFactor = e.shiftKey ? 100 : 10
         const moveSelectedTokens = () => {
             updateTokens(token => {
@@ -235,7 +235,7 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 
     const onMouseUp = (e) => {
         setMousePosition({
-            downX: 0, 
+            downX: 0,
             downY: 0,
         })
         const currMap = getMap()
@@ -255,9 +255,9 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
             }
             currentPath = []
             const updatedMaps = game.maps.map((map) => {
-                return map.$id === currMap.$id ? {...currMap, fogPaths: fogPaths, drawPaths: drawPaths, } : map
+                return map.$id === currMap.$id ? { ...currMap, fogPaths: fogPaths, drawPaths: drawPaths, } : map
             })
-            
+
             updateMaps(updatedMaps)
         }
 
@@ -269,7 +269,7 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
                     deselectTokens = true
             if (deselectTokens)
                 game.tokens.map((token) => token.$selected ? toggleTokenValue(token.guid,'$selected') : null)
-            
+
             pushTokens(webSocket, wsSettings, game.tokens)
         }
     }
@@ -362,22 +362,24 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
     /****************************************************
      * Helper Functions                                 *
      ****************************************************/
+    /*
     const notify = (msg, ttl, tag) => {
         console.log(msg)
         if (window.Notification) {
             if (window.Notification.permission !== 'granted')
                 window.Notification.requestPermission()
             else {
-                const note = new window.Notification(msg, {tag: tag})
+                const note = new window.Notification(msg, { tag: tag })
                 setTimeout(() => note.close(), ttl || 1000)
                 return note
             }
         }
     }
+    */
 
+    /*
     const toJson = (additionalAttrs) => {
         //TODO: rewrite toJson
-        /*
         const map = getMap()
         incrementGen()
         const tokens = game.tokens.map(token => ({...token}))
@@ -391,12 +393,12 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
             tokens: tokens,
         }, additionalAttrs)
         return JSON.stringify(data)
-        */
     }
+    */
 
+    /*
     const fromJson = (json) => {
         //TODO: rewrite fromJson
-        /*
         const data = Object.assign(JSON.parse(json)||{})
         if (data.tokens) {
             data.tokens.forEach(token => {
@@ -413,8 +415,8 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
             })
             resolve()
         })
-        */
     }
+    */
 
     const saveToLocalStorage = () => {
         //TODO: Reenable after we've fixed toJson
@@ -462,6 +464,9 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
         }
 
         const currMap = getMap()
+        let pathToUpdate = []
+        let updatedMaps = []
+        let updatedTokens = []
         switch (data.type) {
         case 'pushCursor':
             /*
@@ -470,35 +475,35 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
             */
             break
         case 'pushDrawPath':
-            const newDrawPath = currMap.drawPaths ? currMap.drawPaths : []
-            newDrawPath.push(data.drawPath)
-            const updatedMapsWithDraw = game.maps.map((map) => {
-                return map.$id === currMap.$id ? { ...currMap, drawPaths: newDrawPath, } : map
+            pathToUpdate = currMap.drawPaths ? currMap.drawPaths : []
+            pathToUpdate.push(data.drawPath)
+            updatedMaps = game.maps.map((map) => {
+                return map.$id === currMap.$id ? { ...currMap, drawPaths: pathToUpdate, } : map
             })
-            updateMaps(updatedMapsWithDraw)
+            updateMaps(updatedMaps)
             break
         case 'pushDrawReset':
-            const updatedMapsWithDrawReset = game.maps.map((map) => {
-                return map.$id === currMap.$id ? {...currMap, drawPaths: [], } : map
+            updatedMaps = game.maps.map((map) => {
+                return map.$id === currMap.$id ? { ...currMap, drawPaths: [], } : map
             })
-            updateMaps(updatedMapsWithDrawReset)
+            updateMaps(updatedMaps)
             break
         case 'pushFogPath':
-            const newFogPath = currMap.fogPaths ? currMap.fogPaths : []
-            newFogPath.push(data.fogPath)
-            const updatedMapsWithFog = game.maps.map((map) => {
-                return map.$id === currMap.$id ? { ...currMap, fogPaths: newFogPath, } : map
+            pathToUpdate = currMap.fogPaths ? currMap.fogPaths : []
+            pathToUpdate.push(data.fogPath)
+            updatedMaps = game.maps.map((map) => {
+                return map.$id === currMap.$id ? { ...currMap, fogPaths: pathToUpdate, } : map
             })
-            updateMaps(updatedMapsWithFog)
+            updateMaps(updatedMaps)
             break
         case 'pushFogReset':
-            const updatedMapsWithFogReset = game.maps.map((map) => {
-                return map.$id === currMap.$id ? {...currMap, fogPaths: [], } : map
+            updatedMaps = game.maps.map((map) => {
+                return map.$id === currMap.$id ? { ...currMap, fogPaths: [], } : map
             })
-            updateMaps(updatedMapsWithFogReset)
+            updateMaps(updatedMaps)
             break
         case 'pushSingleToken':
-            const updatedTokens = game.tokens.map((token) => {
+            updatedTokens = game.tokens.map((token) => {
                 return token.guid !== data.token.guid ? token : {
                     ...data.token,
                     $selected: token.$selected,
@@ -507,14 +512,14 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
             updateTokens(updatedTokens)
             break
         case 'pushTokens':
-            const selectionFixedTokens = data.tokens.map((token) => {
+            updatedTokens = data.tokens.map((token) => {
                 let tokenSelected = false
                 const currentToken = game.tokens.filter((token2) => token2.guid === token.guid)
                 if (currentToken.length > 0)
                     tokenSelected = currentToken.$selected
                 return { ...token, $selected: tokenSelected, }
             })
-            updateTokens(selectionFixedTokens)
+            updateTokens(updatedTokens)
             break
         case 'pushMapId':
             loadMap(data.mapId)
@@ -564,7 +569,7 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
             //window.removeEventListener('keypress', onKeyPress)
             window.removeEventListener('keydown', onKeyDown)
         }
-    }, []) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [])
 
     useEffect(() => {
         document.title = `Borealis D&D, Room: ${metadata.room}`
@@ -604,16 +609,16 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 
     try {
         return (
-            <GameView 
-                isHost={ metadata.isHost } 
-                overlayRef={ overlayRef } 
-                isFogLoaded={ game.isFogLoaded } 
-                cursors={ cursorsCopy } 
-                cursorSize={ settings.cursorSize } 
-                tokens={ game.tokens } 
-                onMouseMove={ onMouseMove } 
-                onMouseUp={ onMouseUp } 
-                onMouseDown={ onMouseDown } 
+            <GameView
+                isHost={ metadata.isHost }
+                overlayRef={ overlayRef }
+                isFogLoaded={ game.isFogLoaded }
+                cursors={ cursorsCopy }
+                cursorSize={ settings.cursorSize }
+                tokens={ game.tokens }
+                onMouseMove={ onMouseMove }
+                onMouseUp={ onMouseUp }
+                onMouseDown={ onMouseDown }
                 /* TODO: reenable notify={ notify } */
             />
         )

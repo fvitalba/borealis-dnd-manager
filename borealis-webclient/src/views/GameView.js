@@ -14,7 +14,7 @@ const GameView = ({ isHost, overlayRef, isFogLoaded, cursors, cursorSize, tokens
             <div className={ goneClass }>
                 <Background />
                 <Drawing />
-                { tokens ? 
+                { tokens ?
                     <div id='tokens'>
                         { tokens.map((token, $i) => (
                             <Token key={ `Token${$i}` } token={ token } isHost={ isHost } />
@@ -32,7 +32,7 @@ const GameView = ({ isHost, overlayRef, isFogLoaded, cursors, cursorSize, tokens
                     : null
                 }
                 {/* Overlay: Holds outline for fog & draw tools */ }
-                <Overlay overlayRef={ overlayRef } /> 
+                <Overlay overlayRef={ overlayRef } />
             </div>
             <ControlPanel />
         </div>

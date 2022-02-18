@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
-import { setToolSettings, setDrawToolSettings, setFogToolSettings } from '../reducers/settingsReducer.js'
-import { resetFog, resetDraw } from '../reducers/gameReducer.js'
-import ToolControlsView from "../views/ToolControlsView.js"
+import { setToolSettings, setDrawToolSettings, setFogToolSettings } from '../reducers/settingsReducer'
+import { resetFog, resetDraw } from '../reducers/gameReducer'
+import ToolControlsView from '../views/ToolControlsView'
 
 const ToolControls = ({ settings, setToolSettings, setDrawToolSettings, setFogToolSettings, resetFog, resetDraw }) => {
     const setSubtool = (subtool) => {
@@ -39,19 +39,19 @@ const ToolControls = ({ settings, setToolSettings, setDrawToolSettings, setFogTo
     }
 
     return (
-        <ToolControlsView 
-            tool={ settings.tool } 
-            subtool={ settings.subtool } 
-            drawColor={ settings.drawColor } 
-            setDrawColor={ setDrawColor } 
-            drawSize={ settings.drawSize } 
-            setDrawSize={ setDrawSize } 
-            fogOpacity={ settings.fogOpacity } 
-            setFogOpacity={ setFogOpacity } 
-            fogRadius={ settings.fogRadius } 
-            setFogRadius={ setFogRadius } 
-            setSubtool={ setSubtool } 
-            resetFog={ resetFogOnCurrentMap } 
+        <ToolControlsView
+            tool={ settings.tool }
+            subtool={ settings.subtool }
+            drawColor={ settings.drawColor }
+            setDrawColor={ setDrawColor }
+            drawSize={ settings.drawSize }
+            setDrawSize={ setDrawSize }
+            fogOpacity={ settings.fogOpacity }
+            setFogOpacity={ setFogOpacity }
+            fogRadius={ settings.fogRadius }
+            setFogRadius={ setFogRadius }
+            setSubtool={ setSubtool }
+            resetFog={ resetFogOnCurrentMap }
             resetDrawing={ resetDrawOnCurrentMap } />
     )
 }

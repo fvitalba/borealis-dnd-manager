@@ -1,7 +1,7 @@
 import React from 'react'
-import useCanvas from '../hooks/useCanvas.js'
+import useCanvas from '../hooks/useCanvas'
 
-const Canvas = ({ id, draw, options, ...rest }) => {
+const Canvas = ({ id, draw, ...rest }) => {
     const canvasRef = useCanvas(draw)
 
     return (

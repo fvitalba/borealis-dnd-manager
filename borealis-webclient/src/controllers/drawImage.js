@@ -28,7 +28,7 @@ const drawImage = (url, which, map, context, resizeCanvases) => {
             })
         }
         img.onerror = (err) => {
-            console.error(`Unable to draw image.`, img.src)
+            console.error('Unable to draw image.', img.src, err)
             reject(`Unable to draw ${which}Url`)
         }
         img.src = url

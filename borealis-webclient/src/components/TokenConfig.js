@@ -1,11 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { deleteToken, copyToken, updateTokenValue, toggleTokenValue, updateTokens } from '../reducers/gameReducer.js'
-import HostTokenConfig from '../views/HostTokenConfigView.js'
-import GuestTokenConfigView from '../views/GuestTokenConfigView.js'
+import { deleteToken, copyToken, updateTokenValue, toggleTokenValue, updateTokens } from '../reducers/gameReducer'
+import HostTokenConfig from '../views/HostTokenConfigView'
+import GuestTokenConfigView from '../views/GuestTokenConfigView'
 
 const TokenConfig = ({ token, game, metadata, deleteToken, copyToken, updateTokenValue, toggleTokenValue }) => {
-    const selectToken = (token, tokenSelected) => {
+    const selectToken = (token) => {
         if (!token.pc && !metadata.isHost)
             return
         toggleTokenValue(token.guid, '$selected')
@@ -42,21 +42,21 @@ const TokenConfig = ({ token, game, metadata, deleteToken, copyToken, updateToke
         <div>
             { token ?
                 metadata.isHost ?
-                    <HostTokenConfig 
-                        maps={ game.maps } 
-                        token={ token } 
-                        copy={ copy } 
-                        onToggle={ onToggle } 
-                        selectToken={ selectToken } 
-                        onTextChange={ onTextChange } 
-                        onIntegerChange={ onIntegerChange } 
-                        onMapSelect={ onMapSelect } 
+                    <HostTokenConfig
+                        maps={ game.maps }
+                        token={ token }
+                        copy={ copy }
+                        onToggle={ onToggle }
+                        selectToken={ selectToken }
+                        onTextChange={ onTextChange }
+                        onIntegerChange={ onIntegerChange }
+                        onMapSelect={ onMapSelect }
                         deleteToken={ deleteCurrToken }
                     />
                     :
-                    <GuestTokenConfigView 
-                        token={ token } 
-                        onTextChange={ onTextChange } 
+                    <GuestTokenConfigView
+                        token={ token }
+                        onTextChange={ onTextChange }
                         onIntegerChange={ onIntegerChange }
                     />
                 : null

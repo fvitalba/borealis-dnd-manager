@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { loadMap, updateMaps, deleteMap, setIsFogLoaded, setIsFirstLoadDone } from '../reducers/gameReducer.js'
-import { pushMapState, useWebSocket } from '../hooks/useSocket.js'
-import MapConfigView from '../views/MapConfigView.js'
+import { loadMap, updateMaps, deleteMap, setIsFogLoaded, setIsFirstLoadDone } from '../reducers/gameReducer'
+import { pushMapState, useWebSocket } from '../hooks/useSocket'
+import MapConfigView from '../views/MapConfigView'
 
 const initialMapConfigState = (map, game) => {
     const existingMap = game.maps.filter((mapElement) => mapElement.$id === map.$id)
@@ -15,7 +15,7 @@ const initialMapConfigState = (map, game) => {
         width: currentMap.width ? currentMap.width : window.innerWidth,
         height: currentMap.height ? currentMap.height : window.innerHeight,
         x: 0,
-        y: 0,	
+        y: 0,
     }
 }
 
@@ -58,12 +58,12 @@ const MapConfig = ({ map, game, loadMap, updateMaps, deleteMap, setIsFogLoaded, 
 
     return (
         map ?
-            <MapConfigView 
-                isSelected={ isSelected } 
-                mapConfigState={ mapConfigState }  
-                load={ load } 
-                onTextChange={ onTextChange } 
-                onIntegerChange={ onIntegerChange } 
+            <MapConfigView
+                isSelected={ isSelected }
+                mapConfigState={ mapConfigState }
+                load={ load }
+                onTextChange={ onTextChange }
+                onIntegerChange={ onIntegerChange }
                 deleteMap={ deleteCurrentMap }
             />
             : null

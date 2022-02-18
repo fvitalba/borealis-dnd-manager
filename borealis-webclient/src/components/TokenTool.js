@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { connect } from 'react-redux'
-import { addToken } from '../reducers/gameReducer.js'
-import TokenToolView from '../views/TokenToolView.js'
-import SelectedTokensControls from './SelectedTokensControls.js'
+import { addToken } from '../reducers/gameReducer'
+import TokenToolView from '../views/TokenToolView'
+import SelectedTokensControls from './SelectedTokensControls'
 
 const TokenTool = ({ toggleOnTokens, game, addToken, metadata }) => {
     const [newTokenUrl, setNewTokenUrl] = useState('')

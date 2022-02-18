@@ -1,10 +1,10 @@
-import { 
+import {
     SET_GAMESETTINGS,
     /* SET_ISHOST,
     SET_ROOM,*/
     SET_CURSORS,
     SET_LAST_COORDINATES,
-    SET_DOWN_COORDINATES 
+    SET_DOWN_COORDINATES
 } from '../redux/constants'
 
 const initialMetadataState = {
@@ -25,7 +25,7 @@ const metadataReducer = (state = initialMetadataState, action) => {
             isHost: action.isHost,
             room: action.room,
         }
-    //TODO: Delete if unused
+        //TODO: Delete if unused
     /*
     case SET_ISHOST:
         return {

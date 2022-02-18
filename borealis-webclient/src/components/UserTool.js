@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
-import { loadDefaultBattleGame, setFogEnabled } from '../reducers/gameReducer.js'
-import { setUsername, setCursorSize, setToolSettings } from '../reducers/settingsReducer.js'
-import { pushFogEnabled, useWebSocket } from '../hooks/useSocket.js'
-import UserToolView from '../views/UserToolView.js'
+import { loadDefaultBattleGame, setFogEnabled } from '../reducers/gameReducer'
+import { setUsername, setCursorSize, setToolSettings } from '../reducers/settingsReducer'
+import { pushFogEnabled, useWebSocket } from '../hooks/useSocket'
+import UserToolView from '../views/UserToolView'
 
 const UserTool = ({ toggleOnUser, game, settings, setFogEnabled, setUsername, setCursorSize, setToolSettings, loadDefaultBattleGame }) => {
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()
@@ -71,13 +71,13 @@ const UserTool = ({ toggleOnUser, game, settings, setFogEnabled, setUsername, se
     return (
         toggleOnUser ?
             <UserToolView
-                initAsDev={ initAsDev } 
-                toggleFog={ toggleFog } 
-                copyJson={ copyJson } 
-                pasteJson={ pasteJson } 
-                username={ settings.username } 
-                updateUsername={ updateUsername } 
-                cursorSize={ settings.cursorSize } 
+                initAsDev={ initAsDev }
+                toggleFog={ toggleFog }
+                copyJson={ copyJson }
+                pasteJson={ pasteJson }
+                username={ settings.username }
+                updateUsername={ updateUsername }
+                cursorSize={ settings.cursorSize }
                 updateCursorSize={ updateCursorSize } />
             : null
     )

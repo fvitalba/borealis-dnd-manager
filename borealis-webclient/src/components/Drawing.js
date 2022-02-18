@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import Canvas from './Canvas.js'
+import Canvas from './Canvas'
 
 const Drawing = ({ game }) => {
     const width = game.width
@@ -20,14 +20,14 @@ const Drawing = ({ game }) => {
         }
         if (!ctx)
             return
-        
+
         ctx.beginPath()
         ctx.clearRect(0, 0, width, height)
         for(let pathId = 0; pathId < map.drawPaths.length; pathId++) {
             const currPath = map.drawPaths[pathId]
             const tool = currPath.length > 0 ? currPath[0].tool : ''
             switch (tool) {
-            case 'draw': 
+            case 'draw':
                 draw(ctx, currPath)
                 break
             case 'erease':
@@ -71,11 +71,11 @@ const Drawing = ({ game }) => {
     }
 
     return (
-        <Canvas 
-            id='drawing' 
-            className='passthrough' 
-            width={ width } 
-            height={ height } 
+        <Canvas
+            id='drawing'
+            className='passthrough'
+            width={ width }
+            height={ height }
             draw={ renderDrawingLayer } />
     )
 }

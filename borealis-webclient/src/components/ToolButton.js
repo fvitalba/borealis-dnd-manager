@@ -1,6 +1,6 @@
-import Button from '../views/Button.js'
 import { connect } from 'react-redux'
-import { setToolSettings } from '../reducers/settingsReducer.js'
+import { setToolSettings } from '../reducers/settingsReducer'
+import Button from '../views/Button'
 
 function ToolButton({ title, value, settings, setToolSettings }) {
     const isSelected = title === settings.tool

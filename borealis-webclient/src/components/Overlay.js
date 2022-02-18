@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { connect } from 'react-redux'
 
 const Overlay = ({ game, overlayRef }) => {
@@ -9,10 +9,10 @@ const Overlay = ({ game, overlayRef }) => {
     const canvasRef = overlayRef
 
     return (
-        <canvas 
-            id='overlay' 
-            ref={ canvasRef } 
-            width={ width } 
+        <canvas
+            id='overlay'
+            ref={ canvasRef }
+            width={ width }
             height={ height } />
     )
 }

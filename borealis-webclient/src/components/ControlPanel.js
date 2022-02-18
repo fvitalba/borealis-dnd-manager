@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { setUsername, setCursorSize } from '../reducers/settingsReducer.js' 
-import { pushGameRefresh, requestRefresh, useWebSocket } from '../hooks/useSocket.js'
-import ControlPanelView from '../views/ControlPanelView.js'
+import { setUsername, setCursorSize } from '../reducers/settingsReducer'
+import { pushGameRefresh, requestRefresh, useWebSocket } from '../hooks/useSocket'
+import ControlPanelView from '../views/ControlPanelView'
 
 const initialControlPanelState = () => {
     return {
@@ -47,18 +47,18 @@ const ControlPanel = ({ game, settings, metadata, setUsername, setCursorSize }) 
     }
 
     return (
-        <ControlPanelView 
-            controlPanelState={ controlPanelState } 
-            setControlPanelState={ setControlPanelState } 
-            hidden={ controlPanelState.hidden } 
-            toggleHidden={ toggleHidden } 
+        <ControlPanelView
+            controlPanelState={ controlPanelState }
+            setControlPanelState={ setControlPanelState }
+            hidden={ controlPanelState.hidden }
+            toggleHidden={ toggleHidden }
             fogEnabled={ game.fogEnabled }
-            isHost={ metadata.isHost } 
-            username={ settings.username } 
-            setUsername={ updateUsername } 
-            cursorSize={ settings.cursorSize } 
-            setCursorSize={ updateCursorSize } 
-            socketRequestRefresh={ socketRequestRefresh } 
+            isHost={ metadata.isHost }
+            username={ settings.username }
+            setUsername={ updateUsername }
+            cursorSize={ settings.cursorSize }
+            setCursorSize={ updateCursorSize }
+            socketRequestRefresh={ socketRequestRefresh }
             pushRefreshToPlayers={ pushRefreshToPlayers } />
     )
 }
