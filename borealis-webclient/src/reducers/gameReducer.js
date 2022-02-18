@@ -132,6 +132,8 @@ const gameReducer = (state = initialGameState, action) => {
             mapId: parseInt(action.mapId),
             width: currMap.width ? currMap.width : state.width,
             height: currMap.height ? currMap.height : state.height,
+            isFogLoaded: true,
+            isFirstLoadDone: true,
         }
     case INCREMENT_GEN:
         return {

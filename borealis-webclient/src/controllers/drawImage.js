@@ -1,33 +1,21 @@
-const drawImage = (url, which, map, context, resizeCanvases) => {
+const drawImage = (url, which, map, context) => {
     // Handle 'whiteboard' (no bg img)
-    if (!url || url.trim().length === 0) {
-        console.log('clearing rectangle', context)
-        context.clearRect(0, 0, map.width, map.height)
+    if ((!url) || (url.trim().length === 0)) {
+        context.clearRect(map.x, map.y, map.width, map.height)
         return Promise.resolve(map.width, map.height)
     }
 
     //Handle ordinary image
     return new Promise((resolve, reject) => {
-        const img = new Image()
+        const img = new Image(map.width, map.height)
         img.onload = () => {
-            let w = map.width
-            let h = map.height
-            if (!w && !h) {
-                w = img.width
-                h = img.height
-            } else if (!w)
-                w = h * img.width / img.height
-            else if (!h)
-                h = w * img.height / img.width
-            const promise = resizeCanvases ? resizeCanvases(w, h) : Promise.resolve()
-            promise.then(() => {
-                context.drawImage(img, map.x || 0, map.y || 0, w, h)
-                resolve(w, h)
-            })
+            context.clearRect(map.x, map.y, map.width, map.height)
+            context.drawImage(img, map.x, map.y, map.width, map.height)
+            resolve(map.width, map.height)
         }
         img.onerror = (err) => {
             console.error('Unable to draw image.', img.src, err)
-            reject(`Unable to draw ${which}Url`)
+            reject(`Unable to draw ${which}'s Image Url.`)
         }
         img.src = url
     })

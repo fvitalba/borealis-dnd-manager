@@ -5,7 +5,6 @@ import Canvas from './Canvas.js'
 
 
 const Background = ({ game }) => {
-    console.log('rerender Background')
     const selectedMap = game.maps.filter((map) => map.$id === game.mapId)
     const map = selectedMap.length > 0 ? selectedMap[0] : undefined
 
