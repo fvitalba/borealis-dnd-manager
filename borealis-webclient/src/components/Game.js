@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
 import { setGameSettings } from '../reducers/metadataReducer'
-import { overwriteGame, updateMaps, loadMap, addMap, incrementGen, setFogEnabled, updateTokens, toggleTokenValue } from '../reducers/gameReducer'
+import { overwriteGame, updateMaps, loadMap, addMap, setFogEnabled, updateTokens, toggleTokenValue } from '../reducers/gameReducer'
 import { pushDrawPath, pushFogPath, pushGameRefresh, pushTokens, useWebSocket } from '../hooks/useSocket'
 import GameView from '../views/GameView'
 
-const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, /*incrementGen, */ setFogEnabled }) => {
+const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, setFogEnabled }) => {
     const overlayRef = React.useRef()
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()
     const [mousePosition, setMousePosition] = useState({ downX: 0, downY: 0 })
@@ -377,66 +377,6 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
     }
     */
 
-    /*
-    const toJson = (additionalAttrs) => {
-        //TODO: rewrite toJson
-        const map = getMap()
-        incrementGen()
-        const tokens = game.tokens.map(token => ({...token}))
-        tokens.forEach(token => websocket.scrubObject(token))
-        const maps = game.maps
-        Object.values(maps).forEach(map => websocket.scrubObject(map))
-        const data = Object.assign({
-            gen: game.gen,
-            maps: maps,
-            mapId: map && map.$id,
-            tokens: tokens,
-        }, additionalAttrs)
-        return JSON.stringify(data)
-    }
-    */
-
-    /*
-    const fromJson = (json) => {
-        //TODO: rewrite fromJson
-        const data = Object.assign(JSON.parse(json)||{})
-        if (data.tokens) {
-            data.tokens.forEach(token => {
-                if (!token.guid) token.guid = guid()
-            })
-        }
-        return new Promise(resolve => {
-            setGameState({
-                ...gameState,
-                game: {
-                    ...gameState.game,
-                    data,
-                }
-            })
-            resolve()
-        })
-    }
-    */
-
-    const saveToLocalStorage = () => {
-        //TODO: Reenable after we've fixed toJson
-        /*
-        if (game.isFirstLoadDone) {
-            console.log('Saving game to local storage')
-            localStorage.setItem(metadata.room, toJson())
-        }
-        */
-    }
-
-    const loadFromLocalStorage = () => {
-        //TODO: reenable after we've fixed fromJson
-        /*
-        //TODO: Verify how come this does not work anymore
-        console.log('Loading game from local storage')
-        return fromJson(localStorage.getItem(metadata.room))
-        */
-    }
-
     function handleError (ex) {
         console.error(ex)
         console.error('Exception in `render`. Clearing localStorage...')
@@ -542,6 +482,9 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
                 pushGameRefresh(webSocket, wsSettings, game, { to: data.from, })
             }
             break
+        case 'loadGame':
+            overwriteGame(data.payload.game)
+            break
         default:
             console.error(`Unrecognized websocket message type: ${data.type}`)
         }
@@ -552,19 +495,15 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
      ****************************************************/
     // On Mount
     useEffect(() => {
-        window.addEventListener('beforeunload', saveToLocalStorage)
         window.addEventListener('resize', onResize)
         //TODO: reenable keypresses
         //window.addEventListener('keypress', onKeyPress)
         window.addEventListener('keydown', onKeyDown)
-        loadFromLocalStorage()
         const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
         setGameSettings(params.get('host'), params.get('room'))
 
         // On Unmount
         return () => {
-            saveToLocalStorage()
-            window.removeEventListener('beforeunload', saveToLocalStorage)
             window.removeEventListener('resize', onResize)
             //window.removeEventListener('keypress', onKeyPress)
             window.removeEventListener('keydown', onKeyDown)
@@ -641,7 +580,6 @@ const mapDispatchToProps = {
     loadMap,
     updateMaps,
     addMap,
-    incrementGen,
     setFogEnabled,
     updateTokens,
     toggleTokenValue,

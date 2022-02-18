@@ -41,22 +41,45 @@ wss.on('connection', (websocketConnection, connectionRequest) => {
     
     websocketConnection.room = path
     websocketConnection.guid = connectionParams.guid
-    console.log(`Client connecting --- Room: ${websocketConnection.room}, guid: ${websocketConnection.guid}`)
-
     websocketConnection.on('message', (message) => {
         const parsedMessage = JSON.parse(message)
-        console.log(`Received message  --- (Room: ${websocketConnection.room}) From: ${parsedMessage.username}, Message Type: ${parsedMessage.type}`)
-        // Forward message to all other clients (for this room)
-        wss.clients.forEach(client => {
-            if (client.readyState === WebSocket.OPEN) {
-                if (client.room !== websocketConnection.room)
-                    return // Don't send to other rooms
-                if (client === websocketConnection)
-                    return // Don't send back to sender
-                console.log(`Sending message   --- Sending to guid: ${client.guid} in Room: ${client.room}`)
-                client.send(JSON.stringify(parsedMessage))
+        switch (parsedMessage.type) {
+        case 'saveGame':
+            // Save game locally
+            fs.writeFile(`${websocketConnection.room}.room`.substring(1), parsedMessage.payload, (err) => {
+                console.error(err)
+            })
+            break
+        case 'requestLoadGame':
+            // Load game from storage
+            const savedGame = fs.readFileSync(`${websocketConnection.room}.room`.substring(1),'utf8')
+            const savedGameMessage = {
+                type: 'loadGame',
+                from: undefined,
+                to: undefined,
+                room: websocketConnection.room,
+                payload: JSON.parse(savedGame), //this is the saved game
             }
-        })
+            wss.clients.forEach(client => {
+                if (client.readyState === WebSocket.OPEN) {
+                    if (client.room !== websocketConnection.room)
+                        return // Don't send to other rooms
+                    client.send(JSON.stringify(savedGameMessage))
+                }
+            })
+        default:
+            // Forward message to all other clients (for this room)
+            wss.clients.forEach(client => {
+                if (client.readyState === WebSocket.OPEN) {
+                    if (client.room !== websocketConnection.room)
+                        return // Don't send to other rooms
+                    if (client === websocketConnection)
+                        return // Don't send back to sender
+                    client.send(JSON.stringify(parsedMessage))
+                }
+            })
+            break
+        }
     })
 })
 
