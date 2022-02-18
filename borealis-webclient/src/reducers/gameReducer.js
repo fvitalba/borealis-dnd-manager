@@ -217,7 +217,6 @@ const gameReducer = (state = initialGameState, action) => {
                 tokens: tokensCopy2,
             }
         case SET_TOKEN_ORIGIN:
-            console.log('setting token origin')
             const tokensCopy3 = state.tokens.map((token) => {
                 return token.guid !== action.tokenGuid ? token : {
                     ...token,
