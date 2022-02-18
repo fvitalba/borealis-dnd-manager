@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { setTokenOrigin, toggleTokenValue } from '../reducers/gameReducer'
+import { setTokenOrigin, updateTokens } from '../reducers/gameReducer'
 import TokenView from '../views/TokenView.js'
 
-const Token = ({ token, isHost, game, settings, toggleTokenValue, setTokenOrigin }) => {
+const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) => {
 	const isMoveTool = () => {
 		return settings.tool === 'move'
 	}
@@ -11,8 +11,13 @@ const Token = ({ token, isHost, game, settings, toggleTokenValue, setTokenOrigin
 	const onMouseDown = (e) => {
 		if (!isMoveTool())
 			return
-		if (!token.$selected)
-			toggleTokenValue(token.guid, '$selected')
+		const updatedTokensWithSelection = game.tokens.map((currToken) => {
+			return {
+				...currToken,
+				$selected: currToken.guid === token.guid ? !currToken.$selected : false
+			}
+		})
+		updateTokens(updatedTokensWithSelection)
 		setTokenOrigin(token.guid, token.x, token.y)
 	}
 
@@ -57,7 +62,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-	toggleTokenValue,
+	updateTokens,
 	setTokenOrigin,
 }
 
