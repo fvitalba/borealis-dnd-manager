@@ -505,7 +505,6 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 				addMap(data.mapName, data.width, data.height)
 				break
 			case 'pushFogEnabled':
-				console.log('receiving fog enabled',data)
 				setFogEnabled(data.fogEnabled)
 				break
 			case 'pushGameRefresh': // refresh from host

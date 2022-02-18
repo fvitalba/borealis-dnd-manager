@@ -11,6 +11,8 @@ const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) 
 	const onMouseDown = (e) => {
 		if (!isMoveTool())
 			return
+		if (!isHost && (!token.pc))
+			return
 		const updatedTokensWithSelection = game.tokens.map((currToken) => {
 			return {
 				...currToken,
