@@ -1,10 +1,10 @@
-import { 
+import {
     CHANGE_CURSORSIZE,
     CHANGE_FOG_SETTINGS,
-    CHANGE_DRAW_SETTINGS, 
+    CHANGE_DRAW_SETTINGS,
     CHANGE_TOOL,
     CHANGE_USERNAME,
-    TOGGLE_MOUSESHARING 
+    TOGGLE_MOUSESHARING
 } from '../redux/constants'
 
 const initialSettingsState = () => {
@@ -24,41 +24,41 @@ const initialSettingsState = () => {
 
 const settingsReducer = (state = initialSettingsState(), action) => {
     switch (action.type) {
-        case CHANGE_CURSORSIZE:
-            return {
-                ...state,
-                cursorSize: action.cursorSize,
-            }
-        case CHANGE_FOG_SETTINGS:
-            return {
-                ...state,
-                fogOpacity: action.fogOpacity,
-                fogRadius: action.fogRadius,
-            }
-        case CHANGE_DRAW_SETTINGS:
-            return {
-                ...state,
-                drawColor: action.drawColor,
-                drawSize: action.drawSize,
-            }
-        case CHANGE_TOOL:
-            return {
-                ...state,
-                tool: action.tool,
-                subtool: action.subtool,
-            }
-        case CHANGE_USERNAME:
-            return {
-                ...state,
-                username: action.username,
-            }
-        case TOGGLE_MOUSESHARING:
-            return {
-                ...state,
-                shareMouse: !state.shareMouse,
-            }
-        default:
-            return state
+    case CHANGE_CURSORSIZE:
+        return {
+            ...state,
+            cursorSize: action.cursorSize,
+        }
+    case CHANGE_FOG_SETTINGS:
+        return {
+            ...state,
+            fogOpacity: action.fogOpacity,
+            fogRadius: action.fogRadius,
+        }
+    case CHANGE_DRAW_SETTINGS:
+        return {
+            ...state,
+            drawColor: action.drawColor,
+            drawSize: action.drawSize,
+        }
+    case CHANGE_TOOL:
+        return {
+            ...state,
+            tool: action.tool,
+            subtool: action.subtool,
+        }
+    case CHANGE_USERNAME:
+        return {
+            ...state,
+            username: action.username,
+        }
+    case TOGGLE_MOUSESHARING:
+        return {
+            ...state,
+            shareMouse: !state.shareMouse,
+        }
+    default:
+        return state
     }
 }
 

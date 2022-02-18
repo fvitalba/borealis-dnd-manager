@@ -4,12 +4,6 @@
 			"path": "."
 		},
 		{
-			"path": "react-app"
-		},
-		{
-			"path": "socket-app"
-		},
-		{
 			"path": "borealis-webclient"
 		},
 		{
