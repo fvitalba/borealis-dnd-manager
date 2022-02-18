@@ -14,7 +14,7 @@ const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) 
 		const updatedTokensWithSelection = game.tokens.map((currToken) => {
 			return {
 				...currToken,
-				$selected: currToken.guid === token.guid ? !currToken.$selected : false
+				$selected: currToken.guid === token.guid ? true : false
 			}
 		})
 		updateTokens(updatedTokensWithSelection)

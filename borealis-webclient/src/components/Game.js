@@ -46,6 +46,12 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 			return
 
 		const newTokens = game.tokens.map((token) => {
+			if (token.$selected) {
+				//console.log(`Current Parameters for ${token.name}`)
+				console.log(`x: ${token.x}, $x0: ${token.$x0}, e.pageX: ${e.pageX}, mousePosition.downX: ${mousePosition.downX}`)
+				console.log(`y: ${token.y}, $y0: ${token.$y0}, e.pageY: ${e.pageY}, mousePosition.downY: ${mousePosition.downY}`)
+			}
+
 			return !token.$selected ? token : {
 				...token,
 				x: token.$x0 + (e.pageX - mousePosition.downX),
@@ -231,6 +237,7 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 	*/
 
 	const onMouseUp = (e) => {
+		setMousePosition({ downX: 0, downY: 0, })
 		const currMap = getMap()
 		if (currMap && metadata.isHost) {
 			const fogPaths = currMap.fogPaths
@@ -260,8 +267,9 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 	}
 
 	const onMouseDown = (e) => {
+		setMousePosition({ downX: parseInt(e.pageX), downY: parseInt(e.pageY), })
 		for (let x of [document.activeElement, e.target])
-			if ((x.tagName.toUpperCase() == 'INPUT' && (x.type.toUpperCase() === 'TEXT' || x.type.toUpperCase() === 'NUMBER')) || (x.tagName.toUpperCase() === 'BUTTON')) /* eslint-disable-line eqeqeq */
+			if ((x.tagName.toUpperCase() === 'INPUT' && (x.type.toUpperCase() === 'TEXT' || x.type.toUpperCase() === 'NUMBER')) || (x.tagName.toUpperCase() === 'BUTTON'))
 				return e
 
 		if (metadata.isHost) {
@@ -278,8 +286,6 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 				})
 			}
 		}
-
-		setMousePosition({ downX: parseInt(e.pageX), downY: parseInt(e.pageY) })
 	}
 
 	const onMouseMove = (e) => {
