@@ -1,10 +1,11 @@
 import { connect } from 'react-redux'
-import { loadDefaultBattleGame, setFogEnabled } from '../reducers/gameReducer'
+import { toJson } from '../controllers/jsonHandler'
+import { incrementGen, loadDefaultBattleGame, setFogEnabled } from '../reducers/gameReducer'
 import { setUsername, setCursorSize, setToolSettings } from '../reducers/settingsReducer'
-import { pushFogEnabled, useWebSocket } from '../hooks/useSocket'
+import { pushFogEnabled, saveGame, requestLoadGame, useWebSocket } from '../hooks/useSocket'
 import UserToolView from '../views/UserToolView'
 
-const UserTool = ({ toggleOnUser, game, settings, setFogEnabled, setUsername, setCursorSize, setToolSettings, loadDefaultBattleGame }) => {
+const UserTool = ({ toggleOnUser, game, metadata, settings, setFogEnabled, incrementGen, setUsername, setCursorSize, setToolSettings, loadDefaultBattleGame }) => {
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()
     if (!toggleOnUser)
         return null
@@ -38,34 +39,14 @@ const UserTool = ({ toggleOnUser, game, settings, setFogEnabled, setUsername, se
             setToolSettings('move','')
     }
 
-    const copyJson = () => {
-        //TODO: Implement CopyJson
-        /*
-        const json = gameState.toJson()
-        window.navigator.clipboard.writeText(json).then(() => {
-            notify('copied to clipboard')
-        }).catch(err => {
-            console.error('failed to write to clipboard: ', err)
-            notify(`failed to write to clipboard: ${err}`, 2000)
-        })
-        */
+    const saveGameInServer = () => {
+        incrementGen()
+        const json = toJson(game, metadata, incrementGen)
+        saveGame(webSocket,wsSettings,json)
     }
 
-    const pasteJson = () => {
-        //TODO: Implement PasteJson
-        /*
-        const note1 = notify('reading clipboard...')
-        window.navigator.clipboard.readText().then(json => {
-            if (window.confirm(`Do you really want to overwrite this game with what's in your clipboard? ${json.slice(0,99)}...`)) {
-                fromJson(json)
-                notify('pasted from clipboard')
-            }
-            note1 && note1.close()
-        }).catch(err => {
-            console.error('failed to read clipboard: ', err)
-            notify(`failed to read clipboard: ${err}`, 2000)
-        })
-        */
+    const loadGameFromServer = () => {
+        requestLoadGame(webSocket,wsSettings)
     }
 
     return (
@@ -73,8 +54,8 @@ const UserTool = ({ toggleOnUser, game, settings, setFogEnabled, setUsername, se
             <UserToolView
                 initAsDev={ initAsDev }
                 toggleFog={ toggleFog }
-                copyJson={ copyJson }
-                pasteJson={ pasteJson }
+                saveGameInServer={ saveGameInServer }
+                loadGameFromServer={ loadGameFromServer }
                 username={ settings.username }
                 updateUsername={ updateUsername }
                 cursorSize={ settings.cursorSize }
@@ -86,6 +67,7 @@ const UserTool = ({ toggleOnUser, game, settings, setFogEnabled, setUsername, se
 const mapStateToProps = (state) => {
     return {
         game: state.game,
+        metadata: state.metadata,
         settings: state.settings,
     }
 }
@@ -96,6 +78,7 @@ const mapDispatchToProps = {
     setFogEnabled,
     setToolSettings,
     loadDefaultBattleGame,
+    incrementGen,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserTool)

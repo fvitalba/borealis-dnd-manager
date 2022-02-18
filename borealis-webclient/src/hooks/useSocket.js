@@ -127,3 +127,20 @@ export const requestRefresh = (webSocket, wsSettings) => {
         username: wsSettings.username,
     })
 }
+
+export const saveGame = (webSocket, wsSettings, json) => {
+    sendData(webSocket, {
+        type: 'saveGame',
+        from: wsSettings.guid,
+        room: wsSettings.room,
+        payload: json,
+    })
+}
+
+export const requestLoadGame = (webSocket, wsSettings) => {
+    sendData(webSocket, {
+        type: 'requestLoadGame',
+        from: wsSettings.guid,
+        room: wsSettings.room,
+    })
+}

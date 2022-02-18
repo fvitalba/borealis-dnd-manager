@@ -1,6 +1,6 @@
 import Button from './Button.js'
 
-const UserToolView = ({ initAsDev, toggleFog, copyJson, pasteJson, username, updateUsername, cursorSize, updateCursorSize }) => {
+const UserToolView = ({ initAsDev, toggleFog, saveGameInServer, loadGameFromServer, username, updateUsername, cursorSize, updateCursorSize }) => {
     return (
         <div>
             <hr />
@@ -10,8 +10,8 @@ const UserToolView = ({ initAsDev, toggleFog, copyJson, pasteJson, username, upd
             <hr />
             <Button title='Redo as dev' value='&#x1f530;' onClick={ initAsDev } />
             <Button title='Toggle fog' value='&#127787;' onClick={ toggleFog } />
-            <Button title='Copy JSON to clipboard' value='&#x1f46f;' onClick={ copyJson } />
-            <Button title='Paste JSON from clipboard' value='&#x1f4cb;' onClick={ pasteJson } />
+            <Button title='Save room' value='&#x1F4BE;' onClick={ saveGameInServer } />
+            <Button title='Load room' value='&#x1F4C0;' onClick={ loadGameFromServer } />
         </div>
     )
 }
