@@ -1,4 +1,4 @@
-import Button from './Button.js'
+import Button from './Button'
 
 const ToolControlsView = ({ tool, subtool, drawColor, setDrawColor, drawSize, setDrawSize, fogOpacity, setFogOpacity, fogRadius, setFogRadius, setSubtool, resetFog, resetDrawing }) => {
     switch (tool) {

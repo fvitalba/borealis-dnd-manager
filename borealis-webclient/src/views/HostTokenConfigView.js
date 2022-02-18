@@ -1,4 +1,4 @@
-import Button from './Button.js'
+import Button from './Button'
 
 const HostTokenConfigView = ({ maps, token, copy, onToggle, selectToken, onTextChange, onIntegerChange, onMapSelect, deleteToken }) => {
     return (

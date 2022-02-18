@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.control-panel {
+    @apply content-start;
+    @apply bg-gradient-to-b from-transparent to-slate-800;
+    @apply col-span-1;
+    @apply col-start-2;
+    @apply justify-center;
+    @apply text-xl;
+    @apply font-sans;
+    @apply antialiased;
+    @apply text-slate-200;
+    @apply space-x-4; 
+}
+
+.selected-button {
+    @apply border-solid;
+    @apply border-4 border-sky-500;
+    @apply bg-slate-500;
+    @apply aspect-square;
+    @apply rounded-md;
+    @apply p-1;
+    @apply justify-center;
+    @apply content-center;
+    @apply place-content-center;
+    :hover
+}
+
+.button {
+    @apply aspect-square;
+    @apply bg-slate-500;
+    @apply border-double;
+    @apply border-4 border-slate-400;
+    @apply rounded-md;
+    @apply p-1;
+    @apply justify-center;
+    @apply content-center;
+    @apply place-content-center;
+}
+
+.button:hover {
+    @apply bg-slate-400;
+}

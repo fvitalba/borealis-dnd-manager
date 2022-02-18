@@ -1,10 +1,10 @@
-import Background from '../components/Background.js'
-import Drawing from '../components/Drawing.js'
-import Fog from '../components/Fog.js'
-import Overlay from '../components/Overlay.js'
-import Token from '../components/Token.js'
-import Cursor from './Cursor.js'
-import ControlPanel from '../components/ControlPanel.js'
+import Background from '../components/Background'
+import Drawing from '../components/Drawing'
+import Fog from '../components/Fog'
+import Overlay from '../components/Overlay'
+import Token from '../components/Token'
+import Cursor from './Cursor'
+import ControlPanel from '../components/ControlPanel'
 
 const GameView = ({ isHost, overlayRef, isFogLoaded, cursors, cursorSize, tokens, onMouseMove, onMouseUp, onMouseDown }) => {
     const goneClass = isFogLoaded ? null : 'gone'
@@ -34,7 +34,11 @@ const GameView = ({ isHost, overlayRef, isFogLoaded, cursors, cursorSize, tokens
                 {/* Overlay: Holds outline for fog & draw tools */ }
                 <Overlay overlayRef={ overlayRef } />
             </div>
-            <ControlPanel />
+            <div className='grid grid-cols-3 grid-rows-1'>
+                <div />
+                <ControlPanel />
+                <div />
+            </div>
         </div>
     )
 }

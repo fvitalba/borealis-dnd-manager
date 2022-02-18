@@ -1,5 +1,5 @@
-import TokenConfig from '../components/TokenConfig.js'
-import Button from './Button.js'
+import TokenConfig from '../components/TokenConfig'
+import Button from './Button'
 
 const TokenToolView = ({ newTokenUrl, setNewTokenUrl, createToken, tokens }) => {
     return (

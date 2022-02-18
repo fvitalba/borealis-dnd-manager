@@ -1,4 +1,4 @@
-import Button from './Button.js'
+import Button from './Button'
 
 const UserToolView = ({ initAsDev, toggleFog, saveGameInServer, loadGameFromServer, username, updateUsername, cursorSize, updateCursorSize }) => {
     return (

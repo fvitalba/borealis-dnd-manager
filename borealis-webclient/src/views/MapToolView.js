@@ -1,5 +1,5 @@
-import MapConfig from '../components/MapConfig.js'
-import Button from './Button.js'
+import MapConfig from '../components/MapConfig'
+import Button from './Button'
 
 const MapToolView = ({ maps, newMapName, setNewMapName, createMap }) => {
     return (
