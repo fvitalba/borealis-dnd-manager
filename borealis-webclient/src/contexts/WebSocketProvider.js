@@ -10,7 +10,7 @@ const SOCKET_SERVER_PORT = process.env.PORT || process.env.REACT_APP_PORT || 800
 
 const generateWebSocketUrl = (room, guid) => {
     let host = window.location.host.replace(/:\d+$/, '')
-	const protocol = /https/.test(window.location.protocol) ? 'wss' : 'ws'
+    const protocol = /https/.test(window.location.protocol) ? 'wss' : 'ws'
 
     return DEBUG_MODE
         ? `${protocol}://${host}:${SOCKET_SERVER_PORT}/${room}?guid=${guid}`
@@ -18,12 +18,12 @@ const generateWebSocketUrl = (room, guid) => {
 }
 
 const createWebSocket = (room, guid) => {
-	if (room) {
-		const webSocketUrl = generateWebSocketUrl(room, guid)
-		return new WebSocket(webSocketUrl)
-	} else {
-		return undefined
-	}
+    if (room) {
+        const webSocketUrl = generateWebSocketUrl(room, guid)
+        return new WebSocket(webSocketUrl)
+    } else {
+        return undefined
+    }
 }
 
 export const WebSocketContext = createContext(createWebSocket('',''))
@@ -35,14 +35,14 @@ const WebSocketProvider = ({ children, metadata }) => {
     })
     const [ws, setWs] = useState(createWebSocket(metadata.room, wsSettings.guid))
 
-	useEffect(() => {
-		setWs(createWebSocket(metadata.room, wsSettings.guid))
-	}, [metadata.room, wsSettings.guid])
+    useEffect(() => {
+        setWs(createWebSocket(metadata.room, wsSettings.guid))
+    }, [metadata.room, wsSettings.guid])
 
     useEffect(() => {
         const onClose = () => {
             setTimeout(() => {
-				console.log('Socket Timeout, recreating WebSocket')
+                console.log('Socket Timeout, recreating WebSocket')
                 setWs(createWebSocket(metadata.room, wsSettings.guid))
             }, SOCKET_RECONNECTION_TIMEOUT)
         }
@@ -53,22 +53,22 @@ const WebSocketProvider = ({ children, metadata }) => {
             }
         }
 
-		const onError = (err) => {
-			console.error('WebSocket could not be created. Error: ',err)
-		}
+        const onError = (err) => {
+            console.error('WebSocket could not be created. Error: ',err)
+        }
 
-		if (ws) {
-			ws.addEventListener('close', onClose)
-			ws.addEventListener('open', onOpen)
-			ws.addEventListener('error', onError)
-		}
+        if (ws) {
+            ws.addEventListener('close', onClose)
+            ws.addEventListener('open', onOpen)
+            ws.addEventListener('error', onError)
+        }
 
         return () => {
-			if (ws) {
-				ws.removeEventListener('close', onClose)
-				ws.removeEventListener('open', onOpen)
-				ws.removeEventListener('error', onError)
-			}
+            if (ws) {
+                ws.removeEventListener('close', onClose)
+                ws.removeEventListener('open', onOpen)
+                ws.removeEventListener('error', onError)
+            }
         }
     }, [ ws, setWs, wsSettings, metadata ])
 
@@ -78,9 +78,9 @@ const WebSocketProvider = ({ children, metadata }) => {
 }
 
 const mapStateToProps = (state) => {
-	return {
-		metadata: state.metadata,
-	}
+    return {
+        metadata: state.metadata,
+    }
 }
 
 export default connect(mapStateToProps, undefined)(WebSocketProvider)

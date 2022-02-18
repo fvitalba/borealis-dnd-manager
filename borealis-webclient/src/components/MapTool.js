@@ -6,31 +6,31 @@ import MapToolView from '../views/MapToolView.js'
 
 const MapTool = ({ toggleOnMaps, game, addMap }) => {
     const [newMapName, setNewMapName] = useState('')
-	const [webSocket, wsSettings, _setWsSettings] = useWebSocket()
+    const [webSocket, wsSettings, _setWsSettings] = useWebSocket()
 
-	const maps = game.maps
+    const maps = game.maps
 
     const createMap = () => {
-		addMap(newMapName, window.innerWidth, window.innerHeight)
-		setNewMapName('')
-		pushCreateMap(webSocket, wsSettings, newMapName, window.innerWidth, window.innerHeight)
-	}
+        addMap(newMapName, window.innerWidth, window.innerHeight)
+        setNewMapName('')
+        pushCreateMap(webSocket, wsSettings, newMapName, window.innerWidth, window.innerHeight)
+    }
 
-	return (
+    return (
         toggleOnMaps ?
-		    <MapToolView maps={ maps } newMapName={ newMapName } setNewMapName={ setNewMapName } createMap={ createMap } />
+            <MapToolView maps={ maps } newMapName={ newMapName } setNewMapName={ setNewMapName } createMap={ createMap } />
             : null
-	)
+    )
 }
 
 const mapStateToProps = (state) => {
-	return {
-		game: state.game,
-	}
+    return {
+        game: state.game,
+    }
 }
 
 const mapDispatchToProps = {
-	addMap,
+    addMap,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapTool)

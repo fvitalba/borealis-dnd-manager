@@ -112,148 +112,148 @@ const gameReducer = (state = initialGameState, action) => {
     const maps = JSON.parse(JSON.stringify(state.maps))
     const tokens = JSON.parse(JSON.stringify(state.tokens))
     switch (action.type) {
-        case OVERWRITE_GAME:
-            return {
-                ...state,
-                ...action.game,
+    case OVERWRITE_GAME:
+        return {
+            ...state,
+            ...action.game,
+        }
+    case LOAD_MAP:
+        return {
+            ...state,
+            mapId: parseInt(action.mapId),
+        }
+    case INCREMENT_GEN:
+        return {
+            ...state,
+            gen: state.gen + 1,
+        }
+    case SET_FOG_ENABLED:
+        return {
+            ...state,
+            fogEnabled: action.fogEnabled,
+        }
+    case SET_ISFOGLOADED:
+        return {
+            ...state,
+            isFogLoaded: action.isFogLoaded,
+        }
+    case SET_ISFIRSTLOADDONE:
+        return {
+            ...state,
+            isFirstLoadDone: action.isFirstLoadDone,
+        }
+    case UPDATE_MAPS:
+        return {
+            ...state,
+            maps: action.maps,
+            mapId: !isNaN(state.mapId) ? state.mapId : undefined,
+        }
+    case ADD_MAP:
+        const newMapId = state.maps.length
+        const mapsWithNewMap = maps.concat({
+            ...action.map,
+            $id: newMapId,
+        })
+        return {
+            ...state,
+            maps: mapsWithNewMap,
+            mapId: !isNaN(state.mapId) ? state.mapId : newMapId,
+            isFirstLoadDone: true,
+            isFogLoaded: true,
+        }
+    case DELETE_MAP:
+        const newMaps = maps.filter((map) => map.$id !== parseInt(action.mapId))
+        return {
+            ...state,
+            maps: newMaps,
+            mapId: parseInt(action.mapId) === state.mapId ? undefined : state.mapId,
+        }
+    case UPDATE_TOKENS:
+        return {
+            ...state,
+            tokens: action.tokens,
+        }
+    case ADD_TOKEN:
+        return {
+            ...state,
+            tokens: state.tokens.concat(action.token)
+        }
+    case DELETE_TOKEN:
+        const newTokens = tokens.filter((token) => token.guid !== action.tokenGuid)
+        return {
+            ...state,
+            tokens: newTokens,
+        }
+    case COPY_TOKEN:
+        const tokenCopy = state.tokens.filter((token) => token.guid === action.tokenGuid)
+        const newToken = {
+            ...tokenCopy[0],
+            guid: guid()
+        }
+        return {
+            ...state,
+            tokens: state.tokens.concat(newToken)
+        }
+    case UPDATE_TOKEN_VALUE:
+        const tokensCopy = state.tokens.map((token) => {
+            return token.guid !== action.tokenGuid ? token : {
+                ...token,
+                [action.key]: action.value
             }
-        case LOAD_MAP:
-            return {
-                ...state,
-                mapId: parseInt(action.mapId),
+        })
+        return {
+            ...state,
+            tokens: tokensCopy,
+        }
+    case TOGGLE_TOKEN_VALUE:
+        const tokensCopy2 = state.tokens.map((token) => {
+            return token.guid !== action.tokenGuid ? token : {
+                ...token,
+                [action.key]: !token[action.key]
             }
-        case INCREMENT_GEN:
-            return {
-                ...state,
-                gen: state.gen + 1,
+        })
+        return {
+            ...state,
+            tokens: tokensCopy2,
+        }
+    case SET_TOKEN_ORIGIN:
+        const tokensCopy3 = state.tokens.map((token) => {
+            return token.guid !== action.tokenGuid ? token : {
+                ...token,
+                $x0: action.xOrigin,
+                $y0: action.yOrigin,
             }
-        case SET_FOG_ENABLED:
-            return {
-                ...state,
-                fogEnabled: action.fogEnabled,
-            }
-        case SET_ISFOGLOADED:
-            return {
-                ...state,
-                isFogLoaded: action.isFogLoaded,
-            }
-        case SET_ISFIRSTLOADDONE:
-            return {
-                ...state,
-                isFirstLoadDone: action.isFirstLoadDone,
-            }
-        case UPDATE_MAPS:
-            return {
-                ...state,
-                maps: action.maps,
-                mapId: !isNaN(state.mapId) ? state.mapId : undefined,
-            }
-        case ADD_MAP:
-            const newMapId = state.maps.length
-            const mapsWithNewMap = maps.concat({
-                ...action.map,
-                $id: newMapId,
+        })
+        return {
+            ...state,
+            tokens: tokensCopy3,
+        }
+    case RESET_FOG:
+        const fogResetMaps = state.maps.map((map) => {
+            return map.$id === state.mapId ? {
+                    ...map,
+                    fogPaths: [],
+                } 
+                : map
             })
-            return {
-                ...state,
-                maps: mapsWithNewMap,
-                mapId: !isNaN(state.mapId) ? state.mapId : newMapId,
-                isFirstLoadDone: true,
-                isFogLoaded: true,
-            }
-        case DELETE_MAP:
-			const newMaps = maps.filter((map) => map.$id !== parseInt(action.mapId))
-            return {
-                ...state,
-                maps: newMaps,
-                mapId: parseInt(action.mapId) === state.mapId ? undefined : state.mapId,
-            }
-        case UPDATE_TOKENS:
-            return {
-                ...state,
-                tokens: action.tokens,
-            }
-        case ADD_TOKEN:
-            return {
-                ...state,
-                tokens: state.tokens.concat(action.token)
-            }
-        case DELETE_TOKEN:
-            const newTokens = tokens.filter((token) => token.guid !== action.tokenGuid)
-            return {
-                ...state,
-                tokens: newTokens,
-            }
-        case COPY_TOKEN:
-            const tokenCopy = state.tokens.filter((token) => token.guid === action.tokenGuid)
-            const newToken = {
-                ...tokenCopy[0],
-                guid: guid()
-            }
-            return {
-                ...state,
-                tokens: state.tokens.concat(newToken)
-            }
-        case UPDATE_TOKEN_VALUE:
-            const tokensCopy = state.tokens.map((token) => {
-                return token.guid !== action.tokenGuid ? token : {
-                    ...token,
-                    [action.key]: action.value
-                }
+        return {
+            ...state,
+            maps: fogResetMaps,
+        }
+    case RESET_DRAW:
+        const drawResetMaps = state.maps.map((map) => {
+            return map.$id === state.mapId ? {
+                    ...map,
+                    drawPaths: [],
+                } 
+                : map
             })
-            return {
-                ...state,
-                tokens: tokensCopy,
-            }
-        case TOGGLE_TOKEN_VALUE:
-            const tokensCopy2 = state.tokens.map((token) => {
-                return token.guid !== action.tokenGuid ? token : {
-                    ...token,
-                    [action.key]: !token[action.key]
-                }
-            })
-            return {
-                ...state,
-                tokens: tokensCopy2,
-            }
-        case SET_TOKEN_ORIGIN:
-            const tokensCopy3 = state.tokens.map((token) => {
-                return token.guid !== action.tokenGuid ? token : {
-                    ...token,
-                    $x0: action.xOrigin,
-                    $y0: action.yOrigin,
-                }
-            })
-            return {
-                ...state,
-                tokens: tokensCopy3,
-            }
-        case RESET_FOG:
-			const fogResetMaps = state.maps.map((map) => {
-                return map.$id === state.mapId ? {
-                        ...map,
-                        fogPaths: [],
-                    } 
-                    : map
-                })
-            return {
-                ...state,
-                maps: fogResetMaps,
-            }
-        case RESET_DRAW:
-            const drawResetMaps = state.maps.map((map) => {
-                return map.$id === state.mapId ? {
-                        ...map,
-                        drawPaths: [],
-                    } 
-                    : map
-                })
-            return {
-                ...state,
-                maps: drawResetMaps,
-            }
-        default:
-            return state
+        return {
+            ...state,
+            maps: drawResetMaps,
+        }
+    default:
+        return state
     }
 }
 
