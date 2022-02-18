@@ -24,6 +24,10 @@ const UserTool = ({ toggleOnUser, game, settings, setFogEnabled, setUsername, se
     }
 
     const initAsDev = () => {
+		const mapsExist = game.maps.length > 0
+		const tokensExist = game.tokens.length > 0
+		if ((mapsExist && tokensExist) && !window.confirm('Overwrite game with defaults?'))
+			return
         loadDefaultBattleGame()
     }
 

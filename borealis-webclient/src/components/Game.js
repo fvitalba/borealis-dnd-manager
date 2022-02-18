@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
 import { setGameSettings } from '../reducers/metadataReducer.js'
-import { overwriteGame, updateMaps, loadMap, addMap, incrementGen, setFogEnabled, updateTokens } from '../reducers/gameReducer.js'
+import { overwriteGame, updateMaps, loadMap, addMap, incrementGen, setFogEnabled, updateTokens, toggleTokenValue } from '../reducers/gameReducer.js'
 import { pushDrawPath, pushFogPath, pushGameRefresh, pushTokens, useWebSocket } from '../hooks/useSocket.js'
 import GameView from '../views/GameView.js'
 
-const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, addMap, updateTokens, incrementGen, setFogEnabled }) => {
+const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, incrementGen, setFogEnabled }) => {
 	const overlayRef = React.useRef()
 	const [webSocket, wsSettings, setWsSettings] = useWebSocket()
 	const [mousePosition, setMousePosition] = useState({ downX: 0, downY: 0})
@@ -45,14 +45,17 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 		if (settings.tool !== 'move')
 			return
 
-		const newTokens = game.tokens.map((token) => {
-			return !token.$selected ? token : {
-				...token,
-				x: token.$x0 + (e.pageX - mousePosition.downX),
-				y: token.$y0 + (e.pageY - mousePosition.downY),
-			}
-		})
-		updateTokens(newTokens)
+		const selectedTokens = game.tokens.filter((token) => token.$selected)
+		if (selectedTokens.length > 0) {
+			const newTokens = game.tokens.map((token) => {
+				return !token.$selected ? token : {
+					...token,
+					x: token.$x0 + (e.pageX - mousePosition.downX),
+					y: token.$y0 + (e.pageY - mousePosition.downY),
+				}
+			})
+			updateTokens(newTokens)
+		}
 	}
 
 	/****************************************************
@@ -231,6 +234,10 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 	*/
 
 	const onMouseUp = (e) => {
+		setMousePosition({
+			downX: 0, 
+			downY: 0,
+		})
 		const currMap = getMap()
 		if (currMap && metadata.isHost) {
 			const fogPaths = currMap.fogPaths
@@ -255,13 +262,35 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 		}
 
 		const selectedTokens = game.tokens.filter((token) => token.$selected)
-		if (selectedTokens.length > 0)
+		if (selectedTokens.length > 0) {
+			let deselectTokens = false
+			for (let x of [document.activeElement, e.target])
+				if (x.id.toUpperCase() === 'BACKGROUND')
+					deselectTokens = true
+			if (deselectTokens)
+				game.tokens.map((token) => token.$selected ? toggleTokenValue(token.guid,'$selected') : null)
+			
 			pushTokens(webSocket, wsSettings, game.tokens)
+		}
 	}
 
 	const onMouseDown = (e) => {
+		setMousePosition({
+			downX: parseInt(e.pageX),
+			downY: parseInt(e.pageY),
+		})
+
+		const selectedTokens = game.tokens.filter((token) => token.$selected)
+		if (selectedTokens.length > 0) {
+			let deselectTokens = false
+			for (let x of [document.activeElement, e.target])
+				if (x.id.toUpperCase() === 'BACKGROUND')
+					deselectTokens = true
+			if (deselectTokens)
+				game.tokens.map((token) => token.$selected ? toggleTokenValue(token.guid,'$selected') : null)
+		}
 		for (let x of [document.activeElement, e.target])
-			if ((x.tagName.toUpperCase() == 'INPUT' && (x.type.toUpperCase() === 'TEXT' || x.type.toUpperCase() === 'NUMBER')) || (x.tagName.toUpperCase() === 'BUTTON')) /* eslint-disable-line eqeqeq */
+			if ((x.tagName.toUpperCase() === 'INPUT' && (x.type.toUpperCase() === 'TEXT' || x.type.toUpperCase() === 'NUMBER')) || (x.tagName.toUpperCase() === 'BUTTON'))
 				return e
 
 		if (metadata.isHost) {
@@ -278,8 +307,6 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 				})
 			}
 		}
-
-		setMousePosition({ downX: parseInt(e.pageX), downY: parseInt(e.pageY) })
 	}
 
 	const onMouseMove = (e) => {
@@ -289,7 +316,8 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 
 		clearOverlay()
 		let x = e.pageX, y = e.pageY
-		switch (metadata.isHost ? settings.tool : 'move') {
+		const currentlySelectedTool = metadata.isHost ? settings.tool : 'move'
+		switch (currentlySelectedTool) {
 			case 'fog':
 				updateCurrentFogPath()
 				setPointerOutline(x, y, 'yellow', settings.fogRadius)
@@ -304,7 +332,7 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 				break
 			default: break
 		}
-		if ((settings.tool === 'fog' || settings.tool === 'draw') && (e.buttons & 1)) {
+		if ((currentlySelectedTool === 'fog' || currentlySelectedTool === 'draw') && (e.buttons & 1)) {
 			currentPath.push({
 				x: x,
 				y: y,
@@ -499,7 +527,6 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
 				addMap(data.mapName, data.width, data.height)
 				break
 			case 'pushFogEnabled':
-				console.log('receiving fog enabled',data)
 				setFogEnabled(data.fogEnabled)
 				break
 			case 'pushGameRefresh': // refresh from host
@@ -612,6 +639,7 @@ const mapDispatchToProps = {
 	incrementGen,
 	setFogEnabled,
 	updateTokens,
+	toggleTokenValue,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game)
