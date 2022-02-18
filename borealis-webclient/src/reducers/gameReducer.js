@@ -117,6 +117,7 @@ const gameReducer = (state = initialGameState, action) => {
     let newMaps = []
     let newToken = {}
     let tokenToCopy = {}
+    let currMap = {}
 
     switch (action.type) {
     case OVERWRITE_GAME:
@@ -125,9 +126,14 @@ const gameReducer = (state = initialGameState, action) => {
             ...action.game,
         }
     case LOAD_MAP:
+        currMap = maps.filter((map) => map.$id === parseInt(action.mapId))[0]
         return {
             ...state,
             mapId: parseInt(action.mapId),
+            width: currMap.width ? currMap.width : state.width,
+            height: currMap.height ? currMap.height : state.height,
+            isFogLoaded: true,
+            isFirstLoadDone: true,
         }
     case INCREMENT_GEN:
         return {
@@ -161,12 +167,17 @@ const gameReducer = (state = initialGameState, action) => {
             ...action.map,
             $id: newMapId,
         })
+
+        newMapId = !isNaN(state.mapId) ? state.mapId : newMapId
+        currMap = newMaps.filter((map) => map.$id === newMapId)[0]
         return {
             ...state,
             maps: newMaps,
-            mapId: !isNaN(state.mapId) ? state.mapId : newMapId,
+            mapId: newMapId,
             isFirstLoadDone: true,
             isFogLoaded: true,
+            width: currMap.width ? currMap.width : state.width,
+            height: currMap.height ? currMap.height : state.height,
         }
     case DELETE_MAP:
         newMaps = maps.filter((map) => map.$id !== parseInt(action.mapId))

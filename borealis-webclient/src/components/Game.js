@@ -239,7 +239,7 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
             downY: 0,
         })
         const currMap = getMap()
-        if (currMap && metadata.isHost) {
+        if ((currMap) && (metadata.isHost) && (currentPath.length > 0)) {
             const fogPaths = currMap.fogPaths
             const drawPaths = currMap.drawPaths
             switch (settings.tool) {
