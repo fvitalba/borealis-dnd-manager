@@ -1,15 +1,13 @@
 const drawImage = (url, which, map, context, resizeCanvases) => {
     // Handle 'whiteboard' (no bg img)
     if (!url || url.trim().length === 0) {
-        if (resizeCanvases) {
-            resizeCanvases()
-        } // Clear canvas
+        console.log('clearing rectangle', context)
+        context.clearRect(0, 0, map.width, map.height)
         return Promise.resolve(map.width, map.height)
     }
 
     //Handle ordinary image
     return new Promise((resolve, reject) => {
-        const ctx = context
         const img = new Image()
         img.onload = () => {
             let w = map.width
@@ -23,7 +21,7 @@ const drawImage = (url, which, map, context, resizeCanvases) => {
                 h = w * img.height / img.width
             const promise = resizeCanvases ? resizeCanvases(w, h) : Promise.resolve()
             promise.then(() => {
-                ctx.drawImage(img, map.x || 0, map.y || 0, w, h)
+                context.drawImage(img, map.x || 0, map.y || 0, w, h)
                 resolve(w, h)
             })
         }

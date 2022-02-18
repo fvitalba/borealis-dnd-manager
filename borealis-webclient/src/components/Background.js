@@ -5,7 +5,9 @@ import Canvas from './Canvas.js'
 
 
 const Background = ({ game }) => {
-    const map = game.maps ? game.maps[game.mapId] : undefined
+    console.log('rerender Background')
+    const selectedMap = game.maps.filter((map) => map.$id === game.mapId)
+    const map = selectedMap.length > 0 ? selectedMap[0] : undefined
 
     const draw = (ctx) => {
         if (!map) {
