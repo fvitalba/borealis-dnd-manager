@@ -34,7 +34,7 @@ const GameView = ({ isHost, overlayRef, isFogLoaded, cursors, cursorSize, tokens
                 {/* Overlay: Holds outline for fog & draw tools */ }
                 <Overlay overlayRef={ overlayRef } />
             </div>
-            <div className='grid grid-cols-3 grid-rows-1'>
+            <div className='grid grid-cols-7 grid-rows-1'>
                 <div />
                 <ControlPanel />
                 <div />

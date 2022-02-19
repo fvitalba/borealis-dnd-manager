@@ -4,42 +4,91 @@
 
 .control-panel {
     @apply content-start;
-    @apply bg-gradient-to-b from-transparent to-slate-800;
-    @apply col-span-1;
-    @apply col-start-2;
-    @apply justify-center;
+    @apply bg-slate-600;
+    @apply border-solid;
+    @apply border-2 border-sky-500;
+    @apply rounded-md;
+    @apply col-span-3;
+    @apply col-start-3;
     @apply text-xl;
     @apply font-sans;
     @apply antialiased;
-    @apply text-slate-200;
     @apply space-x-4; 
+    @apply p-2;
+    @apply shadow-md;
+    @apply backdrop-blur-md;
+    @apply bg-opacity-25;
+}
+
+.control-panel-submenu {
+    @apply mt-2;
+    @apply pt-2;
+    @apply border-t-2;
+    @apply border-solid border-sky-600;
+}
+
+.tokenConfig {
+    
+}
+
+.tool-group {
+    @apply space-x-1;
 }
 
 .selected-button {
     @apply border-solid;
-    @apply border-4 border-sky-500;
-    @apply bg-slate-500;
+    @apply border-2 border-sky-500;
     @apply aspect-square;
     @apply rounded-md;
     @apply p-1;
-    @apply justify-center;
-    @apply content-center;
-    @apply place-content-center;
-    :hover
+    @apply bg-gradient-to-b from-slate-700 to-slate-800;
+    @apply mix-blend-multiply;
 }
 
 .button {
     @apply aspect-square;
     @apply bg-slate-500;
-    @apply border-double;
-    @apply border-4 border-slate-400;
+    @apply border-solid;
+    @apply border-2 border-slate-500;
     @apply rounded-md;
     @apply p-1;
-    @apply justify-center;
-    @apply content-center;
-    @apply place-content-center;
+    @apply bg-gradient-to-b from-slate-700 to-slate-800;
+}
+
+.bsimgx {
+    @apply text-slate-200;   
+}
+
+.selected-button:hover {
+    @apply bg-gradient-to-b from-slate-600 to-slate-700;
 }
 
 .button:hover {
-    @apply bg-slate-400;
+    @apply bg-gradient-to-b from-slate-600 to-slate-700;
+}
+
+.selected-button:focus {
+    @apply bg-gradient-to-b from-slate-500 to-slate-600;
+}
+
+.button:focus {
+    @apply bg-gradient-to-b from-slate-500 to-slate-600;
+}
+
+.selected-button:active {
+    @apply bg-gradient-to-b from-slate-300 to-slate-400;
+}
+
+.button:active {
+    @apply bg-gradient-to-b from-slate-300 to-slate-400;
+}
+
+.control-panel-input {
+    @apply text-sky-300;
+    @apply rounded-md;
+    @apply text-base;
+    @apply justify-center;
+    @apply bg-slate-600;
+    @apply pl-1;
+    @apply pr-1;
 }
