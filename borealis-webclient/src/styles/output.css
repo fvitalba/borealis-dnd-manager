@@ -426,6 +426,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .grid-rows-1 {
   grid-template-rows: repeat(1, minmax(0, 1fr));
 }
+.pl-1 {
+  padding-left: 0.25rem;
+}
 .outline {
   outline-style: solid;
 }
@@ -482,7 +485,8 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 .map-config-collection {
-
+  padding-top: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .map-config {
@@ -506,7 +510,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-border-opacity: 1;
   border-color: rgb(2 132 199 / var(--tw-border-opacity));
   font-weight: 700;
-  background-color: rgb(100 116 139 / var(--tw-bg-opacity));
+  background-color: rgb(51 65 85 / var(--tw-bg-opacity));
   --tw-bg-opacity: 0.5;
 }
 

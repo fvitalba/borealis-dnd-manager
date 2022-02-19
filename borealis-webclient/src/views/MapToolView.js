@@ -6,8 +6,10 @@ const MapToolView = ({ maps, newMapName, setNewMapName, createMap }) => {
     return (
         <div className='control-panel-submenu'>
             <div>
-                <input placeholder='New map name' onChange={ (e) => setNewMapName(e.target.value) } value={ newMapName } className='control-panel-input' />
-                <Button title='Create new map' value={ <ImageAdd width='30' /> } onClick={ createMap } disabled={ newMapName === '' } />
+                <input placeholder='New map name' onChange={ (e) => setNewMapName(e.target.value) } value={ newMapName } className='control-panel-input-very-long' />
+                <span className='pl-1 tool-group'>
+                    <Button title='Create new map' value={ <ImageAdd width='30' /> } onClick={ createMap } disabled={ newMapName === '' } />
+                </span>
                 <div className='map-config-collection'>
                     { maps.map((map) => (
                         <MapConfig key={ `map${map.$id}` } map={ map } />

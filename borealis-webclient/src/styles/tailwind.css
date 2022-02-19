@@ -32,7 +32,8 @@
 }
 
 .map-config-collection {
-
+    @apply pt-2;
+    @apply mt-2;
 }
 
 .map-config {
@@ -45,7 +46,7 @@
 .map-config-selected {
     @apply map-config;
     @apply font-bold;
-    @apply bg-slate-500;
+    @apply bg-slate-700;
     @apply bg-opacity-50;
 }
 

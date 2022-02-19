@@ -23,7 +23,7 @@ const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, tog
     if (isHost)
         return (
             <div id='control-panel' className='control-panel'>
-                <Button value={ <Show width='30' /> } onClick={ toggleHidden } title='show/hide control panel' />
+                <Button value={ <Show width='30' /> } onClick={ toggleHidden } title='show/hide control panel'/>
                 <span className='tool-group'>
                     <ToggleButton title='User' value={ <UsersCog width='30'/> } controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
                     <ToggleButton title='Maps' value={ <Map width='30' />} controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
