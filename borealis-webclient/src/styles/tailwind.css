@@ -27,10 +27,6 @@
     @apply border-solid border-sky-600;
 }
 
-.tokenConfig {
-    
-}
-
 .map-config-collection {
     @apply pt-2;
     @apply mt-2;
@@ -50,6 +46,24 @@
     @apply bg-opacity-50;
 }
 
+.token-config-collection {
+    @apply pt-2;
+    @apply mt-2;
+}
+
+.token-config {
+    @apply text-slate-200;
+    @apply text-base;
+    @apply border-t-2;
+    @apply border-solid border-sky-600;
+    @apply pt-1;
+    @apply pb-1;
+}
+
+.token-config-header {
+
+}
+
 .tool-group {
     @apply space-x-1;
 }
@@ -62,6 +76,7 @@
     @apply p-1;
     @apply bg-gradient-to-b from-slate-700 to-slate-800;
     @apply mix-blend-multiply;
+    @apply text-sky-300;
 }
 
 .button {
@@ -72,10 +87,10 @@
     @apply rounded-md;
     @apply p-1;
     @apply bg-gradient-to-b from-slate-700 to-slate-800;
+    @apply text-slate-200;
 }
 
 .bsimgx {
-    @apply text-slate-200;   
 }
 
 .selected-button:hover {
@@ -116,6 +131,16 @@
 .control-panel-input-short {
     @apply control-panel-input;
     @apply w-24;
+}
+
+.control-panel-input-md {
+    @apply control-panel-input;
+    @apply w-48;
+}
+
+.control-panel-input-long {
+    @apply control-panel-input;
+    @apply w-64;
 }
 
 .control-panel-input-very-long {
