@@ -1,35 +1,36 @@
-import ToggleButton from '../components/ToggleButton.js'
-import ToolControls from '../components/ToolControls.js'
-import MapTool from '../components/MapTool.js'
-import TokenTool from '../components/TokenTool.js'
-import UserTool from '../components/UserTool.js'
-import SelectedTokensControls from '../components/SelectedTokensControls.js'
-import ToolSelectView from './ToolSelectView.js'
-import Button from './Button.js'
+import ToggleButton from '../components/ToggleButton'
+import ToolControls from '../components/ToolControls'
+import MapTool from '../components/MapTool'
+import TokenTool from '../components/TokenTool'
+import UserTool from '../components/UserTool'
+import SelectedTokensControls from '../components/SelectedTokensControls'
+import ToolSelectView from './ToolSelectView'
+import Button from './Button'
+import { Show } from '@styled-icons/boxicons-solid/Show'
+import { UsersCog } from '@styled-icons/fa-solid/UsersCog'
+import { Map } from '@styled-icons/fa-solid/Map'
+import { Chess } from '@styled-icons/fa-solid/Chess'
+import { RefreshCircle } from '@styled-icons/ionicons-sharp/RefreshCircle'
 
 const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, toggleHidden, fogEnabled, isHost, username, setUsername, cursorSize, setCursorSize, socketRequestRefresh, pushRefreshToPlayers }) => {
     if (hidden)
         return (
-            <div id='control-panel'>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <Button value='&#x1f441;' onClick={ toggleHidden } title='show/hide control panel' />
-                &nbsp;&nbsp;&nbsp;&nbsp;
+            <div id='control-panel' className='control-panel'>
+                <Button value={ <Show width='30' /> } onClick={ toggleHidden } title='show/hide control panel' />
             </div>
         )
 
     if (isHost)
         return (
-            <div id='control-panel'>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <Button value='&#x1f441;' onClick={ toggleHidden } title='show/hide control panel' />
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <ToggleButton title='User' value='&#x1f9d9;&#x200d;&#x2642;&#xfe0f;' controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
-                <ToggleButton title='Maps' value='&#x1f5fa;' controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
-                <ToggleButton title='Tokens' value='&#x265f;' controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
-                <Button title='Push refresh to players' value='&#x1f4ab;' onClick={ pushRefreshToPlayers } />
-                &nbsp;&nbsp;&nbsp;&nbsp;
+            <div id='control-panel' className='control-panel'>
+                <Button value={ <Show width='30' /> } onClick={ toggleHidden } title='show/hide control panel'/>
+                <span className='tool-group'>
+                    <ToggleButton title='User' value={ <UsersCog width='30'/> } controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
+                    <ToggleButton title='Maps' value={ <Map width='30' />} controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
+                    <ToggleButton title='Tokens' value={ <Chess width='30' /> } controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
+                    <Button title='Push refresh to players' value={ <RefreshCircle width='30' /> } onClick={ pushRefreshToPlayers } />
+                </span>
                 <ToolSelectView fogEnabled={ fogEnabled } />
-                &nbsp;&nbsp;&nbsp;&nbsp;
                 <ToolControls />
                 <MapTool toggleOnMaps={ controlPanelState.toggleOnMaps } />
                 <TokenTool toggleOnTokens={ controlPanelState.toggleOnTokens } />
@@ -38,8 +39,8 @@ const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, tog
         )
     else
         return (
-            <div id='control-panel'>
-                <Button value='&#x1f441;' onClick={ toggleHidden } title='show/hide control panel' />
+            <div id='control-panel' className='control-panel'>
+                <Button value={ <Show width='30' /> } onClick={ toggleHidden } title='show/hide control panel' />
                 <input title='User name' placeholder='User name' value={ username } onChange={ (e) => setUsername(e.target.value) } />
                 <ToggleButton title='Share mouse (cursor)' value='&#x1f401;' controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
                 <input title='Cursor size' value={ cursorSize } onChange={ (e) => setCursorSize(parseInt(e.target.value)) } type='number' min='0' />

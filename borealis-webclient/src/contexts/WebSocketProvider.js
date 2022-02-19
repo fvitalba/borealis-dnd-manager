@@ -2,7 +2,6 @@ import React, { useEffect, useState, createContext } from 'react'
 import { connect } from 'react-redux'
 import { requestRefresh } from '../hooks/useSocket'
 import guid from '../controllers/guid'
-require('dotenv').config()
 
 const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
 const SOCKET_RECONNECTION_TIMEOUT = 2500

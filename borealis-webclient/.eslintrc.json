@@ -6,7 +6,8 @@
     },
     "extends": [
         "eslint:recommended",
-        "plugin:react/recommended"
+        "plugin:react/recommended",
+        "plugin:tailwindcss/recommended"
     ],
     "parserOptions": {
         "ecmaFeatures": {
@@ -16,7 +17,8 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
+        "tailwindcss"
     ],
     "rules": {
         "indent": [
@@ -51,6 +53,10 @@
     "settings": {
         "react": {
             "version": "detect"
+        },
+        "tailwindcss": {
+            "cssFiles": ["**/*.css", "!**/node_modules", "!**/.*", "!**/dist", "!**/build"],
+            "removeDuplicates": true
         }
     }
 }

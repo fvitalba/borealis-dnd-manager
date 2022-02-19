@@ -8,7 +8,7 @@ function ToolButton({ title, value, settings, setToolSettings }) {
         setToolSettings(title, undefined)
     }
     return (
-        <Button title={ title } value={ value.toString() } onClick={ onClick } isSelected={ isSelected } />
+        <Button title={ title } value={ value } onClick={ onClick } isSelected={ isSelected } />
     )
 }
 

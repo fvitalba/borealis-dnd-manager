@@ -5,6 +5,9 @@ function ToggleButton({ controlPanelState, setControlPanelState, title, value })
     const onClick = () => {
         setControlPanelState({
             ...controlPanelState,
+            toggleOnUser: false,
+            toggleOnMaps: false,
+            toggleOnTokens: false,
             [toggleKey]: !controlPanelState[toggleKey],
         })
     }

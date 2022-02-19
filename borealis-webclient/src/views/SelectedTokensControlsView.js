@@ -1,4 +1,4 @@
-import TokenConfig from '../components/TokenConfig.js'
+import TokenConfig from '../components/TokenConfig'
 
 const SelectedTokensControlsView = ({ tokens }) => {
     const filteredTokens = tokens.filter(t => t.$selected)

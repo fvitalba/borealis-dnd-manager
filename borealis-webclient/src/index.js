@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './styles/index.css'
 import './styles/Game.css'
+import './styles/output.css'
 import App from './components/App'
 import * as serviceWorker from './serviceWorker.js'
 
