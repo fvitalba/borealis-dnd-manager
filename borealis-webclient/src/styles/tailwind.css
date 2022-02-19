@@ -17,7 +17,7 @@
     @apply p-2;
     @apply shadow-md;
     @apply backdrop-blur-md;
-    @apply bg-opacity-25;
+    @apply bg-opacity-40;
 }
 
 .control-panel-submenu {
@@ -29,6 +29,24 @@
 
 .tokenConfig {
     
+}
+
+.map-config-collection {
+
+}
+
+.map-config {
+    @apply text-slate-200;
+    @apply text-base;
+    @apply border-t-2;
+    @apply border-solid border-sky-600;
+}
+
+.map-config-selected {
+    @apply map-config;
+    @apply font-bold;
+    @apply bg-slate-500;
+    @apply bg-opacity-50;
 }
 
 .tool-group {
@@ -91,4 +109,15 @@
     @apply bg-slate-600;
     @apply pl-1;
     @apply pr-1;
+    @apply placeholder-slate-300;
+}
+
+.control-panel-input-short {
+    @apply control-panel-input;
+    @apply w-24;
+}
+
+.control-panel-input-very-long {
+    @apply control-panel-input;
+    @apply w-96;
 }
