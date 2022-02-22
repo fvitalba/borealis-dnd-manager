@@ -6,7 +6,7 @@ import { Upload } from '@styled-icons/fa-solid/Upload'
 
 const UserToolView = ({ initAsDev, toggleFog, saveGameInServer, loadGameFromServer, username, updateUsername, cursorSize, updateCursorSize }) => {
     return (
-        <div className='control-panel-submenu'>
+        <div className='user-tool-view'>
             <span className='tool-group'>
                 <input title='User name' placeholder='User name' value={ username } onChange={ (e) => updateUsername(e.target.value) } className='control-panel-input' />
                 <input title='Cursor size' value={ cursorSize } onChange={ (e) => updateCursorSize(e.target.value) } type='number' min='0' className='control-panel-input' />

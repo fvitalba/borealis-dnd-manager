@@ -1,15 +1,14 @@
 import ToolButton from '../components/ToolButton'
-import { MoveOutline } from '@styled-icons/evaicons-outline/MoveOutline'
-import { PencilFill } from '@styled-icons/bootstrap/PencilFill'
 import { Cloud } from '@styled-icons/fa-solid/Cloud'
+import { LocationSolidIcon, EditSolidIcon } from './Icons'
 
 const ToolSelectView = ({ fogEnabled }) => {
     return (
-        <span id='tools' className='tool-group'>
-            <ToolButton title='move' value={ <MoveOutline width='30' /> } />
-            <ToolButton title='draw' value={ <PencilFill width='30' /> } />
+        <div className='tool-select-view'>
+            <ToolButton title='move' value={ <LocationSolidIcon /> } />
+            <ToolButton title='draw' value={ <EditSolidIcon /> } />
             { fogEnabled ? <ToolButton title='fog'  value={ <Cloud width='30' /> } /> : null }
-        </span>
+        </div>
     )
 }
 
