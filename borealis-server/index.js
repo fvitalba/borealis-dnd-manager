@@ -1,9 +1,13 @@
+import 'dotenv/config'
 import express from 'express'
 import fs from 'fs'
 import http from 'http'
 import https from 'https'
 import WebSocket from 'ws'
 import queryString from 'query-string'
+import Room from './models/room.js'
+import User from './models/user.js'
+import Message from './models/chatMessage.js'
 
 const app = express()
 const privateKeyFilename = 'privkey.pem'
@@ -17,6 +21,27 @@ fs.writeFile('pid.tmp', process.pid.toString(), err => {
 })
 
 app.use(express.static('build'))
+
+app.route('/room-file/:roomName').get((req, res) => {
+    const room = req.params.roomName
+    const savedGame = JSON.parse(fs.readFileSync(`${room}.room`,'utf8'))
+    res.json(savedGame)
+})
+
+app.route('/room-db/:roomName').get((req, res) => {
+    const roomName = req.params.roomName
+    let currentRoom = undefined
+    if (roomName) {
+        Room.find({ 'metadata.room': roomName }).then((result) => {
+            result.forEach((room) => {
+                if ((!currentRoom) || (currentRoom.game.gen < room.game.gen)) {
+                    currentRoom = room
+                }
+            })
+            res.json(currentRoom)
+        })
+    }
+})
 
 const createServer = () => {
     // Check SSL files & create HTTPS server
@@ -67,6 +92,39 @@ wss.on('connection', (websocketConnection, connectionRequest) => {
                     client.send(JSON.stringify(savedGameMessage))
                 }
             })
+        case 'saveGameToDatabase':
+            const room = new Room(JSON.parse(parsedMessage.payload))
+            room.save().then()
+            break
+        case 'requestLoadGameFromDatabase':
+            const roomName = websocketConnection.room.substring(1)
+            let currentRoom = undefined
+            if (roomName) {
+                Room.find({ 'metadata.room': roomName }).then((result) => {
+                    result.forEach((room) => {
+                        if ((!currentRoom) || (currentRoom.game.gen < room.game.gen)) {
+                            currentRoom = room
+                        }
+                    })
+                    if (currentRoom) {
+                        const savedGameMessage = {
+                            type: 'loadGame',
+                            from: undefined,
+                            to: undefined,
+                            room: websocketConnection.room,
+                            payload: currentRoom, //this is the saved game
+                        }
+                        wss.clients.forEach(client => {
+                            if (client.readyState === WebSocket.OPEN) {
+                                if (client.room !== websocketConnection.room)
+                                    return // Don't send to other rooms
+                                client.send(JSON.stringify(savedGameMessage))
+                            }
+                        })
+                    }
+                })
+            }
+            break
         default:
             // Forward message to all other clients (for this room)
             wss.clients.forEach(client => {
