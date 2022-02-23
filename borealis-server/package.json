@@ -13,6 +13,7 @@
   "author": "Fabio Vitalba",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.0",
     "express": "^4.17.2",
     "mongoose": "^6.2.3",
     "query-string": "^7.1.1",
