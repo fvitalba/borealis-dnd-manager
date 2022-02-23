@@ -1,9 +1,12 @@
+require('dotenv').config()
+
 import express from 'express'
 import fs from 'fs'
 import http from 'http'
 import https from 'https'
 import WebSocket from 'ws'
 import queryString from 'query-string'
+const Room = require('./models/room')
 
 const app = express()
 const privateKeyFilename = 'privkey.pem'
@@ -73,6 +76,15 @@ wss.on('connection', (websocketConnection, connectionRequest) => {
                     client.send(JSON.stringify(savedGameMessage))
                 }
             })
+        case 'saveGameToDatabase':
+            const room = new Room(parsedMessage.payload)
+
+            room.save().then(savedRoom => {
+                response.json(savedRoom)
+            })
+            break
+        case 'loadGameFromDatabase':
+            break
         default:
             // Forward message to all other clients (for this room)
             wss.clients.forEach(client => {
