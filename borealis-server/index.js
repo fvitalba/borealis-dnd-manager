@@ -6,7 +6,8 @@ import https from 'https'
 import WebSocket from 'ws'
 import queryString from 'query-string'
 import Room from './models/room.js'
-import mongoose from 'mongoose'
+import User from './models/user.js'
+import Message from './models/chatMessage.js'
 
 const app = express()
 const privateKeyFilename = 'privkey.pem'
@@ -21,13 +22,13 @@ fs.writeFile('pid.tmp', process.pid.toString(), err => {
 
 app.use(express.static('build'))
 
-app.route('/room-json/:roomName').get((req, res) => {
+app.route('/room-file/:roomName').get((req, res) => {
     const room = req.params.roomName
     const savedGame = JSON.parse(fs.readFileSync(`${room}.room`,'utf8'))
     res.json(savedGame)
 })
 
-app.route('/room-mongoDB-json/:roomName').get((req, res) => {
+app.route('/room-db/:roomName').get((req, res) => {
     const roomName = req.params.roomName
     let currentRoom = undefined
     if (roomName) {
