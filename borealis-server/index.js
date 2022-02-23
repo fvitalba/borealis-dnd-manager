@@ -18,6 +18,12 @@ fs.writeFile('pid.tmp', process.pid.toString(), err => {
 
 app.use(express.static('build'))
 
+app.route('/room-json/:room').get((req, res) => {
+    const room = req.params.room
+    const savedGame = JSON.parse(fs.readFileSync(`${room}.room`,'utf8'))
+    res.json(savedGame)
+})
+
 const createServer = () => {
     // Check SSL files & create HTTPS server
     if (fs.existsSync(privateKeyFilename) && fs.existsSync(SslCertificateFilename)) {
