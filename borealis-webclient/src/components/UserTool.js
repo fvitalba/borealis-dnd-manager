@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import { toJson } from '../controllers/jsonHandler'
 import { incrementGen, loadDefaultBattleGame, setFogEnabled } from '../reducers/gameReducer'
 import { setUsername, setCursorSize, setToolSettings } from '../reducers/settingsReducer'
-import { pushFogEnabled, saveGame, requestLoadGame, useWebSocket } from '../hooks/useSocket'
+import { pushFogEnabled, saveGame, requestLoadGame, saveGameToDatabase, useWebSocket } from '../hooks/useSocket'
 import UserToolView from '../views/UserToolView'
 
 const UserTool = ({ toggleOnUser, game, metadata, settings, setFogEnabled, incrementGen, setUsername, setCursorSize, setToolSettings, loadDefaultBattleGame }) => {
@@ -43,6 +43,7 @@ const UserTool = ({ toggleOnUser, game, metadata, settings, setFogEnabled, incre
         incrementGen()
         const json = toJson(game, metadata, incrementGen)
         saveGame(webSocket,wsSettings,json)
+        saveGameToDatabase(webSocket,wsSettings,json)
     }
 
     const loadGameFromServer = () => {

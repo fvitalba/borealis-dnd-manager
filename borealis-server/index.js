@@ -1,12 +1,12 @@
-require('dotenv').config()
-
+import 'dotenv/config'
 import express from 'express'
 import fs from 'fs'
 import http from 'http'
 import https from 'https'
 import WebSocket from 'ws'
 import queryString from 'query-string'
-const Room = require('./models/room')
+import Room from './models/room.js'
+import { parse } from 'path'
 
 const app = express()
 const privateKeyFilename = 'privkey.pem'
@@ -77,11 +77,8 @@ wss.on('connection', (websocketConnection, connectionRequest) => {
                 }
             })
         case 'saveGameToDatabase':
-            const room = new Room(parsedMessage.payload)
-
-            room.save().then(savedRoom => {
-                response.json(savedRoom)
-            })
+            const room = new Room(JSON.parse(parsedMessage.payload))
+            room.save()
             break
         case 'loadGameFromDatabase':
             break

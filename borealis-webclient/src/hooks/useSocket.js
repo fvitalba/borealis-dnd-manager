@@ -144,3 +144,12 @@ export const requestLoadGame = (webSocket, wsSettings) => {
         room: wsSettings.room,
     })
 }
+
+export const saveGameToDatabase = (webSocket, wsSettings, json) => {
+    sendData(webSocket, {
+        type: 'saveGameToDatabase',
+        from: wsSettings.guid,
+        room: wsSettings.room,
+        payload: json,
+    })
+}
