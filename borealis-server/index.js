@@ -97,7 +97,7 @@ wss.on('connection', (websocketConnection, connectionRequest) => {
             room.save().then()
             break
         case 'requestLoadGameFromDatabase':
-            const roomName = req.params.roomName
+            const roomName = websocketConnection.room.substring(1)
             let currentRoom = undefined
             if (roomName) {
                 Room.find({ 'metadata.room': roomName }).then((result) => {
