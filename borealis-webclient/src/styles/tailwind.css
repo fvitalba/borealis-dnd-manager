@@ -31,7 +31,6 @@
 .user-tool-view {
     @apply flex;
     @apply flex-row;
-    @apply justify-center;
 }
 
 .map-tool-view {

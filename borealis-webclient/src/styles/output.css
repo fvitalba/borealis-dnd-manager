@@ -464,7 +464,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .user-tool-view {
   display: flex;
   flex-direction: row;
-  justify-content: center;
 }
 
 .map-tool-view {
