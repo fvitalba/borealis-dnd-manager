@@ -18,7 +18,7 @@ import {
 
 
 
-const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, toggleHidden, fogEnabled, isHost, username, setUsername, cursorSize, setCursorSize, socketRequestRefresh, pushRefreshToPlayers }) => {
+const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, toggleHidden, submenuHidden, fogEnabled, isHost, username, setUsername, cursorSize, setCursorSize, socketRequestRefresh, pushRefreshToPlayers }) => {
     if (hidden)
         return (
             <div id='control-panel' className='control-panel-container'>
@@ -40,11 +40,15 @@ const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, tog
                     <ToolSelectView fogEnabled={ fogEnabled } />
                     <ToolControls />
                 </div>
-                <div className='control-panel-submenu'>
-                    <MapTool toggleOnMaps={ controlPanelState.toggleOnMaps } />
-                    <TokenTool toggleOnTokens={ controlPanelState.toggleOnTokens } />
-                    <UserTool toggleOnUser={ controlPanelState.toggleOnUser } />
-                </div>
+                {
+                    !submenuHidden
+                        ? <div className='control-panel-submenu'>
+                            <MapTool toggleOnMaps={ controlPanelState.toggleOnMaps } />
+                            <TokenTool toggleOnTokens={ controlPanelState.toggleOnTokens } />
+                            <UserTool toggleOnUser={ controlPanelState.toggleOnUser } />
+                        </div>
+                        : null
+                }
             </div>
         )
     else
@@ -57,9 +61,13 @@ const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, tog
                     <input title='Cursor size' value={ cursorSize } onChange={ (e) => setCursorSize(parseInt(e.target.value)) } type='number' min='0' />
                     <Button title='Request gameboard refresh from host' onClick={ socketRequestRefresh } value='&#x1f4ab;' />
                 </div>
-                <div className='control-panel-submenu'>
-                    <SelectedTokensControls />
-                </div>
+                {
+                    !submenuHidden
+                        ? <div className='control-panel-submenu'>
+                            <SelectedTokensControls />
+                        </div>
+                        : null
+                }
             </div>
         )
 }

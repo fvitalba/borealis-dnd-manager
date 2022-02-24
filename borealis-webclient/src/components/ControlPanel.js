@@ -46,12 +46,15 @@ const ControlPanel = ({ game, settings, metadata, setUsername, setCursorSize }) 
         pushGameRefresh(webSocket, wsSettings, game)
     }
 
+    const submenuHidden = (controlPanelState.hidden || (!controlPanelState.toggleOnMaps && !controlPanelState.toggleOnTokens && !controlPanelState.toggleOnUser))
+
     return (
         <ControlPanelView
             controlPanelState={ controlPanelState }
             setControlPanelState={ setControlPanelState }
             hidden={ controlPanelState.hidden }
             toggleHidden={ toggleHidden }
+            submenuHidden={ submenuHidden }
             fogEnabled={ game.fogEnabled }
             isHost={ metadata.isHost }
             username={ settings.username }

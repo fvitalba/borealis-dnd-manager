@@ -19,6 +19,7 @@
 }
 
 .control-panel-submenu {
+    @apply p-2;
     @apply flex;
     @apply flex-col;
 }
@@ -28,11 +29,19 @@
 }
 
 .user-tool-view {
-
+    @apply flex;
+    @apply flex-row;
+    @apply justify-center;
 }
 
 .map-tool-view {
+    @apply flex;
+    @apply flex-col;
+}
 
+.map-tool-creation {
+    @apply flex;
+    @apply flex-row;
 }
 
 .map-config-collection {
@@ -41,21 +50,53 @@
 }
 
 .map-config {
-    @apply text-slate-200;
+    @apply text-primary-700;
     @apply text-base;
     @apply border-t-2;
-    @apply border-solid border-secondary-600;
+    @apply border-dotted border-primary-700;
+    @apply pb-2;
+    @apply flex;
+    @apply flex-row;
 }
 
 .map-config-selected {
     @apply map-config;
     @apply font-bold;
-    @apply bg-primary-700;
-    @apply bg-opacity-50;
+}
+
+.map-config-map-info {
+    @apply flex;
+    @apply flex-col;
+}
+
+.map-config-map-name {
+    @apply text-xl;
+}
+
+.map-config-map-name-selected {
+    @apply map-config-map-name;
+    @apply font-bold;
+    @apply text-secondary-700;
+}
+
+.map-config-map-details {
+    @apply flex;
+    @apply flex-row;
+}
+
+.map-config-map-actions {
+    @apply flex;
+    @apply flex-row;
 }
 
 .token-tool-view {
+    @apply flex;
+    @apply flex-col;
+}
 
+.token-tool-creation {
+    @apply flex;
+    @apply flex-row;
 }
 
 .token-config-collection {
@@ -81,11 +122,11 @@
 }
 
 .control-panel-input {
-    @apply text-secondary-300;
+    @apply text-primary-300;
     @apply rounded-md;
     @apply text-base;
     @apply justify-center;
-    @apply bg-slate-600;
+    @apply bg-primary-500;
     @apply pl-1;
     @apply pr-1;
     @apply placeholder-primary-300;
@@ -155,6 +196,9 @@
 .chat-panel-input {
     @apply bottom-8;
     @apply absolute;
+}
+
+.chat-panel-input-input {
     @apply bg-primary-300;
     @apply text-primary-700;
     @apply border-b-2;
@@ -174,9 +218,6 @@
     @apply text-primary-600;
     @apply transition-colors;
     @apply duration-75;
-}
-
-.bsimgx {
 }
 
 .selected-button:hover {
