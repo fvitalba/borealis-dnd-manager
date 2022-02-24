@@ -1,7 +1,10 @@
 // These icons were copied from https://github.com/la-moore/scarlab-icons/tree/master/react
 // I had to copy them, because they are written as JSX.Elements, whereas I need React Function Components
+const defaultWidth = '33'
+const defaultHeight = '33'
+
 export const PlusCircleOutlineIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
         <path d='M9 12H15' />
         <path d='M12 9L12 15' />
         <path d='M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z' />
@@ -9,92 +12,92 @@ export const PlusCircleOutlineIcon = (props) => {
 }
 
 export const EyeSolidIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
         <path d='M8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12ZM6.24234 6.34315C9.36653 3.21895 14.4319 3.21895 17.556 6.34315L19.7239 8.511C20.3508 9.13781 20.8909 9.67788 21.2653 10.1685C21.6665 10.6944 21.9703 11.2792 21.9703 12C21.9703 12.7208 21.6665 13.3056 21.2653 13.8315C20.8909 14.3221 20.3508 14.8622 19.7239 15.489L17.556 17.6569C14.4319 20.781 9.36653 20.781 6.24234 17.6569L4.07447 15.489C3.44759 14.8622 2.90746 14.3221 2.5331 13.8315C2.1319 13.3056 1.82812 12.7208 1.82812 12C1.82812 11.2792 2.1319 10.6944 2.5331 10.1685C2.90746 9.67788 3.44759 9.13781 4.07447 8.51101C4.08994 8.49555 4.10545 8.48003 4.12102 8.46447L6.24234 6.34315Z' />
         <path d='M12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14C13.1046 14 14 13.1046 14 12C14 10.8954 13.1046 10 12 10Z' />
     </svg>
 }
 
 export const UserCircleSolidIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
         <path d='M2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM11.9999 6C9.79077 6 7.99991 7.79086 7.99991 10C7.99991 12.2091 9.79077 14 11.9999 14C14.209 14 15.9999 12.2091 15.9999 10C15.9999 7.79086 14.209 6 11.9999 6ZM17.1115 15.9974C17.8693 16.4854 17.8323 17.5491 17.1422 18.1288C15.7517 19.2966 13.9581 20 12.0001 20C10.0551 20 8.27215 19.3059 6.88556 18.1518C6.18931 17.5723 6.15242 16.5032 6.91351 16.012C7.15044 15.8591 7.40846 15.7251 7.68849 15.6097C8.81516 15.1452 10.2542 15 12 15C13.7546 15 15.2018 15.1359 16.3314 15.5954C16.6136 15.7102 16.8734 15.8441 17.1115 15.9974Z' />
     </svg>
 }
 
 export const MapSolidIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
         <path d='M7.42237 2.50959C7.90046 2.23354 8.41151 2.03459 9.01156 2.04997C9.61162 2.06534 10.1118 2.2902 10.5751 2.59038C11.0045 2.86853 11.4811 3.26576 12.0271 3.72088L14.0076 5.37123C14.4445 5.73537 14.5392 5.80583 14.6171 5.84493C14.8831 5.97831 15.1947 5.98629 15.4672 5.86672C15.5471 5.83166 15.6452 5.76614 16.1002 5.42485L16.2775 5.29156C16.5959 5.0518 16.9148 4.81172 17.2458 4.58979C17.5453 4.38894 17.8684 4.19785 18.2201 4.10314C19.6886 3.70779 21.2206 4.4738 21.7855 5.8858C21.9208 6.22405 21.9617 6.59713 21.9808 6.95727C22 7.3219 22 7.78387 22 8.34635V15L22.0002 15.1676C22.0017 15.98 22.003 16.7022 21.6833 17.3416C21.3636 17.981 20.785 18.4133 20.1342 18.8996C19.6676 19.2482 19.2018 19.598 18.736 19.9477L18.0857 20.4357L18.0857 20.4357L18.0856 20.4359C17.5169 20.8624 17.0207 21.2346 16.5777 21.4904C16.0996 21.7665 15.5886 21.9654 14.9885 21.95C14.3884 21.9346 13.8883 21.7098 13.4249 21.4096C12.9956 21.1315 12.519 20.7343 11.973 20.2792L11.9729 20.2791L9.9925 18.6288C9.55553 18.2646 9.46091 18.1942 9.38293 18.1551C9.11693 18.0217 8.80535 18.0137 8.53287 18.1333C8.45299 18.1683 8.35489 18.2339 7.89984 18.5751L7.72313 18.708L7.72308 18.7081C7.40448 18.9479 7.08546 19.1882 6.75429 19.4102C6.45474 19.6111 6.13171 19.8021 5.77993 19.8969C4.31144 20.2922 2.77943 19.5262 2.21461 18.1142C2.07931 17.7759 2.03836 17.4029 2.01931 17.0427C2.00002 16.6781 2.00003 16.2162 2.00003 15.6537C2.00003 14.9086 2.00045 14.1634 2.00087 13.4183C2.00174 11.8897 2.0026 10.361 1.99983 8.83239C1.99836 8.01998 1.99705 7.29776 2.31675 6.65835C2.63645 6.01895 3.21502 5.58666 3.86583 5.1004L3.86583 5.1004C4.32252 4.75917 4.77842 4.41689 5.23432 4.07461L5.23437 4.07457L5.8694 3.59797L5.91435 3.56426C6.48303 3.13769 6.97937 2.7654 7.42237 2.50959ZM15 8C15.5523 8 16 8.44772 16 9V19C16 19.5523 15.5523 20 15 20C14.4477 20 14 19.5523 14 19V9C14 8.44772 14.4477 8 15 8ZM10 5C10 4.44772 9.55228 4 9 4C8.44772 4 8 4.44772 8 5V15C8 15.5523 8.44772 16 9 16C9.55228 16 10 15.5523 10 15V5Z' />
     </svg>
 }
 
 export const GhostSolidIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
         <path d='M12 2C6.47715 2 2 6.47715 2 12V19.0093C2 21.6066 5.07633 22.9767 7.00689 21.2392L7.65579 20.6552C7.9614 20.3801 8.40422 20.3201 8.77197 20.504L10.6584 21.4472C11.5029 21.8695 12.4971 21.8695 13.3416 21.4472L15.228 20.504C15.5958 20.3201 16.0386 20.3801 16.3442 20.6552L16.9931 21.2392C18.9237 22.9767 22 21.6066 22 19.0093V12C22 6.47715 17.5228 2 12 2ZM8.79957 13.3994C8.46788 12.9578 7.84101 12.8687 7.39942 13.2004C6.95783 13.5321 6.86874 14.159 7.20043 14.6006C8.29339 16.0557 10.0367 17 12.0004 17C13.964 17 15.7073 16.0557 16.8003 14.6006C17.132 14.159 17.0429 13.5321 16.6013 13.2004C16.1597 12.8687 15.5329 12.9578 15.2012 13.3994C14.4697 14.3732 13.3084 15 12.0004 15C10.6924 15 9.53103 14.3732 8.79957 13.3994ZM9 9C9.55228 9 10 9.44772 10 10V10.0112C10 10.5635 9.55228 11.0112 9 11.0112C8.44772 11.0112 8 10.5635 8 10.0112V10C8 9.44772 8.44772 9 9 9ZM16 10C16 9.44772 15.5523 9 15 9C14.4477 9 14 9.44772 14 10V10.0112C14 10.5635 14.4477 11.0112 15 11.0112C15.5523 11.0112 16 10.5635 16 10.0112V10Z' />
     </svg>
 }
 
 export const RefreshOutlineIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
         <path d='M21 3L15.6 3C15.2686 3 15 3.26863 15 3.6V3.6L15 9' />
         <path d='M15.5 3.5C18.7983 4.80851 21 8.29825 21 12C21 16.8715 16.9706 21 12 21C7.02944 21 3 16.8715 3 12C3 8.73514 4.80989 5.52512 7.5 4' />
     </svg>
 }
 
 export const LocationSolidIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
         <path d='M13 3C13 2.44772 12.5523 2 12 2C11.4477 2 11 2.44772 11 3V4.06189C7.38128 4.51314 4.51314 7.38128 4.06189 11H3C2.44772 11 2 11.4477 2 12C2 12.5523 2.44772 13 3 13H4.06189C4.51314 16.6187 7.38128 19.4869 11 19.9381V21C11 21.5523 11.4477 22 12 22C12.5523 22 13 21.5523 13 21V19.9381C16.6187 19.4869 19.4869 16.6187 19.9381 13H21C21.5523 13 22 12.5523 22 12C22 11.4477 21.5523 11 21 11H19.9381C19.4869 7.38128 16.6187 4.51314 13 4.06189V3ZM10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12ZM12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8Z' />
     </svg>
 }
 
 export const EditSolidIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
         <path d='M12 21C12 20.4477 12.4477 20 13 20H21C21.5523 20 22 20.4477 22 21C22 21.5523 21.5523 22 21 22H13C12.4477 22 12 21.5523 12 21Z' />
         <path d='M20.7736 8.09994C22.3834 6.48381 22.315 4.36152 21.113 3.06183C20.5268 2.4281 19.6926 2.0233 18.7477 2.00098C17.7993 1.97858 16.8167 2.34127 15.91 3.09985C15.8868 3.11925 15.8645 3.13969 15.8432 3.16111L2.87446 16.1816C2.31443 16.7438 2 17.5051 2 18.2987V19.9922C2 21.0937 2.89197 22 4.00383 22H5.68265C6.48037 22 7.24524 21.6823 7.80819 21.1171L20.7736 8.09994ZM17.2071 5.79295C16.8166 5.40243 16.1834 5.40243 15.7929 5.79295C15.4024 6.18348 15.4024 6.81664 15.7929 7.20717L16.7929 8.20717C17.1834 8.59769 17.8166 8.59769 18.2071 8.20717C18.5976 7.81664 18.5976 7.18348 18.2071 6.79295L17.2071 5.79295Z' />
     </svg>
 }
 
 export const CloudOffSolidIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
         <path d='M8.75 3C8.75 2.44772 9.19772 2 9.75 2C13.4633 2 16.5282 4.68197 17.3077 8.22257C19.9376 8.2545 22 10.465 22 13.1111C22 13.6634 21.5523 14.1111 21 14.1111C20.4477 14.1111 20 13.6634 20 13.1111C20 11.481 18.7348 10.2222 17.25 10.2222C17.1112 10.2222 16.9753 10.233 16.8431 10.2535C16.1857 10.3557 15.5383 9.90357 15.4504 9.20732C15.0756 6.24027 12.6398 4 9.75 4C9.19772 4 8.75 3.55228 8.75 3Z' />
         <path d='M3.64021 2.2318C3.21593 1.87824 2.58537 1.93556 2.2318 2.35984C1.87824 2.78412 1.93556 3.41468 2.35984 3.76825L3.75441 4.93038C2.65635 6.31284 2.00003 8.08016 2.00003 10C2.00003 14.3837 5.43585 18 9.75003 18H17.25C17.8745 18 18.4715 17.8756 19.0179 17.65L20.3598 18.7682C20.7841 19.1218 21.4147 19.0645 21.7682 18.6402C22.1218 18.2159 22.0645 17.5854 21.6402 17.2318L3.64021 2.2318Z' />
     </svg>
 }
 
 export const CloudFogSolidIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
         <path d='M2 10C2 5.61631 5.43583 2 9.75 2C13.4633 2 16.5282 4.68197 17.3077 8.22257C19.9376 8.2545 22 10.465 22 13.1111C22 15.7766 19.9073 18 17.25 18H9.75C5.43583 18 2 14.3837 2 10Z' />
         <path d='M4 21C4 20.4477 4.44772 20 5 20H19C19.5523 20 20 20.4477 20 21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21Z' />
     </svg>
 }
 
 export const CloudDownloadSolidIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
         <path d='M14 13C14 12.4477 13.5523 12 13 12C12.4477 12 12 12.4477 12 13L12 18.5858L10.7071 17.2929C10.3166 16.9024 9.68342 16.9024 9.29289 17.2929C8.90237 17.6834 8.90237 18.3166 9.29289 18.7071L12.2929 21.7071C12.4804 21.8946 12.7348 22 13 22C13.2652 22 13.5196 21.8946 13.7071 21.7071L16.7071 18.7071C17.0976 18.3166 17.0976 17.6834 16.7071 17.2929C16.3166 16.9024 15.6834 16.9024 15.2929 17.2929L14 18.5858' />
         <path d='M2 10C2 5.61631 5.43583 2 9.75 2C13.4089 2 16.4383 4.60401 17.272 8.06762C17.2938 8.15801 17.3739 8.22292 17.4668 8.22718C20.0202 8.3442 22 10.5186 22 13.1111C22 15.4412 20.4008 17.4334 18.2233 17.8979C18.1051 17.9231 17.9967 17.8325 17.9794 17.7129C17.9199 17.3005 17.7315 16.9031 17.4142 16.5858C16.8463 16.0178 16.0217 15.8629 15.3137 16.1209C15.169 16.1737 15 16.0748 15 15.9208L15 13.5661C15 12 14.5 11 13 11C11.5 11 11 12 11 13.5661L11 15.9208C11 16.0748 10.831 16.1737 10.6863 16.1209C9.97831 15.8629 9.15375 16.0178 8.58579 16.5858C8.30451 16.8671 8.12453 17.2113 8.04584 17.5731C8.02016 17.6912 7.9054 17.7738 7.78867 17.7425C4.43962 16.8429 2 13.6939 2 10Z' />
     </svg>
 }
 
 export const CloudUploadSolidIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
         <path d='M13 12C13.2729 12 13.5202 12.1093 13.7006 12.2865C13.7028 12.2886 13.705 12.2907 13.7071 12.2929L16.7071 15.2929C17.0976 15.6834 17.0976 16.3166 16.7071 16.7071C16.3166 17.0976 15.6834 17.0976 15.2929 16.7071L14 15.4142V21C14 21.5523 13.5523 22 13 22C12.4477 22 12 21.5523 12 21L12 15.4142L10.7071 16.7071C10.3166 17.0976 9.68342 17.0976 9.29289 16.7071C8.90237 16.3166 8.90237 15.6834 9.29289 15.2929L12.2926 12.2932C12.4802 12.1056 12.7348 12 13 12Z' />
         <path d='M2 10C2 5.61631 5.43583 2 9.75 2C13.4089 2 16.4383 4.60401 17.272 8.06762C17.2938 8.15801 17.3739 8.22292 17.4668 8.22718C20.0202 8.3442 22 10.5186 22 13.1111C22 15.7766 19.9073 18 17.25 18H17.0051C16.936 18 16.8799 17.9439 16.8799 17.8748C16.8799 17.827 16.9073 17.7836 16.9494 17.7609C17.1163 17.6708 17.2732 17.5553 17.4142 17.4142C18.1953 16.6332 18.1953 15.3668 17.4142 14.5858L14.4152 11.5868C14.0532 11.2243 13.5528 11 13 11C12.4472 11 11.9468 11.2243 11.5848 11.5868L8.58579 14.5858C7.80474 15.3668 7.80474 16.6332 8.58579 17.4142C8.74604 17.5745 8.92672 17.7018 9.11945 17.7963C9.15152 17.8121 9.17249 17.8443 9.17249 17.88C9.17249 17.933 9.12704 17.9748 9.07425 17.9702C5.08252 17.6159 2 14.1522 2 10Z' />
     </svg>
 }
 
 export const DatabaseSolidIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
         <path d='M21 7C21 5.3126 19.6581 4.05416 18.1041 3.27715C16.4902 2.47023 14.3307 2 12 2C9.66928 2 7.50977 2.47023 5.89593 3.27715C4.34191 4.05416 3 5.3126 3 7V17C3 18.6874 4.34191 19.9458 5.89593 20.7229C7.50977 21.5298 9.66928 22 12 22C14.3307 22 16.4902 21.5298 18.1041 20.7229C19.6581 19.9458 21 18.6874 21 17V7ZM5.12992 14.1529C5.40214 13.6724 6.01238 13.5035 6.49291 13.7757C7.77337 14.5011 9.738 15 12.0001 15C14.2621 15 16.2267 14.5011 17.5072 13.7757C17.9877 13.5035 18.598 13.6724 18.8702 14.1529C19.1424 14.6334 18.9736 15.2436 18.493 15.5159C16.8417 16.4514 14.5168 17 12.0001 17C9.48328 17 7.15841 16.4514 5.50709 15.5159C5.02656 15.2436 4.85769 14.6334 5.12992 14.1529ZM6.49283 8.77571C6.0123 8.50349 5.40207 8.67235 5.12984 9.15289C4.85762 9.63342 5.02648 10.2437 5.50702 10.5159C7.15833 11.4514 9.48321 12 12 12C14.5168 12 16.8416 11.4514 18.4929 10.5159C18.9735 10.2437 19.1423 9.63342 18.8701 9.15289C18.5979 8.67235 17.9877 8.50349 17.5071 8.77571C16.2267 9.50111 14.262 10 12 10C9.73792 10 7.77329 9.50111 6.49283 8.77571Z' />
     </svg>
 }
 
 export const PlusSquareSolidIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
         <path d='M13 9C13 8.44772 12.5523 8 12 8C11.4477 8 11 8.44772 11 9V11H9C8.44772 11 8 11.4477 8 12C8 12.5523 8.44772 13 9 13H11V15C11 15.5523 11.4477 16 12 16C12.5523 16 13 15.5523 13 15V13H15C15.5523 13 16 12.5523 16 12C16 11.4477 15.5523 11 15 11H13V9ZM7.25007 2.38782C8.54878 2.0992 10.1243 2 12 2C13.8757 2 15.4512 2.0992 16.7499 2.38782C18.06 2.67897 19.1488 3.176 19.9864 4.01358C20.824 4.85116 21.321 5.94002 21.6122 7.25007C21.9008 8.54878 22 10.1243 22 12C22 13.8757 21.9008 15.4512 21.6122 16.7499C21.321 18.06 20.824 19.1488 19.9864 19.9864C19.1488 20.824 18.06 21.321 16.7499 21.6122C15.4512 21.9008 13.8757 22 12 22C10.1243 22 8.54878 21.9008 7.25007 21.6122C5.94002 21.321 4.85116 20.824 4.01358 19.9864C3.176 19.1488 2.67897 18.06 2.38782 16.7499C2.0992 15.4512 2 13.8757 2 12C2 10.1243 2.0992 8.54878 2.38782 7.25007C2.67897 5.94002 3.176 4.85116 4.01358 4.01358C4.85116 3.176 5.94002 2.67897 7.25007 2.38782Z' />
     </svg>
 }
 
 export const UserAddSolidIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
         <path d='M5 9.5C5 7.01472 7.01472 5 9.5 5C11.9853 5 14 7.01472 14 9.5C14 11.9853 11.9853 14 9.5 14C7.01472 14 5 11.9853 5 9.5Z' />
         <path d='M4.64115 15.6993C5.87351 15.1644 7.49045 15 9.49995 15C11.5112 15 13.1293 15.1647 14.3621 15.7008C15.705 16.2847 16.5212 17.2793 16.949 18.6836C17.1495 19.3418 16.6551 20 15.9738 20H3.02801C2.34589 20 1.85045 19.3408 2.05157 18.6814C2.47994 17.2769 3.29738 16.2826 4.64115 15.6993Z' />
         <path d='M19 3C19 2.44772 18.5523 2 18 2C17.4477 2 17 2.44772 17 3V5H15C14.4477 5 14 5.44772 14 6C14 6.55228 14.4477 7 15 7H17V9C17 9.55228 17.4477 10 18 10C18.5523 10 19 9.55228 19 9V7H21C21.5523 7 22 6.55228 22 6C22 5.44772 21.5523 5 21 5H19V3Z' />
@@ -102,7 +105,7 @@ export const UserAddSolidIcon = (props) => {
 }
 
 export const GlobeSolidIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
         <path d='M10.139 13C9.55133 13 9.08639 13.5059 9.19698 14.0831C9.52905 15.8163 10.2679 17.4049 11.3109 18.7462C11.6638 19.2 12.3364 19.2 12.6893 18.7462C13.7324 17.4049 14.4712 15.8164 14.8032 14.0831C14.9138 13.5059 14.4489 13 13.8612 13H10.139Z' />
         <path d='M17.889 13C17.3661 13 16.9358 13.4037 16.8591 13.9209C16.5115 16.267 15.5369 18.409 14.1122 20.1704C13.8041 20.5512 13.8482 21.1177 14.2355 21.4176V21.4176C14.4404 21.5762 14.7082 21.6325 14.9557 21.556C18.3847 20.4967 21.0257 17.6424 21.7812 14.0908C21.9043 13.5124 21.4379 13 20.8465 13H17.889Z' />
         <path d='M3.15352 13C2.56218 13 2.09582 13.5124 2.21886 14.0908C3.00142 17.7696 5.80689 20.7002 9.41564 21.6629C9.66029 21.7281 9.91894 21.6492 10.0955 21.4678V21.4678C10.3689 21.1868 10.3695 20.7413 10.1148 20.4433C8.56666 18.6322 7.50675 16.3896 7.14096 13.9209C7.06432 13.4037 6.63392 13 6.11108 13H3.15352Z' />
@@ -113,13 +116,13 @@ export const GlobeSolidIcon = (props) => {
 }
 
 export const PencilAltSolidIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
         <path d='M9.65451 3.34098C10.7432 1.6173 13.2568 1.6173 14.3455 3.34098L18.5365 9.97669C18.8393 10.4561 19 11.0116 19 11.5787V19C19 20.6568 17.6569 22 16 22H8C6.34315 22 5 20.6568 5 19V11.5787C5 11.0116 5.16072 10.4561 5.46353 9.97669L9.65451 3.34098ZM12.6545 4.40896C12.3507 3.92797 11.6493 3.92797 11.3455 4.40896L10.303 6.0595C10.657 6.62504 11.2856 6.99997 12 6.99997C12.7144 6.99997 13.343 6.625 13.6969 6.05942L12.6545 4.40896ZM8 12C7.44772 12 7 12.4477 7 13C7 13.5523 7.44772 14 8 14H16C16.5523 14 17 13.5523 17 13C17 12.4477 16.5523 12 16 12H8Z' />
     </svg>
 }
 
 export const PencilAltOutlineIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
         <path d='M6 11.5787V19C6 20.1046 6.89543 21 8 21H16C17.1046 21 18 20.1046 18 19V11.5787C18 11.2007 17.8929 10.8303 17.691 10.5107L13.5 3.875C12.8038 2.77266 11.1962 2.77266 10.5 3.875L6.30902 10.5107C6.10715 10.8303 6 11.2007 6 11.5787Z' />
         <path d='M14.8293 6C14.4175 7.16519 13.3062 8 12 8C10.6938 8 9.58255 7.16519 9.17072 6' />
         <path d='M6 13L18 13' />
@@ -127,34 +130,88 @@ export const PencilAltOutlineIcon = (props) => {
 }
 
 export const DropletSolidIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
         <path d='M21 13.5C21 18.4706 16.9706 22.5 12 22.5C7.02944 22.5 3 18.4706 3 13.5C3 10.796 4.40858 8.44449 5.97593 6.65272C7.55461 4.84799 9.3972 3.49253 10.4939 2.76287C11.411 2.15267 12.589 2.15267 13.5061 2.76287C14.6028 3.49253 16.4454 4.84799 18.0241 6.65272C19.5914 8.44449 21 10.796 21 13.5Z' />
     </svg>
 }
 
 export const SquareOutlineIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
         <path d='M3 12C3 4.5885 4.5885 3 12 3C19.4115 3 21 4.5885 21 12C21 19.4115 19.4115 21 12 21C4.5885 21 3 19.4115 3 12Z' />
     </svg>
 }
 
 export const PlaySolidIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='currentColor' stroke='none' fillRule='evenodd' clipRule='evenodd' {...props}>
         <path d='M15.5963 10.3318C16.8872 11.0694 16.8872 12.9307 15.5963 13.6683L11.154 16.2068C9.9715 16.8825 8.5002 16.0287 8.5002 14.6667L8.5002 9.33339C8.5002 7.97146 9.9715 7.11762 11.154 7.79333L15.5963 10.3318Z' />
     </svg>
 }
 
 export const CheckSquareOutlineIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
         <path d='M3 12C3 4.5885 4.5885 3 12 3C19.4115 3 21 4.5885 21 12C21 19.4115 19.4115 21 12 21C4.5885 21 3 19.4115 3 12Z' />
         <path d='M9 12L10.6828 13.6828V13.6828C10.858 13.858 11.142 13.858 11.3172 13.6828V13.6828L15 10' />
     </svg>
 }
 
 export const DocumentXOutlineIcon = (props) => {
-    return <svg xmlns='http://www.w3.org/2000/svg' width='33' height='33' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
         <path d='M9.5 11L14.5 16' />
         <path d='M14.5 11L9.5 16' />
         <path d='M17.8284 6.82843C18.4065 7.40649 18.6955 7.69552 18.8478 8.06306C19 8.4306 19 8.83935 19 9.65685L19 17C19 18.8856 19 19.8284 18.4142 20.4142C17.8284 21 16.8856 21 15 21H9C7.11438 21 6.17157 21 5.58579 20.4142C5 19.8284 5 18.8856 5 17L5 7C5 5.11438 5 4.17157 5.58579 3.58579C6.17157 3 7.11438 3 9 3H12.3431C13.1606 3 13.5694 3 13.9369 3.15224C14.3045 3.30448 14.5935 3.59351 15.1716 4.17157L17.8284 6.82843Z' />
+    </svg>
+}
+
+export const DesktopOutlineIcon = (props) => {
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
+        <path d='M3 7C3 5.11438 3 4.17157 3.58579 3.58579C4.17157 3 5.11438 3 7 3H12H17C18.8856 3 19.8284 3 20.4142 3.58579C21 4.17157 21 5.11438 21 7V10V13C21 14.8856 21 15.8284 20.4142 16.4142C19.8284 17 18.8856 17 17 17H12H7C5.11438 17 4.17157 17 3.58579 16.4142C3 15.8284 3 14.8856 3 13V10V7Z' />
+        <path d='M13.3333 17L14.6667 19V19C15.2366 19.8549 14.6238 21 13.5963 21H12H10.4037C9.37624 21 8.7634 19.8549 9.33333 19V19L10.6667 17' />
+        <path d='M3 13H21' />
+    </svg>
+}
+
+export const CursorAltOutlineIcon = (props) => {
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
+        <path d='M8.68602 16.288L8.10556 9.37387C7.96399 7.68752 9.85032 6.59846 11.24 7.56424L16.9375 11.524C18.6256 12.6972 17.6579 15.348 15.611 15.1577L14.8273 15.0849C13.9821 15.0063 13.1795 15.4697 12.825 16.2409L12.4962 16.9561C11.6376 18.8238 8.858 18.3365 8.68602 16.288Z' />
+    </svg>
+}
+
+export const UserXOutlineIcon = (props) => {
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
+        <path d='M3 19C3.69137 16.6928 5.46998 16 9.5 16C13.53 16 15.3086 16.6928 16 19' />
+        <path d='M13 9.5C13 11.433 11.433 13 9.5 13C7.567 13 6 11.433 6 9.5C6 7.567 7.567 6 9.5 6C11.433 6 13 7.567 13 9.5Z' />
+        <path d='M16 3L21 8' />
+        <path d='M21 3L16 8' />
+    </svg>
+}
+
+export const UserSquareOutlineIcon = (props) => {
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
+        <path d='M3 12C3 4.5885 4.5885 3 12 3C19.4115 3 21 4.5885 21 12C21 19.4115 19.4115 21 12 21C4.5885 21 3 19.4115 3 12Z' />
+        <path d='M15 10C15 11.6569 13.6569 13 12 13C10.3431 13 9 11.6569 9 10C9 8.34315 10.3431 7 12 7C13.6569 7 15 8.34315 15 10Z' />
+        <path d='M6 19C6.63819 16.6928 8.27998 16 12 16C15.72 16 17.3618 16.6425 18 18.9497' />
+    </svg>
+}
+
+export const UserCheckOutlineIcon = (props) => {
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
+        <path d='M3 19C3.69137 16.6928 5.46998 16 9.5 16C13.53 16 15.3086 16.6928 16 19' />
+        <path d='M13 9.5C13 11.433 11.433 13 9.5 13C7.567 13 6 11.433 6 9.5C6 7.567 7.567 6 9.5 6C11.433 6 13 7.567 13 9.5Z' />
+        <path d='M15 5L16.5 6.5V6.5C16.7761 6.77614 17.2239 6.77614 17.5 6.5V6.5L21 3' />
+    </svg>
+}
+
+export const DuplicateOutlineIcon = (props) => {
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
+        <path d='M8 15.9615C3.92665 15.7245 3 14.3107 3 9.5C3 4.14725 4.14725 3 9.5 3C14.3107 3 15.7245 3.92665 15.9615 8' />
+        <path d='M8 14.5C8 9.14725 9.14725 8 14.5 8C19.8527 8 21 9.14725 21 14.5C21 19.8527 19.8527 21 14.5 21C9.14725 21 8 19.8527 8 14.5Z' />
+    </svg>
+}
+
+export const XSquareOutlineIcon = (props) => {
+    return <svg xmlns="http://www.w3.org/2000/svg" width={ defaultWidth } height={ defaultHeight } viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
+        <path d="M9 9L15 15" />
+        <path d="M15 9L9 15" />
+        <path d="M3 12C3 4.5885 4.5885 3 12 3C19.4115 3 21 4.5885 21 12C21 19.4115 19.4115 21 12 21C4.5885 21 3 19.4115 3 12Z" />
     </svg>
 }

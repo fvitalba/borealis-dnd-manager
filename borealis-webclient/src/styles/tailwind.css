@@ -152,6 +152,17 @@
     @apply w-96;
 }
 
+.control-panel-select {
+    @apply text-primary-300;
+    @apply rounded-md;
+    @apply text-base;
+    @apply justify-center;
+    @apply bg-primary-500;
+    @apply pl-1;
+    @apply pr-1;
+    @apply placeholder-primary-300;
+}
+
 .chat-panel-container {
     @apply basis-1/3;
     @apply z-100;

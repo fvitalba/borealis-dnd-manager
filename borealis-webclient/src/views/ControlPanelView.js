@@ -6,15 +6,7 @@ import UserTool from '../components/UserTool'
 import SelectedTokensControls from '../components/SelectedTokensControls'
 import ToolSelectView from './ToolSelectView'
 import Button from './Button'
-// Scarlab Icons
-import {
-    PlusCircleOutlineIcon,
-    /* EyeSolidIcon, */
-    UserCircleSolidIcon,
-    MapSolidIcon,
-    GhostSolidIcon,
-    RefreshOutlineIcon
-} from './Icons'
+import { PlusCircleOutlineIcon, UserCircleSolidIcon, MapSolidIcon, GhostSolidIcon, RefreshOutlineIcon } from './Icons'
 
 
 
