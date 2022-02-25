@@ -1,7 +1,9 @@
 import Button from './Button'
 import { PlaySolidIcon } from './Icons'
 
-const ChatPanelView = () => {
+const ChatPanelView = ({ /* chatPanelHidden, toggleHidden, */ currentMessage, changeCurrentMessage, addMessage, chatMessages }) => {
+    const playerInfo = 'lvl. XX Barbarian'
+    const sortedChatMessages = chatMessages.sort((a, b) => a.timestamp - b.timestamp)
     return (
         <div className='chat-panel-container'>
             <div className='chat-panel-header'>
@@ -9,11 +11,18 @@ const ChatPanelView = () => {
                 <div className='chat-panel-header-subtitle'>2 players online</div>
             </div>
             <div className='chat-panel-content'>
-                <div className='chat-panel-message'><b>Tobia</b>| lvl. 13 Paladin:<br />LEEEROY JENKINS!</div>
-                <div className='chat-panel-message'><b>Fabio</b>| lvl. 12 Ranger:<br />DARF ICH SEINEN DÖDEL VERGOLDEN?</div>
+                { sortedChatMessages.map((message) =>
+                    <div key={ message.guid } className='chat-panel-message'>
+                        <div className='chat-panel-message-info'>
+                            <div className='chat-panel-message-username' >{ message.username }</div>
+                            { playerInfo ? <div className='chat-panel-message-player-info'>| { playerInfo }</div> : null }
+                        </div>
+                        <div className='chat-panel-message-content'>{ message.message }</div>
+                    </div>
+                )}
                 <div className='chat-panel-input'>
-                    <input title='Mesage' placeholder='Type your message...' className='chat-panel-input-input' />
-                    <Button title='Push refresh to players' value={ <PlaySolidIcon /> } onClick={ null } />
+                    <input title='Mesage' placeholder='Type your message...' value={ currentMessage } onChange={ changeCurrentMessage } className='chat-panel-input-input' />
+                    <Button title='Push refresh to players' value={ <PlaySolidIcon /> } onClick={ addMessage } />
                 </div>
             </div>
         </div>

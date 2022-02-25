@@ -13,7 +13,7 @@ const initialControlPanelState = () => {
     }
 }
 
-const ControlPanel = ({ game, settings, metadata, setUsername/*, setCursorSize */, toggleMousesharing }) => {
+const ControlPanel = ({ game, settings, metadata, chat, setUsername/*, setCursorSize */, toggleMousesharing }) => {
     const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()
 
@@ -49,7 +49,7 @@ const ControlPanel = ({ game, settings, metadata, setUsername/*, setCursorSize *
     }
 
     const pushRefreshToPlayers = () => {
-        pushGameRefresh(webSocket, wsSettings, game)
+        pushGameRefresh(webSocket, wsSettings, game, chat)
     }
 
     const submenuHidden = (controlPanelState.hidden || (!controlPanelState.toggleOnMaps && !controlPanelState.toggleOnTokens && !controlPanelState.toggleOnUser))
@@ -77,6 +77,7 @@ const mapStateToProps = (state) => {
         game: state.game,
         settings: state.settings,
         metadata: state.metadata,
+        chat: state.chat,
     }
 }
 

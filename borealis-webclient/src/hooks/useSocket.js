@@ -94,12 +94,13 @@ export const pushFogEnabled = (webSocket, wsSettings, newFogEnabled) => {
     })
 }
 
-export const pushGameRefresh = (webSocket, wsSettings, game, additionalAttributes) => {
+export const pushGameRefresh = (webSocket, wsSettings, game, chat, additionalAttributes) => {
     sendData(webSocket, {
         type: 'pushGameRefresh',
         from: wsSettings.guid,
         username: wsSettings.username,
         game: game,
+        chat: chat,
         ...additionalAttributes,
     })
 }
@@ -159,5 +160,17 @@ export const requestLoadGameFromDatabase = (webSocket, wsSettings) => {
         type: 'requestLoadGameFromDatabase',
         from: wsSettings.guid,
         room: wsSettings.room,
+    })
+}
+
+export const sendChatMessage = (webSocket, wsSettings, username, playerInfo, messageText, timestamp) => {
+    sendData(webSocket, {
+        type: 'sendChatMessage',
+        from: wsSettings.guid,
+        room: wsSettings.room,
+        username: username,
+        playerInfo: playerInfo,
+        messageText: messageText,
+        timestamp: timestamp,
     })
 }

@@ -175,13 +175,15 @@
 }
 
 .chat-panel-container {
-    @apply basis-1/3;
     @apply z-100;
     @apply absolute;
     @apply top-0 right-0;
     @apply bg-primary-300;
     @apply h-screen;
+    @apply w-80;
     @apply overflow-hidden;
+    @apply flex;
+    @apply flex-col;
 }
 
 .chat-panel-header {
@@ -215,9 +217,32 @@
 
 }
 
+.chat-panel-message-info {
+    @apply flex;
+    @apply flex-row;
+}
+
+.chat-panel-message-username {
+    @apply font-bold;
+}
+
+.chat-panel-message-player-info {
+    @apply text-primary-500;
+    @apply font-bold;
+    @apply text-sm;
+    @apply pl-1;
+    @apply align-text-bottom;
+}
+
+.chat-panel-message-content {
+
+}
+
 .chat-panel-input {
     @apply bottom-8;
     @apply absolute;
+    @apply flex;
+    @apply flex-row;
 }
 
 .chat-panel-input-input {
