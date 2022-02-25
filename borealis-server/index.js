@@ -8,6 +8,7 @@ import queryString from 'query-string'
 import Room from './models/room.js'
 import User from './models/user.js'
 import Message from './models/chatMessage.js'
+import { handleIncomingMessage } from './controllers/messageHandler.js'
 
 const app = express()
 const privateKeyFilename = 'privkey.pem'
@@ -64,68 +65,11 @@ wss.on('connection', (websocketConnection, connectionRequest) => {
     const [path, params] = connectionRequest?.url?.split('?')
     const connectionParams = queryString.parse(params)
     
-    websocketConnection.room = path
+    websocketConnection.room = path.substring(1)
     websocketConnection.guid = connectionParams.guid
     websocketConnection.on('message', (message) => {
-        const parsedMessage = JSON.parse(message)
-        switch (parsedMessage.type) {
-        case 'saveGame':
-            // Save game locally
-            fs.writeFile(`${websocketConnection.room}.room`.substring(1), parsedMessage.payload, (err) => {
-                console.error(err)
-            })
-            break
-        case 'requestLoadGame':
-            // Load game from storage
-            const savedGame = fs.readFileSync(`${websocketConnection.room}.room`.substring(1),'utf8')
-            const savedGameMessage = {
-                type: 'loadGame',
-                from: undefined,
-                to: undefined,
-                room: websocketConnection.room,
-                payload: JSON.parse(savedGame), //this is the saved game
-            }
-            wss.clients.forEach(client => {
-                if (client.readyState === WebSocket.OPEN) {
-                    if (client.room !== websocketConnection.room)
-                        return // Don't send to other rooms
-                    client.send(JSON.stringify(savedGameMessage))
-                }
-            })
-        case 'saveGameToDatabase':
-            const room = new Room(JSON.parse(parsedMessage.payload))
-            room.save().then()
-            break
-        case 'requestLoadGameFromDatabase':
-            const roomName = websocketConnection.room.substring(1)
-            let currentRoom = undefined
-            if (roomName) {
-                Room.find({ 'metadata.room': roomName }).then((result) => {
-                    result.forEach((room) => {
-                        if ((!currentRoom) || (currentRoom.game.gen < room.game.gen)) {
-                            currentRoom = room
-                        }
-                    })
-                    if (currentRoom) {
-                        const savedGameMessage = {
-                            type: 'loadGame',
-                            from: undefined,
-                            to: undefined,
-                            room: websocketConnection.room,
-                            payload: currentRoom, //this is the saved game
-                        }
-                        wss.clients.forEach(client => {
-                            if (client.readyState === WebSocket.OPEN) {
-                                if (client.room !== websocketConnection.room)
-                                    return // Don't send to other rooms
-                                client.send(JSON.stringify(savedGameMessage))
-                            }
-                        })
-                    }
-                })
-            }
-            break
-        default:
+        const outgoingMessage = handleIncomingMessage(message)
+        if (outgoingMessage) {
             // Forward message to all other clients (for this room)
             wss.clients.forEach(client => {
                 if (client.readyState === WebSocket.OPEN) {
@@ -133,10 +77,9 @@ wss.on('connection', (websocketConnection, connectionRequest) => {
                         return // Don't send to other rooms
                     if (client === websocketConnection)
                         return // Don't send back to sender
-                    client.send(JSON.stringify(parsedMessage))
+                    client.send(JSON.stringify(outgoingMessage))
                 }
             })
-            break
         }
     })
 })
