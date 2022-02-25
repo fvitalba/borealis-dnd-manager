@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { setUsername, setCursorSize } from '../reducers/settingsReducer'
+import { setUsername, setCursorSize, toggleMousesharing } from '../reducers/settingsReducer'
 import { pushGameRefresh, requestRefresh, useWebSocket } from '../hooks/useSocket'
 import ControlPanelView from '../views/ControlPanelView'
 
@@ -13,7 +13,7 @@ const initialControlPanelState = () => {
     }
 }
 
-const ControlPanel = ({ game, settings, metadata, setUsername, setCursorSize }) => {
+const ControlPanel = ({ game, settings, metadata, setUsername/*, setCursorSize */, toggleMousesharing }) => {
     const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()
 
@@ -24,6 +24,10 @@ const ControlPanel = ({ game, settings, metadata, setUsername, setCursorSize }) 
         })
     }
 
+    const toggleShareMouse = () => {
+        toggleMousesharing()
+    }
+
     const updateUsername = (value) => {
         setUsername(value)
         setWsSettings({
@@ -32,11 +36,13 @@ const ControlPanel = ({ game, settings, metadata, setUsername, setCursorSize }) 
         })
     }
 
+    /*
     const updateCursorSize = (value) => {
         const newSize = value
         if (!isNaN(newSize))
             setCursorSize(newSize)
     }
+    */
 
     const socketRequestRefresh = () => {
         requestRefresh(webSocket, wsSettings)
@@ -46,18 +52,21 @@ const ControlPanel = ({ game, settings, metadata, setUsername, setCursorSize }) 
         pushGameRefresh(webSocket, wsSettings, game)
     }
 
+    const submenuHidden = (controlPanelState.hidden || (!controlPanelState.toggleOnMaps && !controlPanelState.toggleOnTokens && !controlPanelState.toggleOnUser))
+
     return (
         <ControlPanelView
             controlPanelState={ controlPanelState }
             setControlPanelState={ setControlPanelState }
             hidden={ controlPanelState.hidden }
             toggleHidden={ toggleHidden }
+            submenuHidden={ submenuHidden }
             fogEnabled={ game.fogEnabled }
             isHost={ metadata.isHost }
             username={ settings.username }
             setUsername={ updateUsername }
-            cursorSize={ settings.cursorSize }
-            setCursorSize={ updateCursorSize }
+            mouseIsShared={ settings.shareMouse }
+            toggleShareMouse={ toggleShareMouse }
             socketRequestRefresh={ socketRequestRefresh }
             pushRefreshToPlayers={ pushRefreshToPlayers } />
     )
@@ -74,6 +83,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
     setUsername,
     setCursorSize,
+    toggleMousesharing,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ControlPanel)

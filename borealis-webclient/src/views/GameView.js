@@ -5,6 +5,7 @@ import Overlay from '../components/Overlay'
 import Token from '../components/Token'
 import Cursor from './Cursor'
 import ControlPanel from '../components/ControlPanel'
+import ChatPanelView from '../views/ChatPanelView'
 
 const GameView = ({ isHost, overlayRef, isFogLoaded, cursors, cursorSize, tokens, onMouseMove, onMouseUp, onMouseDown }) => {
     const goneClass = isFogLoaded ? null : 'gone'
@@ -34,11 +35,8 @@ const GameView = ({ isHost, overlayRef, isFogLoaded, cursors, cursorSize, tokens
                 {/* Overlay: Holds outline for fog & draw tools */ }
                 <Overlay overlayRef={ overlayRef } />
             </div>
-            <div className='grid grid-cols-7 grid-rows-1'>
-                <div />
-                <ControlPanel />
-                <div />
-            </div>
+            <ControlPanel />
+            <ChatPanelView />
         </div>
     )
 }
