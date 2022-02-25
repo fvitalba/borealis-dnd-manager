@@ -2,10 +2,11 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
 import { setGameSettings } from '../reducers/metadataReducer'
 import { overwriteGame, updateMaps, loadMap, addMap, setFogEnabled, updateTokens, toggleTokenValue } from '../reducers/gameReducer'
+import { addChatMessage, overwriteChat } from '../reducers/chatReducer'
 import { pushDrawPath, pushFogPath, pushGameRefresh, pushTokens, useWebSocket } from '../hooks/useSocket'
 import GameView from '../views/GameView'
 
-const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, setFogEnabled }) => {
+const Game = ({ metadata, game, settings, chat, setGameSettings, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, setFogEnabled, addChatMessage, overwriteChat }) => {
     const overlayRef = React.useRef()
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()
     const [mousePosition, setMousePosition] = useState({ downX: 0, downY: 0 })
@@ -475,20 +476,25 @@ const Game = ({ metadata, game, settings, setGameSettings, overwriteGame, loadMa
             setFogEnabled(data.fogEnabled)
             break
         case 'pushGameRefresh': // refresh from host
+            console.log('receiving',data)
             overwriteGame(data.game)
+            overwriteChat(data.chat)
             break
         case 'requestRefresh': // refresh request from player
             if (metadata.isHost) {
-                pushGameRefresh(webSocket, wsSettings, game, { to: data.from, })
+                pushGameRefresh(webSocket, wsSettings, game, chat, { to: data.from, })
             }
             break
         case 'loadGame':
             overwriteGame(data.payload.game)
             break
+        case 'sendChatMessage':
+            addChatMessage(data.username, data.playerInfo, data.messageText, data.timestamp)
+            break
         default:
             console.error(`Unrecognized websocket message type: ${data.type}`)
         }
-    },[ game, metadata.isHost, loadMap, overwriteGame, setFogEnabled, updateMaps, addMap, updateTokens, webSocket, wsSettings ])
+    },[ game, chat, metadata.isHost, loadMap, overwriteGame, setFogEnabled, updateMaps, addMap, updateTokens, webSocket, wsSettings ])
 
     /****************************************************
      * React Hooks                                      *
@@ -571,6 +577,7 @@ const mapStateToProps = (state) => {
         metadata: state.metadata,
         game: state.game,
         settings: state.settings,
+        chat: state.chat,
     }
 }
 
@@ -583,6 +590,8 @@ const mapDispatchToProps = {
     setFogEnabled,
     updateTokens,
     toggleTokenValue,
+    addChatMessage,
+    overwriteChat,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game)

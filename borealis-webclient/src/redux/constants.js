@@ -36,3 +36,8 @@ export const SET_DOWN_COORDINATES = 'METADATA/SET_DOWN_COORDINATES'
 
 // controlpanel
 //TODO: Add control panel actions
+
+// chat
+export const ADD_CHAT_MESSAGE = 'CHAT/ADD_CHAT_MESSAGE'
+export const SET_CHAT_USERNAME = 'CHAT/SET_CHAT_USERNAME'
+export const OVERWRITE_CHAT = 'CHAT/OVERWRITE_CHAT'

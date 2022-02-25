@@ -5,7 +5,7 @@ import Overlay from '../components/Overlay'
 import Token from '../components/Token'
 import Cursor from './Cursor'
 import ControlPanel from '../components/ControlPanel'
-import ChatPanelView from '../views/ChatPanelView'
+import ChatPanel from '../components/ChatPanel'
 
 const GameView = ({ isHost, overlayRef, isFogLoaded, cursors, cursorSize, tokens, onMouseMove, onMouseUp, onMouseDown }) => {
     const goneClass = isFogLoaded ? null : 'gone'
@@ -36,7 +36,7 @@ const GameView = ({ isHost, overlayRef, isFogLoaded, cursors, cursorSize, tokens
                 <Overlay overlayRef={ overlayRef } />
             </div>
             <ControlPanel />
-            <ChatPanelView />
+            <ChatPanel />
         </div>
     )
 }

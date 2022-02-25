@@ -704,7 +704,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 .chat-panel-container {
-  flex-basis: 33.333333%;
   z-index: 100;
   position: absolute;
   top: 0px;
@@ -712,7 +711,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-bg-opacity: 1;
   background-color: rgb(209 213 219 / var(--tw-bg-opacity));
   height: 100vh;
+  width: 20rem;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .chat-panel-header {
@@ -751,9 +753,34 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 }
 
+.chat-panel-message-info {
+  display: flex;
+  flex-direction: row;
+}
+
+.chat-panel-message-username {
+  font-weight: 700;
+}
+
+.chat-panel-message-player-info {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
+  font-weight: 700;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  padding-left: 0.25rem;
+  vertical-align: text-bottom;
+}
+
+.chat-panel-message-content {
+
+}
+
 .chat-panel-input {
   bottom: 2rem;
   position: absolute;
+  display: flex;
+  flex-direction: row;
 }
 
 .chat-panel-input-input {

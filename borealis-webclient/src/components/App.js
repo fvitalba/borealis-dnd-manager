@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import settingsReducer from '../reducers/settingsReducer'
 import metadataReducer from '../reducers/metadataReducer'
 import gameReducer from '../reducers/gameReducer'
+import chatReducer from '../reducers/chatReducer'
 import WebSocketProvider from '../contexts/WebSocketProvider'
 import Game from './Game'
 
@@ -12,6 +13,7 @@ const App = () => {
         settings: settingsReducer,
         metadata: metadataReducer,
         game: gameReducer,
+        chat: chatReducer,
     })
     const store = createStore(combinedReducer)
 
