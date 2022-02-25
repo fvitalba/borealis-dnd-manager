@@ -17,10 +17,12 @@ const TokenTool = ({ toggleOnTokens, game, addToken, metadata }) => {
         setNewTokenUrl('')
     }
 
+    const currentTokens = game.tokens.filter((token) => (token.mapId === undefined) || (token.mapId === game.mapId))
+
     return (
-        toggleOnTokens ?
-            <TokenToolView newTokenUrl={ newTokenUrl } setNewTokenUrl={ setNewTokenUrl } createToken={ createToken } tokens={ game.tokens } /> :
-            <SelectedTokensControls tokens={ game.tokens } />
+        toggleOnTokens
+            ? <TokenToolView newTokenUrl={ newTokenUrl } setNewTokenUrl={ setNewTokenUrl } createToken={ createToken } tokens={ currentTokens } />
+            : <SelectedTokensControls tokens={ currentTokens } />
     )
 }
 

@@ -6,7 +6,7 @@ const TokenToolView = ({ newTokenUrl, setNewTokenUrl, createToken, tokens }) => 
     return (
         <div className='token-tool-view'>
             <div className='token-tool-creation'>
-                <input placeholder='New token url' onChange={ (e) => setNewTokenUrl(e.target.value) } value={ newTokenUrl } className='control-panel-input-very-long' />
+                <input placeholder='New token url' onChange={ (e) => setNewTokenUrl(e.target.value) } value={ newTokenUrl } className='w-96 control-panel-input' />
                 <Button title='Create new token' value={ <UserAddSolidIcon /> } onClick={ createToken } />
             </div>
             {

@@ -6,11 +6,11 @@ import UserTool from '../components/UserTool'
 import SelectedTokensControls from '../components/SelectedTokensControls'
 import ToolSelectView from './ToolSelectView'
 import Button from './Button'
-import { PlusCircleOutlineIcon, UserCircleSolidIcon, MapSolidIcon, GhostSolidIcon, RefreshOutlineIcon } from './Icons'
+import { PlusCircleOutlineIcon, UserCircleSolidIcon, MapSolidIcon, GhostSolidIcon, RefreshOutlineIcon, CursorOutlineIcon, CursorSolidIcon } from './Icons'
 
 
 
-const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, toggleHidden, submenuHidden, fogEnabled, isHost, username, setUsername, cursorSize, setCursorSize, socketRequestRefresh, pushRefreshToPlayers }) => {
+const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, toggleHidden, submenuHidden, fogEnabled, isHost, username, setUsername, mouseIsShared, toggleShareMouse, socketRequestRefresh, pushRefreshToPlayers }) => {
     if (hidden)
         return (
             <div id='control-panel' className='control-panel-container'>
@@ -48,10 +48,10 @@ const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, tog
             <div id='control-panel' className='control-panel-container'>
                 <div className='control-panel-tools'>
                     <Button value={ <PlusCircleOutlineIcon /> } onClick={ toggleHidden } title='show/hide control panel' />
-                    <input title='User name' placeholder='User name' value={ username } onChange={ (e) => setUsername(e.target.value) } />
-                    <ToggleButton title='Share mouse (cursor)' value='&#x1f401;' controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
-                    <input title='Cursor size' value={ cursorSize } onChange={ (e) => setCursorSize(parseInt(e.target.value)) } type='number' min='0' />
-                    <Button title='Request gameboard refresh from host' onClick={ socketRequestRefresh } value='&#x1f4ab;' />
+                    <input title='User name' placeholder='User name' value={ username } onChange={ (e) => setUsername(e.target.value) } className='control-panel-input' />
+                    <Button title='Share cursor' value={ mouseIsShared ? <CursorSolidIcon /> : <CursorOutlineIcon /> } onClick={ toggleShareMouse } />
+                    { /* <input title='Cursor size' value={ cursorSize } onChange={ (e) => setCursorSize(parseInt(e.target.value)) } type='number' min='0' /> */ }
+                    <Button title='Request gameboard refresh from host' onClick={ socketRequestRefresh } value={ <RefreshOutlineIcon /> } />
                 </div>
                 {
                     !submenuHidden

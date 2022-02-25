@@ -209,9 +209,21 @@ export const DuplicateOutlineIcon = (props) => {
 }
 
 export const XSquareOutlineIcon = (props) => {
-    return <svg xmlns="http://www.w3.org/2000/svg" width={ defaultWidth } height={ defaultHeight } viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
-        <path d="M9 9L15 15" />
-        <path d="M15 9L9 15" />
-        <path d="M3 12C3 4.5885 4.5885 3 12 3C19.4115 3 21 4.5885 21 12C21 19.4115 19.4115 21 12 21C4.5885 21 3 19.4115 3 12Z" />
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
+        <path d='M9 9L15 15' />
+        <path d='M15 9L9 15' />
+        <path d='M3 12C3 4.5885 4.5885 3 12 3C19.4115 3 21 4.5885 21 12C21 19.4115 19.4115 21 12 21C4.5885 21 3 19.4115 3 12Z' />
+    </svg>
+}
+
+export const CursorOutlineIcon = (props) => {
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
+        <path d='M7.236 14.1235L10.1904 7.84548C10.9109 6.31427 13.0891 6.31427 13.8096 7.84548L16.764 14.1235C17.6393 15.9835 15.4758 17.7954 13.7983 16.6071L13.156 16.1522C12.4634 15.6616 11.5366 15.6616 10.844 16.1522L10.2017 16.6072C8.52417 17.7954 6.36069 15.9835 7.236 14.1235Z' />
+    </svg>
+}
+
+export const CursorSolidIcon = (props) => {
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='currentColor' stroke='none' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
+        <path d='M10.7797 17.4231C8.26348 19.2055 5.01827 16.4877 6.33123 13.6977L9.28559 7.41965C10.3664 5.12284 13.6337 5.12285 14.7145 7.41966L17.6689 13.6977C18.9818 16.4877 15.7366 19.2055 13.2204 17.4231L12.5781 16.9682C12.2318 16.7229 11.7683 16.7229 11.422 16.9682L10.7797 17.4231Z' />
     </svg>
 }

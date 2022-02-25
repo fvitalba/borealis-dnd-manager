@@ -6,7 +6,7 @@ const MapToolView = ({ maps, newMapName, setNewMapName, createMap }) => {
     return (
         <div className='map-tool-view'>
             <div className='map-tool-creation' >
-                <input placeholder='New map name' onChange={ (e) => setNewMapName(e.target.value) } value={ newMapName } className='control-panel-input-very-long' />
+                <input placeholder='New map name' onChange={ (e) => setNewMapName(e.target.value) } value={ newMapName } className='w-96 control-panel-input' />
                 <Button title='Create new map' value={ <PlusSquareSolidIcon /> } onClick={ createMap } disabled={ newMapName === '' } />
             </div>
             {

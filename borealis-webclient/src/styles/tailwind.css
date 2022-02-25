@@ -25,7 +25,7 @@
 }
 
 .tool-select-view {
-
+    @apply pl-4;
 }
 
 .user-tool-view {
@@ -81,6 +81,7 @@
 .map-config-map-details {
     @apply flex;
     @apply flex-row;
+    @apply h-10;
 }
 
 .map-config-map-actions {
@@ -104,20 +105,37 @@
 }
 
 .token-config {
-    @apply text-primary-200;
+    @apply text-primary-700;
     @apply text-base;
     @apply border-t-2;
-    @apply border-solid border-secondary-600;
-    @apply pt-1;
-    @apply pb-1;
+    @apply border-dotted border-primary-700;
+    @apply pt-2;
+    @apply pb-2;
+    @apply flex;
+    @apply flex-col;
+}
+
+.token-config-selected {
+    @apply token-config;
+    @apply font-bold;
+    @apply text-secondary-700;
 }
 
 .token-config-header {
-
+    @apply flex;
+    @apply flex-row;
 }
 
-.tool-group {
-    @apply space-x-1;
+.token-config-details {
+    @apply flex;
+    @apply flex-row;
+    @apply pt-2;
+}
+
+.tool-control-group {
+    @apply flex;
+    @apply flex-row;
+    @apply pl-4;
 }
 
 .control-panel-input {
@@ -129,26 +147,13 @@
     @apply pl-1;
     @apply pr-1;
     @apply placeholder-primary-300;
+    @apply m-1;
 }
 
-.control-panel-input-short {
+.control-panel-input-selected {
     @apply control-panel-input;
-    @apply w-24;
-}
-
-.control-panel-input-md {
-    @apply control-panel-input;
-    @apply w-48;
-}
-
-.control-panel-input-long {
-    @apply control-panel-input;
-    @apply w-64;
-}
-
-.control-panel-input-very-long {
-    @apply control-panel-input;
-    @apply w-96;
+    @apply text-secondary-300;
+    @apply font-bold;
 }
 
 .control-panel-select {
@@ -160,6 +165,13 @@
     @apply pl-1;
     @apply pr-1;
     @apply placeholder-primary-300;
+    @apply m-1;
+}
+
+.control-panel-select-selected {
+    @apply control-panel-select;
+    @apply text-secondary-300;
+    @apply font-bold;
 }
 
 .chat-panel-container {
