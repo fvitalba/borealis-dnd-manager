@@ -15,12 +15,6 @@ const privateKeyFilename = 'privkey.pem'
 const SslCertificateFilename = 'fullchain.pem'
 const serverPort = process.env.PORT || 8000
 
-fs.writeFile('pid.tmp', process.pid.toString(), err => {
-    if (err)
-        return console.log(err)
-    console.log(`process id ${process.pid}`)
-})
-
 app.use(express.static('build'))
 
 app.route('/room-file/:roomName').get((req, res) => {
