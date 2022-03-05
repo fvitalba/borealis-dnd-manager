@@ -1,7 +1,7 @@
 import Button from './Button'
 import { PlaySolidIcon } from './Icons'
 
-const ChatPanelView = ({ /* chatPanelHidden, toggleHidden, */ noOfCurrentUsers, /* users, */ currentMessage, changeCurrentMessage, addMessage, chatMessages }) => {
+const ChatPanelView = ({ /* chatPanelHidden, toggleHidden, */ noOfCurrentUsers, /* users, */ currentMessage, changeCurrentMessage, addMessage, chatMessages, inputOnKeyDown }) => {
     const playerInfo = 'lvl. XX Barbarian'
     const sortedChatMessages = chatMessages.sort((a, b) => a.timestamp - b.timestamp)
     return (
@@ -21,7 +21,7 @@ const ChatPanelView = ({ /* chatPanelHidden, toggleHidden, */ noOfCurrentUsers, 
                     </div>
                 )}
                 <div className='chat-panel-input'>
-                    <input title='Mesage' placeholder='Type your message...' value={ currentMessage } onChange={ changeCurrentMessage } className='chat-panel-input-input' />
+                    <input title='Mesage' placeholder='Type your message...' value={ currentMessage } onChange={ changeCurrentMessage } className='chat-panel-input-input' onKeyDown={ inputOnKeyDown } />
                     <Button title='Push refresh to players' value={ <PlaySolidIcon /> } onClick={ addMessage } />
                 </div>
             </div>

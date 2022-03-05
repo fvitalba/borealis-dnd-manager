@@ -32,6 +32,12 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
         })
     }
 
+    const inputOnKeyDown = (e) => {
+        if (e.keyCode === 13) {
+            addMessage()
+        }
+    }
+
     const addMessage = () => {
         const playerInfo = {}
         addChatMessage(settings.username, playerInfo, chatPanelState.currentMessage)
@@ -63,7 +69,7 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
                     console.error(error)
                 })
         }
-    }, [ wsSettings.room ])
+    }, [ wsSettings.room, chatPanelState, setChatPanelState ])
 
     useEffect(() => {
         const interval = setInterval(() => loadUsers(), 5000)
@@ -81,7 +87,8 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
             currentMessage={ chatPanelState.currentMessage }
             changeCurrentMessage={ changeCurrentMessage }
             addMessage={ addMessage }
-            chatMessages={ chat.messages } />
+            chatMessages={ chat.messages }
+            inputOnKeyDown={ inputOnKeyDown } />
     )
 }
 
