@@ -54,7 +54,7 @@ export const handleIncomingMessage = (incMessage) => {
         break
     default:
         // Forward message to all other clients (for this room)
-        outgoingMessage = incMessage
+        outgoingMessage = parsedMessage
         break
     }
 

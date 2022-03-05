@@ -476,7 +476,6 @@ const Game = ({ metadata, game, settings, chat, setGameSettings, overwriteGame, 
             setFogEnabled(data.fogEnabled)
             break
         case 'pushGameRefresh': // refresh from host
-            console.log('receiving',data)
             overwriteGame(data.game)
             overwriteChat(data.chat)
             break
