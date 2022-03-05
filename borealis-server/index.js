@@ -10,6 +10,7 @@ import Room from './models/room.js'
 import User from './models/user.js'
 import Message from './models/chatMessage.js'
 import { handleIncomingMessage } from './controllers/messageHandler.js'
+import { deleteOfflineUsers } from './middleware/userMiddleware.js'
 
 const app = express()
 const privateKeyFilename = 'privkey.pem'
@@ -17,6 +18,7 @@ const SslCertificateFilename = 'fullchain.pem'
 const serverPort = process.env.PORT || 8000
 
 app.use(cors())
+app.use(deleteOfflineUsers)
 app.use(express.static('build'))
 
 app.route('/room-file/:roomName?').get((req, res) => {

@@ -1,14 +1,14 @@
 import Button from './Button'
 import { PlaySolidIcon } from './Icons'
 
-const ChatPanelView = ({ /* chatPanelHidden, toggleHidden, */ currentUsers, currentMessage, changeCurrentMessage, addMessage, chatMessages }) => {
+const ChatPanelView = ({ /* chatPanelHidden, toggleHidden, */ noOfCurrentUsers, /* users, */ currentMessage, changeCurrentMessage, addMessage, chatMessages }) => {
     const playerInfo = 'lvl. XX Barbarian'
     const sortedChatMessages = chatMessages.sort((a, b) => a.timestamp - b.timestamp)
     return (
         <div className='chat-panel-container'>
             <div className='chat-panel-header'>
                 <div className='chat-panel-header-title'>Live Chat</div>
-                <div className='chat-panel-header-subtitle'>{ currentUsers } player(s) online</div>
+                <div className='chat-panel-header-subtitle'>{ noOfCurrentUsers } player(s) online</div>
             </div>
             <div className='chat-panel-content'>
                 { sortedChatMessages.map((message) =>

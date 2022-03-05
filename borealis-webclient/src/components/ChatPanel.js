@@ -9,7 +9,8 @@ const initialChatPanelState = () => {
     return {
         hidden: false,
         currentMessage: '',
-        currentUsers: 0,
+        noOfCurrentUsers: 0,
+        users: [],
     }
 }
 
@@ -50,10 +51,11 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
                     return response.json()
                 })
                 .then((data) => {
-                    if (data.length !== chatPanelState.currentUsers) {
+                    if (data.length !== chatPanelState.noOfCurrentUsers) {
                         setChatPanelState({
                             ...chatPanelState,
-                            currentUsers: data.length,
+                            noOfCurrentUsers: data.length,
+                            users: data,
                         })
                     }
                 })
@@ -74,7 +76,8 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
         <ChatPanelView
             chatPanelHidden={ chatPanelState.hidden }
             toggleHidden={ toggleHidden }
-            currentUsers={ chatPanelState.currentUsers }
+            noOfCurrentUsers={ chatPanelState.noOfCurrentUsers }
+            users={ chatPanelState.users }
             currentMessage={ chatPanelState.currentMessage }
             changeCurrentMessage={ changeCurrentMessage }
             addMessage={ addMessage }
