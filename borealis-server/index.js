@@ -38,6 +38,15 @@ app.route('/room-db/:roomName').get((req, res) => {
     }
 })
 
+app.route('/room-users-db/:roomName').get((req, res) => {
+    const roomName = req.params.roomName
+    if (roomName) {
+        User.find({ 'roomName': roomName }).then((result) => {
+            res.json(result)
+        })
+    }
+})
+
 const createServer = () => {
     // Check SSL files & create HTTPS server
     if (fs.existsSync(privateKeyFilename) && fs.existsSync(SslCertificateFilename)) {
