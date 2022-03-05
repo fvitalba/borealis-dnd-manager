@@ -4,16 +4,26 @@ import { requestRefresh } from '../hooks/useSocket'
 import guid from '../controllers/guid'
 
 const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
+const USER_API_URL = 'room-users-db'
 const SOCKET_RECONNECTION_TIMEOUT = 2500
 const SOCKET_SERVER_PORT = process.env.PORT || process.env.REACT_APP_PORT || 8000
 
 const generateWebSocketUrl = (room, guid) => {
-    let host = window.location.host.replace(/:\d+$/, '')
+    const host = window.location.host.replace(/:\d+$/, '')
     const protocol = /https/.test(window.location.protocol) ? 'wss' : 'ws'
 
     return DEBUG_MODE
         ? `${protocol}://${host}:${SOCKET_SERVER_PORT}/${room}?guid=${guid}`
         : `${protocol}://${host}/${room}?guid=${guid}`
+}
+
+export const usersUrl = (room) => {
+    const host = window.location.host.replace(/:\d+$/, '')
+    const protocol = /https/.test(window.location.protocol) ? 'https' : 'http'
+
+    return DEBUG_MODE
+        ? `${protocol}://${host}:${SOCKET_SERVER_PORT}/${USER_API_URL}/${room}`
+        : `${protocol}://${host}/${USER_API_URL}/${room}`
 }
 
 const createWebSocket = (room, guid) => {
@@ -42,7 +52,7 @@ const WebSocketProvider = ({ children, metadata }) => {
     useEffect(() => {
         const onClose = () => {
             setTimeout(() => {
-                console.log('Socket Timeout, recreating WebSocket')
+                console.debug('Socket Timeout, recreating WebSocket')
                 setWs(createWebSocket(metadata.room, wsSettings.guid))
             }, SOCKET_RECONNECTION_TIMEOUT)
         }

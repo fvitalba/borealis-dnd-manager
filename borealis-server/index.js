@@ -4,6 +4,7 @@ import fs from 'fs'
 import http from 'http'
 import https from 'https'
 import WebSocket from 'ws'
+import cors from 'cors'
 import queryString from 'query-string'
 import Room from './models/room.js'
 import User from './models/user.js'
@@ -15,6 +16,7 @@ const privateKeyFilename = 'privkey.pem'
 const SslCertificateFilename = 'fullchain.pem'
 const serverPort = process.env.PORT || 8000
 
+app.use(cors())
 app.use(express.static('build'))
 
 app.route('/room-file/:roomName?').get((req, res) => {
