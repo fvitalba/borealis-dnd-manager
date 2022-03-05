@@ -476,7 +476,6 @@ const Game = ({ metadata, game, settings, chat, setGameSettings, overwriteGame, 
             setFogEnabled(data.fogEnabled)
             break
         case 'pushGameRefresh': // refresh from host
-            console.log('receiving',data)
             overwriteGame(data.game)
             overwriteChat(data.chat)
             break
@@ -507,6 +506,7 @@ const Game = ({ metadata, game, settings, chat, setGameSettings, overwriteGame, 
         window.addEventListener('keydown', onKeyDown)
         const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
         setGameSettings(params.get('host'), params.get('room'))
+        setWsSettings(params.get('room'))
 
         // On Unmount
         return () => {
@@ -518,6 +518,10 @@ const Game = ({ metadata, game, settings, chat, setGameSettings, overwriteGame, 
 
     useEffect(() => {
         document.title = `Borealis D&D, Room: ${metadata.room}`
+        setWsSettings({
+            ...wsSettings,
+            room: metadata.room,
+        })
     }, [ metadata.room ])
 
     useEffect(() => {
@@ -531,7 +535,7 @@ const Game = ({ metadata, game, settings, chat, setGameSettings, overwriteGame, 
             if (webSocket)
                 webSocket.removeEventListener('message', receiveData)
         }
-    }, [webSocket, wsSettings, setWsSettings, receiveData, settings.username])
+    }, [ webSocket, wsSettings, setWsSettings, receiveData, settings.username ])
 
     /*
     useEffect(() => {

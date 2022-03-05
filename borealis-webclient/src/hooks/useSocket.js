@@ -18,6 +18,7 @@ export const pushCursor = (webSocket, wsSettings, x, y) => {
         type: 'pushCursor',
         from: wsSettings.guid,
         username: wsSettings.username,
+        room: wsSettings.room,
         x: x,
         y: y,
     })
@@ -28,6 +29,7 @@ export const pushDrawPath = (webSocket, wsSettings, newDrawPath) => {
         type: 'pushDrawPath',
         from: wsSettings.guid,
         username: wsSettings.username,
+        room: wsSettings.room,
         drawPath: newDrawPath,
     })
 }
@@ -37,6 +39,7 @@ export const pushDrawReset = (webSocket, wsSettings) => {
         type: 'pushDrawReset',
         from: wsSettings.guid,
         username: wsSettings.username,
+        room: wsSettings.room,
     })
 }
 
@@ -45,6 +48,7 @@ export const pushFogPath = (webSocket, wsSettings, newFogPath) => {
         type: 'pushFogPath',
         from: wsSettings.guid,
         username: wsSettings.username,
+        room: wsSettings.room,
         fogPath: newFogPath,
     })
 }
@@ -54,6 +58,7 @@ export const pushFogReset = (webSocket, wsSettings) => {
         type: 'pushFogReset',
         from: wsSettings.guid,
         username: wsSettings.username,
+        room: wsSettings.room,
     })
 }
 
@@ -62,6 +67,7 @@ export const pushMapState = (webSocket, wsSettings, maps, mapId) => {
         type: 'pushMapState',
         from: wsSettings.guid,
         username: wsSettings.username,
+        room: wsSettings.room,
         maps: maps,
         mapId: mapId,
     })
@@ -72,6 +78,7 @@ export const pushMapId = (webSocket, wsSettings, mapId) => {
         type: 'pushMapId',
         from: wsSettings.guid,
         username: wsSettings.username,
+        room: wsSettings.room,
         mapId: mapId,
     })
 }
@@ -80,6 +87,8 @@ export const pushCreateMap = (webSocket, wsSettings, newMapName, newWidth, newHe
     sendData(webSocket, {
         type: 'pushCreateMap',
         from: wsSettings.guid,
+        username: wsSettings.username,
+        room: wsSettings.room,
         mapName: newMapName,
         width: newWidth,
         height: newHeight,
@@ -90,6 +99,8 @@ export const pushFogEnabled = (webSocket, wsSettings, newFogEnabled) => {
     sendData(webSocket, {
         type: 'pushFogEnabled',
         from: wsSettings.guid,
+        username: wsSettings.username,
+        room: wsSettings.room,
         fogEnabled: newFogEnabled,
     })
 }
@@ -99,6 +110,7 @@ export const pushGameRefresh = (webSocket, wsSettings, game, chat, additionalAtt
         type: 'pushGameRefresh',
         from: wsSettings.guid,
         username: wsSettings.username,
+        room: wsSettings.room,
         game: game,
         chat: chat,
         ...additionalAttributes,
@@ -109,6 +121,8 @@ export const pushSingleToken = (webSocket, wsSettings, token) => {
     sendData(webSocket, {
         type: 'pushSingleToken',
         from: wsSettings.guid,
+        username: wsSettings.username,
+        room: wsSettings.room,
         token: token,
     })
 }
@@ -117,6 +131,8 @@ export const pushTokens = (webSocket, wsSettings, tokens) => {
     sendData(webSocket, {
         type: 'pushTokens',
         from: wsSettings.guid,
+        username: wsSettings.username,
+        room: wsSettings.room,
         tokens: tokens,
     })
 }
@@ -126,6 +142,7 @@ export const requestRefresh = (webSocket, wsSettings) => {
         type: 'requestRefresh',
         from: wsSettings.guid,
         username: wsSettings.username,
+        room: wsSettings.room,
     })
 }
 
@@ -133,6 +150,7 @@ export const saveGame = (webSocket, wsSettings, json) => {
     sendData(webSocket, {
         type: 'saveGame',
         from: wsSettings.guid,
+        username: wsSettings.username,
         room: wsSettings.room,
         payload: json,
     })
@@ -142,6 +160,7 @@ export const requestLoadGame = (webSocket, wsSettings) => {
     sendData(webSocket, {
         type: 'requestLoadGame',
         from: wsSettings.guid,
+        username: wsSettings.username,
         room: wsSettings.room,
     })
 }
@@ -150,6 +169,7 @@ export const saveGameToDatabase = (webSocket, wsSettings, json) => {
     sendData(webSocket, {
         type: 'saveGameToDatabase',
         from: wsSettings.guid,
+        username: wsSettings.username,
         room: wsSettings.room,
         payload: json,
     })
@@ -159,6 +179,7 @@ export const requestLoadGameFromDatabase = (webSocket, wsSettings) => {
     sendData(webSocket, {
         type: 'requestLoadGameFromDatabase',
         from: wsSettings.guid,
+        username: wsSettings.username,
         room: wsSettings.room,
     })
 }
@@ -167,8 +188,8 @@ export const sendChatMessage = (webSocket, wsSettings, username, playerInfo, mes
     sendData(webSocket, {
         type: 'sendChatMessage',
         from: wsSettings.guid,
-        room: wsSettings.room,
         username: username,
+        room: wsSettings.room,
         playerInfo: playerInfo,
         messageText: messageText,
         timestamp: timestamp,

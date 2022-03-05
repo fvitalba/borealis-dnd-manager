@@ -31,12 +31,13 @@ const WebSocketProvider = ({ children, metadata }) => {
     const [wsSettings, setWsSettings] = useState({
         guid: guid(),
         username: '',
+        room: metadata.room,
     })
     const [ws, setWs] = useState(createWebSocket(metadata.room, wsSettings.guid))
 
     useEffect(() => {
         setWs(createWebSocket(metadata.room, wsSettings.guid))
-    }, [metadata.room, wsSettings.guid])
+    }, [ metadata.room, wsSettings.guid ])
 
     useEffect(() => {
         const onClose = () => {
@@ -50,10 +51,15 @@ const WebSocketProvider = ({ children, metadata }) => {
             if (!metadata.isHost) {
                 requestRefresh(ws, wsSettings)
             }
+            if (metadata.room && !wsSettings.room)
+                setWsSettings({
+                    ...wsSettings,
+                    room: metadata.room,
+                })
         }
 
         const onError = (err) => {
-            console.error('WebSocket could not be created. Error: ',err)
+            console.error('WebSocket could not be created. Error: ', err)
         }
 
         if (ws) {
