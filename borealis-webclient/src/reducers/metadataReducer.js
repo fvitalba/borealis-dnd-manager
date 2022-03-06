@@ -1,7 +1,5 @@
 import {
     SET_GAMESETTINGS,
-    /* SET_ISHOST,
-    SET_ROOM,*/
     SET_CURSORS,
     SET_LAST_COORDINATES,
     SET_DOWN_COORDINATES
@@ -25,19 +23,6 @@ const metadataReducer = (state = initialMetadataState, action) => {
             isHost: action.isHost,
             room: action.room,
         }
-        //TODO: Delete if unused
-    /*
-    case SET_ISHOST:
-        return {
-            ...state,
-            isHost: action.isHost,
-        }
-    case SET_ROOM:
-        return {
-            ...state,
-            room: action.room,
-        }
-    */
     case SET_CURSORS:
         return {
             ...state,
@@ -68,23 +53,6 @@ export const setGameSettings = (newIsHost, newRoom) => {
         room: newRoom,
     }
 }
-
-//TODO: Delete if unused
-/*
-export const setIsHost = (newIsHost) => {
-    return {
-        type: SET_ISHOST,
-        isHost: newIsHost,
-    }
-}
-
-export const setRoom = (newRoom) => {
-    return {
-        type: SET_ROOM,
-        room: newRoom,
-    }
-}
-*/
 
 export const setCursors = (newCursors) => {
     return {
