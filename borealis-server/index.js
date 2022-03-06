@@ -4,26 +4,34 @@ import fs from 'fs'
 import http from 'http'
 import https from 'https'
 import WebSocket from 'ws'
+import cors from 'cors'
 import queryString from 'query-string'
 import Room from './models/room.js'
 import User from './models/user.js'
 import Message from './models/chatMessage.js'
 import { handleIncomingMessage } from './controllers/messageHandler.js'
+import { deleteOfflineUsers } from './middleware/userMiddleware.js'
 
 const app = express()
 const privateKeyFilename = 'privkey.pem'
 const SslCertificateFilename = 'fullchain.pem'
 const serverPort = process.env.PORT || 8000
 
+app.use(cors())
+app.use(deleteOfflineUsers)
 app.use(express.static('build'))
 
-app.route('/room-file/:roomName').get((req, res) => {
+app.route('/room-file/:roomName?').get((req, res) => {
     const room = req.params.roomName
-    const savedGame = JSON.parse(fs.readFileSync(`${room}.room`,'utf8'))
-    res.json(savedGame)
+    if (room) {
+        const savedGame = JSON.parse(fs.readFileSync(`${room}.room`,'utf8'))
+        res.json(savedGame)
+    } else {
+        res.json({ })
+    }
 })
 
-app.route('/room-db/:roomName').get((req, res) => {
+app.route('/room-db/:roomName?').get((req, res) => {
     const roomName = req.params.roomName
     let currentRoom = undefined
     if (roomName) {
@@ -35,15 +43,19 @@ app.route('/room-db/:roomName').get((req, res) => {
             })
             res.json(currentRoom)
         })
+    } else {
+        res.json([])
     }
 })
 
-app.route('/room-users-db/:roomName').get((req, res) => {
+app.route('/room-users-db/:roomName?').get((req, res) => {
     const roomName = req.params.roomName
     if (roomName) {
         User.find({ 'roomName': roomName }).then((result) => {
             res.json(result)
         })
+    } else {
+        res.json([])
     }
 })
 

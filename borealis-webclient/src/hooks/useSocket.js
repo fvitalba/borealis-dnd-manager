@@ -184,7 +184,7 @@ export const requestLoadGameFromDatabase = (webSocket, wsSettings) => {
     })
 }
 
-export const sendChatMessage = (webSocket, wsSettings, username, playerInfo, messageText, timestamp) => {
+export const sendChatMessage = (webSocket, wsSettings, username, playerInfo, messageText, timestamp, typeOfMessage) => {
     sendData(webSocket, {
         type: 'sendChatMessage',
         from: wsSettings.guid,
@@ -192,6 +192,7 @@ export const sendChatMessage = (webSocket, wsSettings, username, playerInfo, mes
         room: wsSettings.room,
         playerInfo: playerInfo,
         messageText: messageText,
+        typeOfMessage: typeOfMessage,
         timestamp: timestamp,
     })
 }

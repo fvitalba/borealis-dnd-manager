@@ -15,6 +15,7 @@ const chatMessage = () => {
         username: '',
         playerInfo: undefined,
         message: '',
+        typeOfMessage: '',
     }
 }
 
@@ -28,6 +29,7 @@ const chatReducer = (state = initialChatState(), action) => {
             username: action.username,
             timestamp: action.timestamp,
             message: action.messageText,
+            typeOfMessage: action.typeOfMessage,
             playerInfo: action.playerInfo,
         }
         return {
@@ -50,12 +52,13 @@ const chatReducer = (state = initialChatState(), action) => {
 }
 
 //#region Action Creators
-export const addChatMessage = (username, playerInfo, messageText, timestamp) => {
+export const addChatMessage = (username, playerInfo, messageText, timestamp, typeOfMessage) => {
     return {
         type: ADD_CHAT_MESSAGE,
         username: username,
         messageText: messageText,
         playerInfo: playerInfo,
+        typeOfMessage: typeOfMessage,
         timestamp: timestamp ? timestamp : Date.now(),
     }
 }
