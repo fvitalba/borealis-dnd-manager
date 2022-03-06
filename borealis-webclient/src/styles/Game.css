@@ -12,11 +12,9 @@
     --z-cursors: 40;
     --z-cp: 100;
 }
-
 body {
     background-color: #333333;
 }
-
 img {
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -37,36 +35,6 @@ img {
     opacity: 1;
     z-index: var(--z-cp);
 }
-
-/*
-canvas, #control-panel {
-    top: 0;
-    left: 0;
-}
-
-#control-panel {
-    max-height: 100%;
-    overflow-y: auto;
-    position: fixed;
-    opacity: 1;
-    z-index: var(--z-cp);
-    background: rgba(255,255,255,0.5);
-}
-#control-panel input[type=number] { width: 40px; }
-#control-panel button {
-    background: grey;
-    font-family: "Noto Color Emoji";
-    font-size: 16pt;
-    margin: 2px;
-}
-#tools button.selected {
-    border: 3px dashed yellow;
-}
-#toggles button.selected {
-    border: 3px dashed #00bb00;
-}
-*/
-
 canvas {
     position: absolute;
 }
@@ -147,23 +115,3 @@ div.token.dead img {
     -webkit-transform: scaleY(-1);
     transform: scaleY(-1);
 }
-/*
-input.text1 {
-    width: 2em !important;
-}
-input.text2 {
-    width: 3em !important;
-}
-input.text3 {
-    width: 4em !important;
-}
-input.text4 {
-    width: 5em !important;
-}
-.selected {
-    font-weight: bold;
-}
-input.selected {
-    font-weight: bold;
-}
-*/

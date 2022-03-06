@@ -7,12 +7,10 @@ import Cursor from './Cursor'
 import ControlPanel from '../components/ControlPanel'
 import ChatPanel from '../components/ChatPanel'
 
-const GameView = ({ isHost, overlayRef, isFogLoaded, cursors, cursorSize, tokens, onMouseMove, onMouseUp, onMouseDown }) => {
-    const goneClass = isFogLoaded ? null : 'gone'
-
+const GameView = ({ isHost, overlayRef, cursors, cursorSize, tokens, onMouseMove, onMouseUp, onMouseDown }) => {
     return (
         <div id='game' onMouseMove={ (e) => onMouseMove(e) } onMouseDown={ (e) => onMouseDown(e) } onMouseUp={ (e) => onMouseUp(e) }>
-            <div className={ goneClass }>
+            <div>
                 <Background />
                 <Drawing />
                 { tokens ?

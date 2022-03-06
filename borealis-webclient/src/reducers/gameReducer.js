@@ -3,8 +3,6 @@ import {
     LOAD_MAP,
     INCREMENT_GEN,
     SET_FOG_ENABLED,
-    SET_ISFIRSTLOADDONE,
-    SET_ISFOGLOADED,
     UPDATE_MAPS,
     ADD_MAP,
     DELETE_MAP,
@@ -26,8 +24,6 @@ const initialGameState = {
     width: window.innerWidth,
     height: window.innerHeight,
     fogEnabled: false,
-    isFogLoaded: false,
-    isFirstLoadDone: false, /* Ensure we don't overwrite localStorage before load is done */
     maps: [],
     tokens: [],
 }
@@ -35,8 +31,6 @@ const initialGameState = {
 const defaultGameState = {
     ...initialGameState,
     mapId: 0,
-    isFogLoaded: true,
-    isFirstLoadDone: true,
     width: 795,
     height: 555,
     maps: [{
@@ -132,8 +126,6 @@ const gameReducer = (state = initialGameState, action) => {
             mapId: parseInt(action.mapId),
             width: currMap.width ? currMap.width : state.width,
             height: currMap.height ? currMap.height : state.height,
-            isFogLoaded: true,
-            isFirstLoadDone: true,
         }
     case INCREMENT_GEN:
         return {
@@ -144,16 +136,6 @@ const gameReducer = (state = initialGameState, action) => {
         return {
             ...state,
             fogEnabled: action.fogEnabled,
-        }
-    case SET_ISFOGLOADED:
-        return {
-            ...state,
-            isFogLoaded: action.isFogLoaded,
-        }
-    case SET_ISFIRSTLOADDONE:
-        return {
-            ...state,
-            isFirstLoadDone: action.isFirstLoadDone,
         }
     case UPDATE_MAPS:
         return {
@@ -174,8 +156,6 @@ const gameReducer = (state = initialGameState, action) => {
             ...state,
             maps: newMaps,
             mapId: newMapId,
-            isFirstLoadDone: true,
-            isFogLoaded: true,
             width: currMap.width ? currMap.width : state.width,
             height: currMap.height ? currMap.height : state.height,
         }
@@ -318,20 +298,6 @@ export const setFogEnabled = (newFogEnabled) => {
     return {
         type: SET_FOG_ENABLED,
         fogEnabled: newFogEnabled,
-    }
-}
-
-export const setIsFogLoaded = (newIsFogLoaded) => {
-    return {
-        type: SET_ISFOGLOADED,
-        isFogLoaded: newIsFogLoaded,
-    }
-}
-
-export const setIsFirstLoadDone = (newIsFirstLoadDone) => {
-    return {
-        type: SET_ISFIRSTLOADDONE,
-        isFirstLoadDone: newIsFirstLoadDone,
     }
 }
 
