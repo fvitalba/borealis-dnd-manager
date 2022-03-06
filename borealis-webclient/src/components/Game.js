@@ -488,7 +488,7 @@ const Game = ({ metadata, game, settings, chat, setGameSettings, overwriteGame, 
             overwriteGame(data.payload.game)
             break
         case 'sendChatMessage':
-            addChatMessage(data.username, data.playerInfo, data.messageText, data.timestamp)
+            addChatMessage(data.username, data.playerInfo, data.messageText, data.timestamp, data.typeOfMessage)
             break
         default:
             console.error(`Unrecognized websocket message type: ${data.type}`)

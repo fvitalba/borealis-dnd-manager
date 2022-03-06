@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { connect } from 'react-redux'
 import { sendChatMessage, useWebSocket } from '../hooks/useSocket'
 import { usersUrl } from '../contexts/WebSocketProvider'
+import { convertChatMessage } from '../controllers/commandHandler'
 import { addChatMessage } from '../reducers/chatReducer'
 import ChatPanelView from '../views/ChatPanelView'
 
@@ -40,12 +41,16 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
 
     const addMessage = () => {
         const playerInfo = {}
-        addChatMessage(settings.username, playerInfo, chatPanelState.currentMessage)
-        sendChatMessage(webSocket, wsSettings, settings.username, playerInfo, chatPanelState.currentMessage, Date.now())
-        setChatPanelState({
-            ...chatPanelState,
-            currentMessage: '',
-        })
+        const [convertedMessage, typeOfMessage] = convertChatMessage(settings.username, chatPanelState.currentMessage)
+        if (convertedMessage.length > 0) {
+            const timestamp = Date.now()
+            addChatMessage(settings.username, playerInfo, convertedMessage, timestamp, typeOfMessage)
+            sendChatMessage(webSocket, wsSettings, settings.username, playerInfo, convertedMessage, timestamp, typeOfMessage)
+            setChatPanelState({
+                ...chatPanelState,
+                currentMessage: '',
+            })
+        }
     }
 
     const loadUsers = useCallback(() => {
