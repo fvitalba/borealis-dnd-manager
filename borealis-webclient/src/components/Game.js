@@ -6,7 +6,7 @@ import { addChatMessage, overwriteChat } from '../reducers/chatReducer'
 import { pushDrawPath, pushFogPath, pushGameRefresh, pushTokens, useWebSocket } from '../hooks/useSocket'
 import GameView from '../views/GameView'
 
-const Game = ({ metadata, game, settings, chat, setGameSettings, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, setFogEnabled, addChatMessage, overwriteChat }) => {
+const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, setFogEnabled, addChatMessage, overwriteChat }) => {
     const overlayRef = React.useRef()
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()
     const [mousePosition, setMousePosition] = useState({ downX: 0, downY: 0 })
@@ -78,10 +78,11 @@ const Game = ({ metadata, game, settings, chat, setGameSettings, overwriteGame, 
         const ctx = overlayRef.current.getContext('2d')
         ctx.beginPath()
         for (let pointId = 0; pointId < currentPath.length; pointId++) {
+            const drawColor = currentTool() === 'draw' ? currentPath[pointId].drawColor : 'black'
             ctx.lineCap = 'round'
-            ctx.fillStyle = currentPath[pointId].drawColor
+            ctx.fillStyle = drawColor
             ctx.lineWidth = currentPath[pointId].drawSize
-            ctx.strokeStyle = currentPath[pointId].drawColor
+            ctx.strokeStyle = drawColor
             if (pointId === 0) {
                 ctx.moveTo(currentPath[pointId].x, currentPath[pointId].y)
             } else {
@@ -504,9 +505,6 @@ const Game = ({ metadata, game, settings, chat, setGameSettings, overwriteGame, 
         //TODO: reenable keypresses
         //window.addEventListener('keypress', onKeyPress)
         window.addEventListener('keydown', onKeyDown)
-        const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
-        setGameSettings(params.get('host'), params.get('room'))
-        setWsSettings(params.get('room'))
 
         // On Unmount
         return () => {
@@ -515,14 +513,6 @@ const Game = ({ metadata, game, settings, chat, setGameSettings, overwriteGame, 
             window.removeEventListener('keydown', onKeyDown)
         }
     }, [])
-
-    useEffect(() => {
-        document.title = `Borealis D&D, Room: ${metadata.room}`
-        setWsSettings({
-            ...wsSettings,
-            room: metadata.room,
-        })
-    }, [ metadata.room ])
 
     useEffect(() => {
         if (webSocket) {
