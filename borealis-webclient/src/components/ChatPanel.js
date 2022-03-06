@@ -56,7 +56,6 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
     const loadUsers = useCallback(() => {
         if (wsSettings.room) {
             const requestUrl = usersUrl(wsSettings.room)
-            console.log(requestUrl)
             fetch(requestUrl)
                 .then((response) => {
                     return response.json()
