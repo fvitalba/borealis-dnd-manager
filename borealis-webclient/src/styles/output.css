@@ -776,6 +776,26 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 }
 
+.chat-panel-command {
+
+}
+
+.chat-panel-command-content {
+  --tw-text-opacity: 1;
+  color: rgb(2 132 199 / var(--tw-text-opacity));
+  font-style: italic;
+}
+
+.chat-panel-error {
+
+}
+
+.chat-panel-error-content {
+  --tw-text-opacity: 1;
+  color: rgb(185 28 28 / var(--tw-text-opacity));
+  font-weight: 700;
+}
+
 .chat-panel-input {
   bottom: 2rem;
   position: absolute;

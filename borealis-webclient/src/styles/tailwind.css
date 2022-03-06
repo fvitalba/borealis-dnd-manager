@@ -238,6 +238,24 @@
 
 }
 
+.chat-panel-command {
+
+}
+
+.chat-panel-command-content {
+    @apply text-secondary-600;
+    @apply italic;
+}
+
+.chat-panel-error {
+
+}
+
+.chat-panel-error-content {
+    @apply text-red-700;
+    @apply font-bold;
+}
+
 .chat-panel-input {
     @apply bottom-8;
     @apply absolute;
