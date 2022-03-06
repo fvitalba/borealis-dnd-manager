@@ -51,8 +51,6 @@ const gameSchema = new mongoose.Schema({
     width: Number,
     height: Number,
     fogEnabled: Boolean,
-    isFogLoaded: Boolean,
-    isFirstLoadDone: Boolean,
     maps: [mapSchema],
     tokens: [tokenSchema],
 })

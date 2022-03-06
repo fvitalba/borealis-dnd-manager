@@ -561,7 +561,6 @@ const Game = ({ metadata, game, settings, chat, setGameSettings, overwriteGame, 
             <GameView
                 isHost={ metadata.isHost }
                 overlayRef={ overlayRef }
-                isFogLoaded={ game.isFogLoaded }
                 cursors={ cursorsCopy }
                 cursorSize={ settings.cursorSize }
                 tokens={ game.tokens }
