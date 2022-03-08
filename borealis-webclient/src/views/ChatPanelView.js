@@ -3,7 +3,7 @@ import { PlaySolidIcon } from './Icons'
 
 const ChatPanelMessage = ({ message, playerInfo }) => {
     return (
-        <div key={ message.guid } className='chat-panel-message'>
+        <div className='chat-panel-message'>
             <div className='chat-panel-message-info'>
                 <div className='chat-panel-message-username' >{ message.username }</div>
                 { playerInfo ? <div className='chat-panel-message-player-info'>| { playerInfo }</div> : null }
@@ -15,7 +15,7 @@ const ChatPanelMessage = ({ message, playerInfo }) => {
 
 const ChatPanelCommand = ({ message }) => {
     return (
-        <div key={ message.guid } className='chat-panel-command'>
+        <div className='chat-panel-command'>
             <div className='chat-panel-command-content'>{ message.message }</div>
         </div>
     )
@@ -23,7 +23,7 @@ const ChatPanelCommand = ({ message }) => {
 
 const ChatPanelError = ({ message }) => {
     return (
-        <div key={ message.guid } className='chat-panel-error'>
+        <div className='chat-panel-error'>
             <div className='chat-panel-error-content'>{ message.message }</div>
         </div>
     )
@@ -42,11 +42,11 @@ const ChatPanelView = ({ /* chatPanelHidden, toggleHidden, */ noOfCurrentUsers, 
                 { sortedChatMessages.map((message) => {
                     switch (message.typeOfMessage) {
                     case 'message':
-                        return (<ChatPanelMessage message={ message } playerInfo={ playerInfo } />)
+                        return (<ChatPanelMessage key={ message.guid } message={ message } playerInfo={ playerInfo } />)
                     case 'command':
-                        return (<ChatPanelCommand message={ message } />)
+                        return (<ChatPanelCommand key={ message.guid } message={ message } />)
                     case 'error':
-                        return (<ChatPanelError message={ message } />)
+                        return (<ChatPanelError key={ message.guid } message={ message } />)
                     default: return null
                     }
                 })}
