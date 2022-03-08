@@ -14,6 +14,7 @@ export const handleIncomingMessage = (websocketConnection, incMessage) => {
                     console.error(err)
                 })
                 resolve({ outgoingMessage, sendBackToSender: false })
+                break
             case 'requestLoadGame':
                 // Load game from storage
                 const savedGame = fs.readFileSync(`${websocketConnection.room}.room`,'utf8')
@@ -25,11 +26,13 @@ export const handleIncomingMessage = (websocketConnection, incMessage) => {
                     payload: JSON.parse(savedGame), //this is the saved game
                 }
                 resolve(outgoingMessage)
+                break
             case 'saveGameToDatabase':
                 const room = new Room(JSON.parse(parsedMessage.payload))
                 room.save().then(() => {
                     resolve({ outgoingMessage, sendBackToSender: false })
                 })
+                break
             case 'requestLoadGameFromDatabase':
                 const roomName = websocketConnection.room
                 let currentRoom = undefined

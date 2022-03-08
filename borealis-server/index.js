@@ -91,7 +91,7 @@ wss.on('connection', (websocketConnection, connectionRequest) => {
                         if (client.readyState === WebSocket.OPEN) {
                             if (client.room !== websocketConnection.room)
                                 return // Don't send to other rooms
-                            if ((client === websocketConnection) || sendBackToSender)
+                            if ((client === websocketConnection) && !sendBackToSender)
                                 return // Don't send back to sender
                             client.send(JSON.stringify(outgoingMessage))
                         }

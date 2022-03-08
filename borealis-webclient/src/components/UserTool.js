@@ -42,11 +42,11 @@ const UserTool = ({ toggleOnUser, game, metadata, settings, setFogEnabled, incre
     const saveGameInServer = () => {
         incrementGen()
         const json = toJson(game, metadata, incrementGen)
-        saveGameToDatabase(webSocket,wsSettings,json)
+        saveGameToDatabase(webSocket, wsSettings, json)
     }
 
     const loadGameFromServer = () => {
-        requestLoadGameFromDatabase(webSocket,wsSettings)
+        requestLoadGameFromDatabase(webSocket, wsSettings)
     }
 
     return (
