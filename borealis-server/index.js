@@ -83,19 +83,21 @@ wss.on('connection', (websocketConnection, connectionRequest) => {
     websocketConnection.room = path.substring(1)
     websocketConnection.guid = connectionParams.guid
     websocketConnection.on('message', (message) => {
-        const outgoingMessage = handleIncomingMessage(message)
-        if (outgoingMessage) {
-            // Forward message to all other clients (for this room)
-            wss.clients.forEach(client => {
-                if (client.readyState === WebSocket.OPEN) {
-                    if (client.room !== websocketConnection.room)
-                        return // Don't send to other rooms
-                    if (client === websocketConnection)
-                        return // Don't send back to sender
-                    client.send(JSON.stringify(outgoingMessage))
+        handleIncomingMessage(websocketConnection, message)
+            .then(({ outgoingMessage, sendBackToSender }) => {
+                if (outgoingMessage) {
+                    // Forward message to all other clients (for this room)
+                    wss.clients.forEach(client => {
+                        if (client.readyState === WebSocket.OPEN) {
+                            if (client.room !== websocketConnection.room)
+                                return // Don't send to other rooms
+                            if ((client === websocketConnection) || sendBackToSender)
+                                return // Don't send back to sender
+                            client.send(JSON.stringify(outgoingMessage))
+                        }
+                    })
                 }
             })
-        }
     })
 })
 
