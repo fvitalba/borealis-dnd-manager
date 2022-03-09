@@ -68,6 +68,7 @@ const metadataSchema = new mongoose.Schema({
 const roomSchema = new mongoose.Schema({
     game: gameSchema,
     metadata: metadataSchema,
+    timestamp: Number,
 })
 
 export default mongoose.model('Room', roomSchema, 'room')

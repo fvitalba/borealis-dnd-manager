@@ -1,11 +1,12 @@
 import { connect } from 'react-redux'
 import { toJson } from '../controllers/jsonHandler'
-import { incrementGen, loadDefaultBattleGame, setFogEnabled } from '../reducers/gameReducer'
+import { overwriteGame, incrementGen, loadDefaultBattleGame, setFogEnabled } from '../reducers/gameReducer'
 import { setUsername, setCursorSize, setToolSettings } from '../reducers/settingsReducer'
-import { pushFogEnabled, saveGameToDatabase, requestLoadGameFromDatabase, useWebSocket } from '../hooks/useSocket'
+import { pushGameRefresh, pushFogEnabled, useWebSocket } from '../hooks/useSocket'
+import { saveRoomToDatabase, loadRoomFromDatabase } from '../controllers/apiHandler'
 import UserToolView from '../views/UserToolView'
 
-const UserTool = ({ toggleOnUser, game, metadata, settings, setFogEnabled, incrementGen, setUsername, setCursorSize, setToolSettings, loadDefaultBattleGame }) => {
+const UserTool = ({ toggleOnUser, game, chat, metadata, settings, setFogEnabled, overwriteGame, incrementGen, setUsername, setCursorSize, setToolSettings, loadDefaultBattleGame }) => {
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()
     if (!toggleOnUser)
         return null
@@ -41,12 +42,25 @@ const UserTool = ({ toggleOnUser, game, metadata, settings, setFogEnabled, incre
 
     const saveGameInServer = () => {
         incrementGen()
-        const json = toJson(game, metadata, incrementGen)
-        saveGameToDatabase(webSocket, wsSettings, json)
+        const json = toJson(game, metadata)
+        saveRoomToDatabase(wsSettings, json)
+            .then(() => {
+                // result here contains the saved room
+            })
+            .catch((error) => {
+                console.error(error)
+            })
     }
 
     const loadGameFromServer = () => {
-        requestLoadGameFromDatabase(webSocket, wsSettings)
+        loadRoomFromDatabase(wsSettings)
+            .then((result) => {
+                overwriteGame(result.data.game)
+                pushGameRefresh(webSocket, wsSettings, result.data.game, chat)
+            })
+            .catch((error) => {
+                console.error(error)
+            })
     }
 
     return (
@@ -67,6 +81,7 @@ const UserTool = ({ toggleOnUser, game, metadata, settings, setFogEnabled, incre
 const mapStateToProps = (state) => {
     return {
         game: state.game,
+        chat: state.chat,
         metadata: state.metadata,
         settings: state.settings,
     }
@@ -79,6 +94,7 @@ const mapDispatchToProps = {
     setToolSettings,
     loadDefaultBattleGame,
     incrementGen,
+    overwriteGame,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserTool)

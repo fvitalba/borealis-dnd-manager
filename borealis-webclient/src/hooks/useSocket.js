@@ -146,44 +146,6 @@ export const requestRefresh = (webSocket, wsSettings) => {
     })
 }
 
-export const saveGame = (webSocket, wsSettings, json) => {
-    sendData(webSocket, {
-        type: 'saveGame',
-        from: wsSettings.guid,
-        username: wsSettings.username,
-        room: wsSettings.room,
-        payload: json,
-    })
-}
-
-export const requestLoadGame = (webSocket, wsSettings) => {
-    sendData(webSocket, {
-        type: 'requestLoadGame',
-        from: wsSettings.guid,
-        username: wsSettings.username,
-        room: wsSettings.room,
-    })
-}
-
-export const saveGameToDatabase = (webSocket, wsSettings, json) => {
-    sendData(webSocket, {
-        type: 'saveGameToDatabase',
-        from: wsSettings.guid,
-        username: wsSettings.username,
-        room: wsSettings.room,
-        payload: json,
-    })
-}
-
-export const requestLoadGameFromDatabase = (webSocket, wsSettings) => {
-    sendData(webSocket, {
-        type: 'requestLoadGameFromDatabase',
-        from: wsSettings.guid,
-        username: wsSettings.username,
-        room: wsSettings.room,
-    })
-}
-
 export const sendChatMessage = (webSocket, wsSettings, username, playerInfo, messageText, timestamp, typeOfMessage) => {
     sendData(webSocket, {
         type: 'sendChatMessage',

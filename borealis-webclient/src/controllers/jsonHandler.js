@@ -1,5 +1,4 @@
-export const toJson = (game, metadata, incrementGen, additionalAttrs) => {
-    incrementGen()
+export const toJson = (game, metadata, additionalAttrs) => {
     const data = {
         game: game,
         metadata: metadata,
@@ -27,7 +26,7 @@ export const fromJson = (json, game, metadata, overwriteGame) => {
                 mapId: undefined,
             }
         }
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             if ((updatedData.game.gen > game.gen) && (metadata.room === updatedData.metadata.room))
                 overwriteGame(updatedData.game)
             resolve()

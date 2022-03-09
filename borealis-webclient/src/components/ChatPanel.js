@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { connect } from 'react-redux'
 import { sendChatMessage, useWebSocket } from '../hooks/useSocket'
-import { usersUrl } from '../contexts/WebSocketProvider'
 import { convertChatMessage } from '../controllers/commandHandler'
+import { getUsersFromDatabase } from '../controllers/apiHandler'
 import { addChatMessage } from '../reducers/chatReducer'
 import ChatPanelView from '../views/ChatPanelView'
 
@@ -55,17 +55,13 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
 
     const loadUsers = useCallback(() => {
         if (wsSettings.room) {
-            const requestUrl = usersUrl(wsSettings.room)
-            fetch(requestUrl)
-                .then((response) => {
-                    return response.json()
-                })
-                .then((data) => {
-                    if (data.length !== chatPanelState.noOfCurrentUsers) {
+            getUsersFromDatabase(wsSettings)
+                .then((users) => {
+                    if (users.length !== chatPanelState.noOfCurrentUsers) {
                         setChatPanelState({
                             ...chatPanelState,
-                            noOfCurrentUsers: data.length,
-                            users: data,
+                            noOfCurrentUsers: users.length,
+                            users: users,
                         })
                     }
                 })
@@ -73,7 +69,7 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
                     console.error(error)
                 })
         }
-    }, [ wsSettings.room, chatPanelState, setChatPanelState ])
+    }, [ wsSettings, chatPanelState, setChatPanelState ])
 
     useEffect(() => {
         const interval = setInterval(() => loadUsers(), 5000)
