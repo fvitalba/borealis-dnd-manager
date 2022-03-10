@@ -31,6 +31,7 @@ const tokenSchema = new mongoose.Schema({
     width: Number,
     height: Number,
     selected: false,
+    hidden: Boolean,
     x0: Number,
     y0: Number,
 })
