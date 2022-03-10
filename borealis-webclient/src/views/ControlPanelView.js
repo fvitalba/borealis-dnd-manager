@@ -6,7 +6,7 @@ import UserTool from '../components/UserTool'
 import SelectedTokensControls from '../components/SelectedTokensControls'
 import ToolSelectView from './ToolSelectView'
 import Button from './Button'
-import { PlusCircleOutlineIcon, UserCircleSolidIcon, MapSolidIcon, GhostSolidIcon, RefreshOutlineIcon, CursorOutlineIcon, CursorSolidIcon } from './Icons'
+import { PlusCircleOutlineIcon, MinusCircleOutlineIcon, UserCircleSolidIcon, MapSolidIcon, GhostSolidIcon, RefreshOutlineIcon, CursorOutlineIcon, CursorSolidIcon } from './Icons'
 
 
 
@@ -24,7 +24,7 @@ const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, tog
         return (
             <div id='control-panel' className='control-panel-container'>
                 <div className='control-panel-tools'>
-                    <Button value={ <PlusCircleOutlineIcon /> } onClick={ toggleHidden } title='show/hide control panel'/>
+                    <Button value={ <MinusCircleOutlineIcon /> } onClick={ toggleHidden } title='show/hide control panel'/>
                     <ToggleButton title='User' value={ <UserCircleSolidIcon /> } controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
                     <ToggleButton title='Maps' value={ <MapSolidIcon />} controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
                     <ToggleButton title='Tokens' value={ <GhostSolidIcon /> } controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
@@ -47,7 +47,7 @@ const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, tog
         return (
             <div id='control-panel' className='control-panel-container'>
                 <div className='control-panel-tools'>
-                    <Button value={ <PlusCircleOutlineIcon /> } onClick={ toggleHidden } title='show/hide control panel' />
+                    <Button value={ <MinusCircleOutlineIcon /> } onClick={ toggleHidden } title='show/hide control panel' />
                     <input title='User name' placeholder='User name' value={ username } onChange={ (e) => setUsername(e.target.value) } className='control-panel-input' />
                     <Button title='Share cursor' value={ mouseIsShared ? <CursorSolidIcon /> : <CursorOutlineIcon /> } onClick={ toggleShareMouse } />
                     { /* <input title='Cursor size' value={ cursorSize } onChange={ (e) => setCursorSize(parseInt(e.target.value)) } type='number' min='0' /> */ }

@@ -278,6 +278,25 @@
     @apply text-primary-500;
 }
 
+.chat-panel-collapsed-container {
+    @apply z-100;
+    @apply absolute;
+    @apply top-2 right-2;
+    @apply bg-primary-300;
+    @apply rounded-lg;
+    @apply shadow-md;
+}
+
+.chat-panel-header-close {
+    @apply p-2;
+    @apply flex;
+    @apply flex-row;
+}
+
+.chat-panel-users {
+    
+}
+
 .chat-panel-content {
     @apply mt-4;
     @apply ml-6;
