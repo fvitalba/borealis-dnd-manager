@@ -1,4 +1,5 @@
 import Button from '../views/Button'
+import LoadingOverlay from '../components/LoadingOverlay'
 import { PlaySolidIcon } from './Icons'
 
 const GameSetupToggleButton = ({ title, value, isSelected, onClick }) => {
@@ -27,6 +28,7 @@ const GameSetupView = ({ roomName, onRoomNameChange, userName, onUserNameChange,
                     <Button title='Load game' value={ <PlaySolidIcon /> } onClick={ onSubmitSetup } disabled={ !isSubmitEnabled } />
                 </div>
             </div>
+            <LoadingOverlay />
         </div>
     )
 }

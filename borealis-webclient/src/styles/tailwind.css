@@ -342,6 +342,22 @@
     @apply border-primary-500;
 }
 
+.loading-overlay {
+    @apply top-0;
+    @apply bottom-0;
+    @apply w-full;
+    @apply h-screen;
+    @apply mx-auto;
+    @apply flex;
+    @apply justify-center;
+    @apply content-center;
+    @apply items-center;
+    @apply fixed;
+    @apply bg-primary-800/60;
+    @apply z-110;
+    @apply text-primary-300;
+}
+
 .selected-button {
     @apply button;
     @apply text-secondary-600;

@@ -227,3 +227,12 @@ export const CursorSolidIcon = (props) => {
         <path d='M10.7797 17.4231C8.26348 19.2055 5.01827 16.4877 6.33123 13.6977L9.28559 7.41965C10.3664 5.12284 13.6337 5.12285 14.7145 7.41966L17.6689 13.6977C18.9818 16.4877 15.7366 19.2055 13.2204 17.4231L12.5781 16.9682C12.2318 16.7229 11.7683 16.7229 11.422 16.9682L10.7797 17.4231Z' />
     </svg>
 }
+
+export const RepeatOutlineIcon = (props) => {
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
+        <path d='M20.5 15C18.9558 18.0448 15.7622 21 12 21C7.14776 21 3.58529 17.5101 3 13' />
+        <path d='M3.5 9C4.89106 5.64934 8.0647 3 12 3C16.7819 3 20.4232 6.48993 21 11' />
+        <path d='M21 21L21 15.6C21 15.2686 20.7314 15 20.4 15V15L15 15' />
+        <path d='M9 9L3.6 9V9C3.26863 9 3 8.73137 3 8.4L3 3' />
+    </svg>
+}

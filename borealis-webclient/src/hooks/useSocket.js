@@ -3,6 +3,9 @@ import { WebSocketContext } from '../contexts/WebSocketProvider'
 
 export const useWebSocket = () => {
     const webSocket = useContext(WebSocketContext)
+    if (!webSocket) {
+        throw new Error('useSocket must be used with WebSocketContext')
+    }
     return webSocket
 }
 

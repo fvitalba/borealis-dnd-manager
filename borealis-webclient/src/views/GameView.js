@@ -3,9 +3,10 @@ import Drawing from '../components/Drawing'
 import Fog from '../components/Fog'
 import Overlay from '../components/Overlay'
 import Token from '../components/Token'
-import Cursor from './Cursor'
+import LoadingOverlay from '../components/LoadingOverlay'
 import ControlPanel from '../components/ControlPanel'
 import ChatPanel from '../components/ChatPanel'
+import Cursor from './Cursor'
 
 const GameView = ({ isHost, overlayRef, cursors, cursorSize, tokens, onMouseMove, onMouseUp, onMouseDown }) => {
     return (
@@ -35,6 +36,7 @@ const GameView = ({ isHost, overlayRef, cursors, cursorSize, tokens, onMouseMove
             </div>
             <ControlPanel />
             <ChatPanel />
+            <LoadingOverlay />
         </div>
     )
 }

@@ -14,6 +14,17 @@ module.exports = {
             },
             zIndex: {
                 '100': '100',
+                '110': '110',
+            },
+            animation: {
+                'reverse-spin': 'reverse-spin 1s linear infinite',
+            },
+            keyframes: {
+                'reverse-spin': {
+                    from: {
+                        transform: 'rotate(360deg)'
+                    },
+                }
             }
         },
     },

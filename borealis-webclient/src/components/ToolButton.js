@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import { setToolSettings } from '../reducers/settingsReducer'
 import Button from '../views/Button'
 
-function ToolButton({ title, value, settings, setToolSettings }) {
+const ToolButton = ({ title, value, settings, setToolSettings }) => {
     const isSelected = title === settings.tool
     const onClick = () => {
         setToolSettings(title, undefined)

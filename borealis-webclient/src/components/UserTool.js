@@ -5,9 +5,13 @@ import { setUsername, setCursorSize, setToolSettings } from '../reducers/setting
 import { pushGameRefresh, pushFogEnabled, useWebSocket } from '../hooks/useSocket'
 import { saveRoomToDatabase, loadRoomFromDatabase } from '../controllers/apiHandler'
 import UserToolView from '../views/UserToolView'
+import { useLoading } from '../hooks/useLoading'
 
 const UserTool = ({ toggleOnUser, game, chat, metadata, settings, setFogEnabled, overwriteGame, incrementGen, setUsername, setCursorSize, setToolSettings, loadDefaultBattleGame }) => {
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()
+    // eslint-disable-next-line no-unused-vars
+    const [_isLoading, setIsLoading] = useLoading()
+
     if (!toggleOnUser)
         return null
 
@@ -41,24 +45,30 @@ const UserTool = ({ toggleOnUser, game, chat, metadata, settings, setFogEnabled,
     }
 
     const saveGameInServer = () => {
+        setIsLoading(true)
         incrementGen()
         const json = toJson(game, metadata)
         saveRoomToDatabase(wsSettings, json)
             .then(() => {
                 // result here contains the saved room
+                setIsLoading(false)
             })
             .catch((error) => {
+                setIsLoading(false)
                 console.error(error)
             })
     }
 
     const loadGameFromServer = () => {
+        setIsLoading(true)
         loadRoomFromDatabase(wsSettings)
             .then((result) => {
                 overwriteGame(result.data.game)
                 pushGameRefresh(webSocket, wsSettings, result.data.game, chat)
+                setIsLoading(false)
             })
             .catch((error) => {
+                setIsLoading(false)
                 console.error(error)
             })
     }

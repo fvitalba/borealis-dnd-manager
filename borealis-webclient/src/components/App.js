@@ -7,6 +7,7 @@ import gameReducer from '../reducers/gameReducer'
 import chatReducer from '../reducers/chatReducer'
 import WebSocketProvider from '../contexts/WebSocketProvider'
 import GameStateHandler from './GameStateHandler'
+import LoadingProvider from '../contexts/LoadingProvider'
 
 const App = () => {
     const combinedReducer = combineReducers({
@@ -20,7 +21,9 @@ const App = () => {
     return(
         <Provider store={ store } >
             <WebSocketProvider>
-                <GameStateHandler />
+                <LoadingProvider>
+                    <GameStateHandler />
+                </LoadingProvider>
             </WebSocketProvider>
         </Provider>
     )
