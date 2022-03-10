@@ -20,11 +20,11 @@ const App = () => {
 
     return(
         <Provider store={ store } >
-            <WebSocketProvider>
-                <LoadingProvider>
+            <LoadingProvider>
+                <WebSocketProvider>
                     <GameStateHandler />
-                </LoadingProvider>
-            </WebSocketProvider>
+                </WebSocketProvider>
+            </LoadingProvider>
         </Provider>
     )
 }

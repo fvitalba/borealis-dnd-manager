@@ -1,6 +1,7 @@
 import React, { useEffect, useState, createContext } from 'react'
 import { connect } from 'react-redux'
 import { requestRefresh } from '../hooks/useSocket'
+import { useLoading } from '../hooks/useLoading'
 import guid from '../controllers/guid'
 
 const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
@@ -34,6 +35,8 @@ const WebSocketProvider = ({ children, metadata }) => {
         room: metadata.room,
     })
     const [ws, setWs] = useState(createWebSocket(metadata.room, wsSettings.guid))
+    // eslint-disable-next-line no-unused-vars
+    const [_isLoading, setIsLoading] = useLoading()
 
     useEffect(() => {
         setWs(createWebSocket(metadata.room, wsSettings.guid))
@@ -41,6 +44,7 @@ const WebSocketProvider = ({ children, metadata }) => {
 
     useEffect(() => {
         const onClose = () => {
+            setIsLoading(true)
             setTimeout(() => {
                 console.debug('Socket Timeout, recreating WebSocket')
                 setWs(createWebSocket(metadata.room, wsSettings.guid))
@@ -56,6 +60,7 @@ const WebSocketProvider = ({ children, metadata }) => {
                     ...wsSettings,
                     room: metadata.room,
                 })
+            setIsLoading(false)
         }
 
         const onError = (err) => {
