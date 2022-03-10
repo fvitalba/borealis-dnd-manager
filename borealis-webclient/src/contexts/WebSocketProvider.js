@@ -53,6 +53,7 @@ const WebSocketProvider = ({ children, metadata }) => {
 
         const onOpen = () => {
             if (!metadata.isHost) {
+                setIsLoading(true)
                 requestRefresh(ws, wsSettings)
             }
             if (metadata.room && !wsSettings.room)
