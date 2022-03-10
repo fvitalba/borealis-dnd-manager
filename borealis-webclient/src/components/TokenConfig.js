@@ -8,7 +8,7 @@ const TokenConfig = ({ token, game, metadata, deleteToken, copyToken, updateToke
     const selectToken = (token) => {
         if (!token.pc && !metadata.isHost)
             return
-        toggleTokenValue(token.guid, '$selected')
+        toggleTokenValue(token.guid, 'selected')
     }
 
     const deleteCurrToken = () => {

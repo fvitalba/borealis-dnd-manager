@@ -18,7 +18,7 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
     const getMap = () => {
         if (game.maps.length === 0)
             return undefined
-        const currMap = game.maps.filter((map) => map.$id === game.mapId)
+        const currMap = game.maps.filter((map) => map.id === game.mapId)
         return currMap.length > 0 ? currMap[0] : game.maps[0]
     }
 
@@ -46,13 +46,13 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
         if (settings.tool !== 'move')
             return
 
-        const selectedTokens = game.tokens.filter((token) => token.$selected)
+        const selectedTokens = game.tokens.filter((token) => token.selected)
         if (selectedTokens.length > 0) {
             const newTokens = game.tokens.map((token) => {
-                return !token.$selected ? token : {
+                return !token.selected ? token : {
                     ...token,
-                    x: token.$x0 + (e.pageX - mousePosition.downX),
-                    y: token.$y0 + (e.pageY - mousePosition.downY),
+                    x: token.x0 + (e.pageX - mousePosition.downX),
+                    y: token.y0 + (e.pageY - mousePosition.downY),
                 }
             })
             updateTokens(newTokens)
@@ -133,10 +133,10 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
         const moveFactor = e.shiftKey ? 100 : 10
         const moveSelectedTokens = () => {
             updateTokens(token => {
-                if (token.$selected) {
+                if (token.selected) {
                     switch (e.keyCode) {
                         case 27: // escape
-                            token.$selected = false
+                            token.selected = false
                             break
                         case 37: // left
                             token.x -= moveFactor
@@ -257,20 +257,20 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
             }
             currentPath = []
             const updatedMaps = game.maps.map((map) => {
-                return map.$id === currMap.$id ? { ...currMap, fogPaths: fogPaths, drawPaths: drawPaths, } : map
+                return map.id === currMap.id ? { ...currMap, fogPaths: fogPaths, drawPaths: drawPaths, } : map
             })
 
             updateMaps(updatedMaps)
         }
 
-        const selectedTokens = game.tokens.filter((token) => token.$selected)
+        const selectedTokens = game.tokens.filter((token) => token.selected)
         if (selectedTokens.length > 0) {
             let deselectTokens = false
             for (let x of [document.activeElement, e.target])
                 if (x.id.toUpperCase() === 'BACKGROUND')
                     deselectTokens = true
             if (deselectTokens)
-                game.tokens.map((token) => token.$selected ? toggleTokenValue(token.guid,'$selected') : null)
+                game.tokens.map((token) => token.selected ? toggleTokenValue(token.guid,'selected') : null)
 
             pushTokens(webSocket, wsSettings, game.tokens)
         }
@@ -282,14 +282,14 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
             downY: parseInt(e.pageY),
         })
 
-        const selectedTokens = game.tokens.filter((token) => token.$selected)
+        const selectedTokens = game.tokens.filter((token) => token.selected)
         if (selectedTokens.length > 0) {
             let deselectTokens = false
             for (let x of [document.activeElement, e.target])
                 if (x.id.toUpperCase() === 'BACKGROUND')
                     deselectTokens = true
             if (deselectTokens)
-                game.tokens.map((token) => token.$selected ? toggleTokenValue(token.guid,'$selected') : null)
+                game.tokens.map((token) => token.selected ? toggleTokenValue(token.guid,'selected') : null)
         }
         for (let x of [document.activeElement, e.target])
             if ((x.tagName.toUpperCase() === 'INPUT' && (x.type.toUpperCase() === 'TEXT' || x.type.toUpperCase() === 'NUMBER')) || (x.tagName.toUpperCase() === 'BUTTON'))
@@ -401,7 +401,7 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
         const getMap = () => {
             if (game.maps.length === 0)
                 return undefined
-            const currMap = game.maps.filter((map) => map.$id === game.mapId)
+            const currMap = game.maps.filter((map) => map.id === game.mapId)
             return currMap.length > 0 ? currMap[0] : game.maps[0]
         }
 
@@ -420,13 +420,13 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
             pathToUpdate = currMap.drawPaths ? currMap.drawPaths : []
             pathToUpdate.push(data.drawPath)
             updatedMaps = game.maps.map((map) => {
-                return map.$id === currMap.$id ? { ...currMap, drawPaths: pathToUpdate, } : map
+                return map.id === currMap.id ? { ...currMap, drawPaths: pathToUpdate, } : map
             })
             updateMaps(updatedMaps)
             break
         case 'pushDrawReset':
             updatedMaps = game.maps.map((map) => {
-                return map.$id === currMap.$id ? { ...currMap, drawPaths: [], } : map
+                return map.id === currMap.id ? { ...currMap, drawPaths: [], } : map
             })
             updateMaps(updatedMaps)
             break
@@ -434,13 +434,13 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
             pathToUpdate = currMap.fogPaths ? currMap.fogPaths : []
             pathToUpdate.push(data.fogPath)
             updatedMaps = game.maps.map((map) => {
-                return map.$id === currMap.$id ? { ...currMap, fogPaths: pathToUpdate, } : map
+                return map.id === currMap.id ? { ...currMap, fogPaths: pathToUpdate, } : map
             })
             updateMaps(updatedMaps)
             break
         case 'pushFogReset':
             updatedMaps = game.maps.map((map) => {
-                return map.$id === currMap.$id ? { ...currMap, fogPaths: [], } : map
+                return map.id === currMap.id ? { ...currMap, fogPaths: [], } : map
             })
             updateMaps(updatedMaps)
             break
@@ -448,7 +448,7 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
             updatedTokens = game.tokens.map((token) => {
                 return token.guid !== data.token.guid ? token : {
                     ...data.token,
-                    $selected: token.$selected,
+                    selected: token.selected,
                 }
             })
             updateTokens(updatedTokens)
@@ -458,8 +458,8 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
                 let tokenSelected = false
                 const currentToken = game.tokens.filter((token2) => token2.guid === token.guid)
                 if (currentToken.length > 0)
-                    tokenSelected = currentToken.$selected
-                return { ...token, $selected: tokenSelected, }
+                    tokenSelected = currentToken.selected
+                return { ...token, selected: tokenSelected, }
             })
             updateTokens(updatedTokens)
             break

@@ -13,7 +13,7 @@ const MapToolView = ({ maps, newMapName, setNewMapName, createMap }) => {
                 maps.length > 0
                     ? <div className='map-config-collection'>
                         { maps.map((map) => (
-                            <MapConfig key={ `map${map.$id}` } map={ map } />
+                            <MapConfig key={ `map${map.id}` } map={ map } />
                         ))}
                     </div>
                     : null

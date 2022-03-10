@@ -423,6 +423,15 @@ Ensure the default browser behavior of the `hidden` attribute.
 .w-24 {
   width: 6rem;
 }
+@keyframes reverse-spin {
+
+  from {
+    transform: rotate(360deg);
+  }
+}
+.animate-reverse-spin {
+  animation: reverse-spin 1s linear infinite;
+}
 .resize {
   resize: both;
 }
@@ -1000,6 +1009,24 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-bottom-width: 2px;
   --tw-border-opacity: 1;
   border-color: rgb(107 114 128 / var(--tw-border-opacity));
+}
+
+.loading-overlay {
+  top: 0px;
+  bottom: 0px;
+  width: 100%;
+  height: 100vh;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  position: fixed;
+  background-color: rgb(31 41 55 / 0.6);
+  z-index: 110;
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity));
 }
 
 .selected-button {

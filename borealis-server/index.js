@@ -3,8 +3,9 @@ import express from 'express'
 import fs from 'fs'
 import http from 'http'
 import https from 'https'
-import WebSocket from 'ws'
+import ws from 'ws'
 import cors from 'cors'
+import bodyParser from 'body-parser'
 import queryString from 'query-string'
 import Room from './models/room.js'
 import User from './models/user.js'
@@ -18,45 +19,76 @@ const SslCertificateFilename = 'fullchain.pem'
 const serverPort = process.env.PORT || 8000
 
 app.use(cors())
+app.use(bodyParser.json())
+
 app.use(deleteOfflineUsers)
 app.use(express.static('build'))
 
-app.route('/room-file/:roomName?').get((req, res) => {
-    const room = req.params.roomName
-    if (room) {
-        const savedGame = JSON.parse(fs.readFileSync(`${room}.room`,'utf8'))
-        res.json(savedGame)
-    } else {
-        res.json({ })
-    }
-})
-
-app.route('/room-db/:roomName?').get((req, res) => {
-    const roomName = req.params.roomName
+app.get('/api/rooms/:roomName?', (request, result) => {
+    const roomName = request.params.roomName
     let currentRoom = undefined
     if (roomName) {
-        Room.find({ 'metadata.room': roomName }).then((result) => {
-            result.forEach((room) => {
-                if ((!currentRoom) || (currentRoom.game.gen < room.game.gen)) {
-                    currentRoom = room
-                }
+        Room.find({ 'metadata.room': roomName })
+            .then((rooms) => {
+                rooms.forEach((room) => {
+                    if ((!currentRoom) || (currentRoom.game.gen < room.game.gen)) {
+                        currentRoom = room
+                    }
+                })
+                result.json(currentRoom)
             })
-            res.json(currentRoom)
-        })
     } else {
-        res.json([])
+        result.json([])
     }
 })
 
-app.route('/room-users-db/:roomName?').get((req, res) => {
-    const roomName = req.params.roomName
+app.get('/api/room-users/:roomName?', (request, result) => {
+    const roomName = request.params.roomName
     if (roomName) {
-        User.find({ 'roomName': roomName }).then((result) => {
-            res.json(result)
+        User.find({ 'roomName': roomName })
+            .then((users) => {
+                result.json(users)
+            })
+    } else {
+        result.json([])
+    }
+})
+
+app.get('/api/room-chat/:roomName?', (request, result) => {
+    /*
+    const roomName = request.params.roomName
+    if (roomName) {
+        User.find({ 'roomName': roomName }).then((users) => {
+            result.json(users)
         })
     } else {
-        res.json([])
+        result.json([])
     }
+    */
+})
+
+app.post('/api/rooms', (request, response) => {
+    const body = request.body
+    if (body.payload === undefined)
+        return response.status(400).json({ error: 'content missing' })
+
+    const room = new Room({
+        ...body.payload,
+        timestamp: new Date(),
+    })
+    room.save()
+        .then((result) => {
+            response.json(result)
+        })
+})
+
+app.delete('api/rooms/:roomName?', (request, result) => {
+    /*
+    const id = Number(request.params.id)
+    notes = notes.filter(note => note.id !== id)
+
+    response.status(204).end()
+    */
 })
 
 const createServer = () => {
@@ -74,7 +106,7 @@ const createServer = () => {
 const server = createServer()
 
 // Initialize the WebSocket server instance
-const wss = new WebSocket.Server({ server: server, autoAcceptConnections: true, })
+const wss = new ws.Server({ server: server, autoAcceptConnections: true, })
 
 wss.on('connection', (websocketConnection, connectionRequest) => {
     const [path, params] = connectionRequest?.url?.split('?')
@@ -88,7 +120,7 @@ wss.on('connection', (websocketConnection, connectionRequest) => {
                 if (outgoingMessage) {
                     // Forward message to all other clients (for this room)
                     wss.clients.forEach(client => {
-                        if (client.readyState === WebSocket.OPEN) {
+                        if (client.readyState === ws.OPEN) {
                             if (client.room !== websocketConnection.room)
                                 return // Don't send to other rooms
                             if ((client === websocketConnection) && !sendBackToSender)

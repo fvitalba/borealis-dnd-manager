@@ -1,11 +1,11 @@
 import TokenConfig from '../components/TokenConfig'
 
 const SelectedTokensControlsView = ({ tokens }) => {
-    const filteredTokens = tokens.filter(t => t.$selected)
+    const filteredTokens = tokens.filter(t => t.selected)
     return (
         <div>
-            { filteredTokens.map((token, $i) => (
-                <TokenConfig key={ `token${$i}` } token={ token } />
+            { filteredTokens.map((token, index) => (
+                <TokenConfig key={ `token${index}` } token={ token } />
             ))}
         </div>
     )

@@ -7,26 +7,16 @@ mongoose.connect(url)
         console.log('error connecting to MongoDB:', error.message)
     })
 
-const coordinateSchema = new mongoose.Schema({
-    x: Number,
-    y: Number,
-    r: Number,
-    r2: Number,
-    tool: String,
-    drawColor: String,
-    drawSize: Number,
-})
-
 const mapSchema = new mongoose.Schema({
     name: String,
-    $id: Number,
+    id: Number,
     imageUrl: String,
     x: Number,
     y: Number,
     width: Number,
     height: Number,
-    drawPaths: [coordinateSchema],
-    fogPaths: [coordinateSchema],
+    drawPaths: [mongoose.Schema.Types.Mixed],
+    fogPaths: [mongoose.Schema.Types.Mixed],
 })
 
 const tokenSchema = new mongoose.Schema({
@@ -40,9 +30,9 @@ const tokenSchema = new mongoose.Schema({
     pc: Boolean,
     width: Number,
     height: Number,
-    $selected: false,
-    $x0: Number,
-    $y0: Number,
+    selected: false,
+    x0: Number,
+    y0: Number,
 })
 
 const gameSchema = new mongoose.Schema({
@@ -68,6 +58,7 @@ const metadataSchema = new mongoose.Schema({
 const roomSchema = new mongoose.Schema({
     game: gameSchema,
     metadata: metadataSchema,
+    timestamp: Number,
 })
 
 export default mongoose.model('Room', roomSchema, 'room')

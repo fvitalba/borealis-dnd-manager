@@ -16,7 +16,7 @@ const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) 
         const updatedTokensWithSelection = game.tokens.map((currToken) => {
             return {
                 ...currToken,
-                $selected: currToken.guid === token.guid ? true : false
+                selected: currToken.guid === token.guid ? true : false
             }
         })
         updateTokens(updatedTokensWithSelection)
@@ -30,7 +30,7 @@ const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) 
         'token',
         token.ko && 'dead',
         token.pc ? 'pc' : 'npc',
-        token.$selected && 'selected',
+        token.selected && 'selected',
         isHost && !token.pc && 'grabbable',
     ]
     const divStyle = {

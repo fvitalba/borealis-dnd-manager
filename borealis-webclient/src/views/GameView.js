@@ -3,9 +3,10 @@ import Drawing from '../components/Drawing'
 import Fog from '../components/Fog'
 import Overlay from '../components/Overlay'
 import Token from '../components/Token'
-import Cursor from './Cursor'
+import LoadingOverlay from '../components/LoadingOverlay'
 import ControlPanel from '../components/ControlPanel'
 import ChatPanel from '../components/ChatPanel'
+import Cursor from './Cursor'
 
 const GameView = ({ isHost, overlayRef, cursors, cursorSize, tokens, onMouseMove, onMouseUp, onMouseDown }) => {
     return (
@@ -15,8 +16,8 @@ const GameView = ({ isHost, overlayRef, cursors, cursorSize, tokens, onMouseMove
                 <Drawing />
                 { tokens ?
                     <div id='tokens'>
-                        { tokens.map((token, $i) => (
-                            <Token key={ `Token${$i}` } token={ token } isHost={ isHost } />
+                        { tokens.map((token, index) => (
+                            <Token key={ `Token${index}` } token={ token } isHost={ isHost } />
                         )) }
                     </div>
                     : null
@@ -25,7 +26,7 @@ const GameView = ({ isHost, overlayRef, cursors, cursorSize, tokens, onMouseMove
                 { cursors ?
                     <div id='cursors'>
                         { cursors.map((cursor) => (
-                            <Cursor key={ `cursor${cursor.$id}` } name={ cursor.username } cursor={ cursor } size={ cursorSize } />
+                            <Cursor key={ `cursor${cursor.id}` } name={ cursor.username } cursor={ cursor } size={ cursorSize } />
                         )) }
                     </div>
                     : null
@@ -35,6 +36,7 @@ const GameView = ({ isHost, overlayRef, cursors, cursorSize, tokens, onMouseMove
             </div>
             <ControlPanel />
             <ChatPanel />
+            <LoadingOverlay />
         </div>
     )
 }

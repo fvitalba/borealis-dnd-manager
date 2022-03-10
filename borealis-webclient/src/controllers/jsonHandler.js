@@ -1,11 +1,14 @@
-export const toJson = (game, metadata, incrementGen, additionalAttrs) => {
-    incrementGen()
+export const toJsonString = (game, metadata, additionalAttrs) => {
+    return JSON.stringify(toJson(game, metadata, additionalAttrs))
+}
+
+export const toJson = (game, metadata, additionalAttrs) => {
     const data = {
         game: game,
         metadata: metadata,
         ...additionalAttrs,
     }
-    return JSON.stringify(data)
+    return data
 }
 
 export const fromJson = (json, game, metadata, overwriteGame) => {
@@ -14,9 +17,9 @@ export const fromJson = (json, game, metadata, overwriteGame) => {
         const updatedTokens = data.game.tokens.map((token) => {
             return {
                 ...token,
-                $selected: false,
-                $x0: 0,
-                $y0: 0,
+                selected: false,
+                x0: 0,
+                y0: 0,
             }
         })
         const updatedData = {
@@ -27,7 +30,7 @@ export const fromJson = (json, game, metadata, overwriteGame) => {
                 mapId: undefined,
             }
         }
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             if ((updatedData.game.gen > game.gen) && (metadata.room === updatedData.metadata.room))
                 overwriteGame(updatedData.game)
             resolve()

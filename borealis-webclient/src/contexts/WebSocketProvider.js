@@ -1,10 +1,10 @@
 import React, { useEffect, useState, createContext } from 'react'
 import { connect } from 'react-redux'
 import { requestRefresh } from '../hooks/useSocket'
+import { useLoading } from '../hooks/useLoading'
 import guid from '../controllers/guid'
 
 const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
-const USER_API_URL = 'room-users-db'
 const SOCKET_RECONNECTION_TIMEOUT = 2500
 const SOCKET_SERVER_PORT = process.env.PORT || process.env.REACT_APP_PORT || 8000
 
@@ -15,15 +15,6 @@ const generateWebSocketUrl = (room, guid) => {
     return DEBUG_MODE
         ? `${protocol}://${host}:${SOCKET_SERVER_PORT}/${room}?guid=${guid}`
         : `${protocol}://${host}/${room}?guid=${guid}`
-}
-
-export const usersUrl = (room) => {
-    const host = window.location.host.replace(/:\d+$/, '')
-    const protocol = /https/.test(window.location.protocol) ? 'https' : 'http'
-
-    return DEBUG_MODE
-        ? `${protocol}://${host}:${SOCKET_SERVER_PORT}/${USER_API_URL}/${room}`
-        : `${protocol}://${host}/${USER_API_URL}/${room}`
 }
 
 const createWebSocket = (room, guid) => {
@@ -44,6 +35,8 @@ const WebSocketProvider = ({ children, metadata }) => {
         room: metadata.room,
     })
     const [ws, setWs] = useState(createWebSocket(metadata.room, wsSettings.guid))
+    // eslint-disable-next-line no-unused-vars
+    const [_isLoading, setIsLoading] = useLoading()
 
     useEffect(() => {
         setWs(createWebSocket(metadata.room, wsSettings.guid))
@@ -51,6 +44,7 @@ const WebSocketProvider = ({ children, metadata }) => {
 
     useEffect(() => {
         const onClose = () => {
+            setIsLoading(true)
             setTimeout(() => {
                 console.debug('Socket Timeout, recreating WebSocket')
                 setWs(createWebSocket(metadata.room, wsSettings.guid))
@@ -66,6 +60,7 @@ const WebSocketProvider = ({ children, metadata }) => {
                     ...wsSettings,
                     room: metadata.room,
                 })
+            setIsLoading(false)
         }
 
         const onError = (err) => {

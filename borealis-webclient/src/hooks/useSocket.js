@@ -3,6 +3,9 @@ import { WebSocketContext } from '../contexts/WebSocketProvider'
 
 export const useWebSocket = () => {
     const webSocket = useContext(WebSocketContext)
+    if (!webSocket) {
+        throw new Error('useSocket must be used with WebSocketContext')
+    }
     return webSocket
 }
 
@@ -140,44 +143,6 @@ export const pushTokens = (webSocket, wsSettings, tokens) => {
 export const requestRefresh = (webSocket, wsSettings) => {
     sendData(webSocket, {
         type: 'requestRefresh',
-        from: wsSettings.guid,
-        username: wsSettings.username,
-        room: wsSettings.room,
-    })
-}
-
-export const saveGame = (webSocket, wsSettings, json) => {
-    sendData(webSocket, {
-        type: 'saveGame',
-        from: wsSettings.guid,
-        username: wsSettings.username,
-        room: wsSettings.room,
-        payload: json,
-    })
-}
-
-export const requestLoadGame = (webSocket, wsSettings) => {
-    sendData(webSocket, {
-        type: 'requestLoadGame',
-        from: wsSettings.guid,
-        username: wsSettings.username,
-        room: wsSettings.room,
-    })
-}
-
-export const saveGameToDatabase = (webSocket, wsSettings, json) => {
-    sendData(webSocket, {
-        type: 'saveGameToDatabase',
-        from: wsSettings.guid,
-        username: wsSettings.username,
-        room: wsSettings.room,
-        payload: json,
-    })
-}
-
-export const requestLoadGameFromDatabase = (webSocket, wsSettings) => {
-    sendData(webSocket, {
-        type: 'requestLoadGameFromDatabase',
         from: wsSettings.guid,
         username: wsSettings.username,
         room: wsSettings.room,
