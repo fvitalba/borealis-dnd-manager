@@ -28,7 +28,7 @@ const initialGameState = {
     tokens: [],
 }
 
-const defaultGameState = {
+export const defaultGameState = {
     ...initialGameState,
     mapId: 0,
     width: 795,

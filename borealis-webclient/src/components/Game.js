@@ -448,9 +448,13 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
             updatedTokens = game.tokens.map((token) => {
                 return token.guid !== data.token.guid ? token : {
                     ...data.token,
-                    selected: token.selected,
+                    selected: (token.pc === data.token.pc) ? token.selected : false,
                 }
             })
+            updateTokens(updatedTokens)
+            break
+        case 'deleteSingleToken':
+            updatedTokens = game.tokens.filter((token) => token.guid !== data.tokenGuid)
             updateTokens(updatedTokens)
             break
         case 'pushTokens':
