@@ -35,7 +35,7 @@ const defaultGameState = {
     height: 555,
     maps: [{
         name: 'Dragon\'s Lair',
-        $id: 0,
+        id: 0,
         imageUrl: 'https://mk0a2minutetabl7hq7i.kinstacdn.com/wp-content/uploads/2022/02/Arena-of-Fire-battle-map-Main-preview-Night.jpg',
         x: 0,
         y: 0,
@@ -46,7 +46,7 @@ const defaultGameState = {
     },
     {
         name: 'Mage Tower',
-        $id: 1,
+        id: 1,
         imageUrl: 'https://2minutetabletop.com/wp-content/uploads/2022/01/Wizarding-School-Classroom-Basic-Light-16x22-1.jpg',
         x: 0,
         y: 0,
@@ -66,9 +66,9 @@ const defaultGameState = {
         pc: false,
         width: 100,
         height: 100,
-        $selected: false,
-        $x0: 0,
-        $y0: 0,
+        selected: false,
+        x0: 0,
+        y0: 0,
     },
     {
         guid: guid(),
@@ -81,9 +81,9 @@ const defaultGameState = {
         pc: true,
         width: 50,
         height: 50,
-        $selected: false,
-        $x0: 0,
-        $y0: 0,
+        selected: false,
+        x0: 0,
+        y0: 0,
     },
     {
         guid: guid(),
@@ -96,9 +96,9 @@ const defaultGameState = {
         pc: false,
         width: 50,
         height: 50,
-        $selected: false,
-        $x0: 0,
-        $y0: 0,
+        selected: false,
+        x0: 0,
+        y0: 0,
     }]
 }
 
@@ -120,7 +120,7 @@ const gameReducer = (state = initialGameState, action) => {
             ...action.game,
         }
     case LOAD_MAP:
-        currMap = maps.filter((map) => map.$id === parseInt(action.mapId))[0]
+        currMap = maps.filter((map) => map.id === parseInt(action.mapId))[0]
         return {
             ...state,
             mapId: parseInt(action.mapId),
@@ -147,11 +147,11 @@ const gameReducer = (state = initialGameState, action) => {
         newMapId = state.maps.length
         newMaps = maps.concat({
             ...action.map,
-            $id: newMapId,
+            id: newMapId,
         })
 
         newMapId = !isNaN(state.mapId) ? state.mapId : newMapId
-        currMap = newMaps.filter((map) => map.$id === newMapId)[0]
+        currMap = newMaps.filter((map) => map.id === newMapId)[0]
         return {
             ...state,
             maps: newMaps,
@@ -160,7 +160,7 @@ const gameReducer = (state = initialGameState, action) => {
             height: currMap.height ? currMap.height : state.height,
         }
     case DELETE_MAP:
-        newMaps = maps.filter((map) => map.$id !== parseInt(action.mapId))
+        newMaps = maps.filter((map) => map.id !== parseInt(action.mapId))
         return {
             ...state,
             maps: newMaps,
@@ -218,8 +218,8 @@ const gameReducer = (state = initialGameState, action) => {
         newTokens = state.tokens.map((token) => {
             return token.guid !== action.tokenGuid ? token : {
                 ...token,
-                $x0: action.xOrigin,
-                $y0: action.yOrigin,
+                x0: action.xOrigin,
+                y0: action.yOrigin,
             }
         })
         return {
@@ -228,7 +228,7 @@ const gameReducer = (state = initialGameState, action) => {
         }
     case RESET_FOG:
         newMaps = state.maps.map((map) => {
-            return map.$id === state.mapId ? {
+            return map.id === state.mapId ? {
                 ...map,
                 fogPaths: [],
             }
@@ -240,7 +240,7 @@ const gameReducer = (state = initialGameState, action) => {
         }
     case RESET_DRAW:
         newMaps = state.maps.map((map) => {
-            return map.$id === state.mapId ? {
+            return map.id === state.mapId ? {
                 ...map,
                 drawPaths: [],
             }
@@ -262,9 +262,9 @@ export const overwriteGame = (newGame) => {
         tokens: newGame.tokens.map((token) => {
             return {
                 ...token,
-                $selected: false,
-                $x0: 0,
-                $y0: 0,
+                selected: false,
+                x0: 0,
+                y0: 0,
             }
         })
     }
@@ -311,7 +311,7 @@ export const updateMaps = (newMaps) => {
 export const addMap = (mapName, width, height) => {
     const newMap = {
         name: mapName,
-        $id: 0,
+        id: 0,
         imageUrl: '',
         x: 0,
         y: 0,
@@ -347,9 +347,9 @@ export const addToken = (tokenName, tokenUrl, mapId) => {
         name: tokenName,
         url: tokenUrl,
         mapId: mapId,
-        $selected: false,
-        $x0: 0,
-        $y0: 0,
+        selected: false,
+        x0: 0,
+        y0: 0,
         x: 0,
         y: 0,
         ko: false,

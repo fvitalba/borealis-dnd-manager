@@ -5,11 +5,11 @@ import { pushMapState, useWebSocket } from '../hooks/useSocket'
 import MapConfigView from '../views/MapConfigView'
 
 const initialMapConfigState = (map, game) => {
-    const existingMap = game.maps.filter((mapElement) => mapElement.$id === map.$id)
+    const existingMap = game.maps.filter((mapElement) => mapElement.id === map.id)
     const currentMap = existingMap.length > 0 ? existingMap[0] : { name: undefined, imageUrl: undefined, w: undefined, h: undefined, }
 
     return {
-        $id: parseInt(map.$id),
+        id: parseInt(map.id),
         name: currentMap.name ? currentMap.name : map.name,
         imageUrl: currentMap.imageUrl ? currentMap.imageUrl : '',
         width: currentMap.width ? currentMap.width : window.innerWidth,
@@ -22,7 +22,7 @@ const initialMapConfigState = (map, game) => {
 const MapConfig = ({ map, game, loadMap, updateMaps, deleteMap }) => {
     const [mapConfigState, setMapConfigState] = useState(initialMapConfigState(map, game))
     const [webSocket, wsSettings] = useWebSocket()
-    const isSelected = game.mapId === map.$id
+    const isSelected = game.mapId === map.id
 
     const onTextChange = (key, evt) => {
         setMapConfigState({
@@ -41,16 +41,16 @@ const MapConfig = ({ map, game, loadMap, updateMaps, deleteMap }) => {
 
     const load = () => {
         const updatedMaps = game.maps.map((currMap) => {
-            return map.$id === currMap.$id ? { ...currMap, imageUrl: mapConfigState.imageUrl, width: mapConfigState.width, height: mapConfigState.height, } : currMap
+            return map.id === currMap.id ? { ...currMap, imageUrl: mapConfigState.imageUrl, width: mapConfigState.width, height: mapConfigState.height, } : currMap
         })
         updateMaps(updatedMaps)
-        loadMap(map.$id)
-        pushMapState(webSocket, wsSettings, updatedMaps, map.$id)
+        loadMap(map.id)
+        pushMapState(webSocket, wsSettings, updatedMaps, map.id)
     }
 
     const deleteCurrentMap = () => {
         if (window.confirm('Delete map?')) {
-            deleteMap(map.$id)
+            deleteMap(map.id)
         }
     }
 

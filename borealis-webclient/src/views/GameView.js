@@ -15,8 +15,8 @@ const GameView = ({ isHost, overlayRef, cursors, cursorSize, tokens, onMouseMove
                 <Drawing />
                 { tokens ?
                     <div id='tokens'>
-                        { tokens.map((token, $i) => (
-                            <Token key={ `Token${$i}` } token={ token } isHost={ isHost } />
+                        { tokens.map((token, index) => (
+                            <Token key={ `Token${index}` } token={ token } isHost={ isHost } />
                         )) }
                     </div>
                     : null
@@ -25,7 +25,7 @@ const GameView = ({ isHost, overlayRef, cursors, cursorSize, tokens, onMouseMove
                 { cursors ?
                     <div id='cursors'>
                         { cursors.map((cursor) => (
-                            <Cursor key={ `cursor${cursor.$id}` } name={ cursor.username } cursor={ cursor } size={ cursorSize } />
+                            <Cursor key={ `cursor${cursor.id}` } name={ cursor.username } cursor={ cursor } size={ cursorSize } />
                         )) }
                     </div>
                     : null

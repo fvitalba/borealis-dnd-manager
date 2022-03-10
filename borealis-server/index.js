@@ -73,7 +73,7 @@ app.post('/api/rooms', (request, response) => {
         return response.status(400).json({ error: 'content missing' })
 
     const room = new Room({
-        ...JSON.parse(body.payload),
+        ...body.payload,
         timestamp: new Date(),
     })
     room.save()

@@ -12,8 +12,8 @@ const TokenToolView = ({ newTokenUrl, setNewTokenUrl, createToken, tokens }) => 
             {
                 tokens.length > 0
                     ? <div className='token-config-collection'>
-                        { tokens.map((token, $i) => (
-                            <TokenConfig key={ `token${$i}` } token={ token } />
+                        { tokens.map((token, index) => (
+                            <TokenConfig key={ `token${index}` } token={ token } />
                         ))}
                     </div>
                     : null
