@@ -63,8 +63,12 @@ const UserTool = ({ toggleOnUser, game, chat, metadata, settings, setFogEnabled,
         setIsLoading(true)
         loadRoomFromDatabase(wsSettings)
             .then((result) => {
-                overwriteGame(result.data.game)
-                pushGameRefresh(webSocket, wsSettings, result.data.game, chat)
+                const loadedGame = {
+                    ...result.data.game,
+                    gen: result.data.game.gen + 1,
+                }
+                overwriteGame(loadedGame)
+                pushGameRefresh(webSocket, wsSettings, loadedGame, chat)
                 setIsLoading(false)
             })
             .catch((error) => {
