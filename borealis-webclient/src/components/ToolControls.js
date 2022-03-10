@@ -1,9 +1,11 @@
 import { connect } from 'react-redux'
 import { setToolSettings, setDrawToolSettings, setFogToolSettings } from '../reducers/settingsReducer'
 import { resetFog, resetDraw } from '../reducers/gameReducer'
+import { pushDrawReset, pushFogReset, useWebSocket } from '../hooks/useSocket'
 import ToolControlsView from '../views/ToolControlsView'
 
 const ToolControls = ({ settings, setToolSettings, setDrawToolSettings, setFogToolSettings, resetFog, resetDraw }) => {
+    const [webSocket, wsSettings] = useWebSocket()
     const setSubtool = (subtool) => {
         setToolSettings(settings.tool, subtool)
     }
@@ -32,10 +34,12 @@ const ToolControls = ({ settings, setToolSettings, setDrawToolSettings, setFogTo
 
     const resetFogOnCurrentMap = () => {
         resetFog()
+        pushFogReset(webSocket, wsSettings)
     }
 
     const resetDrawOnCurrentMap = () => {
         resetDraw()
+        pushDrawReset(webSocket, wsSettings)
     }
 
     return (
