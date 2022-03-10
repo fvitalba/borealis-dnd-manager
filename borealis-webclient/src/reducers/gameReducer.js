@@ -28,7 +28,7 @@ const initialGameState = {
     tokens: [],
 }
 
-const defaultGameState = {
+export const defaultGameState = {
     ...initialGameState,
     mapId: 0,
     width: 795,
@@ -67,6 +67,7 @@ const defaultGameState = {
         width: 100,
         height: 100,
         selected: false,
+        hidden: false,
         x0: 0,
         y0: 0,
     },
@@ -82,6 +83,7 @@ const defaultGameState = {
         width: 50,
         height: 50,
         selected: false,
+        hidden: false,
         x0: 0,
         y0: 0,
     },
@@ -97,6 +99,7 @@ const defaultGameState = {
         width: 50,
         height: 50,
         selected: false,
+        hidden: false,
         x0: 0,
         y0: 0,
     }]
@@ -348,6 +351,7 @@ export const addToken = (tokenName, tokenUrl, mapId) => {
         url: tokenUrl,
         mapId: mapId,
         selected: false,
+        hidden: false,
         x0: 0,
         y0: 0,
         x: 0,

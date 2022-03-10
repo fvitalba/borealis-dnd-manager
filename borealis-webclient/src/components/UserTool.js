@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { toJson } from '../controllers/jsonHandler'
-import { overwriteGame, incrementGen, loadDefaultBattleGame, setFogEnabled } from '../reducers/gameReducer'
+import { defaultGameState, overwriteGame, incrementGen, loadDefaultBattleGame, setFogEnabled } from '../reducers/gameReducer'
 import { setUsername, setCursorSize, setToolSettings } from '../reducers/settingsReducer'
 import { pushGameRefresh, pushFogEnabled, useWebSocket } from '../hooks/useSocket'
 import { saveRoomToDatabase, loadRoomFromDatabase } from '../controllers/apiHandler'
@@ -35,6 +35,8 @@ const UserTool = ({ toggleOnUser, game, chat, metadata, settings, setFogEnabled,
         if ((mapsExist && tokensExist) && !window.confirm('Overwrite game with defaults?'))
             return
         loadDefaultBattleGame()
+        const defaultGame = defaultGameState
+        pushGameRefresh(webSocket, wsSettings, defaultGame, chat)
     }
 
     const toggleFog = () => {

@@ -130,6 +130,16 @@ export const pushSingleToken = (webSocket, wsSettings, token) => {
     })
 }
 
+export const deleteSingleToken = (webSocket, wsSettings, tokenGuid) => {
+    sendData(webSocket, {
+        type: 'deleteSingleToken',
+        from: wsSettings.guid,
+        username: wsSettings.username,
+        room: wsSettings.room,
+        tokenGuid: tokenGuid,
+    })
+}
+
 export const pushTokens = (webSocket, wsSettings, tokens) => {
     sendData(webSocket, {
         type: 'pushTokens',
