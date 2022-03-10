@@ -1,5 +1,16 @@
 import Button from './Button'
-import { DuplicateOutlineIcon, DesktopOutlineIcon, UserXOutlineIcon, UserSquareOutlineIcon, UserCheckOutlineIcon, CheckSquareOutlineIcon, SquareOutlineIcon, XSquareOutlineIcon } from './Icons'
+import {
+    DuplicateOutlineIcon,
+    DesktopOutlineIcon,
+    UserXOutlineIcon,
+    UserSquareOutlineIcon,
+    UserCheckOutlineIcon,
+    CheckSquareOutlineIcon,
+    SquareOutlineIcon,
+    XSquareOutlineIcon,
+    EyeOutlineIcon,
+    EyeOffOutlineIcon
+} from './Icons'
 
 const HostTokenConfigView = ({ maps, token, copy, onToggle, selectToken, onTextChange, onIntegerChange, onMapSelect, deleteToken }) => {
     const controlPanelInputClass = token.selected ? 'control-panel-input-selected' : 'control-panel-input'
@@ -13,10 +24,11 @@ const HostTokenConfigView = ({ maps, token, copy, onToggle, selectToken, onTextC
                 <Button title='Delete token' value={ <XSquareOutlineIcon /> } onClick={ deleteToken } />
             </div>
             <div className='token-config-details'>
-                <Button title='Duplicate token' value={ <DuplicateOutlineIcon /> } onClick={ copy } />
-                <Button value={ token.pc ? <UserSquareOutlineIcon className='text-red-300' /> : <DesktopOutlineIcon /> } onClick={ (e) => onToggle('pc', e) } title='PC / NPC' />
-                <Button value={ token.selected ? <CheckSquareOutlineIcon /> : <SquareOutlineIcon /> } onClick={ (e) => selectToken(token, e) } title='Toggle selection' />
-                <Button value={ token.ko ? <UserXOutlineIcon /> : <UserCheckOutlineIcon /> } onClick={ (e) => onToggle('ko', e) } title='Alive / Dead' />
+                <Button value={ <DuplicateOutlineIcon /> } onClick={ copy } title='Duplicate token' />
+                <Button value={ token.hidden ? <EyeOffOutlineIcon /> : <EyeOutlineIcon /> } onClick={ (e) => onToggle('hidden', e) } title={ token.hidden ? 'Hidden' : 'Shown' } />
+                <Button value={ token.pc ? <UserSquareOutlineIcon className='text-red-300' /> : <DesktopOutlineIcon /> } onClick={ (e) => onToggle('pc', e) } title={ token.pc ? 'Player Character' : 'Non-Player Character' } />
+                <Button value={ token.selected ? <CheckSquareOutlineIcon /> : <SquareOutlineIcon /> } onClick={ (e) => selectToken(token, e) } title={ token.selected ? 'Selected' : 'Unselected' } />
+                <Button value={ token.ko ? <UserXOutlineIcon /> : <UserCheckOutlineIcon /> } onClick={ (e) => onToggle('ko', e) } title={ token.ko ? 'Dead' : 'Alive' } />
                 <label>wh:</label>
                 <input value={ token.width || '' } placeholder='w' onChange={ (e) => onIntegerChange('width', e) } type='number' step='5' min='0' title='width' className={ 'w-24 ' + controlPanelInputClass } />
                 <input value={ token.height || '' } placeholder='h' onChange={ (e) => onIntegerChange('height', e) } type='number' step='5' min='0' title='height' className={ 'w-24 ' + controlPanelInputClass } />

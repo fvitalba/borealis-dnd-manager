@@ -411,6 +411,9 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-backdrop-saturate:  ;
   --tw-backdrop-sepia:  ;
 }
+.invisible {
+  visibility: hidden;
+}
 .hidden {
   display: none;
 }
@@ -438,6 +441,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-red-300 {
   --tw-text-opacity: 1;
   color: rgb(252 165 165 / var(--tw-text-opacity));
+}
+.opacity-50 {
+  opacity: 0.5;
 }
 .outline {
   outline-style: solid;

@@ -26,12 +26,14 @@ const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) 
     if (!token.url || !token.url.trim())
         return null
 
+    const hiddenClass = isHost ? 'opacity-50' : 'invisible'
     const classes = [
         'token',
         token.ko && 'dead',
         token.pc ? 'pc' : 'npc',
         token.selected && 'selected',
         isHost && !token.pc && 'grabbable',
+        token.hidden && hiddenClass,
     ]
     const divStyle = {
         left: token.x || 0,
