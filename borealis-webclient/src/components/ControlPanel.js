@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { setUsername, setCursorSize, toggleMousesharing } from '../reducers/settingsReducer'
 import { pushGameRefresh, requestRefresh, useWebSocket } from '../hooks/useSocket'
+import { useLoading } from '../hooks/useLoading'
 import ControlPanelView from '../views/ControlPanelView'
 
 const initialControlPanelState = () => {
@@ -16,6 +17,8 @@ const initialControlPanelState = () => {
 const ControlPanel = ({ game, settings, metadata, chat, setUsername/*, setCursorSize */, toggleMousesharing }) => {
     const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()
+    // eslint-disable-next-line no-unused-vars
+    const [_isLoading, setIsLoading] = useLoading()
 
     const toggleHidden = () => {
         setControlPanelState({
@@ -45,6 +48,7 @@ const ControlPanel = ({ game, settings, metadata, chat, setUsername/*, setCursor
     */
 
     const socketRequestRefresh = () => {
+        setIsLoading(true)
         requestRefresh(webSocket, wsSettings)
     }
 

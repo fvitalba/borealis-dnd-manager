@@ -4,11 +4,14 @@ import { setGameSettings } from '../reducers/metadataReducer'
 import { overwriteGame, updateMaps, loadMap, addMap, setFogEnabled, updateTokens, toggleTokenValue } from '../reducers/gameReducer'
 import { addChatMessage, overwriteChat } from '../reducers/chatReducer'
 import { pushDrawPath, pushFogPath, pushGameRefresh, pushTokens, useWebSocket } from '../hooks/useSocket'
+import { useLoading } from '../hooks/useLoading'
 import GameView from '../views/GameView'
 
 const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, setFogEnabled, addChatMessage, overwriteChat }) => {
     const overlayRef = React.useRef()
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()
+    // eslint-disable-next-line no-unused-vars
+    const [_isLoading, setIsLoading] = useLoading()
     const [mousePosition, setMousePosition] = useState({ downX: 0, downY: 0 })
     let currentPath = []
 
@@ -483,6 +486,7 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
         case 'pushGameRefresh': // refresh from host
             overwriteGame(data.game)
             overwriteChat(data.chat)
+            setIsLoading(false)
             break
         case 'requestRefresh': // refresh request from player
             if (metadata.isHost) {
