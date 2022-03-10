@@ -29,9 +29,10 @@ const ChatPanelError = ({ message }) => {
     )
 }
 
-const ChatPanelView = ({ chatPanelHidden, toggleHidden, noOfCurrentUsers, /* users, */ currentMessage, changeCurrentMessage, addMessage, chatMessages, inputOnKeyDown }) => {
+const ChatPanelView = ({ chatPanelHidden, toggleHidden, showUserHover, toggleUserHover, noOfCurrentUsers, users, currentMessage, changeCurrentMessage, addMessage, chatMessages, inputOnKeyDown }) => {
     const playerInfo = 'lvl. XX Barbarian'
     const sortedChatMessages = chatMessages.sort((a, b) => a.timestamp - b.timestamp)
+
     return (
         chatPanelHidden
             ? <div className='chat-panel-collapsed-container'>
@@ -47,7 +48,15 @@ const ChatPanelView = ({ chatPanelHidden, toggleHidden, noOfCurrentUsers, /* use
                 </div>
                 <div className='chat-panel-header'>
                     <div className='chat-panel-header-title'>Live Chat</div>
-                    <div className='chat-panel-header-subtitle'>{ noOfCurrentUsers } player(s) online</div>
+                    <div className='chat-panel-header-subtitle' onMouseEnter={ toggleUserHover } onMouseLeave={ toggleUserHover }>{ noOfCurrentUsers } player(s) online</div>
+                    { (showUserHover && (users.length > 0))
+                        ? <div className='chat-panel-users'>
+                            { users.map((user) =>
+                                <div className='chat-panel-user' key={ user.guid }>{ user.userName }</div>
+                            )}
+                        </div>
+                        : null
+                    }
                 </div>
                 <div className='chat-panel-content'>
                     { sortedChatMessages.map((message) => {

@@ -17,6 +17,7 @@ const initialChatPanelState = () => {
 
 const ChatPanel = ({ chat, settings, addChatMessage }) => {
     const [chatPanelState, setChatPanelState] = useState(initialChatPanelState)
+    const [showUserHover, setShowUserHover] = useState(false)
     const [webSocket, wsSettings] = useWebSocket()
 
     const toggleHidden = () => {
@@ -24,6 +25,10 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
             ...chatPanelState,
             hidden: !chatPanelState.hidden,
         })
+    }
+
+    const toggleUserHover = () => {
+        setShowUserHover(!showUserHover)
     }
 
     const changeCurrentMessage = (e) => {
@@ -82,6 +87,8 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
         <ChatPanelView
             chatPanelHidden={ chatPanelState.hidden }
             toggleHidden={ toggleHidden }
+            showUserHover={ showUserHover }
+            toggleUserHover={ toggleUserHover }
             noOfCurrentUsers={ chatPanelState.noOfCurrentUsers }
             users={ chatPanelState.users }
             currentMessage={ chatPanelState.currentMessage }
