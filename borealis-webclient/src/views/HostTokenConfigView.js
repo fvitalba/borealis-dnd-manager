@@ -9,10 +9,12 @@ import {
     SquareOutlineIcon,
     XSquareOutlineIcon,
     EyeOutlineIcon,
-    EyeOffOutlineIcon
+    EyeOffOutlineIcon,
+    FormattingOutlineIcon,
+    FormattingClearOutlineIcon
 } from './Icons'
 
-const HostTokenConfigView = ({ maps, token, copy, onToggle, selectToken, onTextChange, onIntegerChange, onMapSelect, deleteToken }) => {
+const HostTokenConfigView = ({ tokenSizes, maps, token, copy, onToggle, selectToken, onTextChange, onSizeSelect, onMapSelect, deleteToken }) => {
     const controlPanelInputClass = token.selected ? 'control-panel-input-selected' : 'control-panel-input'
     const controlPanelSelectClass = token.selected ? 'control-panel-select-selected' : 'control-panel-select'
 
@@ -29,10 +31,13 @@ const HostTokenConfigView = ({ maps, token, copy, onToggle, selectToken, onTextC
                 <Button value={ token.pc ? <UserSquareOutlineIcon className='text-red-300' /> : <DesktopOutlineIcon /> } onClick={ (e) => onToggle('pc', e) } title={ token.pc ? 'Player Character' : 'Non-Player Character' } />
                 <Button value={ token.selected ? <CheckSquareOutlineIcon /> : <SquareOutlineIcon /> } onClick={ (e) => selectToken(token, e) } title={ token.selected ? 'Selected' : 'Unselected' } />
                 <Button value={ token.ko ? <UserXOutlineIcon /> : <UserCheckOutlineIcon /> } onClick={ (e) => onToggle('ko', e) } title={ token.ko ? 'Dead' : 'Alive' } />
-                <label>wh:</label>
-                <input value={ token.width || '' } placeholder='w' onChange={ (e) => onIntegerChange('width', e) } type='number' step='5' min='0' title='width' className={ 'w-24 ' + controlPanelInputClass } />
-                <input value={ token.height || '' } placeholder='h' onChange={ (e) => onIntegerChange('height', e) } type='number' step='5' min='0' title='height' className={ 'w-24 ' + controlPanelInputClass } />
-                <select value={ !isNaN(token.mapId) ? token.mapId : -1 } onChange={ (e) => onMapSelect(e) } title='which map' className={ controlPanelSelectClass }>
+                <Button value={ token.showLabel ? <FormattingOutlineIcon /> : <FormattingClearOutlineIcon /> } onClick={ (e) => onToggle('showLabel', e) } title={ token.showLabel ? 'Label shown' : 'Label hidden' } />
+                <select value={ token.size ? token.size : 'medium' } onChange={ onSizeSelect } title='which size' className={ controlPanelSelectClass }>
+                    { tokenSizes.map((size) => (
+                        <option key={ size.id } value={ size.id } >{ size.id }</option>
+                    ))}
+                </select>
+                <select value={ !isNaN(token.mapId) ? token.mapId : -1 } onChange={ onMapSelect } title='which map' className={ controlPanelSelectClass }>
                     <option key={ -1 } value={ -1 } >All</option>
                     { maps.map((map) => (
                         <option key={ map.id } value={ map.id } >{ map.name }</option>

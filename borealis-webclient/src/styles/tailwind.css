@@ -12,7 +12,7 @@
 
 .game-setup-form {
     @apply mx-auto;
-    @apply z-100;
+    @apply z-control-panel;
     @apply bg-primary-300;
     @apply rounded-lg;
     @apply shadow-md;
@@ -21,7 +21,8 @@
 }
 
 .game-setup-room-input {
-
+    @apply flex;
+    @apply flex-row;
 }
 
 .game-setup-input {
@@ -76,12 +77,15 @@
 
 .control-panel-container {
     @apply basis-1/3;
-    @apply z-100;
+    @apply z-control-panel;
     @apply absolute;
     @apply top-2 left-2;
     @apply bg-primary-300;
     @apply rounded-lg;
     @apply shadow-md;
+    @apply max-h-full;
+    @apply overflow-y-auto;
+    @apply opacity-100;
 }
 
 .control-panel-tools {
@@ -247,7 +251,7 @@
 }
 
 .chat-panel-container {
-    @apply z-100;
+    @apply z-chat-panel;
     @apply absolute;
     @apply top-0 right-0;
     @apply bg-primary-300;
@@ -279,7 +283,7 @@
 }
 
 .chat-panel-collapsed-container {
-    @apply z-100;
+    @apply z-chat-panel;
     @apply absolute;
     @apply top-2 right-2;
     @apply bg-primary-300;
@@ -388,7 +392,7 @@
     @apply items-center;
     @apply fixed;
     @apply bg-primary-800/60;
-    @apply z-110;
+    @apply z-loading;
     @apply text-primary-300;
 }
 
@@ -429,4 +433,88 @@
 
 .button:active {
     @apply text-secondary-600;
+}
+
+.tokens-container {
+    @apply relative;
+}
+
+.token {
+    @apply absolute;
+}
+
+.token-pc {
+    @apply z-pc-div;
+}
+
+.token-npc {
+    @apply z-npc-div;
+}
+
+.token-image {
+    @apply relative;
+    @apply pointer-events-none;
+    @apply rounded-full;
+    @apply overflow-hidden;
+    @apply mx-auto;
+}
+
+.token-image-selected {
+    @apply token-image;
+    @apply border-dashed;
+    @apply border-accent-500;
+    @apply border-2;
+}
+
+.token-label {
+    @apply text-xs;
+    @apply bg-primary-300;
+    @apply text-primary-700;
+    @apply border-2;
+    @apply border-primary-500;
+    @apply p-1;
+    @apply rounded-md;
+    @apply fixed;
+}
+
+.token-grabbable {
+    @apply cursor-grab;
+}
+
+.token-dead {
+    @apply invert;
+    @apply rotate-180;
+}
+
+.gone {
+    @apply hidden;
+}
+
+.passthrough {
+    @apply pointer-events-none;
+}
+
+.background {
+    @apply z-map;
+    @apply absolute;
+}
+
+.drawing {
+    @apply z-drawing;
+    @apply absolute;
+    @apply border-dashed;
+    @apply border-2;
+    @apply border-accent-500;
+}
+
+.fog {
+    @apply z-fog;
+    @apply absolute;
+    @apply opacity-100;
+}
+
+.overlay {
+    @apply z-overlay;
+    @apply absolute;
+    @apply pointer-events-none;
 }

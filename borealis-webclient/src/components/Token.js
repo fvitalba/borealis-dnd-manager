@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import { setTokenOrigin, updateTokens } from '../reducers/gameReducer'
 import TokenView from '../views/TokenView'
 
 const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) => {
+    const labelRef = useRef(null)
+    const [labelPosition, setLabelPosition] = useState({
+        top: token.y + token.height,
+        left: token.x + Math.floor(token.width / 2),
+    })
+
     const isMoveTool = () => {
         return settings.tool === 'move'
     }
@@ -23,16 +29,24 @@ const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) 
         setTokenOrigin(token.guid, token.x, token.y)
     }
 
+    useEffect(() => {
+        if (labelRef.current) {
+            setLabelPosition({
+                top: token.y + token.height,
+                left: token.x + Math.floor(token.width / 2) - Math.floor(labelRef.current.offsetWidth / 2),
+            })
+        }
+    }, [ labelRef.current, token.x, token.y, token.width, token.height, token.showLabel ])
+
     if (!token.url || !token.url.trim())
         return null
 
     const hiddenClass = isHost ? 'opacity-50' : 'invisible'
     const classes = [
         'token',
-        token.ko && 'dead',
-        token.pc ? 'pc' : 'npc',
-        token.selected && 'selected',
-        isHost && !token.pc && 'grabbable',
+        token.ko && 'token-dead',
+        token.pc ? 'token-pc' : 'token-npc',
+        isHost && !token.pc && 'token-grabbable',
         token.hidden && hiddenClass,
     ]
     const divStyle = {
@@ -50,8 +64,11 @@ const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) 
             <TokenView
                 divStyle={ divStyle }
                 token={ token }
+                isSelected={ token.selected }
                 classes={ classes }
                 imgStyle={ imgStyle }
+                labelRef={ labelRef }
+                labelPosition={ labelPosition }
                 onMouseDown={ onMouseDown }
             />
             : null

@@ -3,9 +3,9 @@ import { toJson } from '../controllers/jsonHandler'
 import { defaultGameState, overwriteGame, incrementGen, loadDefaultBattleGame, setFogEnabled } from '../reducers/gameReducer'
 import { setUsername, setCursorSize, setToolSettings } from '../reducers/settingsReducer'
 import { pushGameRefresh, pushFogEnabled, useWebSocket } from '../hooks/useSocket'
+import { useLoading } from '../hooks/useLoading'
 import { saveRoomToDatabase, loadRoomFromDatabase } from '../controllers/apiHandler'
 import UserToolView from '../views/UserToolView'
-import { useLoading } from '../hooks/useLoading'
 
 const UserTool = ({ toggleOnUser, game, chat, metadata, settings, setFogEnabled, overwriteGame, incrementGen, setUsername, setCursorSize, setToolSettings, loadDefaultBattleGame }) => {
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()

@@ -72,8 +72,7 @@ const Drawing = ({ game }) => {
 
     return (
         <Canvas
-            id='drawing'
-            className='passthrough'
+            className='drawing passthrough'
             width={ width }
             height={ height }
             draw={ renderDrawingLayer } />

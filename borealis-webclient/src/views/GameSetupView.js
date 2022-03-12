@@ -1,6 +1,6 @@
 import Button from '../views/Button'
 import LoadingOverlay from '../components/LoadingOverlay'
-import { PlaySolidIcon } from './Icons'
+import { PlaySolidIcon, CheckAltOutlineIcon, XAltOutlineIcon, RepeatOutlineIcon } from './Icons'
 
 const GameSetupToggleButton = ({ title, value, isSelected, onClick }) => {
     return (
@@ -10,12 +10,16 @@ const GameSetupToggleButton = ({ title, value, isSelected, onClick }) => {
     )
 }
 
-const GameSetupView = ({ roomName, onRoomNameChange, userName, onUserNameChange, onToggleUserButton, onSubmitSetup, isHost, isPlayer, isSubmitEnabled }) => {
+const GameSetupView = ({ roomName, onRoomNameChange, searchingRoom, roomFound, userName, onUserNameChange, onToggleUserButton, onSubmitSetup, isHost, isPlayer, isSubmitEnabled }) => {
     return (
         <div className='game-setup-container'>
             <div className='game-setup-form'>
                 <div className='game-setup-room-input'>
                     <input title='Room name' placeholder='Room name' value={ roomName } onChange={ onRoomNameChange } className='game-setup-input' />
+                    { !searchingRoom
+                        ? ( roomFound ? <CheckAltOutlineIcon className='text-green-700' /> : <XAltOutlineIcon className='text-red-700' /> )
+                        : <RepeatOutlineIcon className='animate-reverse-spin' />
+                    }
                 </div>
                 <div className='game-setup-user-selection'>
                     <GameSetupToggleButton title='DM' value='DM' isSelected={ isHost } onClick={ onToggleUserButton } />

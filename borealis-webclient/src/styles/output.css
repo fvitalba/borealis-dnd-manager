@@ -438,6 +438,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 .resize {
   resize: both;
 }
+.text-green-700 {
+  --tw-text-opacity: 1;
+  color: rgb(21 128 61 / var(--tw-text-opacity));
+}
+.text-red-700 {
+  --tw-text-opacity: 1;
+  color: rgb(185 28 28 / var(--tw-text-opacity));
+}
 .text-red-300 {
   --tw-text-opacity: 1;
   color: rgb(252 165 165 / var(--tw-text-opacity));
@@ -512,7 +520,8 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 .game-setup-room-input {
-
+  display: flex;
+  flex-direction: row;
 }
 
 .game-setup-input {
@@ -653,6 +662,9 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  max-height: 100%;
+  overflow-y: auto;
+  opacity: 1;
 }
 
 .control-panel-tools {
@@ -908,7 +920,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 .chat-panel-container {
-  z-index: 100;
+  z-index: 110;
   position: absolute;
   top: 0px;
   right: 0px;
@@ -947,7 +959,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 .chat-panel-collapsed-container {
-  z-index: 100;
+  z-index: 110;
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
@@ -1072,7 +1084,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   align-items: center;
   position: fixed;
   background-color: rgb(31 41 55 / 0.6);
-  z-index: 110;
+  z-index: 120;
   --tw-text-opacity: 1;
   color: rgb(209 213 219 / var(--tw-text-opacity));
 }
@@ -1148,4 +1160,102 @@ Ensure the default browser behavior of the `hidden` attribute.
 .button:active {
   --tw-text-opacity: 1;
   color: rgb(2 132 199 / var(--tw-text-opacity));
+}
+
+.tokens-container {
+  position: relative;
+}
+
+.token {
+  position: absolute;
+}
+
+.token-pc {
+  z-index: 25;
+}
+
+.token-npc {
+  z-index: 15;
+}
+
+.token-image {
+  position: relative;
+  pointer-events: none;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.token-image-selected {
+  position: relative;
+  pointer-events: none;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-left: auto;
+  margin-right: auto;
+  border-style: dashed;
+  --tw-border-opacity: 1;
+  border-color: rgb(249 115 22 / var(--tw-border-opacity));
+  border-width: 2px;
+}
+
+.token-label {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(55 65 81 / var(--tw-text-opacity));
+  border-width: 2px;
+  --tw-border-opacity: 1;
+  border-color: rgb(107 114 128 / var(--tw-border-opacity));
+  padding: 0.25rem;
+  border-radius: 0.375rem;
+  position: fixed;
+}
+
+.token-grabbable {
+  cursor: grab;
+}
+
+.token-dead {
+  --tw-invert: invert(100%);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+  --tw-rotate: 180deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.gone {
+  display: none;
+}
+
+.passthrough {
+  pointer-events: none;
+}
+
+.background {
+  z-index: 1;
+  position: absolute;
+}
+
+.drawing {
+  z-index: 2;
+  position: absolute;
+  border-style: dashed;
+  border-width: 2px;
+  --tw-border-opacity: 1;
+  border-color: rgb(249 115 22 / var(--tw-border-opacity));
+}
+
+.fog {
+  z-index: 20;
+  position: absolute;
+  opacity: 1;
+}
+
+.overlay {
+  z-index: 30;
+  position: absolute;
+  pointer-events: none;
 }

@@ -49,8 +49,7 @@ const Fog = ({ game, metadata, settings }) => {
     return (
         game.fogEnabled ?
             <Canvas
-                id='fog'
-                className='passthrough'
+                className='fog passthrough'
                 style={{ opacity: fogOpacity }}
                 width={ width }
                 height={ height }

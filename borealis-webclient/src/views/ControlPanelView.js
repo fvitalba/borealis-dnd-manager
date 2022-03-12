@@ -13,7 +13,7 @@ import { PlusCircleOutlineIcon, MinusCircleOutlineIcon, UserCircleSolidIcon, Map
 const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, toggleHidden, submenuHidden, fogEnabled, isHost, username, setUsername, mouseIsShared, toggleShareMouse, socketRequestRefresh, pushRefreshToPlayers }) => {
     if (hidden)
         return (
-            <div id='control-panel' className='control-panel-container'>
+            <div className='control-panel-container'>
                 <div className='control-panel-tools'>
                     <Button value={ <PlusCircleOutlineIcon /> } onClick={ toggleHidden } title='show/hide control panel' />
                 </div>
@@ -22,7 +22,7 @@ const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, tog
 
     if (isHost)
         return (
-            <div id='control-panel' className='control-panel-container'>
+            <div className='control-panel-container'>
                 <div className='control-panel-tools'>
                     <Button value={ <MinusCircleOutlineIcon /> } onClick={ toggleHidden } title='show/hide control panel'/>
                     <ToggleButton title='User' value={ <UserCircleSolidIcon /> } controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
@@ -45,7 +45,7 @@ const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, tog
         )
     else
         return (
-            <div id='control-panel' className='control-panel-container'>
+            <div className='control-panel-container'>
                 <div className='control-panel-tools'>
                     <Button value={ <MinusCircleOutlineIcon /> } onClick={ toggleHidden } title='show/hide control panel' />
                     <input title='User name' placeholder='User name' value={ username } onChange={ (e) => setUsername(e.target.value) } className='control-panel-input' />

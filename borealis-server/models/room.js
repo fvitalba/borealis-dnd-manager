@@ -30,8 +30,10 @@ const tokenSchema = new mongoose.Schema({
     pc: Boolean,
     width: Number,
     height: Number,
+    size: String,
     selected: false,
     hidden: Boolean,
+    showLabel: Boolean,
     x0: Number,
     y0: Number,
 })

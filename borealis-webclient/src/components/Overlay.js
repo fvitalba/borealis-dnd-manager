@@ -10,7 +10,7 @@ const Overlay = ({ game, overlayRef }) => {
 
     return (
         <canvas
-            id='overlay'
+            className='overlay'
             ref={ canvasRef }
             width={ width }
             height={ height } />

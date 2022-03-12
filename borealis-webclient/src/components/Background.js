@@ -17,7 +17,7 @@ const Background = ({ game }) => {
 
     return (
         <Canvas
-            id='background'
+            className='background'
             width={ map ? map.width : 0 }
             height={ map ? map.height : 0 }
             draw={ draw } />

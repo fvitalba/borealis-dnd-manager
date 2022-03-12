@@ -66,8 +66,10 @@ export const defaultGameState = {
         pc: false,
         width: 100,
         height: 100,
+        size: 'huge',
         selected: false,
         hidden: false,
+        showLabel: false,
         x0: 0,
         y0: 0,
     },
@@ -82,8 +84,10 @@ export const defaultGameState = {
         pc: true,
         width: 50,
         height: 50,
+        size: 'medium',
         selected: false,
         hidden: false,
+        showLabel: false,
         x0: 0,
         y0: 0,
     },
@@ -98,8 +102,10 @@ export const defaultGameState = {
         pc: false,
         width: 50,
         height: 50,
+        size: 'medium',
         selected: false,
         hidden: false,
+        showLabel: false,
         x0: 0,
         y0: 0,
     }]
@@ -164,9 +170,11 @@ const gameReducer = (state = initialGameState, action) => {
         }
     case DELETE_MAP:
         newMaps = maps.filter((map) => map.id !== parseInt(action.mapId))
+        newTokens = tokens.filter((token) => token.mapId === parseInt(action.mapId))
         return {
             ...state,
             maps: newMaps,
+            tokens: newTokens,
             mapId: parseInt(action.mapId) === state.mapId ? undefined : state.mapId,
         }
     case UPDATE_TOKENS:
