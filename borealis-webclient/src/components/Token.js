@@ -36,7 +36,7 @@ const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) 
                 left: token.x + Math.floor(token.width / 2) - Math.floor(labelRef.current.offsetWidth / 2),
             })
         }
-    }, [ labelRef.current, token.x, token.y, token.width, token.height ])
+    }, [ labelRef.current, token.x, token.y, token.width, token.height, token.showLabel ])
 
     if (!token.url || !token.url.trim())
         return null
