@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { setGameSettings } from '../reducers/metadataReducer'
 import { setUsername } from '../reducers/settingsReducer'
+import { overwriteGame } from '../reducers/gameReducer'
+import { useLoading } from '../hooks/useLoading'
+import { loadRoomFromDatabase } from '../controllers/apiHandler'
 import GameSetupView from '../views/GameSetupView'
 
 const initialGameSetupState = () => {
@@ -12,8 +15,10 @@ const initialGameSetupState = () => {
     }
 }
 
-const GameSetup = ({ setGameSettings, setUsername }) => {
+const GameSetup = ({ setGameSettings, setUsername, overwriteGame }) => {
     const [gameSetupState, setGameSetupState] = useState(initialGameSetupState)
+    // eslint-disable-next-line no-unused-vars
+    const [_isLoading, setIsLoading] = useLoading()
 
     const onRoomNameChange = (e) => {
         const newRoomName = e.target.value
@@ -46,6 +51,27 @@ const GameSetup = ({ setGameSettings, setUsername }) => {
     const onSubmitSetup = () => {
         setGameSettings(gameSetupState.isHost, gameSetupState.roomName)
         setUsername(gameSetupState.userName)
+        if (gameSetupState.isHost) {
+            setIsLoading(true)
+            const tempWsSettings = {
+                guid: '',
+                username: gameSetupState.userName,
+                room: gameSetupState.roomName,
+            }
+            loadRoomFromDatabase(tempWsSettings)
+                .then((result) => {
+                    const loadedGame = {
+                        ...result.data.game,
+                        gen: result.data.game.gen + 1,
+                    }
+                    overwriteGame(loadedGame)
+                    setIsLoading(false)
+                })
+                .catch((error) => {
+                    setIsLoading(false)
+                    console.error(error)
+                })
+        }
     }
 
     const isHost = (gameSetupState.isHost === true)
@@ -70,6 +96,7 @@ const GameSetup = ({ setGameSettings, setUsername }) => {
 const mapDispatchToProps = {
     setGameSettings,
     setUsername,
+    overwriteGame,
 }
 
 export default connect(undefined, mapDispatchToProps)(GameSetup)
