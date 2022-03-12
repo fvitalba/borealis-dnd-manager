@@ -5,23 +5,23 @@ import TokenToolView from '../views/TokenToolView'
 import SelectedTokensControls from './SelectedTokensControls'
 
 const TokenTool = ({ toggleOnTokens, game, addToken, metadata }) => {
-    const [newTokenUrl, setNewTokenUrl] = useState('')
+    const [newTokenName, setNewTokenName] = useState('')
 
     if (!metadata.isHost)
         return null
 
     const createToken = () => {
-        if (!newTokenUrl)
+        if (!newTokenName)
             return
-        addToken(undefined, newTokenUrl, game.mapId)
-        setNewTokenUrl('')
+        addToken(newTokenName, '', game.mapId)
+        setNewTokenName('')
     }
 
     const currentTokens = game.tokens.filter((token) => (token.mapId === undefined) || (token.mapId === game.mapId))
 
     return (
         toggleOnTokens
-            ? <TokenToolView newTokenUrl={ newTokenUrl } setNewTokenUrl={ setNewTokenUrl } createToken={ createToken } tokens={ currentTokens } />
+            ? <TokenToolView newTokenName={ newTokenName } setNewTokenName={ setNewTokenName } createToken={ createToken } tokens={ currentTokens } />
             : <SelectedTokensControls tokens={ currentTokens } />
     )
 }
