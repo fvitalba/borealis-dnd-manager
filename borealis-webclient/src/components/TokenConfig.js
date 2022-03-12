@@ -5,7 +5,38 @@ import { pushSingleToken, deleteSingleToken, useWebSocket } from '../hooks/useSo
 import HostTokenConfig from '../views/HostTokenConfigView'
 import GuestTokenConfigView from '../views/GuestTokenConfigView'
 
-const TokenConfig = ({ token, game, metadata, deleteToken, copyToken, updateTokenValue, toggleTokenValue }) => {
+const tokenSizes = [{
+    id: 'tiny',
+    width: 10,
+    height: 10,
+},
+{
+    id: 'small',
+    width: 25,
+    height: 25,
+},
+{
+    id: 'medium',
+    width: 50,
+    height: 50,
+},
+{
+    id: 'large',
+    width: 75,
+    height: 75,
+},
+{
+    id: 'huge',
+    width: 100,
+    height: 100,
+},
+{
+    id: 'gargantuan',
+    width: 150,
+    height: 150,
+}]
+
+const TokenConfig = ({ token, game, metadata, deleteToken, copyToken, updateTokenValue, toggleTokenValue, updateTokens }) => {
     const [webSocket, wsSettings] = useWebSocket()
 
     const selectToken = (token) => {
@@ -21,6 +52,20 @@ const TokenConfig = ({ token, game, metadata, deleteToken, copyToken, updateToke
 
     const copy = () => {
         copyToken(token.guid)
+    }
+
+    const onSizeSelect = (e) => {
+        const size = tokenSizes.filter((tokenSize) => tokenSize.id === e.target.value)
+        const newToken = {
+            ...token,
+            size: size[0].id,
+            width: size[0].width,
+            height: size[0].height,
+        }
+        console.log(newToken)
+        const newTokens = game.tokens.map((gtoken) => gtoken.guid === newToken.guid ? newToken : gtoken)
+        updateTokens(newTokens)
+        pushSingleToken(webSocket,wsSettings,newToken)
     }
 
     const onMapSelect = (e) => {
@@ -44,15 +89,6 @@ const TokenConfig = ({ token, game, metadata, deleteToken, copyToken, updateToke
         pushSingleToken(webSocket,wsSettings,newToken)
     }
 
-    const onIntegerChange = (key, e) => {
-        updateTokenValue(token.guid, key, parseInt(e.target.value) || undefined)
-        const newToken = {
-            ...token,
-            [key]: parseInt(e.target.value) || undefined,
-        }
-        pushSingleToken(webSocket,wsSettings,newToken)
-    }
-
     const onTextChange = (key, e) => {
         updateTokenValue(token.guid, key, e.target.value)
         const newToken = {
@@ -67,13 +103,14 @@ const TokenConfig = ({ token, game, metadata, deleteToken, copyToken, updateToke
             { token ?
                 metadata.isHost ?
                     <HostTokenConfig
+                        tokenSizes={ tokenSizes }
                         maps={ game.maps }
                         token={ token }
                         copy={ copy }
                         onToggle={ onToggle }
                         selectToken={ selectToken }
                         onTextChange={ onTextChange }
-                        onIntegerChange={ onIntegerChange }
+                        onSizeSelect={ onSizeSelect }
                         onMapSelect={ onMapSelect }
                         deleteToken={ deleteCurrToken }
                     />
@@ -81,7 +118,6 @@ const TokenConfig = ({ token, game, metadata, deleteToken, copyToken, updateToke
                     <GuestTokenConfigView
                         token={ token }
                         onTextChange={ onTextChange }
-                        onIntegerChange={ onIntegerChange }
                     />
                 : null
             }

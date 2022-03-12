@@ -30,6 +30,7 @@ const tokenSchema = new mongoose.Schema({
     pc: Boolean,
     width: Number,
     height: Number,
+    size: String,
     selected: false,
     hidden: Boolean,
     showLabel: Boolean,
