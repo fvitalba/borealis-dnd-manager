@@ -167,9 +167,11 @@ const gameReducer = (state = initialGameState, action) => {
         }
     case DELETE_MAP:
         newMaps = maps.filter((map) => map.id !== parseInt(action.mapId))
+        newTokens = tokens.filter((token) => token.mapId === parseInt(action.mapId))
         return {
             ...state,
             maps: newMaps,
+            tokens: newTokens,
             mapId: parseInt(action.mapId) === state.mapId ? undefined : state.mapId,
         }
     case UPDATE_TOKENS:
