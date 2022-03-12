@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import { setTokenOrigin, updateTokens } from '../reducers/gameReducer'
 import TokenView from '../views/TokenView'
 
 const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) => {
+    const labelRef = useRef(null)
+    const [labelPosition, setLabelPosition] = useState({
+        top: token.y + token.height,
+        left: token.x + Math.floor(token.width / 2),
+    })
+
     const isMoveTool = () => {
         return settings.tool === 'move'
     }
@@ -22,6 +28,15 @@ const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) 
         updateTokens(updatedTokensWithSelection)
         setTokenOrigin(token.guid, token.x, token.y)
     }
+
+    useEffect(() => {
+        if (labelRef.current) {
+            setLabelPosition({
+                top: token.y + token.height,
+                left: token.x + Math.floor(token.width / 2) - Math.floor(labelRef.current.offsetWidth / 2),
+            })
+        }
+    }, [ labelRef.current, token.x, token.y, token.width, token.height ])
 
     if (!token.url || !token.url.trim())
         return null
@@ -52,6 +67,8 @@ const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) 
                 isSelected={ token.selected }
                 classes={ classes }
                 imgStyle={ imgStyle }
+                labelRef={ labelRef }
+                labelPosition={ labelPosition }
                 onMouseDown={ onMouseDown }
             />
             : null

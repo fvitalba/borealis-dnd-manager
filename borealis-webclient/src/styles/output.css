@@ -1203,6 +1203,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-color: rgb(107 114 128 / var(--tw-border-opacity));
   padding: 0.25rem;
   border-radius: 0.375rem;
+  position: fixed;
 }
 
 .token-grabbable {
