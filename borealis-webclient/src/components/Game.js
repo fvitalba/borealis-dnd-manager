@@ -289,7 +289,7 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
         if (selectedTokens.length > 0) {
             let deselectTokens = false
             for (let x of [document.activeElement, e.target])
-                if (x.id.toUpperCase() === 'BACKGROUND')
+                if (x.className.toUpperCase() === 'BACKGROUND')
                     deselectTokens = true
             if (deselectTokens)
                 game.tokens.map((token) => token.selected ? toggleTokenValue(token.guid,'selected') : null)

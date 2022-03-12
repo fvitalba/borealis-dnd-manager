@@ -1198,6 +1198,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   display: none;
 }
 
+.passthrough {
+  pointer-events: none;
+}
+
 .background {
   z-index: 1;
   position: absolute;

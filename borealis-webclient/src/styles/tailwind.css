@@ -476,6 +476,10 @@
     @apply hidden;
 }
 
+.passthrough {
+    @apply pointer-events-none;
+}
+
 .background {
     @apply z-map;
     @apply absolute;
