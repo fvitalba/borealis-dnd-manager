@@ -455,6 +455,7 @@
     @apply pointer-events-none;
     @apply rounded-full;
     @apply overflow-hidden;
+    @apply mx-auto;
 }
 
 .token-image-selected {
@@ -465,7 +466,13 @@
 }
 
 .token-label {
-
+    @apply text-xs;
+    @apply bg-primary-300;
+    @apply text-primary-700;
+    @apply border-2;
+    @apply border-primary-500;
+    @apply p-1;
+    @apply rounded-md;
 }
 
 .token-grabbable {
