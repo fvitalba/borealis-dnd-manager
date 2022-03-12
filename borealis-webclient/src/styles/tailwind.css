@@ -82,6 +82,9 @@
     @apply bg-primary-300;
     @apply rounded-lg;
     @apply shadow-md;
+    @apply max-h-full;
+    @apply overflow-y-auto;
+    @apply opacity-100;
 }
 
 .control-panel-tools {
@@ -467,4 +470,33 @@
 .token-dead {
     @apply invert;
     @apply rotate-180;
+}
+
+.gone {
+    @apply hidden;
+}
+
+.background {
+    @apply z-map;
+    @apply absolute;
+}
+
+.drawing {
+    @apply z-drawing;
+    @apply absolute;
+    @apply border-dashed;
+    @apply border-2;
+    @apply border-accent-500;
+}
+
+.fog {
+    @apply z-fog;
+    @apply absolute;
+    @apply opacity-100;
+}
+
+.overlay {
+    @apply z-overlay;
+    @apply absolute;
+    @apply pointer-events-none;
 }

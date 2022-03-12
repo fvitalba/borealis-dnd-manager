@@ -653,6 +653,9 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  max-height: 100%;
+  overflow-y: auto;
+  opacity: 1;
 }
 
 .control-panel-tools {
@@ -1189,4 +1192,34 @@ Ensure the default browser behavior of the `hidden` attribute.
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
   --tw-rotate: 180deg;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.gone {
+  display: none;
+}
+
+.background {
+  z-index: 1;
+  position: absolute;
+}
+
+.drawing {
+  z-index: 2;
+  position: absolute;
+  border-style: dashed;
+  border-width: 2px;
+  --tw-border-opacity: 1;
+  border-color: rgb(249 115 22 / var(--tw-border-opacity));
+}
+
+.fog {
+  z-index: 20;
+  position: absolute;
+  opacity: 1;
+}
+
+.overlay {
+  z-index: 30;
+  position: absolute;
+  pointer-events: none;
 }
