@@ -438,6 +438,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 .resize {
   resize: both;
 }
+.text-green-700 {
+  --tw-text-opacity: 1;
+  color: rgb(21 128 61 / var(--tw-text-opacity));
+}
+.text-red-700 {
+  --tw-text-opacity: 1;
+  color: rgb(185 28 28 / var(--tw-text-opacity));
+}
 .text-red-300 {
   --tw-text-opacity: 1;
   color: rgb(252 165 165 / var(--tw-text-opacity));
@@ -512,7 +520,8 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 .game-setup-room-input {
-
+  display: flex;
+  flex-direction: row;
 }
 
 .game-setup-input {

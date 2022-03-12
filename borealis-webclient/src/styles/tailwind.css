@@ -21,7 +21,8 @@
 }
 
 .game-setup-room-input {
-
+    @apply flex;
+    @apply flex-row;
 }
 
 .game-setup-input {

@@ -294,3 +294,16 @@ export const FormattingClearOutlineIcon = (props) => {
         <path d='M5 20H9' />
     </svg>
 }
+
+export const XAltOutlineIcon = (props) => {
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
+        <path d='M9 9L15 15' />
+        <path d='M15 9L9 15' />
+    </svg>
+}
+
+export const CheckAltOutlineIcon = (props) => {
+    return <svg xmlns='http://www.w3.org/2000/svg' width={ defaultWidth } height={ defaultHeight } viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1' strokeLinecap='round' strokeLinejoin='round' {...props}>
+        <path d='M7 12L9.89075 14.8907V14.8907C9.95114 14.951 10.049 14.9511 10.1094 14.8907V14.8907L17 8' />
+    </svg>
+}

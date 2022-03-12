@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { setGameSettings } from '../reducers/metadataReducer'
 import { setUsername } from '../reducers/settingsReducer'
@@ -17,6 +17,10 @@ const initialGameSetupState = () => {
 
 const GameSetup = ({ setGameSettings, setUsername, overwriteGame }) => {
     const [gameSetupState, setGameSetupState] = useState(initialGameSetupState)
+    const [roomLookupState, setRoomLookupState] = useState({
+        roomFound: false,
+        searchingRoom: false,
+    })
     // eslint-disable-next-line no-unused-vars
     const [_isLoading, setIsLoading] = useLoading()
 
@@ -25,6 +29,10 @@ const GameSetup = ({ setGameSettings, setUsername, overwriteGame }) => {
         setGameSetupState({
             ...gameSetupState,
             roomName: newRoomName,
+        })
+        setRoomLookupState({
+            roomFound: false,
+            searchingRoom: true,
         })
     }
 
@@ -74,6 +82,48 @@ const GameSetup = ({ setGameSettings, setUsername, overwriteGame }) => {
         }
     }
 
+    const searchRoom = useCallback(() => {
+        if ((gameSetupState.roomName !== '') && (!roomLookupState.roomFound)) {
+            const tempWsSettings = {
+                guid: '',
+                username: gameSetupState.userName,
+                room: gameSetupState.roomName,
+            }
+            if (!roomLookupState.searchingRoom)
+                setRoomLookupState({
+                    roomFound: false,
+                    searchingRoom: true,
+                })
+            loadRoomFromDatabase(tempWsSettings)
+                .then((result) => {
+                    if (result.data) {
+                        setRoomLookupState({
+                            roomFound: true,
+                            searchingRoom: false,
+                        })
+                    } else {
+                        setRoomLookupState({
+                            roomFound: false,
+                            searchingRoom: false,
+                        })
+                    }
+                })
+                .catch(() => {
+                    setRoomLookupState({
+                        roomFound: false,
+                        searchingRoom: false,
+                    })
+                })
+        }
+    }, [ gameSetupState, roomLookupState, setRoomLookupState ])
+
+    useEffect(() => {
+        const interval = setInterval(() => searchRoom(), 3000)
+        return () => {
+            clearInterval(interval)
+        }
+    }, [ searchRoom ])
+
     const isHost = (gameSetupState.isHost === true)
     const isPlayer = (gameSetupState.isHost === false)
     const isSubmitEnabled = ((gameSetupState.isHost !== undefined) && (gameSetupState.roomName !== ''))
@@ -82,6 +132,8 @@ const GameSetup = ({ setGameSettings, setUsername, overwriteGame }) => {
         <GameSetupView
             roomName={ gameSetupState.roomName }
             onRoomNameChange={ onRoomNameChange }
+            searchingRoom={ roomLookupState.searchingRoom }
+            roomFound={ roomLookupState.roomFound }
             userName={ gameSetupState.userName }
             onUserNameChange={ onUserNameChange }
             onToggleUserButton={ onToggleUserButton }
