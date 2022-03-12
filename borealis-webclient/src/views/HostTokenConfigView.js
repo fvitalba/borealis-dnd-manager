@@ -9,7 +9,9 @@ import {
     SquareOutlineIcon,
     XSquareOutlineIcon,
     EyeOutlineIcon,
-    EyeOffOutlineIcon
+    EyeOffOutlineIcon,
+    FormattingOutlineIcon,
+    FormattingClearOutlineIcon
 } from './Icons'
 
 const HostTokenConfigView = ({ maps, token, copy, onToggle, selectToken, onTextChange, onIntegerChange, onMapSelect, deleteToken }) => {
@@ -29,6 +31,7 @@ const HostTokenConfigView = ({ maps, token, copy, onToggle, selectToken, onTextC
                 <Button value={ token.pc ? <UserSquareOutlineIcon className='text-red-300' /> : <DesktopOutlineIcon /> } onClick={ (e) => onToggle('pc', e) } title={ token.pc ? 'Player Character' : 'Non-Player Character' } />
                 <Button value={ token.selected ? <CheckSquareOutlineIcon /> : <SquareOutlineIcon /> } onClick={ (e) => selectToken(token, e) } title={ token.selected ? 'Selected' : 'Unselected' } />
                 <Button value={ token.ko ? <UserXOutlineIcon /> : <UserCheckOutlineIcon /> } onClick={ (e) => onToggle('ko', e) } title={ token.ko ? 'Dead' : 'Alive' } />
+                <Button value={ token.showLabel ? <FormattingOutlineIcon /> : <FormattingClearOutlineIcon /> } onClick={ (e) => onToggle('showLabel', e) } title={ token.showLabel ? 'Label shown' : 'Label hidden' } />
                 <label>wh:</label>
                 <input value={ token.width || '' } placeholder='w' onChange={ (e) => onIntegerChange('width', e) } type='number' step='5' min='0' title='width' className={ 'w-24 ' + controlPanelInputClass } />
                 <input value={ token.height || '' } placeholder='h' onChange={ (e) => onIntegerChange('height', e) } type='number' step='5' min='0' title='height' className={ 'w-24 ' + controlPanelInputClass } />

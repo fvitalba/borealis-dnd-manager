@@ -1159,8 +1159,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .token {
   position: absolute;
-  border-radius: 9999px;
-  overflow: hidden;
 }
 
 .token-pc {
@@ -1174,13 +1172,23 @@ Ensure the default browser behavior of the `hidden` attribute.
 .token-image {
   position: relative;
   pointer-events: none;
+  border-radius: 9999px;
+  overflow: hidden;
 }
 
-.token-selected {
+.token-image-selected {
+  position: relative;
+  pointer-events: none;
+  border-radius: 9999px;
+  overflow: hidden;
   border-style: dashed;
   --tw-border-opacity: 1;
   border-color: rgb(249 115 22 / var(--tw-border-opacity));
   border-width: 2px;
+}
+
+.token-label {
+
 }
 
 .token-grabbable {

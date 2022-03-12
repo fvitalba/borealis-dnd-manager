@@ -68,6 +68,7 @@ export const defaultGameState = {
         height: 100,
         selected: false,
         hidden: false,
+        showLabel: false,
         x0: 0,
         y0: 0,
     },
@@ -84,6 +85,7 @@ export const defaultGameState = {
         height: 50,
         selected: false,
         hidden: false,
+        showLabel: false,
         x0: 0,
         y0: 0,
     },
@@ -100,6 +102,7 @@ export const defaultGameState = {
         height: 50,
         selected: false,
         hidden: false,
+        showLabel: false,
         x0: 0,
         y0: 0,
     }]

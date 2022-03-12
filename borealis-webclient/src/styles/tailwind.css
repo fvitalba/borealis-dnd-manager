@@ -440,8 +440,6 @@
 
 .token {
     @apply absolute;
-    @apply rounded-full;
-    @apply overflow-hidden;
 }
 
 .token-pc {
@@ -455,12 +453,19 @@
 .token-image {
     @apply relative;
     @apply pointer-events-none;
+    @apply rounded-full;
+    @apply overflow-hidden;
 }
 
-.token-selected {
+.token-image-selected {
+    @apply token-image;
     @apply border-dashed;
     @apply border-accent-500;
     @apply border-2;
+}
+
+.token-label {
+
 }
 
 .token-grabbable {

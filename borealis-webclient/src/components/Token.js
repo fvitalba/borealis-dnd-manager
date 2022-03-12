@@ -31,7 +31,6 @@ const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) 
         'token',
         token.ko && 'token-dead',
         token.pc ? 'token-pc' : 'token-npc',
-        token.selected && 'token-selected',
         isHost && !token.pc && 'token-grabbable',
         token.hidden && hiddenClass,
     ]
@@ -50,6 +49,7 @@ const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) 
             <TokenView
                 divStyle={ divStyle }
                 token={ token }
+                isSelected={ token.selected }
                 classes={ classes }
                 imgStyle={ imgStyle }
                 onMouseDown={ onMouseDown }
