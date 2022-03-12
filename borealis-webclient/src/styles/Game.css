@@ -81,37 +81,3 @@ canvas#overlay {
     z-index: var(--z-overlay);
     pointer-events: none;
 }
-div#tokens {
-    position: relative;
-}
-div.token.pc {
-    z-index: var(--z-pc-img);
-}
-div.token.pc .label {
-    z-index: var(--z-pc-lbl)
-}
-div.token.npc {
-    z-index: var(--z-npc-div);
-}
-div.token.npc .label {
-    z-index: var(--z-npc-lbl)
-}
-div.token {
-    position: absolute;
-    pointer-events: all;
-}
-div.token.selected {
-    border: yellow dotted 3px;
-}
-div.token.pc, div.token.grabbable {
-    cursor: grab;
-}
-div.token img {
-    position: relative;
-    pointer-events: none;
-}
-div.token.dead img {
-    filter: invert();
-    -webkit-transform: scaleY(-1);
-    transform: scaleY(-1);
-}

@@ -15,7 +15,7 @@ const GameView = ({ isHost, overlayRef, cursors, cursorSize, tokens, onMouseMove
                 <Background />
                 <Drawing />
                 { tokens ?
-                    <div id='tokens'>
+                    <div className='tokens-container'>
                         { tokens.map((token, index) => (
                             <Token key={ `Token${index}` } token={ token } isHost={ isHost } />
                         )) }

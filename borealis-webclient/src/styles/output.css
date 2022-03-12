@@ -908,7 +908,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 .chat-panel-container {
-  z-index: 100;
+  z-index: 110;
   position: absolute;
   top: 0px;
   right: 0px;
@@ -947,7 +947,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 .chat-panel-collapsed-container {
-  z-index: 100;
+  z-index: 110;
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
@@ -1072,7 +1072,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   align-items: center;
   position: fixed;
   background-color: rgb(31 41 55 / 0.6);
-  z-index: 110;
+  z-index: 120;
   --tw-text-opacity: 1;
   color: rgb(209 213 219 / var(--tw-text-opacity));
 }
@@ -1148,4 +1148,45 @@ Ensure the default browser behavior of the `hidden` attribute.
 .button:active {
   --tw-text-opacity: 1;
   color: rgb(2 132 199 / var(--tw-text-opacity));
+}
+
+.tokens-container {
+  position: relative;
+}
+
+.token {
+  position: absolute;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.token-pc {
+  z-index: 25;
+}
+
+.token-npc {
+  z-index: 15;
+}
+
+.token-image {
+  position: relative;
+  pointer-events: none;
+}
+
+.token-selected {
+  border-style: dashed;
+  --tw-border-opacity: 1;
+  border-color: rgb(249 115 22 / var(--tw-border-opacity));
+  border-width: 2px;
+}
+
+.token-grabbable {
+  cursor: grab;
+}
+
+.token-dead {
+  --tw-invert: invert(100%);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+  --tw-rotate: 180deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }

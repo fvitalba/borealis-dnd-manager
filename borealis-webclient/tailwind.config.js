@@ -11,10 +11,23 @@ module.exports = {
             colors: {
                 primary: colors.gray,    // it's now possible to use bg-primary instead of colors   gray-300
                 secondary: colors.sky,
+                accent: colors.orange,
             },
             zIndex: {
-                '100': '100',
-                '110': '110',
+                'map': '1',
+                'drawing': '2',
+                'npc-div': '15',
+                'npc-lbl': '16',
+                'fog-placeholder': '19',
+                'fog': '20',
+                'pc-div': '25',
+                'pc-lbl': '26',
+                'overlay': '30',
+                'indicator': '30',
+                'cursors': '40',
+                'control-panel': '100',
+                'chat-panel': '110',
+                'loading': '120',
             },
             animation: {
                 'reverse-spin': 'reverse-spin 1s linear infinite',

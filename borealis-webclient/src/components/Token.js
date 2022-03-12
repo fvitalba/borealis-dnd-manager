@@ -29,10 +29,10 @@ const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) 
     const hiddenClass = isHost ? 'opacity-50' : 'invisible'
     const classes = [
         'token',
-        token.ko && 'dead',
-        token.pc ? 'pc' : 'npc',
-        token.selected && 'selected',
-        isHost && !token.pc && 'grabbable',
+        token.ko && 'token-dead',
+        token.pc ? 'token-pc' : 'token-npc',
+        token.selected && 'token-selected',
+        isHost && !token.pc && 'token-grabbable',
         token.hidden && hiddenClass,
     ]
     const divStyle = {
