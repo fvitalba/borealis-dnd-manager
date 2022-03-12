@@ -46,11 +46,11 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
 
     const addMessage = () => {
         const playerInfo = {}
-        const [convertedMessage, typeOfMessage] = convertChatMessage(settings.username, chatPanelState.currentMessage)
-        if (convertedMessage.length > 0) {
+        const convertedMessage = convertChatMessage(settings.username, chatPanelState.currentMessage)
+        if (convertedMessage.publicMessage.length > 0) {
             const timestamp = Date.now()
-            addChatMessage(settings.username, playerInfo, convertedMessage, timestamp, typeOfMessage)
-            sendChatMessage(webSocket, wsSettings, settings.username, playerInfo, convertedMessage, timestamp, typeOfMessage)
+            addChatMessage(settings.username, playerInfo, convertedMessage.publicMessage, convertedMessage.privateMessage, timestamp, convertedMessage.messageType)
+            sendChatMessage(webSocket, wsSettings, settings.username, playerInfo, convertedMessage.publicMessage, convertedMessage.privateMessage, timestamp, convertedMessage.messageType)
             setChatPanelState({
                 ...chatPanelState,
                 currentMessage: '',
@@ -85,6 +85,7 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
 
     return (
         <ChatPanelView
+            username={ settings.username }
             chatPanelHidden={ chatPanelState.hidden }
             toggleHidden={ toggleHidden }
             showUserHover={ showUserHover }

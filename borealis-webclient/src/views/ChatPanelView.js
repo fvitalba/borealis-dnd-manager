@@ -8,15 +8,16 @@ const ChatPanelMessage = ({ message, playerInfo }) => {
                 <div className='chat-panel-message-username' >{ message.username }</div>
                 { playerInfo ? <div className='chat-panel-message-player-info'>| { playerInfo }</div> : null }
             </div>
-            <div className='chat-panel-message-content'>{ message.message }</div>
+            <div className='chat-panel-message-content'>{ message.publicMessage }</div>
         </div>
     )
 }
 
-const ChatPanelCommand = ({ message }) => {
+const ChatPanelCommand = ({ username, message }) => {
+    const textToShow = message.username === username ? message.privateMessage : message.publicMessage
     return (
         <div className='chat-panel-command'>
-            <div className='chat-panel-command-content'>{ message.message }</div>
+            <div className='chat-panel-command-content'>{ textToShow }</div>
         </div>
     )
 }
@@ -24,12 +25,12 @@ const ChatPanelCommand = ({ message }) => {
 const ChatPanelError = ({ message }) => {
     return (
         <div className='chat-panel-error'>
-            <div className='chat-panel-error-content'>{ message.message }</div>
+            <div className='chat-panel-error-content'>{ message.publicMessage }</div>
         </div>
     )
 }
 
-const ChatPanelView = ({ chatPanelHidden, toggleHidden, showUserHover, toggleUserHover, noOfCurrentUsers, users, currentMessage, changeCurrentMessage, addMessage, chatMessages, inputOnKeyDown }) => {
+const ChatPanelView = ({ username, chatPanelHidden, toggleHidden, showUserHover, toggleUserHover, noOfCurrentUsers, users, currentMessage, changeCurrentMessage, addMessage, chatMessages, inputOnKeyDown }) => {
     const playerInfo = 'lvl. XX Barbarian'
     const sortedChatMessages = chatMessages.sort((a, b) => a.timestamp - b.timestamp)
 
@@ -64,7 +65,7 @@ const ChatPanelView = ({ chatPanelHidden, toggleHidden, showUserHover, toggleUse
                         case 'message':
                             return (<ChatPanelMessage key={ message.guid } message={ message } playerInfo={ playerInfo } />)
                         case 'command':
-                            return (<ChatPanelCommand key={ message.guid } message={ message } />)
+                            return (<ChatPanelCommand key={ message.guid } message={ message } username={ username } />)
                         case 'error':
                             return (<ChatPanelError key={ message.guid } message={ message } />)
                         default: return null
