@@ -69,7 +69,7 @@ export const defaultGameState = {
         size: 'huge',
         selected: false,
         hidden: false,
-        showLabel: false,
+        showLabel: true,
         x0: 0,
         y0: 0,
     },
@@ -105,7 +105,7 @@ export const defaultGameState = {
         size: 'medium',
         selected: false,
         hidden: false,
-        showLabel: false,
+        showLabel: true,
         x0: 0,
         y0: 0,
     }]
@@ -360,14 +360,16 @@ export const addToken = (tokenName, tokenUrl, mapId) => {
         mapId: mapId,
         selected: false,
         hidden: false,
+        size: 'medium',
+        showLabel: false,
         x0: 0,
         y0: 0,
         x: 0,
         y: 0,
         ko: false,
         pc: false,
-        w: 0,
-        h: 0,
+        w: 50,
+        h: 50,
     }
 
     return {
