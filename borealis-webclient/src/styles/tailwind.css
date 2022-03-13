@@ -306,11 +306,14 @@
     @apply rounded-lg;
     @apply bg-primary-300;
     @apply shadow-md;
+    @apply border-2;
+    @apply border-primary-500;
 }
 
 .chat-panel-help-table {
     @apply border-collapse;
     @apply border-primary-500;
+    @apply p-1;
 }
 
 .chat-panel-help-th {
