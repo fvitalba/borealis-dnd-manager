@@ -13,9 +13,12 @@ const chatMessage = () => {
         guid: undefined,
         timestamp: undefined,
         username: '',
+        targetUsername: '',
         playerInfo: undefined,
-        message: '',
+        publicMessage: '',
+        privateMessage: '',
         typeOfMessage: '',
+        read: false,
     }
 }
 
@@ -28,7 +31,9 @@ const chatReducer = (state = initialChatState(), action) => {
             guid: guid(),
             username: action.username,
             timestamp: action.timestamp,
-            message: action.messageText,
+            targetUsername: action.targetUsername,
+            privateMessage: action.privateMessageText,
+            publicMessage: action.publicMessageText,
             typeOfMessage: action.typeOfMessage,
             playerInfo: action.playerInfo,
         }
@@ -52,11 +57,13 @@ const chatReducer = (state = initialChatState(), action) => {
 }
 
 //#region Action Creators
-export const addChatMessage = (username, playerInfo, messageText, timestamp, typeOfMessage) => {
+export const addChatMessage = (username, playerInfo, publicMessageText, privateMessageText, targetUsername, timestamp, typeOfMessage) => {
     return {
         type: ADD_CHAT_MESSAGE,
         username: username,
-        messageText: messageText,
+        targetUsername: targetUsername,
+        publicMessageText: publicMessageText,
+        privateMessageText: privateMessageText,
         playerInfo: playerInfo,
         typeOfMessage: typeOfMessage,
         timestamp: timestamp ? timestamp : Date.now(),

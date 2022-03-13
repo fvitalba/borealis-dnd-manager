@@ -11,6 +11,7 @@ import Room from './models/room.js'
 import User from './models/user.js'
 import Message from './models/chatMessage.js'
 import { handleIncomingMessage } from './controllers/messageHandler.js'
+import { saveUpdateRoomUser } from './controllers/userHandler.js'
 import { deleteOfflineUsers } from './middleware/userMiddleware.js'
 
 const app = express()
@@ -114,6 +115,8 @@ wss.on('connection', (websocketConnection, connectionRequest) => {
     
     websocketConnection.room = path.substring(1)
     websocketConnection.guid = connectionParams.guid
+    websocketConnection.username = connectionParams.username
+    saveUpdateRoomUser(websocketConnection.room, websocketConnection.guid, websocketConnection.username)
     websocketConnection.on('message', (message) => {
         handleIncomingMessage(websocketConnection, message)
             .then(({ outgoingMessage, sendBackToSender }) => {

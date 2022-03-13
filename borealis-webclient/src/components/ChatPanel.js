@@ -9,11 +9,31 @@ import ChatPanelView from '../views/ChatPanelView'
 const initialChatPanelState = () => {
     return {
         hidden: false,
+        showHelp: false,
         currentMessage: '',
         noOfCurrentUsers: 0,
         users: [],
     }
 }
+
+const chatCommands = [{
+    command: '/roll <NO. OF DICE>d<DICE TYPE>',
+    shortcut: '/r',
+    description: 'Rolls the specified dice.',
+    example: '/roll 3d6',
+},
+{
+    command: '/hiddenroll <NO. OF DICE>d<DICE TYPE>',
+    shortcut: '/hr',
+    description: 'Rolls the specified dice, only shows the results to self.',
+    example: '/hiddenroll 2d12',
+},
+{
+    command: '/whisper <TARGET USERNAME> <MESSAGE>',
+    shortcut: '/w',
+    description: 'Sends a message only to the specified target.',
+    example: '/whisper PC be careful with that!',
+}]
 
 const ChatPanel = ({ chat, settings, addChatMessage }) => {
     const [chatPanelState, setChatPanelState] = useState(initialChatPanelState)
@@ -24,6 +44,13 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
         setChatPanelState({
             ...chatPanelState,
             hidden: !chatPanelState.hidden,
+        })
+    }
+
+    const toggleHelp = () => {
+        setChatPanelState({
+            ...chatPanelState,
+            showHelp: !chatPanelState.showHelp,
         })
     }
 
@@ -46,11 +73,13 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
 
     const addMessage = () => {
         const playerInfo = {}
-        const [convertedMessage, typeOfMessage] = convertChatMessage(settings.username, chatPanelState.currentMessage)
-        if (convertedMessage.length > 0) {
+        const convertedMessage = convertChatMessage(settings.username, chatPanelState.currentMessage)
+        if ((convertedMessage.publicMessage.length > 0) || (convertedMessage.privateMessage.length > 0)) {
             const timestamp = Date.now()
-            addChatMessage(settings.username, playerInfo, convertedMessage, timestamp, typeOfMessage)
-            sendChatMessage(webSocket, wsSettings, settings.username, playerInfo, convertedMessage, timestamp, typeOfMessage)
+            addChatMessage(settings.username, playerInfo, convertedMessage.publicMessage, convertedMessage.privateMessage, convertedMessage.targetPlayerName,
+                timestamp, convertedMessage.messageType)
+            sendChatMessage(webSocket, wsSettings, settings.username, playerInfo, convertedMessage.publicMessage, convertedMessage.privateMessage,
+                convertedMessage.targetPlayerName, timestamp, convertedMessage.messageType)
             setChatPanelState({
                 ...chatPanelState,
                 currentMessage: '',
@@ -85,8 +114,12 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
 
     return (
         <ChatPanelView
+            username={ settings.username }
             chatPanelHidden={ chatPanelState.hidden }
             toggleHidden={ toggleHidden }
+            showHelp={ chatPanelState.showHelp }
+            toggleHelp={ toggleHelp }
+            chatCommands={ chatCommands }
             showUserHover={ showUserHover }
             toggleUserHover={ toggleUserHover }
             noOfCurrentUsers={ chatPanelState.noOfCurrentUsers }

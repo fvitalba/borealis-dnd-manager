@@ -282,19 +282,54 @@
     @apply text-primary-500;
 }
 
-.chat-panel-collapsed-container {
+.chat-panel-expanded-container {
     @apply z-chat-panel;
     @apply absolute;
     @apply top-2 right-2;
     @apply bg-primary-300;
     @apply rounded-lg;
+}
+
+.chat-panel-collapsed-container {
+    @apply chat-panel-expanded-container;
     @apply shadow-md;
+}
+
+.chat-panel-help-container {
+    @apply p-2;
+    @apply flex;
+    @apply flex-row;
+    @apply text-sm;
+    @apply fixed;
+    @apply top-16;
+    @apply right-2;
+    @apply rounded-lg;
+    @apply bg-primary-300;
+    @apply shadow-md;
+    @apply border-2;
+    @apply border-primary-500;
+}
+
+.chat-panel-help-table {
+    @apply border-collapse;
+    @apply border-primary-500;
+    @apply p-1;
+}
+
+.chat-panel-help-th {
+    @apply border;
+    @apply border-primary-600;
+}
+
+.chat-panel-help-td {
+    @apply border;
+    @apply border-primary-700;
 }
 
 .chat-panel-header-close {
     @apply p-2;
     @apply flex;
-    @apply flex-row;
+    @apply flex-row-reverse;
 }
 
 .chat-panel-users {
@@ -517,4 +552,42 @@
     @apply z-overlay;
     @apply absolute;
     @apply pointer-events-none;
+}
+
+.bottom-banner-container {
+    @apply z-banner;
+    @apply absolute;
+    @apply bottom-0;
+    @apply w-full;
+    @apply block;
+    @apply flex;
+    @apply flex-row;
+    @apply text-xs;
+    @apply bg-yellow-300;
+    @apply text-primary-700;
+}
+
+.bottom-banner-content {
+    @apply pl-4;
+    @apply pb-2;
+    @apply pt-2;
+    @apply font-extrabold;
+    @apply underline;
+    @apply align-middle;
+    @apply text-center;
+}
+
+.bottom-banner-content :hover {
+    @apply text-secondary-400;
+}
+
+.bottom-banner-btn {
+    @apply right-6;
+    @apply absolute;
+    @apply h-full;
+}
+
+.bottom-banner-action-btn {
+    @apply w-6;
+    @apply h-6;
 }

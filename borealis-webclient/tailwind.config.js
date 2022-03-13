@@ -27,7 +27,8 @@ module.exports = {
                 'cursors': '40',
                 'control-panel': '100',
                 'chat-panel': '110',
-                'loading': '120',
+                'banner': '120',
+                'loading': '130',
             },
             animation: {
                 'reverse-spin': 'reverse-spin 1s linear infinite',

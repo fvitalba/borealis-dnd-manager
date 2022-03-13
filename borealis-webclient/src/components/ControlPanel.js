@@ -14,7 +14,7 @@ const initialControlPanelState = () => {
     }
 }
 
-const ControlPanel = ({ game, settings, metadata, chat, setUsername/*, setCursorSize */, toggleMousesharing }) => {
+const ControlPanel = ({ game, settings, metadata, chat, setUsername, toggleMousesharing }) => {
     const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()
     // eslint-disable-next-line no-unused-vars
@@ -38,14 +38,6 @@ const ControlPanel = ({ game, settings, metadata, chat, setUsername/*, setCursor
             username: value,
         })
     }
-
-    /*
-    const updateCursorSize = (value) => {
-        const newSize = value
-        if (!isNaN(newSize))
-            setCursorSize(newSize)
-    }
-    */
 
     const socketRequestRefresh = () => {
         setIsLoading(true)
