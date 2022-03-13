@@ -28,15 +28,33 @@ const createWebSocket = (room, guid) => {
 
 export const WebSocketContext = createContext(createWebSocket('',''))
 
+const saveIdToLocalStorage = (roomName, localGuid) => {
+    localStorage.setItem(`borealis-${roomName}`, localGuid)
+}
+
+const readIdFromLocalStorage = (roomName) => {
+    const localGuid = localStorage.getItem(`borealis-${roomName}`)
+    return localGuid ? localGuid : guid()
+}
+
 const WebSocketProvider = ({ children, metadata }) => {
     const [wsSettings, setWsSettings] = useState({
-        guid: guid(),
+        guid: readIdFromLocalStorage(metadata.room),
         username: '',
         room: metadata.room,
     })
     const [ws, setWs] = useState(createWebSocket(metadata.room, wsSettings.guid))
     // eslint-disable-next-line no-unused-vars
     const [_isLoading, setIsLoading] = useLoading()
+
+    useEffect(() => {
+        const localGuid = readIdFromLocalStorage(metadata.room)
+        if (localGuid !== wsSettings.guid)
+            setWsSettings({
+                ...wsSettings,
+                guid: localGuid,
+            })
+    }, [ metadata.room ])
 
     useEffect(() => {
         setWs(createWebSocket(metadata.room, wsSettings.guid))
@@ -52,6 +70,7 @@ const WebSocketProvider = ({ children, metadata }) => {
         }
 
         const onOpen = () => {
+            saveIdToLocalStorage(wsSettings.room, wsSettings.guid)
             if (!metadata.isHost) {
                 setIsLoading(true)
                 requestRefresh(ws, wsSettings)
