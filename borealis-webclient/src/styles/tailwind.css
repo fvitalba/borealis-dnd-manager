@@ -553,3 +553,41 @@
     @apply absolute;
     @apply pointer-events-none;
 }
+
+.bottom-banner-container {
+    @apply z-banner;
+    @apply absolute;
+    @apply bottom-0;
+    @apply w-full;
+    @apply block;
+    @apply flex;
+    @apply flex-row;
+    @apply text-xs;
+    @apply bg-yellow-300;
+    @apply text-primary-700;
+}
+
+.bottom-banner-content {
+    @apply pl-4;
+    @apply pb-2;
+    @apply pt-2;
+    @apply font-extrabold;
+    @apply underline;
+    @apply align-middle;
+    @apply text-center;
+}
+
+.bottom-banner-content :hover {
+    @apply text-secondary-400;
+}
+
+.bottom-banner-btn {
+    @apply right-6;
+    @apply absolute;
+    @apply h-full;
+}
+
+.bottom-banner-action-btn {
+    @apply w-6;
+    @apply h-6;
+}

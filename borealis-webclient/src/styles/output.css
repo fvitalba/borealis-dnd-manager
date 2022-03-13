@@ -420,6 +420,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .hidden {
   display: none;
 }
+.\!hidden {
+  display: none !important;
+}
 .w-48 {
   width: 12rem;
 }
@@ -1136,7 +1139,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   align-items: center;
   position: fixed;
   background-color: rgb(31 41 55 / 0.6);
-  z-index: 120;
+  z-index: 130;
   --tw-text-opacity: 1;
   color: rgb(209 213 219 / var(--tw-text-opacity));
 }
@@ -1310,4 +1313,46 @@ Ensure the default browser behavior of the `hidden` attribute.
   z-index: 30;
   position: absolute;
   pointer-events: none;
+}
+
+.bottom-banner-container {
+  z-index: 120;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  display: block;
+  display: flex;
+  flex-direction: row;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(253 224 71 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(55 65 81 / var(--tw-text-opacity));
+}
+
+.bottom-banner-content {
+  padding-left: 1rem;
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+  font-weight: 800;
+  text-decoration-line: underline;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.bottom-banner-content :hover {
+  --tw-text-opacity: 1;
+  color: rgb(56 189 248 / var(--tw-text-opacity));
+}
+
+.bottom-banner-btn {
+  right: 1.5rem;
+  position: absolute;
+  height: 100%;
+}
+
+.bottom-banner-action-btn {
+  width: 1.5rem;
+  height: 1.5rem;
 }

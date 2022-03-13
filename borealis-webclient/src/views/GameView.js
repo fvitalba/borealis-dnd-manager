@@ -7,6 +7,7 @@ import LoadingOverlay from '../components/LoadingOverlay'
 import ControlPanel from '../components/ControlPanel'
 import ChatPanel from '../components/ChatPanel'
 import Cursor from './Cursor'
+import Banner from '../components/Banner'
 
 const GameView = ({ isHost, overlayRef, cursors, cursorSize, tokens, onMouseMove, onMouseUp, onMouseDown }) => {
     return (
@@ -36,6 +37,7 @@ const GameView = ({ isHost, overlayRef, cursors, cursorSize, tokens, onMouseMove
             </div>
             <ControlPanel />
             <ChatPanel />
+            <Banner bannerContent={'Liking the tool? Want to support me? Buy me a coffee ☕!'} linkToAction={ 'https://www.buymeacoffee.com/fabio.vitalba' } />
             <LoadingOverlay />
         </div>
     )
