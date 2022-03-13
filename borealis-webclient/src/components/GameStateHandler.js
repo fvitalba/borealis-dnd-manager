@@ -16,7 +16,10 @@ const GameStateHandler = ({ metadata, setGameSettings }) => {
     }, [])
 
     useEffect(() => {
-        document.title = `Borealis D&D, Room: ${metadata.room}`
+        if (metadata.room)
+            document.title = `Borealis D&D, Room: ${metadata.room}`
+        else
+            document.title = 'Borealis D&D'
         setWsSettings({
             ...wsSettings,
             room: metadata.room,
