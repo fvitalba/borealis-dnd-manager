@@ -1,8 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import drawImage from '../controllers/drawImage'
-import Canvas from './Canvas.js'
-
+import Canvas from './Canvas'
 
 const Background = ({ game }) => {
     const selectedMap = game.maps.filter((map) => map.id === game.mapId)

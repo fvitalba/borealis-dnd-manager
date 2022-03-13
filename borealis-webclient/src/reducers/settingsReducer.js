@@ -13,7 +13,7 @@ const initialSettingsState = () => {
         cursorSize: 50,
         fogOpacity: 0.5,
         fogRadius: 75,
-        drawColor: 'white',
+        drawColor: '#fafafa',
         drawSize: 8,
         tool: 'move',
         subtool: undefined,

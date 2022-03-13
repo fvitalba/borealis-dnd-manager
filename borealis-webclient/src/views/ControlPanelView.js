@@ -29,7 +29,7 @@ const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, tog
                     <ToggleButton title='Maps' value={ <MapSolidIcon />} controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
                     <ToggleButton title='Tokens' value={ <GhostSolidIcon /> } controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
                     <Button title='Push refresh to players' value={ <RefreshOutlineIcon /> } onClick={ pushRefreshToPlayers } />
-                    <ToolSelectView fogEnabled={ fogEnabled } />
+                    <ToolSelectView isHost={ isHost } fogEnabled={ fogEnabled } />
                     <ToolControls />
                 </div>
                 {
@@ -51,6 +51,8 @@ const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, tog
                     <input title='User name' placeholder='User name' value={ username } onChange={ (e) => setUsername(e.target.value) } className='control-panel-input' />
                     <Button title={ mouseIsShared ? 'Cursor shared' : 'Cursor hidden' } value={ mouseIsShared ? <CursorSolidIcon /> : <CursorOutlineIcon /> } onClick={ toggleShareMouse } />
                     <Button title='Request gameboard refresh from host' onClick={ socketRequestRefresh } value={ <RefreshOutlineIcon /> } />
+                    <ToolSelectView isHost={ isHost } fogEnabled={ fogEnabled } />
+                    <ToolControls />
                 </div>
                 {
                     !submenuHidden

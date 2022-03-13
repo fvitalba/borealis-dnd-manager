@@ -62,7 +62,6 @@ const TokenConfig = ({ token, game, metadata, deleteToken, copyToken, updateToke
             width: size[0].width,
             height: size[0].height,
         }
-        console.log(newToken)
         const newTokens = game.tokens.map((gtoken) => gtoken.guid === newToken.guid ? newToken : gtoken)
         updateTokens(newTokens)
         pushSingleToken(webSocket,wsSettings,newToken)
