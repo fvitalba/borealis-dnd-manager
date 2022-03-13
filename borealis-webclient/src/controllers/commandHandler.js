@@ -1,6 +1,7 @@
 const COMMAND_NOT_VALID_ERR = 'Command is not valid.'
 const commandNotValidMessage = {
     messageType: 'error',
+    targetPlayerName: '',
     privateMessage: COMMAND_NOT_VALID_ERR,
     publicMessage: COMMAND_NOT_VALID_ERR,
 }
@@ -24,10 +25,14 @@ export const convertChatMessage = (playerName, inputChatMessage) => {
         return rollHiddenDiceCommand(playerName, splitMessage[1].toUpperCase())
     case '/W':
     case '/WHISPER':
-        return commandNotValidMessage
+        if (splitMessage.length < 3)
+            return commandNotValidMessage
+
+        return whisperCommand(splitMessage[1].toUpperCase(), splitMessage.splice(2, splitMessage.length - 2))
     default:
         returnMessage = {
             messageType: 'message',
+            targetPlayerName: '',
             publicMessage: inputChatMessage,
             privateMessage: inputChatMessage,
         }
@@ -50,6 +55,7 @@ const rollDiceCommand = (playerName, diceText) => {
     const convertedMessage = `${playerName} rolled the following values ${rolledValues}, for a total of: ${totalValue}.`
     const returnMessage = {
         messageType: 'command',
+        targetPlayerName: '',
         publicMessage: convertedMessage,
         privateMessage: convertedMessage,
     }
@@ -70,8 +76,20 @@ const rollHiddenDiceCommand = (playerName, diceText) => {
     const totalValue = rolledValues.reduce((a, b) => a + b, 0)
     const returnMessage = {
         messageType: 'command',
+        targetPlayerName: '',
         publicMessage: `${playerName} rolled ${noOfDice}d${diceType}.`,
         privateMessage: `${playerName} rolled ${noOfDice}d${diceType}. (For a total of: ${totalValue})`,
+    }
+    return returnMessage
+}
+
+const whisperCommand = (targetPlayerName, whisperText) => {
+    console.log('invoking whisper')
+    const returnMessage = {
+        messageType: 'whisper',
+        targetPlayerName: targetPlayerName,
+        publicMessage: '',
+        privateMessage: whisperText.join(' '),
     }
     return returnMessage
 }

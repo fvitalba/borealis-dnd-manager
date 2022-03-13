@@ -159,11 +159,12 @@ export const requestRefresh = (webSocket, wsSettings) => {
     })
 }
 
-export const sendChatMessage = (webSocket, wsSettings, username, playerInfo, publicMessageText, privateMessageText, timestamp, typeOfMessage) => {
+export const sendChatMessage = (webSocket, wsSettings, username, playerInfo, publicMessageText, privateMessageText, targetUsername, timestamp, typeOfMessage) => {
     sendData(webSocket, {
         type: 'sendChatMessage',
         from: wsSettings.guid,
         username: username,
+        targetUsername: targetUsername,
         room: wsSettings.room,
         playerInfo: playerInfo,
         publicMessageText: publicMessageText,

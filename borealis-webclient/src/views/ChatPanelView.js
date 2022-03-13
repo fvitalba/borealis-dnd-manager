@@ -13,6 +13,27 @@ const ChatPanelMessage = ({ message, playerInfo }) => {
     )
 }
 
+const ChatPanelWhisper = ({ message, username, playerInfo }) => {
+    let textToShow = ''
+    if (message.username === username)
+        textToShow = `To ${message.targetUsername}: ` + message.privateMessage
+    else if (message.targetUsername === username)
+        textToShow = `From ${message.username}: ` + message.privateMessage
+
+    if (textToShow === '')
+        return null
+
+    return (
+        <div className='chat-panel-message'>
+            <div className='chat-panel-message-info'>
+                <div className='chat-panel-message-username' >{ message.username }</div>
+                { playerInfo ? <div className='chat-panel-message-player-info'>| { playerInfo }</div> : null }
+            </div>
+            <div className='chat-panel-message-content'>{ textToShow }</div>
+        </div>
+    )
+}
+
 const ChatPanelCommand = ({ username, message }) => {
     const textToShow = message.username === username ? message.privateMessage : message.publicMessage
     return (
@@ -100,6 +121,8 @@ const ChatPanelView = ({ username, chatPanelHidden, toggleHidden, showHelp, togg
                         switch (message.typeOfMessage) {
                         case 'message':
                             return (<ChatPanelMessage key={ message.guid } message={ message } playerInfo={ playerInfo } />)
+                        case 'whisper':
+                            return (<ChatPanelWhisper key={ message.guid } message={ message } username={ username } playerInfo={ playerInfo } />)
                         case 'command':
                             return (<ChatPanelCommand key={ message.guid } message={ message } username={ username } />)
                         case 'error':

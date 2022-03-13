@@ -74,10 +74,12 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
     const addMessage = () => {
         const playerInfo = {}
         const convertedMessage = convertChatMessage(settings.username, chatPanelState.currentMessage)
-        if (convertedMessage.publicMessage.length > 0) {
+        if ((convertedMessage.publicMessage.length > 0) || (convertedMessage.privateMessage.length > 0)) {
             const timestamp = Date.now()
-            addChatMessage(settings.username, playerInfo, convertedMessage.publicMessage, convertedMessage.privateMessage, timestamp, convertedMessage.messageType)
-            sendChatMessage(webSocket, wsSettings, settings.username, playerInfo, convertedMessage.publicMessage, convertedMessage.privateMessage, timestamp, convertedMessage.messageType)
+            addChatMessage(settings.username, playerInfo, convertedMessage.publicMessage, convertedMessage.privateMessage, convertedMessage.targetPlayerName,
+                timestamp, convertedMessage.messageType)
+            sendChatMessage(webSocket, wsSettings, settings.username, playerInfo, convertedMessage.publicMessage, convertedMessage.privateMessage,
+                convertedMessage.targetPlayerName, timestamp, convertedMessage.messageType)
             setChatPanelState({
                 ...chatPanelState,
                 currentMessage: '',
