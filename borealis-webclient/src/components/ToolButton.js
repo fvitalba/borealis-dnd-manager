@@ -5,8 +5,12 @@ import Button from '../views/Button'
 const ToolButton = ({ title, value, settings, setToolSettings }) => {
     const isSelected = title === settings.tool
     const onClick = () => {
-        setToolSettings(title, undefined)
+        if (title === 'draw')
+            setToolSettings(title, 'pencil')
+        else
+            setToolSettings(title, undefined)
     }
+
     return (
         <Button title={ title } value={ value } onClick={ onClick } isSelected={ isSelected } />
     )

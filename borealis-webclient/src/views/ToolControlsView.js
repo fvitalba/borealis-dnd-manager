@@ -2,7 +2,7 @@ import Button from './Button'
 import { PencilAltSolidIcon, PencilAltOutlineIcon, CloudFogSolidIcon, SquareOutlineIcon, DropletSolidIcon } from './Icons'
 
 
-const ToolControlsView = ({ tool, subtool, drawColor, setDrawColor, drawSize, setDrawSize/*, fogOpacity, setFogOpacity*/, fogRadius, setFogRadius, setSubtool, resetFog, resetDrawing }) => {
+const ToolControlsView = ({ tool, subtool, drawColor, setDrawColor, drawSize, setDrawSize, fogRadius, setFogRadius, setSubtool, resetFog, resetDrawing }) => {
     switch (tool) {
     case 'draw':
         return (
@@ -21,7 +21,6 @@ const ToolControlsView = ({ tool, subtool, drawColor, setDrawColor, drawSize, se
         return (
             <div className='tool-control-group'>
                 <input size='3' title='fog radius' value={ fogRadius } onChange={ (e) => setFogRadius(e.target.value) } type='number' step='5' min='1' className='control-panel-input' />
-                { /* <input size='3' title='fog opacity' step='0.05' min='0' max='1' value={ fogOpacity } onChange={ (e) => setFogOpacity(e.target.value) } type='number' className='control-panel-input' /> */ }
                 <Button title='Reset Fog' onClick={ resetFog } value={ <CloudFogSolidIcon /> } />
             </div>
         )
