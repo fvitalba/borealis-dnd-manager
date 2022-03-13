@@ -59,6 +59,7 @@ const GameSetup = ({ setGameSettings, setUsername, overwriteGame }) => {
     const onSubmitSetup = () => {
         setGameSettings(gameSetupState.isHost, gameSetupState.roomName)
         setUsername(gameSetupState.userName)
+        saveSettingsToLocalStorage()
         if (gameSetupState.isHost) {
             setIsLoading(true)
             const tempWsSettings = {
@@ -80,6 +81,37 @@ const GameSetup = ({ setGameSettings, setUsername, overwriteGame }) => {
                     console.error(error)
                 })
         }
+    }
+
+    const readSettingsFromLocalStorage = (roomName) => {
+        const lastRoomNameText = (!roomName || (roomName === '')) ? localStorage.getItem('borealis-room') : roomName
+        const lastRoomName = lastRoomNameText ? lastRoomNameText : ''
+
+        const roomUsernameText = localStorage.getItem(`borealis-${lastRoomName}-username`)
+        const roomUsername = roomUsernameText ? roomUsernameText : ''
+
+        const isHostText = localStorage.getItem(`borealis-${lastRoomName}-${roomUsername}`)
+        const isHost = isHostText ? (isHostText === 'true') : undefined
+        return [lastRoomName, roomUsername, isHost]
+    }
+
+    const saveSettingsToLocalStorage = () => {
+        localStorage.setItem('borealis-room',`${gameSetupState.roomName}`)
+        localStorage.setItem(`borealis-${gameSetupState.roomName}-username`,`${gameSetupState.userName}`)
+        localStorage.setItem(`borealis-${gameSetupState.roomName}-${gameSetupState.userName}`,`${gameSetupState.isHost}`)
+    }
+
+    const updateSettingsFromLocalStorage = (skipRoomUpdate) => {
+        let [lastRoomName, roomUsername, isHost] = readSettingsFromLocalStorage(gameSetupState.roomName)
+        if (skipRoomUpdate)
+            lastRoomName = gameSetupState.roomName
+        if ((lastRoomName !== gameSetupState.roomName) || (roomUsername !== gameSetupState.userName))
+            setGameSetupState({
+                ...gameSetupState,
+                roomName: lastRoomName,
+                userName: roomUsername,
+                isHost: isHost,
+            })
     }
 
     const searchRoom = useCallback(() => {
@@ -123,6 +155,10 @@ const GameSetup = ({ setGameSettings, setUsername, overwriteGame }) => {
             clearInterval(interval)
         }
     }, [ searchRoom ])
+
+    useEffect(() => {
+        updateSettingsFromLocalStorage(false)
+    }, [])
 
     const isHost = (gameSetupState.isHost === true)
     const isPlayer = (gameSetupState.isHost === false)
