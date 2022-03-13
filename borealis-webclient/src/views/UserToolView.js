@@ -1,12 +1,11 @@
 import Button from './Button'
-import { GlobeSolidIcon, CloudOffSolidIcon, CloudUploadSolidIcon, CloudDownloadSolidIcon } from './Icons'
+import { GlobeSolidIcon, CloudOffSolidIcon, CloudUploadSolidIcon, CloudDownloadSolidIcon, CursorSolidIcon, CursorOutlineIcon } from './Icons'
 
-const UserToolView = ({ initAsDev, toggleFog, saveGameInServer, loadGameFromServer, username, updateUsername /*, cursorSize, updateCursorSize */ }) => {
+const UserToolView = ({ initAsDev, toggleFog, saveGameInServer, loadGameFromServer, username, updateUsername, mouseIsShared, toggleShareMouse }) => {
     return (
         <div className='user-tool-view'>
             <input title='User name' placeholder='User name' value={ username } onChange={ (e) => updateUsername(e.target.value) } className='control-panel-input' />
-            { /* <input title='Cursor size' value={ cursorSize } onChange={ (e) => updateCursorSize(e.target.value) } type='number' min='0' className='control-panel-input' /> */ }
-            { /* TODO: enable the mousesharing <ToggleButton title='Share mouse (cursor)' value='&#x1f401;' controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } /> */ }
+            <Button title={ mouseIsShared ? 'Cursor shared' : 'Cursor hidden' } value={ mouseIsShared ? <CursorSolidIcon /> : <CursorOutlineIcon /> } onClick={ toggleShareMouse } />
             <Button title='Load example' value={ <GlobeSolidIcon /> } onClick={ initAsDev } />
             <Button title='Toggle Fog' value={ <CloudOffSolidIcon /> } onClick={ toggleFog } />
             <Button title='Save room' value={ <CloudUploadSolidIcon /> } onClick={ saveGameInServer } />

@@ -1,13 +1,13 @@
 import { connect } from 'react-redux'
 import { toJson } from '../controllers/jsonHandler'
 import { defaultGameState, overwriteGame, incrementGen, loadDefaultBattleGame, setFogEnabled } from '../reducers/gameReducer'
-import { setUsername, setCursorSize, setToolSettings } from '../reducers/settingsReducer'
+import { setUsername, setCursorSize, setToolSettings, toggleMousesharing } from '../reducers/settingsReducer'
 import { pushGameRefresh, pushFogEnabled, useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
 import { saveRoomToDatabase, loadRoomFromDatabase } from '../controllers/apiHandler'
 import UserToolView from '../views/UserToolView'
 
-const UserTool = ({ toggleOnUser, game, chat, metadata, settings, setFogEnabled, overwriteGame, incrementGen, setUsername, setCursorSize, setToolSettings, loadDefaultBattleGame }) => {
+const UserTool = ({ toggleOnUser, game, chat, metadata, settings, setFogEnabled, overwriteGame, incrementGen, setUsername, toggleMousesharing, setToolSettings, loadDefaultBattleGame }) => {
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()
     // eslint-disable-next-line no-unused-vars
     const [_isLoading, setIsLoading] = useLoading()
@@ -23,10 +23,8 @@ const UserTool = ({ toggleOnUser, game, chat, metadata, settings, setFogEnabled,
         })
     }
 
-    const updateCursorSize = (value) => {
-        const newSize = value
-        if (!isNaN(newSize))
-            setCursorSize(newSize)
+    const toggleShareMouse = () => {
+        toggleMousesharing()
     }
 
     const initAsDev = () => {
@@ -89,7 +87,8 @@ const UserTool = ({ toggleOnUser, game, chat, metadata, settings, setFogEnabled,
                 username={ settings.username }
                 updateUsername={ updateUsername }
                 cursorSize={ settings.cursorSize }
-                updateCursorSize={ updateCursorSize } />
+                mouseIsShared={ settings.shareMouse }
+                toggleShareMouse={ toggleShareMouse } />
             : null
     )
 }
@@ -111,6 +110,7 @@ const mapDispatchToProps = {
     loadDefaultBattleGame,
     incrementGen,
     overwriteGame,
+    toggleMousesharing,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserTool)
