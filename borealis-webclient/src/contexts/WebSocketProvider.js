@@ -8,18 +8,20 @@ const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
 const SOCKET_RECONNECTION_TIMEOUT = 2500
 const SOCKET_SERVER_PORT = process.env.PORT || process.env.REACT_APP_PORT || 8000
 
-const generateWebSocketUrl = (room, guid) => {
+const generateWebSocketUrl = (room, guid, username) => {
     const host = window.location.host.replace(/:\d+$/, '')
     const protocol = /https/.test(window.location.protocol) ? 'wss' : 'ws'
 
-    return DEBUG_MODE
+    const webSocketUrl = DEBUG_MODE
         ? `${protocol}://${host}:${SOCKET_SERVER_PORT}/${room}?guid=${guid}`
         : `${protocol}://${host}/${room}?guid=${guid}`
+
+    return username ? webSocketUrl + `&username=${username}` : webSocketUrl
 }
 
-const createWebSocket = (room, guid) => {
+const createWebSocket = (room, guid, username) => {
     if (room) {
-        const webSocketUrl = generateWebSocketUrl(room, guid)
+        const webSocketUrl = generateWebSocketUrl(room, guid, username)
         return new WebSocket(webSocketUrl)
     } else {
         return undefined
@@ -43,7 +45,7 @@ const WebSocketProvider = ({ children, metadata }) => {
         username: '',
         room: metadata.room,
     })
-    const [ws, setWs] = useState(createWebSocket(metadata.room, wsSettings.guid))
+    const [ws, setWs] = useState(createWebSocket(metadata.room, wsSettings.guid, wsSettings.username))
     // eslint-disable-next-line no-unused-vars
     const [_isLoading, setIsLoading] = useLoading()
 
@@ -57,15 +59,15 @@ const WebSocketProvider = ({ children, metadata }) => {
     }, [ metadata.room ])
 
     useEffect(() => {
-        setWs(createWebSocket(metadata.room, wsSettings.guid))
-    }, [ metadata.room, wsSettings.guid ])
+        setWs(createWebSocket(metadata.room, wsSettings.guid, wsSettings.username))
+    }, [ metadata.room, wsSettings.guid, wsSettings.username ])
 
     useEffect(() => {
         const onClose = () => {
             setIsLoading(true)
             setTimeout(() => {
                 console.debug('Socket Timeout, recreating WebSocket')
-                setWs(createWebSocket(metadata.room, wsSettings.guid))
+                setWs(createWebSocket(metadata.room, wsSettings.guid, wsSettings.username))
             }, SOCKET_RECONNECTION_TIMEOUT)
         }
 
