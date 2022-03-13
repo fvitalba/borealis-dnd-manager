@@ -244,7 +244,7 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
             downY: 0,
         })
         const currMap = getMap()
-        if ((currMap) && (metadata.isHost) && (currentPath.length > 0)) {
+        if ((currMap) && (currentPath.length > 0)) {
             const fogPaths = currMap.fogPaths
             const drawPaths = currMap.drawPaths
             switch (settings.tool) {
@@ -298,19 +298,17 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
             if ((x.tagName.toUpperCase() === 'INPUT' && (x.type.toUpperCase() === 'TEXT' || x.type.toUpperCase() === 'NUMBER')) || (x.tagName.toUpperCase() === 'BUTTON'))
                 return e
 
-        if (metadata.isHost) {
-            if (e.buttons & 1) {
-                currentPath = []
-                currentPath.push({
-                    x: e.pageX,
-                    y: e.pageY,
-                    r: settings.fogRadius,
-                    r2: undefined,
-                    tool: currentTool(),
-                    drawColor: settings.drawColor,
-                    drawSize: settings.drawSize,
-                })
-            }
+        if (e.buttons & 1) {
+            currentPath = []
+            currentPath.push({
+                x: e.pageX,
+                y: e.pageY,
+                r: settings.fogRadius,
+                r2: undefined,
+                tool: currentTool(),
+                drawColor: settings.drawColor,
+                drawSize: settings.drawSize,
+            })
         }
     }
 
@@ -321,7 +319,7 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
 
         clearOverlay()
         let x = e.pageX, y = e.pageY
-        const currentlySelectedTool = metadata.isHost ? settings.tool : 'move'
+        const currentlySelectedTool = settings.tool
         switch (currentlySelectedTool) {
         case 'fog':
             updateCurrentFogPath()

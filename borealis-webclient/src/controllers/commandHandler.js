@@ -84,7 +84,6 @@ const rollHiddenDiceCommand = (playerName, diceText) => {
 }
 
 const whisperCommand = (targetPlayerName, whisperText) => {
-    console.log('invoking whisper')
     const returnMessage = {
         messageType: 'whisper',
         targetPlayerName: targetPlayerName,
