@@ -591,3 +591,36 @@
     @apply w-6;
     @apply h-6;
 }
+
+.color-picker-container {
+    @apply fixed;
+    @apply bg-primary-300;
+    @apply text-primary-700;
+    @apply border-2;
+    @apply border-primary-500;
+    @apply p-1;
+    @apply rounded-md;
+    @apply flex;
+    @apply flex-row;
+    @apply flex-wrap;
+}
+
+.color-picker-color {
+    @apply rounded-full;
+    @apply w-8;
+    @apply h-8;
+    @apply block;
+    @apply p-1;
+    @apply border;
+    @apply border-2;
+    @apply border-solid;
+    @apply border-primary-300;
+}
+
+.color-picker-color-selected {
+    @apply color-picker-color;
+    @apply border;
+    @apply border-2;
+    @apply border-solid;
+    @apply border-accent-500;
+}

@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react'
 import { connect } from 'react-redux'
 import { setToolSettings, setDrawToolSettings, setFogToolSettings } from '../reducers/settingsReducer'
 import { resetFog, resetDraw } from '../reducers/gameReducer'
@@ -5,7 +6,19 @@ import { pushDrawReset, pushFogReset, useWebSocket } from '../hooks/useSocket'
 import ToolControlsView from '../views/ToolControlsView'
 
 const ToolControls = ({ settings, setToolSettings, setDrawToolSettings, setFogToolSettings, resetFog, resetDraw }) => {
+    const [toolControlState, setToolControlState] = useState({
+        showColorPicker: false,
+    })
     const [webSocket, wsSettings] = useWebSocket()
+    const drawColorRef = useRef(null)
+
+    const toggleColorPicker = () => {
+        setToolControlState({
+            ...toolControlState,
+            showColorPicker: !toolControlState.showColorPicker,
+        })
+    }
+
     const setSubtool = (subtool) => {
         setToolSettings(settings.tool, subtool)
     }
@@ -48,6 +61,9 @@ const ToolControls = ({ settings, setToolSettings, setDrawToolSettings, setFogTo
             subtool={ settings.subtool }
             drawColor={ settings.drawColor }
             setDrawColor={ setDrawColor }
+            drawColorRef={ drawColorRef }
+            showColorPicker={ toolControlState.showColorPicker }
+            toggleColorPicker={ toggleColorPicker }
             drawSize={ settings.drawSize }
             setDrawSize={ setDrawSize }
             fogOpacity={ settings.fogOpacity }
