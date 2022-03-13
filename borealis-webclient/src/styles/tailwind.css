@@ -282,19 +282,51 @@
     @apply text-primary-500;
 }
 
-.chat-panel-collapsed-container {
+.chat-panel-expanded-container {
     @apply z-chat-panel;
     @apply absolute;
     @apply top-2 right-2;
     @apply bg-primary-300;
     @apply rounded-lg;
+}
+
+.chat-panel-collapsed-container {
+    @apply chat-panel-expanded-container;
     @apply shadow-md;
+}
+
+.chat-panel-help-container {
+    @apply p-2;
+    @apply flex;
+    @apply flex-row;
+    @apply text-sm;
+    @apply fixed;
+    @apply top-16;
+    @apply right-2;
+    @apply rounded-lg;
+    @apply bg-primary-300;
+    @apply shadow-md;
+}
+
+.chat-panel-help-table {
+    @apply border-collapse;
+    @apply border-primary-500;
+}
+
+.chat-panel-help-th {
+    @apply border;
+    @apply border-primary-600;
+}
+
+.chat-panel-help-td {
+    @apply border;
+    @apply border-primary-700;
 }
 
 .chat-panel-header-close {
     @apply p-2;
     @apply flex;
-    @apply flex-row;
+    @apply flex-row-reverse;
 }
 
 .chat-panel-users {

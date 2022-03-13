@@ -414,6 +414,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .invisible {
   visibility: hidden;
 }
+.table {
+  display: table;
+}
 .hidden {
   display: none;
 }
@@ -958,6 +961,16 @@ Ensure the default browser behavior of the `hidden` attribute.
   color: rgb(107 114 128 / var(--tw-text-opacity));
 }
 
+.chat-panel-expanded-container {
+  z-index: 110;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
+  border-radius: 0.5rem;
+}
+
 .chat-panel-collapsed-container {
   z-index: 110;
   position: absolute;
@@ -971,10 +984,45 @@ Ensure the default browser behavior of the `hidden` attribute.
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
-.chat-panel-header-close {
+.chat-panel-help-container {
   padding: 0.5rem;
   display: flex;
   flex-direction: row;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  position: fixed;
+  top: 4rem;
+  right: 0.5rem;
+  border-radius: 0.5rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.chat-panel-help-table {
+  border-collapse: collapse;
+  --tw-border-opacity: 1;
+  border-color: rgb(107 114 128 / var(--tw-border-opacity));
+}
+
+.chat-panel-help-th {
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(75 85 99 / var(--tw-border-opacity));
+}
+
+.chat-panel-help-td {
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(55 65 81 / var(--tw-border-opacity));
+}
+
+.chat-panel-header-close {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: row-reverse;
 }
 
 .chat-panel-users {
