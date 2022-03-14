@@ -3,9 +3,6 @@ import { connect } from 'react-redux'
 import Canvas from './Canvas'
 
 const Drawing = ({ game, settings }) => {
-    const width = game.width * settings.scale
-    const height = game.height * settings.scale
-
     const getMap = () => {
         if (game.maps.length === 0)
             return undefined
@@ -22,7 +19,7 @@ const Drawing = ({ game, settings }) => {
             return
 
         ctx.beginPath()
-        ctx.clearRect(0, 0, width, height)
+        ctx.clearRect(0, 0, game.width, game.height)
         for(let pathId = 0; pathId < map.drawPaths.length; pathId++) {
             const currPath = map.drawPaths[pathId]
             const tool = currPath.length > 0 ? currPath[0].tool : ''

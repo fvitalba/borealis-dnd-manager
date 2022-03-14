@@ -15,6 +15,8 @@ const Background = ({ game, settings, updateDeltaXY, updateScale }) => {
         if (!map) {
             return
         }
+        ctx.beginPath()
+        ctx.clearRect(0, 0, game.width, game.height)
         drawImage(map.imageUrl, map.name, map.x + settings.deltaX, map.y + settings.deltaY, map.width * settings.scale, map.height * settings.scale, ctx)
     }, [ settings.deltaX, settings.deltaY, settings.scale, map ])
 

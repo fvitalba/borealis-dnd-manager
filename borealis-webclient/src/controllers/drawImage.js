@@ -1,7 +1,6 @@
 const drawImage = (url, which, xPos, yPos, imageWidth, imageHeight, context) => {
     // Handle 'whiteboard' (no bg img)
     if ((!url) || (url.trim().length === 0)) {
-        context.clearRect(xPos, yPos, imageWidth, imageHeight)
         return Promise.resolve(imageWidth, imageHeight)
     }
 
@@ -9,7 +8,6 @@ const drawImage = (url, which, xPos, yPos, imageWidth, imageHeight, context) => 
     return new Promise((resolve, reject) => {
         const img = new Image(imageWidth, imageHeight)
         img.onload = () => {
-            context.clearRect(xPos, yPos, imageWidth, imageHeight)
             context.drawImage(img, xPos, yPos, imageWidth, imageHeight)
             resolve(imageWidth, imageHeight)
         }

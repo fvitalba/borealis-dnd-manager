@@ -4,8 +4,6 @@ import Canvas from './Canvas'
 
 const Fog = ({ game, metadata, settings }) => {
     const fogOpacity = metadata.isHost ? settings.fogOpacity : 1
-    const width = game.width * settings.scale
-    const height = game.height * settings.scale
 
     const getMap = () => {
         if (game.maps.length === 0)
@@ -25,7 +23,7 @@ const Fog = ({ game, metadata, settings }) => {
         ctx.beginPath()
         ctx.globalCompositeOperation = 'destination-over'
         ctx.fillStyle = 'black'
-        ctx.fillRect(0, 0, width, height)
+        ctx.fillRect(0, 0, game.width, game.height)
         for(let pathId = 0; pathId < map.fogPaths.length; pathId++) {
             const currPath = map.fogPaths[pathId]
             ereaseFog(ctx, currPath)
