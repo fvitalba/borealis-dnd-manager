@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
 import { setGameSettings } from '../reducers/metadataReducer'
 import { overwriteGame, updateMaps, loadMap, addMap, setFogEnabled, updateTokens, toggleTokenValue } from '../reducers/gameReducer'
@@ -12,7 +12,6 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()
     // eslint-disable-next-line no-unused-vars
     const [_isLoading, setIsLoading] = useLoading()
-    const [mousePosition, setMousePosition] = useState({ downX: 0, downY: 0 })
     let currentPath = []
 
     /****************************************************
@@ -54,8 +53,8 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
             const newTokens = game.tokens.map((token) => {
                 return !token.selected ? token : {
                     ...token,
-                    x: token.x0 + (e.pageX - mousePosition.downX),
-                    y: token.y0 + (e.pageY - mousePosition.downY),
+                    x: token.x + (e.movementX / settings.scale),
+                    y: token.y + (e.movementY / settings.scale),
                 }
             })
             updateTokens(newTokens)
@@ -239,17 +238,13 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
     */
 
     const onMouseUp = (e) => {
-        setMousePosition({
-            downX: 0,
-            downY: 0,
-        })
         const currMap = getMap()
         if ((currMap) && (currentPath.length > 0)) {
             const scaledCurrPath = currentPath.map((point) => ({
                 ...point,
-                x: Math.floor((point.x - settings.deltaX) / settings.scale),
-                y: Math.floor((point.y - settings.deltaY) / settings.scale),
-                r: Math.floor(point.r / settings.scale),
+                x: (point.x - settings.deltaX) / settings.scale,
+                y: (point.y - settings.deltaY) / settings.scale,
+                r: point.r / settings.scale,
             }))
             const fogPaths = currMap.fogPaths
             const drawPaths = currMap.drawPaths
@@ -286,11 +281,6 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
     }
 
     const onMouseDown = (e) => {
-        setMousePosition({
-            downX: parseInt(e.pageX),
-            downY: parseInt(e.pageY),
-        })
-
         const selectedTokens = game.tokens.filter((token) => token.selected)
         if (selectedTokens.length > 0) {
             let deselectTokens = false

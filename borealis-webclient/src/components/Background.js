@@ -20,6 +20,14 @@ const Background = ({ game, settings, updateDeltaXY, updateScale }) => {
         drawImage(map.imageUrl, map.name, map.x + settings.deltaX, map.y + settings.deltaY, map.width * settings.scale, map.height * settings.scale, ctx)
     }, [ settings.deltaX, settings.deltaY, settings.scale, map ])
 
+    const anyTokenSelected = () => {
+        const selectedToken = game.tokens.filter((token) => token.selected)
+        if (selectedToken[0])
+            return true
+        else
+            return false
+    }
+
     const onMouseDown = () => {
         setBackgroundSettings({
             ...backgroundSettings,
@@ -35,7 +43,7 @@ const Background = ({ game, settings, updateDeltaXY, updateScale }) => {
     }
 
     const onMouseMove = (e) => {
-        if (backgroundSettings.isDragging && (settings.tool === 'move'))
+        if (backgroundSettings.isDragging && (settings.tool === 'move') && (!anyTokenSelected()))
             updateDeltaXY(settings.deltaX + e.movementX, settings.deltaY + e.movementY)
     }
 
