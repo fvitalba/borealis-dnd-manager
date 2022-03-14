@@ -245,16 +245,22 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
         })
         const currMap = getMap()
         if ((currMap) && (currentPath.length > 0)) {
+            const scaledCurrPath = currentPath.map((point) => ({
+                ...point,
+                x: Math.floor((point.x - settings.deltaX) / settings.scale),
+                y: Math.floor((point.y - settings.deltaY) / settings.scale),
+                r: Math.floor(point.r / settings.scale),
+            }))
             const fogPaths = currMap.fogPaths
             const drawPaths = currMap.drawPaths
             switch (settings.tool) {
             case 'fog':
-                fogPaths.push(currentPath)
-                pushFogPath(webSocket, wsSettings, currentPath)
+                fogPaths.push(scaledCurrPath)
+                pushFogPath(webSocket, wsSettings, scaledCurrPath)
                 break
             case 'draw':
-                drawPaths.push(currentPath)
-                pushDrawPath(webSocket, wsSettings, currentPath)
+                drawPaths.push(scaledCurrPath)
+                pushDrawPath(webSocket, wsSettings, scaledCurrPath)
                 break
             default: break
             }
