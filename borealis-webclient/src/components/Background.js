@@ -57,8 +57,8 @@ const Background = ({ game, settings, updateDeltaXY, updateScale }) => {
     return (
         <Canvas
             className='background'
-            width={ map ? map.width : 0 }
-            height={ map ? map.height : 0 }
+            width={ game.width }
+            height={ game.height }
             draw={ draw }
             onMouseUp={ onMouseUp }
             onMouseDown={ onMouseDown }

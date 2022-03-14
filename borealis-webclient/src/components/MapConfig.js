@@ -31,14 +31,6 @@ const MapConfig = ({ map, game, loadMap, updateMaps, deleteMap }) => {
         })
     }
 
-    const onIntegerChange = (key, evt) => {
-        const value = parseInt(evt.target.value) || undefined
-        setMapConfigState({
-            ...mapConfigState,
-            [key]: value,
-        })
-    }
-
     const load = () => {
         const updatedMaps = game.maps.map((currMap) => {
             return map.id === currMap.id ? { ...currMap, imageUrl: mapConfigState.imageUrl, width: mapConfigState.width, height: mapConfigState.height, } : currMap
@@ -61,7 +53,6 @@ const MapConfig = ({ map, game, loadMap, updateMaps, deleteMap }) => {
                 mapConfigState={ mapConfigState }
                 load={ load }
                 onTextChange={ onTextChange }
-                onIntegerChange={ onIntegerChange }
                 deleteMap={ deleteCurrentMap }
             />
             : null
