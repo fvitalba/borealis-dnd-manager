@@ -4,7 +4,9 @@ import {
     CHANGE_DRAW_SETTINGS,
     CHANGE_TOOL,
     CHANGE_USERNAME,
-    TOGGLE_MOUSESHARING
+    TOGGLE_MOUSESHARING,
+    UPDATE_DELTAXY,
+    UPDATE_SCALE
 } from '../redux/constants'
 
 const initialSettingsState = () => {
@@ -19,6 +21,9 @@ const initialSettingsState = () => {
         subtool: undefined,
         username: params.get('host') ? 'DM' : 'PC',
         shareMouse: true,
+        deltaX: 0,
+        deltaY: 0,
+        scale: 1.0,
     }
 }
 
@@ -56,6 +61,17 @@ const settingsReducer = (state = initialSettingsState(), action) => {
         return {
             ...state,
             shareMouse: !state.shareMouse,
+        }
+    case UPDATE_DELTAXY:
+        return {
+            ...state,
+            deltaX: action.deltaX,
+            deltaY: action.deltaY,
+        }
+    case UPDATE_SCALE:
+        return {
+            ...state,
+            scale: action.scale,
         }
     default:
         return state
@@ -104,6 +120,21 @@ export const setUsername = (newUsername) => {
 export const toggleMousesharing = () => {
     return {
         type: TOGGLE_MOUSESHARING,
+    }
+}
+
+export const updateDeltaXY = (newDeltaX, newDeltaY) => {
+    return {
+        type: UPDATE_DELTAXY,
+        deltaX: newDeltaX,
+        deltaY: newDeltaY,
+    }
+}
+
+export const updateScale = (newScale) => {
+    return {
+        type: UPDATE_SCALE,
+        scale: newScale,
     }
 }
 //#endregion Action Creators

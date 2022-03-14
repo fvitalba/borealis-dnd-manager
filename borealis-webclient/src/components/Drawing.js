@@ -2,9 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import Canvas from './Canvas'
 
-const Drawing = ({ game }) => {
-    const width = game.width
-    const height = game.height
+const Drawing = ({ game, settings }) => {
+    const width = game.width * settings.scale
+    const height = game.height * settings.scale
 
     const getMap = () => {
         if (game.maps.length === 0)
@@ -49,9 +49,9 @@ const Drawing = ({ game }) => {
             ctx.lineWidth = currPath[pointId].drawSize
             ctx.strokeStyle = currPath[pointId].drawColor
             if (pointId === 0) {
-                ctx.moveTo(currPath[pointId].x, currPath[pointId].y)
+                ctx.moveTo(currPath[pointId].x * settings.scale + settings.deltaX, currPath[pointId].y * settings.scale + settings.deltaY)
             } else {
-                ctx.lineTo(currPath[pointId].x, currPath[pointId].y)
+                ctx.lineTo(currPath[pointId].x * settings.scale + settings.deltaX, currPath[pointId].y * settings.scale + settings.deltaY)
             }
         }
     }
@@ -63,9 +63,9 @@ const Drawing = ({ game }) => {
             ctx.lineCap = 'round'
             ctx.lineWidth = currPath[pointId].drawSize
             if (pointId === 0) {
-                ctx.moveTo(currPath[pointId].x, currPath[pointId].y)
+                ctx.moveTo(currPath[pointId].x * settings.scale + settings.deltaX, currPath[pointId].y * settings.scale + settings.deltaY)
             } else {
-                ctx.lineTo(currPath[pointId].x, currPath[pointId].y)
+                ctx.lineTo(currPath[pointId].x * settings.scale + settings.deltaX, currPath[pointId].y * settings.scale + settings.deltaY)
             }
         }
     }
@@ -73,8 +73,8 @@ const Drawing = ({ game }) => {
     return (
         <Canvas
             className='drawing passthrough'
-            width={ width }
-            height={ height }
+            width={ game.width }
+            height={ game.height }
             draw={ renderDrawingLayer } />
     )
 }
@@ -82,6 +82,7 @@ const Drawing = ({ game }) => {
 const mapStateToProps = (state) => {
     return {
         game: state.game,
+        settings: state.settings,
     }
 }
 

@@ -1,13 +1,11 @@
 import React, { useCallback, useState } from 'react'
 import { connect } from 'react-redux'
+import { updateDeltaXY, updateScale } from '../reducers/settingsReducer'
 import drawImage from '../controllers/drawImage'
 import Canvas from './Canvas'
 
-const Background = ({ game }) => {
+const Background = ({ game, settings, updateDeltaXY, updateScale }) => {
     const [backgroundSettings, setBackgroundSettings] = useState({
-        deltaX: 0,
-        deltaY: 0,
-        scale: 1.0,
         isDragging: false,
     })
     const selectedMap = game.maps.filter((map) => map.id === game.mapId)
@@ -17,8 +15,8 @@ const Background = ({ game }) => {
         if (!map) {
             return
         }
-        drawImage(map.imageUrl, map.name, map.x + backgroundSettings.deltaX, map.y + backgroundSettings.deltaY, map.width * backgroundSettings.scale, map.height * backgroundSettings.scale, ctx)
-    }, [ backgroundSettings, map ])
+        drawImage(map.imageUrl, map.name, map.x + settings.deltaX, map.y + settings.deltaY, map.width * settings.scale, map.height * settings.scale, ctx)
+    }, [ settings.deltaX, settings.deltaY, settings.scale, map ])
 
     const onMouseDown = () => {
         setBackgroundSettings({
@@ -35,24 +33,15 @@ const Background = ({ game }) => {
     }
 
     const onMouseMove = (e) => {
-        if (backgroundSettings.isDragging)
-            setBackgroundSettings({
-                ...backgroundSettings,
-                deltaX: backgroundSettings.deltaX + e.movementX,
-                deltaY: backgroundSettings.deltaY + e.movementY,
-            })
+        if (backgroundSettings.isDragging && (settings.tool === 'move'))
+            updateDeltaXY(settings.deltaX + e.movementX, settings.deltaY + e.movementY)
     }
 
     const onWheel = (e) => {
         e.preventDefault()
-        console.log(e.deltaY * -0.01)
 
-        const scale = Math.min(Math.max(.125, (backgroundSettings.scale + e.deltaY * -0.01)), 4)
-        console.log(scale)
-        setBackgroundSettings({
-            ...backgroundSettings,
-            scale: scale,
-        })
+        const scale = Math.min(Math.max(.125, (settings.scale + e.deltaY * -0.01)), 4)
+        updateScale(scale)
     }
 
     return (
@@ -71,10 +60,13 @@ const Background = ({ game }) => {
 const mapStateToProps = (state) => {
     return {
         game: state.game,
+        settings: state.settings,
     }
 }
 
 const mapDispatchToProps = {
+    updateDeltaXY,
+    updateScale,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Background)
