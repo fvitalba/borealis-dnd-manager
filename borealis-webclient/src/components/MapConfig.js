@@ -36,7 +36,6 @@ const MapConfig = ({ map, game, loadMap, updateMaps, deleteMap }) => {
         setIsLoading(true)
         retrieveImageSize(mapConfigState.imageUrl)
             .then((dimensions) => {
-                console.log(dimensions)
                 const updatedMaps = game.maps.map((currMap) => {
                     return map.id === currMap.id ? { ...currMap, imageUrl: mapConfigState.imageUrl, width: dimensions.width, height: dimensions.height, } : currMap
                 })
@@ -54,7 +53,6 @@ const MapConfig = ({ map, game, loadMap, updateMaps, deleteMap }) => {
     const retrieveImageSize = (imageUrl) => {
         return new Promise((resolve, reject) => {
             const image = new Image()
-            console.log(image)
             image.src = imageUrl
             image.onload = () => {
                 resolve({ width: image.width, height: image.height })
