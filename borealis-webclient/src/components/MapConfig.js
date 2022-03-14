@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { loadMap, updateMaps, deleteMap } from '../reducers/gameReducer'
 import { pushMapState, useWebSocket } from '../hooks/useSocket'
+import { useLoading } from '../hooks/useLoading'
 import MapConfigView from '../views/MapConfigView'
 
 const initialMapConfigState = (map, game) => {
@@ -12,8 +13,6 @@ const initialMapConfigState = (map, game) => {
         id: parseInt(map.id),
         name: currentMap.name ? currentMap.name : map.name,
         imageUrl: currentMap.imageUrl ? currentMap.imageUrl : '',
-        width: currentMap.width ? currentMap.width : window.innerWidth,
-        height: currentMap.height ? currentMap.height : window.innerHeight,
         x: 0,
         y: 0,
     }
@@ -22,6 +21,8 @@ const initialMapConfigState = (map, game) => {
 const MapConfig = ({ map, game, loadMap, updateMaps, deleteMap }) => {
     const [mapConfigState, setMapConfigState] = useState(initialMapConfigState(map, game))
     const [webSocket, wsSettings] = useWebSocket()
+    // eslint-disable-next-line no-unused-vars
+    const [_isLoading, setIsLoading] = useLoading()
     const isSelected = game.mapId === map.id
 
     const onTextChange = (key, evt) => {
@@ -31,21 +32,37 @@ const MapConfig = ({ map, game, loadMap, updateMaps, deleteMap }) => {
         })
     }
 
-    const onIntegerChange = (key, evt) => {
-        const value = parseInt(evt.target.value) || undefined
-        setMapConfigState({
-            ...mapConfigState,
-            [key]: value,
-        })
+    const load = () => {
+        setIsLoading(true)
+        retrieveImageSize(mapConfigState.imageUrl)
+            .then((dimensions) => {
+                console.log(dimensions)
+                const updatedMaps = game.maps.map((currMap) => {
+                    return map.id === currMap.id ? { ...currMap, imageUrl: mapConfigState.imageUrl, width: dimensions.width, height: dimensions.height, } : currMap
+                })
+                setIsLoading(false)
+                updateMaps(updatedMaps)
+                loadMap(map.id)
+                pushMapState(webSocket, wsSettings, updatedMaps, map.id)
+            })
+            .catch((error) => {
+                console.error(error)
+                setIsLoading(false)
+            })
     }
 
-    const load = () => {
-        const updatedMaps = game.maps.map((currMap) => {
-            return map.id === currMap.id ? { ...currMap, imageUrl: mapConfigState.imageUrl, width: mapConfigState.width, height: mapConfigState.height, } : currMap
+    const retrieveImageSize = (imageUrl) => {
+        return new Promise((resolve, reject) => {
+            const image = new Image()
+            console.log(image)
+            image.src = imageUrl
+            image.onload = () => {
+                resolve({ width: image.width, height: image.height })
+            }
+            image.onerror = () => {
+                reject()
+            }
         })
-        updateMaps(updatedMaps)
-        loadMap(map.id)
-        pushMapState(webSocket, wsSettings, updatedMaps, map.id)
     }
 
     const deleteCurrentMap = () => {
@@ -61,7 +78,6 @@ const MapConfig = ({ map, game, loadMap, updateMaps, deleteMap }) => {
                 mapConfigState={ mapConfigState }
                 load={ load }
                 onTextChange={ onTextChange }
-                onIntegerChange={ onIntegerChange }
                 deleteMap={ deleteCurrentMap }
             />
             : null

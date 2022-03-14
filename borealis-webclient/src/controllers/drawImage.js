@@ -1,17 +1,15 @@
-const drawImage = (url, which, map, context) => {
+const drawImage = (url, which, xPos, yPos, imageWidth, imageHeight, context) => {
     // Handle 'whiteboard' (no bg img)
     if ((!url) || (url.trim().length === 0)) {
-        context.clearRect(map.x, map.y, map.width, map.height)
-        return Promise.resolve(map.width, map.height)
+        return Promise.resolve(imageWidth, imageHeight)
     }
 
     //Handle ordinary image
     return new Promise((resolve, reject) => {
-        const img = new Image(map.width, map.height)
+        const img = new Image(imageWidth, imageHeight)
         img.onload = () => {
-            context.clearRect(map.x, map.y, map.width, map.height)
-            context.drawImage(img, map.x, map.y, map.width, map.height)
-            resolve(map.width, map.height)
+            context.drawImage(img, xPos, yPos, imageWidth, imageHeight)
+            resolve(imageWidth, imageHeight)
         }
         img.onerror = (err) => {
             console.error('Unable to draw image.', img.src, err)
