@@ -80,6 +80,7 @@ const UserTool = ({ toggleOnUser, game, chat, metadata, settings, setFogEnabled,
     return (
         toggleOnUser ?
             <UserToolView
+                isHost={ metadata.isHost }
                 initAsDev={ initAsDev }
                 toggleFog={ toggleFog }
                 saveGameInServer={ saveGameInServer }

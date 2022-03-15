@@ -414,6 +414,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .invisible {
   visibility: hidden;
 }
+.flex {
+  display: flex;
+}
 .table {
   display: table;
 }
@@ -440,6 +443,12 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .resize {
   resize: both;
+}
+.flex-row {
+  flex-direction: row;
+}
+.flex-nowrap {
+  flex-wrap: nowrap;
 }
 .bg-violet-600 {
   --tw-bg-opacity: 1;
