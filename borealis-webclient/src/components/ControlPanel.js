@@ -38,7 +38,7 @@ const ControlPanel = ({ game, metadata, chat }) => {
         pushGameRefresh(webSocket, wsSettings, game, chat)
     }
 
-    const submenuHidden = (controlPanelState.hidden || (!controlPanelState.toggleOnMaps && !controlPanelState.toggleOnTokens && !controlPanelState.toggleOnUser))
+    const submenuHidden = (controlPanelState.hidden || (!controlPanelState.toggleOnMaps && !controlPanelState.toggleOnTokens && !controlPanelState.toggleOnUser && !controlPanelState.toggleOnCharacterStats && !controlPanelState.toggleOnCharacterInventory && !controlPanelState.toggleOnCharacterSpells))
 
     return (
         <ControlPanelView

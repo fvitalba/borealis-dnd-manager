@@ -3,6 +3,7 @@ import ToolControls from '../components/ToolControls'
 import MapTool from '../components/MapTool'
 import TokenTool from '../components/TokenTool'
 import UserTool from '../components/UserTool'
+import CharacterStats from '../components/CharacterStats'
 import ToolSelectView from './ToolSelectView'
 import Button from './Button'
 import {
@@ -69,6 +70,7 @@ const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, tog
                     !submenuHidden
                         ? <div className='control-panel-submenu'>
                             <UserTool toggleOnUser={ controlPanelState.toggleOnUser } />
+                            <CharacterStats toggleOnCharacterStats={ controlPanelState.toggleOnCharacterStats } />
                         </div>
                         : null
                 }

@@ -624,3 +624,22 @@
     @apply border-solid;
     @apply border-accent-500;
 }
+
+.character-stats-view-container {
+    @apply flex;
+    @apply flex-col;
+}
+
+.character-stats-view-row {
+    @apply flex;
+    @apply flex-row;
+}
+
+.character-stats-label {
+    @apply text-sm;
+}
+
+.character-stat-input-container {
+    @apply flex;
+    @apply flex-col;
+}
