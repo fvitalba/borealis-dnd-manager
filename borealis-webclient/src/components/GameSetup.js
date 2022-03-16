@@ -4,7 +4,7 @@ import { setGameSettings } from '../reducers/metadataReducer'
 import { setUsername } from '../reducers/settingsReducer'
 import { overwriteGame } from '../reducers/gameReducer'
 import { useLoading } from '../hooks/useLoading'
-import { loadRoomFromDatabase } from '../controllers/apiHandler'
+import { getRoomFromDatabase } from '../controllers/apiHandler'
 import GameSetupView from '../views/GameSetupView'
 
 const initialGameSetupState = () => {
@@ -67,7 +67,7 @@ const GameSetup = ({ setGameSettings, setUsername, overwriteGame }) => {
                 username: gameSetupState.userName,
                 room: gameSetupState.roomName,
             }
-            loadRoomFromDatabase(tempWsSettings)
+            getRoomFromDatabase(tempWsSettings)
                 .then((result) => {
                     const loadedGame = {
                         ...result.data.game,
@@ -126,7 +126,7 @@ const GameSetup = ({ setGameSettings, setUsername, overwriteGame }) => {
                     roomFound: false,
                     searchingRoom: true,
                 })
-            loadRoomFromDatabase(tempWsSettings)
+            getRoomFromDatabase(tempWsSettings)
                 .then((result) => {
                     if (result.data) {
                         setRoomLookupState({

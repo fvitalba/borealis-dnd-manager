@@ -47,8 +47,9 @@ app.get('/api/rooms/:roomName?', (request, result) => {
 })
 
 app.get('/api/room-users/:roomName?:userGuid?', (request, result) => {
-    const roomName = request.params.roomName
-    const userGuid = request.params.userGuid
+    const roomName = request.params.roomName ? request.params.roomName : request.query.roomName
+    const userGuid = request.params.userGuid ? request.params.userGuid : request.query.userGuid
+
 
     if (roomName) {
         const queryParameters = userGuid ? { 'roomName': roomName, 'guid': userGuid, } : { 'roomName': roomName, }
@@ -62,8 +63,8 @@ app.get('/api/room-users/:roomName?:userGuid?', (request, result) => {
 })
 
 app.get('/api/room-characters/:roomName?:characterGuid?', (request, result) => {
-    const roomName = request.params.roomName
-    const characterGuid = request.params.characterGuid
+    const roomName = request.params.roomName ? request.params.roomName : request.query.roomName
+    const characterGuid = request.params.characterGuid ? request.params.characterGuid : request.query.characterGuid
 
     if (roomName) {
         const queryParameters = characterGuid ? { 'roomName': roomName, 'guid': characterGuid, } : { 'roomName': roomName, }
@@ -80,10 +81,10 @@ app.post('/api/room-characters', (request, response) => {
     const body = request.body
     if (body.payload === undefined)
         return response.status(400).json({ error: 'Request Payload is missing.' })
-    if (body.roomName === undefined)
+    if (body.room === undefined)
         return response.status(400).json({ error: 'Room was not specified.' })
 
-    saveUpdateRoomCharacter(body.roomName, JSON.parse(body.payload))
+    saveUpdateRoomCharacter(body.room, JSON.parse(body.payload))
         .then((result) => response.json(result))
 })
 
@@ -104,6 +105,8 @@ app.post('/api/rooms', (request, response) => {
     const body = request.body
     if (body.payload === undefined)
         return response.status(400).json({ error: 'Request Payload is missing.' })
+    if (body.room === undefined)
+        return response.status(400).json({ error: 'Room was not specified.' })
 
     const room = new Room({
         ...body.payload,

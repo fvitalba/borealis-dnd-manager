@@ -4,7 +4,7 @@ import { defaultGameState, overwriteGame, incrementGen, loadDefaultBattleGame, s
 import { setUsername, setCursorSize, setToolSettings, toggleMousesharing } from '../reducers/settingsReducer'
 import { pushGameRefresh, pushFogEnabled, useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
-import { saveRoomToDatabase, loadRoomFromDatabase } from '../controllers/apiHandler'
+import { saveRoomToDatabase, getRoomFromDatabase } from '../controllers/apiHandler'
 import UserToolView from '../views/UserToolView'
 
 const UserTool = ({ toggleOnUser, game, chat, metadata, settings, setFogEnabled, overwriteGame, incrementGen, setUsername, toggleMousesharing, setToolSettings, loadDefaultBattleGame }) => {
@@ -61,7 +61,7 @@ const UserTool = ({ toggleOnUser, game, chat, metadata, settings, setFogEnabled,
 
     const loadGameFromServer = () => {
         setIsLoading(true)
-        loadRoomFromDatabase(wsSettings)
+        getRoomFromDatabase(wsSettings)
             .then((result) => {
                 const loadedGame = {
                     ...result.data.game,
