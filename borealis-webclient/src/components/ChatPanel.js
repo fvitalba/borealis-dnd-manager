@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { connect } from 'react-redux'
 import { sendChatMessage, useWebSocket } from '../hooks/useSocket'
 import { convertChatMessage } from '../controllers/commandHandler'
@@ -37,6 +37,7 @@ const chatCommands = [{
 const ChatPanel = ({ chat, settings, user, character, metadata, addChatMessage, setUsersFromAPI }) => {
     const [chatPanelState, setChatPanelState] = useState(initialChatPanelState())
     const [showUserHover, setShowUserHover] = useState(false)
+    const endOfMessagesRef = useRef(null)
     const [webSocket, wsSettings] = useWebSocket()
     const currentCharacter = character.myCharacterGuid
         ? character.characters.filter((currCharacter) => currCharacter.guid === character.myCharacterGuid)[0]
@@ -97,6 +98,11 @@ const ChatPanel = ({ chat, settings, user, character, metadata, addChatMessage, 
         }
     }
 
+    const scrollToBottom = () => {
+        console.log('attempting to scroll',endOfMessagesRef)
+        endOfMessagesRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+
     const loadUsers = useCallback(() => {
         if (wsSettings.room) {
             getUsersFromDatabase(wsSettings)
@@ -108,6 +114,10 @@ const ChatPanel = ({ chat, settings, user, character, metadata, addChatMessage, 
                 })
         }
     }, [ wsSettings, chatPanelState, setChatPanelState ])
+
+    useEffect(() => {
+        scrollToBottom()
+    }, [ chat.messages ])
 
     useEffect(() => {
         const interval = setInterval(() => loadUsers(), 5000)
@@ -132,7 +142,8 @@ const ChatPanel = ({ chat, settings, user, character, metadata, addChatMessage, 
             changeCurrentMessage={ changeCurrentMessage }
             addMessage={ addMessage }
             chatMessages={ chat.messages }
-            inputOnKeyDown={ inputOnKeyDown } />
+            inputOnKeyDown={ inputOnKeyDown }
+            endOfMessagesRef={ endOfMessagesRef } />
     )
 }
 

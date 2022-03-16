@@ -82,7 +82,7 @@ const ChatCommand = ({ command }) => {
     )
 }
 
-const ChatPanelView = ({ username, chatPanelHidden, toggleHidden, showHelp, toggleHelp, chatCommands, showUserHover, toggleUserHover, noOfCurrentUsers, users, currentMessage, changeCurrentMessage, addMessage, chatMessages, inputOnKeyDown }) => {
+const ChatPanelView = ({ username, chatPanelHidden, toggleHidden, showHelp, toggleHelp, chatCommands, showUserHover, toggleUserHover, noOfCurrentUsers, users, currentMessage, changeCurrentMessage, addMessage, chatMessages, inputOnKeyDown, endOfMessagesRef }) => {
     const sortedChatMessages = chatMessages.sort((a, b) => a.timestamp - b.timestamp)
 
     return (
@@ -129,6 +129,7 @@ const ChatPanelView = ({ username, chatPanelHidden, toggleHidden, showHelp, togg
                         default: return null
                         }
                     })}
+                    <div ref={ endOfMessagesRef }></div>
                     <div className='chat-panel-input'>
                         <input title='Mesage' placeholder='Type your message...' value={ currentMessage } onChange={ changeCurrentMessage } className='chat-panel-input-input' onKeyDown={ inputOnKeyDown } />
                         <Button title='Push refresh to players' value={ <PlaySolidIcon /> } onClick={ addMessage } />
