@@ -256,7 +256,7 @@
     @apply top-0 right-0;
     @apply bg-primary-300;
     @apply h-screen;
-    @apply w-80;
+    @apply w-96;
     @apply overflow-hidden;
     @apply flex;
     @apply flex-col;
@@ -355,7 +355,10 @@
     @apply mt-4;
     @apply ml-6;
     @apply mr-6;
-    @apply h-full;
+    @apply h-fit;
+    @apply overflow-hidden;
+    @apply overflow-y-scroll;
+    @apply pb-20;
 }
 
 .chat-panel-message {

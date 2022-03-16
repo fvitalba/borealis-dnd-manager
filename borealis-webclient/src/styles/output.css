@@ -974,7 +974,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-bg-opacity: 1;
   background-color: rgb(209 213 219 / var(--tw-bg-opacity));
   height: 100vh;
-  width: 20rem;
+  width: 24rem;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -1100,7 +1100,11 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-top: 1rem;
   margin-left: 1.5rem;
   margin-right: 1.5rem;
-  height: 100%;
+  height: -moz-fit-content;
+  height: fit-content;
+  overflow: hidden;
+  overflow-y: scroll;
+  padding-bottom: 5rem;
 }
 
 .chat-panel-message {
