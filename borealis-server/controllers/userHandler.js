@@ -1,24 +1,24 @@
 import User from '../models/user.js'
 
 export const saveUpdateRoomUser = async (room, guid, username, isHost) => {
-    if (!room || !guid || !username)
+    if (!room || !username)
         return undefined
 
     return User.findOneAndUpdate(
-        { roomName: room, guid: guid, }, 
-        { userName: username, lastOnline: new Date(), isHost: isHost, active: true, }, 
+        { roomName: room, userName: username, }, 
+        { guid: guid, lastOnline: new Date(), isHost: isHost, active: true, }, 
         { new: true, upsert: true, }
     ).then((newUser) => {
         return newUser
     })
 }
 
-export const assignCharacter = async (room, guid, username, characterGuid) => {
-    if (!room || !guid || !username || !characterGuid)
+export const assignCharacter = async (room, username, characterGuid) => {
+    if (!room || !username || !characterGuid)
         return undefined
 
     return User.findOneAndUpdate(
-        { roomName: room, guid: guid, }, 
+        { roomName: room, userName: username, }, 
         { characterGuid: characterGuid, active: true, }, 
         { new: true, upsert: false, }
     ).then((newUser) => {

@@ -83,7 +83,6 @@ const ChatCommand = ({ command }) => {
 }
 
 const ChatPanelView = ({ username, chatPanelHidden, toggleHidden, showHelp, toggleHelp, chatCommands, showUserHover, toggleUserHover, noOfCurrentUsers, users, currentMessage, changeCurrentMessage, addMessage, chatMessages, inputOnKeyDown }) => {
-    const playerInfo = 'lvl. XX Barbarian'
     const sortedChatMessages = chatMessages.sort((a, b) => a.timestamp - b.timestamp)
 
     return (
@@ -110,7 +109,7 @@ const ChatPanelView = ({ username, chatPanelHidden, toggleHidden, showHelp, togg
                     { (showUserHover && (users.length > 0))
                         ? <div className='chat-panel-users'>
                             { users.map((user) =>
-                                <div className='chat-panel-user' key={ user.guid }>{ user.username } ({ user.isHost ? 'DM' : 'Player' })</div>
+                                <div className='chat-panel-user' key={ user.username }>{ user.username } ({ user.isHost ? 'DM' : 'Player' })</div>
                             )}
                         </div>
                         : null
@@ -120,9 +119,9 @@ const ChatPanelView = ({ username, chatPanelHidden, toggleHidden, showHelp, togg
                     { sortedChatMessages.map((message) => {
                         switch (message.typeOfMessage) {
                         case 'message':
-                            return (<ChatPanelMessage key={ message.guid } message={ message } playerInfo={ playerInfo } />)
+                            return (<ChatPanelMessage key={ message.guid } message={ message } playerInfo={ message.playerInfo } />)
                         case 'whisper':
-                            return (<ChatPanelWhisper key={ message.guid } message={ message } username={ username } playerInfo={ playerInfo } />)
+                            return (<ChatPanelWhisper key={ message.guid } message={ message } username={ username } playerInfo={ message.playerInfo } />)
                         case 'command':
                             return (<ChatPanelCommand key={ message.guid } message={ message } username={ username } />)
                         case 'error':

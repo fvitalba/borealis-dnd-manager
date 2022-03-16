@@ -7,6 +7,7 @@ import { setCharacters } from '../reducers/characterReducer'
 import { useLoading } from '../hooks/useLoading'
 import { getRoomFromDatabase, getCharactersFromDatabase } from '../controllers/apiHandler'
 import GameSetupView from '../views/GameSetupView'
+import { useWebSocket } from '../hooks/useSocket'
 
 const initialGameSetupState = () => {
     return {
@@ -22,6 +23,8 @@ const GameSetup = ({ setGameSettings, setUsername, overwriteGame, setCharacters 
         roomFound: false,
         searchingRoom: false,
     })
+    // eslint-disable-next-line no-unused-vars
+    const [_webSocker, wsSettings, setWsSettings] = useWebSocket()
     // eslint-disable-next-line no-unused-vars
     const [_isLoading, setIsLoading] = useLoading()
 
@@ -60,6 +63,10 @@ const GameSetup = ({ setGameSettings, setUsername, overwriteGame, setCharacters 
     const onSubmitSetup = () => {
         setGameSettings(gameSetupState.isHost, gameSetupState.roomName)
         setUsername(gameSetupState.userName)
+        setWsSettings({
+            ...wsSettings,
+            username: gameSetupState.userName,
+        })
         saveSettingsToLocalStorage()
         if (gameSetupState.isHost) {
             setIsLoading(true)

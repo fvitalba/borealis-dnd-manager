@@ -1,5 +1,5 @@
 import guid from '../controllers/guid'
-import { ADD_CHARACTER, UPDATE_CHARACTER, DELETE_CHARACTER, ASSIGN_CHARACTER, SET_CHARACTERS } from '../redux/constants'
+import { ADD_CHARACTER, UPDATE_CHARACTER, DELETE_CHARACTER, ASSIGN_CHARACTER, ASSIGN_CHARACTER_TO_USER, SET_CHARACTERS } from '../redux/constants'
 
 const initialCharacterReducer = () => {
     return {
@@ -28,7 +28,7 @@ export const characterTemplate = {
     maxNoOfHitDice: 0,
     currNoOfHitDice: 0,
     hitDiceType: 0,
-    userGuid: '',
+    username: '',
 }
 
 const characterReducer = (state = initialCharacterReducer(), action) => {
@@ -63,11 +63,24 @@ const characterReducer = (state = initialCharacterReducer(), action) => {
         return {
             ...state,
             characters: newCharacters,
+            myCharacterGuid: '',
         }
     case ASSIGN_CHARACTER:
         return {
             ...state,
             myCharacterGuid: action.guidToAssign,
+        }
+    case ASSIGN_CHARACTER_TO_USER:
+        newCharacters = state.characters.map((character) => {
+            if (character.guid === action.guidToAssign) {
+                return { ...character, username: action.username, }
+            } else {
+                return character
+            }
+        })
+        return {
+            ...state,
+            characters: newCharacters,
         }
     case SET_CHARACTERS:
         newCharacters = action.newCharacters.map((actionCharacter) => {
@@ -118,6 +131,14 @@ export const deleteCharacter = (characterGuidToDelete) => {
 export const assignCharacter = (guidToAssign) => {
     return {
         type: ASSIGN_CHARACTER,
+        guidToAssign: guidToAssign,
+    }
+}
+
+export const assignCharacterToUser = (username, guidToAssign) => {
+    return {
+        type: ASSIGN_CHARACTER_TO_USER,
+        username: username,
         guidToAssign: guidToAssign,
     }
 }

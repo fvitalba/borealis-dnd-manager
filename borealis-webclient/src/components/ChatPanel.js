@@ -34,7 +34,7 @@ const chatCommands = [{
     example: '/whisper PC be careful with that!',
 }]
 
-const ChatPanel = ({ chat, settings, user, addChatMessage, setUsersFromAPI }) => {
+const ChatPanel = ({ chat, settings, user, character, metadata, addChatMessage, setUsersFromAPI }) => {
     const [chatPanelState, setChatPanelState] = useState(initialChatPanelState())
     const [showUserHover, setShowUserHover] = useState(false)
     const [webSocket, wsSettings] = useWebSocket()
@@ -70,8 +70,19 @@ const ChatPanel = ({ chat, settings, user, addChatMessage, setUsersFromAPI }) =>
         }
     }
 
+    const getPlayerInfo = () => {
+        if (metadata.isHost)
+            return 'Dungeon Master'
+        else {
+            const currentCharacter = character.myCharacterGuid
+                ? character.characters.filter((currCharacter) => currCharacter.guid === character.myCharacterGuid)[0]
+                : ''
+            return currentCharacter ? `lvl. ${currentCharacter.level} ${currentCharacter.class}` : ''
+        }
+    }
+
     const addMessage = () => {
-        const playerInfo = {}
+        const playerInfo = getPlayerInfo()
         const convertedMessage = convertChatMessage(settings.username, chatPanelState.currentMessage)
         if ((convertedMessage.publicMessage.length > 0) || (convertedMessage.privateMessage.length > 0)) {
             const timestamp = Date.now()
@@ -130,6 +141,8 @@ const mapStateToProps = (state) => {
         settings: state.settings,
         chat: state.chat,
         user: state.user,
+        metadata: state.metadata,
+        character: state.character,
     }
 }
 

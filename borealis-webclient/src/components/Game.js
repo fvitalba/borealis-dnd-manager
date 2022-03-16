@@ -2,7 +2,7 @@ import React, { useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
 import { overwriteGame, updateMaps, loadMap, addMap, setFogEnabled, updateTokens, toggleTokenValue } from '../reducers/gameReducer'
 import { addChatMessage, overwriteChat } from '../reducers/chatReducer'
-import { setCharacters } from '../reducers/characterReducer'
+import { assignCharacter, assignCharacterToUser, setCharacters } from '../reducers/characterReducer'
 import { pushDrawPath, pushFogPath, pushGameRefresh, pushTokens, useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
 import GameView from '../views/GameView'
@@ -406,6 +406,7 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
         let pathToUpdate = []
         let updatedMaps = []
         let updatedTokens = []
+        let assignedCharacter = ''
         switch (data.type) {
         case 'pushCursor':
             /*
@@ -477,10 +478,16 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
         case 'pushFogEnabled':
             setFogEnabled(data.fogEnabled)
             break
+        case 'assignCharacterToUser':
+            assignCharacterToUser(data.username, data.characterGuid)
+            break
         case 'pushGameRefresh': // refresh from host
             overwriteGame(data.game)
             overwriteChat(data.chat)
             setCharacters(data.characters)
+            assignedCharacter = data.characters.filter((character) => character.username === settings.username)[0]
+            if (assignedCharacter && (!assignedCharacter !== ''))
+                assignCharacter(assignedCharacter.guid)
             setIsLoading(false)
             break
         case 'requestRefresh': // refresh request from player

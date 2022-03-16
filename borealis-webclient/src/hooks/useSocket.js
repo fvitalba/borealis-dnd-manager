@@ -183,3 +183,11 @@ export const assignCharacter = (webSocket, wsSettings, username, characterGuid) 
         characterGuid: characterGuid,
     })
 }
+
+export const ping = (webSocket, wsSettings, username) => {
+    sendData(webSocket, {
+        type: 'ping',
+        from: wsSettings.guid,
+        username: username,
+    })
+}

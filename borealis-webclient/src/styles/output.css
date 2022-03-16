@@ -1586,6 +1586,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-right: 0.75rem;
 }
 
+.character-stats-view-select {
+    
+}
+
 .select-character-container {
   display: flex;
   flex-direction: row;

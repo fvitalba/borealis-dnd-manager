@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { characterTemplate, updateCharacter, deleteCharacter } from '../reducers/characterReducer'
-import { useWebSocket } from '../hooks/useSocket'
+import { assignCharacter, ping, useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
 import { saveCharacterToDatabase } from '../controllers/apiHandler'
 import CharacterStatsView from '../views/CharacterStatsView'
 
-const CharacterStats = ({ toggleOnCharacterStats, character, user, metadata, updateCharacter, deleteCharacter }) => {
+const CharacterStats = ({ toggleOnCharacterStats, character, user, metadata, settings, updateCharacter, deleteCharacter }) => {
     if (!toggleOnCharacterStats)
         return null
 
     const [selectedCharacter, setSelectedCharacter] = useState(characterTemplate)
     // eslint-disable-next-line no-unused-vars
-    const [_webSocket, wsSettings] = useWebSocket()
+    const [webSocket, wsSettings] = useWebSocket()
     // eslint-disable-next-line no-unused-vars
     const [_isLoading, setIsLoading] = useLoading()
 
@@ -33,6 +33,13 @@ const CharacterStats = ({ toggleOnCharacterStats, character, user, metadata, upd
         if (currCharacter)
             setSelectedCharacter(currCharacter)
     }, [ character.myCharacterGuid ])
+
+    useEffect(() => {
+        const interval = setInterval(() => ping(webSocket, wsSettings, settings.username), 10000)
+        return () => {
+            clearInterval(interval)
+        }
+    },[ ping ])
 
     const modifiers = {
         strength: modifierFromStat(selectedCharacter.strength),
@@ -67,8 +74,9 @@ const CharacterStats = ({ toggleOnCharacterStats, character, user, metadata, upd
     const onSelectUser = (e) => {
         setSelectedCharacter({
             ...selectedCharacter,
-            userGuid: e.target.value,
+            username: e.target.value,
         })
+        assignCharacter(webSocket, wsSettings, e.target.value, selectedCharacter.guid)
     }
 
     const saveCurrCharacter = () => {
@@ -110,6 +118,7 @@ const CharacterStats = ({ toggleOnCharacterStats, character, user, metadata, upd
 const mapStateToProps = (state) => {
     return {
         character: state.character,
+        settings: state.settings,
         metadata: state.metadata,
         user: state.user,
     }

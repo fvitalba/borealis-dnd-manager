@@ -7,8 +7,11 @@ export const handleIncomingMessage = (websocketConnection, incMessage) => {
         let outgoingMessage = undefined
         switch (parsedMessage.type) {
             case 'assignCharacter':
-                assignCharacter(websocketConnection.room, websocketConnection.guid, websocketConnection.username, parsedMessage.characterGuid)
-                resolve({ outgoingMessage: undefined, sendBackToSender: false })
+                assignCharacter(websocketConnection.room, parsedMessage.username, parsedMessage.characterGuid)
+                resolve({ outgoingMessage, sendBackToSender: false })
+                break
+            case 'ping':
+                resolve({ outgoingMessage: undefined, sendBackToSender: false, })
                 break
             default:
                 // Forward message to all other clients (for this room)

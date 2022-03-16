@@ -14,10 +14,10 @@ const CharacterStatsView = ({ showCharacterStats, isHost, character, users, modi
                         { isHost
                             ? <div className='character-stat-input-container'>
                                 <label className='character-stats-label'>Assigned User</label>
-                                <select value={ character.userGuid } onChange={ onSelectUser } title='Which user' className='character-stats-view-select'>
+                                <select value={ character.username } onChange={ onSelectUser } title='Which user' className='character-stats-view-select'>
                                     <option key='' value=''>None</option>
                                     { users.map((user) => (
-                                        <option key={ user.guid } value={ user.guid } >{ user.username }</option>
+                                        <option key={ user.username } value={ user.username } >{ user.username }</option>
                                     ))}
                                 </select>
                             </div>

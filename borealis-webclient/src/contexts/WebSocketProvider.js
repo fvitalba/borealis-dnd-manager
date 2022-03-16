@@ -38,7 +38,7 @@ const saveIdToLocalStorage = (roomName, localGuid) => {
 }
 
 const readIdFromLocalStorage = (roomName) => {
-    const localGuid = DEBUG_MODE ? guid() : localStorage.getItem(`borealis-${roomName}`)
+    const localGuid = localStorage.getItem(`borealis-${roomName}`)
     return localGuid ? localGuid : guid()
 }
 
