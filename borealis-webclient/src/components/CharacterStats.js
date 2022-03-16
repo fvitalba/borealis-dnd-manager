@@ -30,6 +30,7 @@ const CharacterStats = ({ toggleOnCharacterStats, /* user, character */ }) => {
         currNoOfHitDice: 1,
         hitDiceType: 12,
     }
+    console.log(JSON.stringify(character))
 
     const modifierFromStat = (statValue) => {
         const modifier = Math.floor((statValue - 10) / 2)
