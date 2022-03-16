@@ -704,6 +704,10 @@
     @apply mx-3;
 }
 
+.character-stats-view-select {
+    
+}
+
 .select-character-container {
     @apply flex;
     @apply flex-row;

@@ -1,6 +1,8 @@
 import SelectCharacter from '../components/SelectCharacter'
+import { XSquareOutlineIcon, FloppyOutlineIcon } from './Icons'
+import Button from './Button'
 
-const CharacterStatsView = ({ showCharacterStats, character, modifiers, characterName, setCharacterName, setCharacterClass, onStatChange }) => {
+const CharacterStatsView = ({ showCharacterStats, isHost, character, users, modifiers, characterName, setCharacterName, setCharacterClass, onStatChange, onSelectUser, saveCharacter, deleteCharacter }) => {
     return (
         <div className='character-stats-view-container'>
             <div className='character-stats-view-row'>
@@ -8,6 +10,22 @@ const CharacterStatsView = ({ showCharacterStats, character, modifiers, characte
             </div>
             { showCharacterStats
                 ? <div className='character-stats-view-container'>
+                    <div className='character-stats-view-row'>
+                        { isHost
+                            ? <div className='character-stat-input-container'>
+                                <label className='character-stats-label'>Assigned User</label>
+                                <select value={ character.userGuid } onChange={ onSelectUser } title='Which user' className='character-stats-view-select'>
+                                    <option key='' value=''>None</option>
+                                    { users.map((user) => (
+                                        <option key={ user.guid } value={ user.guid } >{ user.username }</option>
+                                    ))}
+                                </select>
+                            </div>
+                            : null
+                        }
+                        <Button title='Save your character' value={ <FloppyOutlineIcon /> } onClick={ saveCharacter } />
+                        <Button title='Delete your character' value={ <XSquareOutlineIcon /> } onClick={ deleteCharacter } />
+                    </div>
                     <div className='character-stats-view-row'>
                         <div className='character-stat-input-container'>
                             <label className='character-stats-label'>Name</label>
