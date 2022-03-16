@@ -21,6 +21,7 @@ import {
 
 
 const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, toggleHidden, submenuHidden, fogEnabled, isHost, socketRequestRefresh, pushRefreshToPlayers }) => {
+    //TODO: move submenuhidden from prop to part of sub-components
     if (hidden)
         return (
             <div className='control-panel-container'>

@@ -6,12 +6,12 @@ const CharacterStats = ({ toggleOnCharacterStats }) => {
 
     const character = {
         name: '',
-        strength: 10,
-        dexterity: 10,
-        constitution: 10,
-        intelligence: 10,
+        strength: 16,
+        dexterity: 6,
+        constitution: 20,
+        intelligence: 3,
         wisdom: 10,
-        charisma: 10,
+        charisma: 17,
         proficiency: 2,
         armorclass: 10,
         passivePerception: 10,
@@ -23,6 +23,27 @@ const CharacterStats = ({ toggleOnCharacterStats }) => {
         maxNoOfHitDice: 1,
         currNoOfHitDice: 1,
         hitDiceType: 12,
+    }
+
+    const modifierFromStat = (statValue) => {
+        const modifier = Math.floor((statValue - 10) / 2)
+        switch(true) {
+        case modifier === 0:
+            return modifier
+        case modifier > 0:
+            return '+' + modifier
+        case modifier < 0:
+            return modifier
+        }
+    }
+
+    const modifiers = {
+        strength: modifierFromStat(character.strength),
+        dexterity: modifierFromStat(character.dexterity),
+        constitution: modifierFromStat(character.constitution),
+        intelligence: modifierFromStat(character.intelligence),
+        wisdom: modifierFromStat(character.wisdom),
+        charisma: modifierFromStat(character.charisma)
     }
 
     const setCharacterName = () => {
@@ -40,6 +61,7 @@ const CharacterStats = ({ toggleOnCharacterStats }) => {
     return (
         <CharacterStatsView
             character={ character }
+            modifiers={ modifiers }
             characterName={ character.name }
             setCharacterName={ setCharacterName }
             setCharacterClass={ setCharacterClass }
