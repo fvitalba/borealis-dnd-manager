@@ -5,9 +5,11 @@ import settingsReducer from '../reducers/settingsReducer'
 import metadataReducer from '../reducers/metadataReducer'
 import gameReducer from '../reducers/gameReducer'
 import chatReducer from '../reducers/chatReducer'
+import userReducer from '../reducers/userReducer'
+import characterReducer from '../reducers/characterReducer'
 import WebSocketProvider from '../contexts/WebSocketProvider'
-import GameStateHandler from './GameStateHandler'
 import LoadingProvider from '../contexts/LoadingProvider'
+import GameStateHandler from './GameStateHandler'
 
 const App = () => {
     const combinedReducer = combineReducers({
@@ -15,6 +17,8 @@ const App = () => {
         metadata: metadataReducer,
         game: gameReducer,
         chat: chatReducer,
+        user: userReducer,
+        character: characterReducer,
     })
     const store = createStore(combinedReducer)
 
