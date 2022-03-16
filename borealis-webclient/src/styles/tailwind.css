@@ -705,7 +705,7 @@
 }
 
 .character-stats-view-select {
-    
+    @apply character-stats-input;
 }
 
 .select-character-container {
@@ -723,5 +723,5 @@
 }
 
 .select-character-select {
-
+    @apply character-stats-input;
 }
