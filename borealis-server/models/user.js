@@ -13,6 +13,8 @@ const userSchema = new mongoose.Schema({
     roomName: String,
     lastOnline: Number,
     isHost: Boolean,
+    active: Boolean,
+    characterGuid: String,
 })
 
 export default mongoose.model('User', userSchema, 'room-user')

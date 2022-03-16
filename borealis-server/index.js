@@ -47,7 +47,7 @@ app.get('/api/rooms/:roomName?', (request, result) => {
 app.get('/api/room-users/:roomName?', (request, result) => {
     const roomName = request.params.roomName
     if (roomName) {
-        User.find({ 'roomName': roomName })
+        User.find({ 'roomName': roomName, 'active': true, })
             .then((users) => {
                 result.json(users)
             })
@@ -120,6 +120,7 @@ wss.on('connection', (websocketConnection, connectionRequest) => {
     websocketConnection.isHost = connectionParams.isHost
     saveUpdateRoomUser(websocketConnection.room, websocketConnection.guid, websocketConnection.username, websocketConnection.isHost)
     websocketConnection.on('message', (message) => {
+        saveUpdateRoomUser(websocketConnection.room, websocketConnection.guid, websocketConnection.username, websocketConnection.isHost)
         handleIncomingMessage(websocketConnection, message)
             .then(({ outgoingMessage, sendBackToSender }) => {
                 if (outgoingMessage) {

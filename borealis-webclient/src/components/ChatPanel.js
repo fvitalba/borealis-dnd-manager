@@ -38,7 +38,6 @@ const ChatPanel = ({ chat, settings, user, addChatMessage, setUsersFromAPI }) =>
     const [chatPanelState, setChatPanelState] = useState(initialChatPanelState())
     const [showUserHover, setShowUserHover] = useState(false)
     const [webSocket, wsSettings] = useWebSocket()
-    console.log(user.users)
 
     const toggleHidden = () => {
         setChatPanelState({

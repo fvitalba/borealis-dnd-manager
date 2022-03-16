@@ -1,9 +1,14 @@
+import { useEffect } from 'react'
 import { connect } from 'react-redux'
 import CharacterStatsView from '../views/CharacterStatsView'
 
 const CharacterStats = ({ toggleOnCharacterStats, /* user, character */ }) => {
     if (!toggleOnCharacterStats)
         return null
+
+    useEffect(() => {
+
+    }, [])
 
     const character = {
         name: '',
