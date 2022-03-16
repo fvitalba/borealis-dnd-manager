@@ -18,7 +18,7 @@ export const convertChatMessage = (playerName, inputChatMessage, character) => {
 
         return rollDiceCommand(playerName, character, splitMessage[1].toUpperCase(), splitMessage.splice(2, splitMessage.length - 2))
     case '/HR':
-    case'/HIDDENROLL':
+    case '/HIDDENROLL':
         if (splitMessage.length < 2)
             return commandNotValidMessage
 
