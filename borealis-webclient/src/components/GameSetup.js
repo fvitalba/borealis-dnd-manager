@@ -24,7 +24,7 @@ const GameSetup = ({ setGameSettings, setUsername, overwriteGame, setCharacters 
         searchingRoom: false,
     })
     // eslint-disable-next-line no-unused-vars
-    const [_webSocker, wsSettings, setWsSettings] = useWebSocket()
+    const [_webSocket, wsSettings, setWsSettings] = useWebSocket()
     // eslint-disable-next-line no-unused-vars
     const [_isLoading, setIsLoading] = useLoading()
 

@@ -2,12 +2,12 @@ import React, { useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
 import { overwriteGame, updateMaps, loadMap, addMap, setFogEnabled, updateTokens, toggleTokenValue } from '../reducers/gameReducer'
 import { addChatMessage, overwriteChat } from '../reducers/chatReducer'
-import { assignCharacter, assignCharacterToUser, setCharacters } from '../reducers/characterReducer'
-import { pushDrawPath, pushFogPath, pushGameRefresh, pushTokens, useWebSocket } from '../hooks/useSocket'
+import { assignCharacter, assignCharacterToUser, setCharacters, updateCharacter } from '../reducers/characterReducer'
+import { pushDrawPath, pushFogPath, pushGameRefresh, pushTokens, requestRefresh, useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
 import GameView from '../views/GameView'
 
-const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, setFogEnabled, addChatMessage, overwriteChat, setCharacters }) => {
+const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, setFogEnabled, addChatMessage, overwriteChat, setCharacters, assignCharacter, assignCharacterToUser, updateCharacter }) => {
     const overlayRef = React.useRef()
     const [webSocket, wsSettings] = useWebSocket()
     // eslint-disable-next-line no-unused-vars
@@ -478,16 +478,20 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
         case 'pushFogEnabled':
             setFogEnabled(data.fogEnabled)
             break
-        case 'assignCharacterToUser':
+        case 'pushAssignCharacterToUser':
             assignCharacterToUser(data.username, data.characterGuid)
+            break
+        case 'pushUpdateCharacter':
+            updateCharacter(data.updatedCharacter)
             break
         case 'pushGameRefresh': // refresh from host
             overwriteGame(data.game)
             overwriteChat(data.chat)
             setCharacters(data.characters)
             assignedCharacter = data.characters.filter((character) => character.username === settings.username)[0]
-            if (assignedCharacter && (!assignedCharacter !== ''))
+            if (assignedCharacter && (!assignedCharacter !== '')) {
                 assignCharacter(assignedCharacter.guid)
+            }
             setIsLoading(false)
             break
         case 'requestRefresh': // refresh request from player
@@ -515,6 +519,9 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
         //TODO: reenable keypresses
         //window.addEventListener('keypress', onKeyPress)
         window.addEventListener('keydown', onKeyDown)
+
+        if (!metadata.isHost)
+            requestRefresh(webSocket, wsSettings)
 
         // On Unmount
         return () => {
@@ -594,6 +601,9 @@ const mapDispatchToProps = {
     addChatMessage,
     overwriteChat,
     setCharacters,
+    assignCharacter,
+    assignCharacterToUser,
+    updateCharacter,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game)

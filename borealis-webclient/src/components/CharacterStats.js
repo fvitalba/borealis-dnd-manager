@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { characterTemplate, updateCharacter, deleteCharacter } from '../reducers/characterReducer'
-import { assignCharacter, ping, useWebSocket } from '../hooks/useSocket'
+import { pushUpdateCharacter, ping, useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
 import { saveCharacterToDatabase } from '../controllers/apiHandler'
 import CharacterStatsView from '../views/CharacterStatsView'
@@ -76,7 +76,6 @@ const CharacterStats = ({ toggleOnCharacterStats, character, user, metadata, set
             ...selectedCharacter,
             username: e.target.value,
         })
-        assignCharacter(webSocket, wsSettings, e.target.value, selectedCharacter.guid)
     }
 
     const saveCurrCharacter = () => {
@@ -85,6 +84,7 @@ const CharacterStats = ({ toggleOnCharacterStats, character, user, metadata, set
         saveCharacterToDatabase(wsSettings, JSON.stringify(selectedCharacter))
             .then(() => {
                 setIsLoading(false)
+                pushUpdateCharacter(selectedCharacter)
             })
             .catch((error) => {
                 console.error(error)

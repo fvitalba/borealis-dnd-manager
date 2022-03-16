@@ -175,12 +175,20 @@ export const sendChatMessage = (webSocket, wsSettings, username, playerInfo, pub
     })
 }
 
-export const assignCharacter = (webSocket, wsSettings, username, characterGuid) => {
+export const pushAssignCharacter = (webSocket, wsSettings, username, characterGuid) => {
     sendData(webSocket, {
-        type: 'assignCharacter',
+        type: 'pushAssignCharacter',
         from: wsSettings.guid,
         username: username,
         characterGuid: characterGuid,
+    })
+}
+
+export const pushUpdateCharacter = (webSocket, wsSettings, updatedCharacter) => {
+    sendData(webSocket, {
+        type: 'pushUpdateCharacter',
+        from: wsSettings.guid,
+        updateCharacter: updatedCharacter,
     })
 }
 

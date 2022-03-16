@@ -6,7 +6,7 @@ export const handleIncomingMessage = (websocketConnection, incMessage) => {
     return new Promise((resolve, reject) => {
         let outgoingMessage = undefined
         switch (parsedMessage.type) {
-            case 'assignCharacter':
+            case 'pushAssignCharacter':
                 assignCharacter(websocketConnection.room, parsedMessage.username, parsedMessage.characterGuid)
                 resolve({ outgoingMessage, sendBackToSender: false })
                 break

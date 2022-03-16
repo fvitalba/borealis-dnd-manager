@@ -38,6 +38,9 @@ const ChatPanel = ({ chat, settings, user, character, metadata, addChatMessage, 
     const [chatPanelState, setChatPanelState] = useState(initialChatPanelState())
     const [showUserHover, setShowUserHover] = useState(false)
     const [webSocket, wsSettings] = useWebSocket()
+    const currentCharacter = character.myCharacterGuid
+        ? character.characters.filter((currCharacter) => currCharacter.guid === character.myCharacterGuid)[0]
+        : ''
 
     const toggleHidden = () => {
         setChatPanelState({
@@ -74,16 +77,13 @@ const ChatPanel = ({ chat, settings, user, character, metadata, addChatMessage, 
         if (metadata.isHost)
             return 'Dungeon Master'
         else {
-            const currentCharacter = character.myCharacterGuid
-                ? character.characters.filter((currCharacter) => currCharacter.guid === character.myCharacterGuid)[0]
-                : ''
             return currentCharacter ? `lvl. ${currentCharacter.level} ${currentCharacter.class}` : ''
         }
     }
 
     const addMessage = () => {
         const playerInfo = getPlayerInfo()
-        const convertedMessage = convertChatMessage(settings.username, chatPanelState.currentMessage)
+        const convertedMessage = convertChatMessage(settings.username, chatPanelState.currentMessage, currentCharacter)
         if ((convertedMessage.publicMessage.length > 0) || (convertedMessage.privateMessage.length > 0)) {
             const timestamp = Date.now()
             addChatMessage(settings.username, playerInfo, convertedMessage.publicMessage, convertedMessage.privateMessage, convertedMessage.targetPlayerName,
