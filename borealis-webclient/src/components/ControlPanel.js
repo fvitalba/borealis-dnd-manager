@@ -16,7 +16,7 @@ const initialControlPanelState = () => {
     }
 }
 
-const ControlPanel = ({ game, metadata, chat }) => {
+const ControlPanel = ({ game, metadata, chat, character }) => {
     const [controlPanelState, setControlPanelState] = useState(initialControlPanelState)
     const [webSocket, wsSettings] = useWebSocket()
     // eslint-disable-next-line no-unused-vars
@@ -35,7 +35,7 @@ const ControlPanel = ({ game, metadata, chat }) => {
     }
 
     const pushRefreshToPlayers = () => {
-        pushGameRefresh(webSocket, wsSettings, game, chat)
+        pushGameRefresh(webSocket, wsSettings, game, chat, character.characters)
     }
 
     const submenuHidden = (controlPanelState.hidden || (!controlPanelState.toggleOnMaps && !controlPanelState.toggleOnTokens && !controlPanelState.toggleOnUser && !controlPanelState.toggleOnCharacterStats && !controlPanelState.toggleOnCharacterInventory && !controlPanelState.toggleOnCharacterSpells))
@@ -59,6 +59,7 @@ const mapStateToProps = (state) => {
         game: state.game,
         metadata: state.metadata,
         chat: state.chat,
+        character: state.character,
     }
 }
 

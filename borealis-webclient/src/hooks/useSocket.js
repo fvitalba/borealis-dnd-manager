@@ -108,7 +108,7 @@ export const pushFogEnabled = (webSocket, wsSettings, newFogEnabled) => {
     })
 }
 
-export const pushGameRefresh = (webSocket, wsSettings, game, chat, additionalAttributes) => {
+export const pushGameRefresh = (webSocket, wsSettings, game, chat, characters, additionalAttributes) => {
     sendData(webSocket, {
         type: 'pushGameRefresh',
         from: wsSettings.guid,
@@ -116,6 +116,7 @@ export const pushGameRefresh = (webSocket, wsSettings, game, chat, additionalAtt
         room: wsSettings.room,
         game: game,
         chat: chat,
+        characters: characters,
         ...additionalAttributes,
     })
 }

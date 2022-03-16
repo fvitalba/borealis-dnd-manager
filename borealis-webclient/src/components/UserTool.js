@@ -7,7 +7,7 @@ import { useLoading } from '../hooks/useLoading'
 import { saveRoomToDatabase, getRoomFromDatabase } from '../controllers/apiHandler'
 import UserToolView from '../views/UserToolView'
 
-const UserTool = ({ toggleOnUser, game, chat, metadata, settings, setFogEnabled, overwriteGame, incrementGen, setUsername, toggleMousesharing, setToolSettings, loadDefaultBattleGame }) => {
+const UserTool = ({ toggleOnUser, game, chat, character, metadata, settings, setFogEnabled, overwriteGame, incrementGen, setUsername, toggleMousesharing, setToolSettings, loadDefaultBattleGame }) => {
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()
     // eslint-disable-next-line no-unused-vars
     const [_isLoading, setIsLoading] = useLoading()
@@ -34,7 +34,7 @@ const UserTool = ({ toggleOnUser, game, chat, metadata, settings, setFogEnabled,
             return
         loadDefaultBattleGame()
         const defaultGame = defaultGameState
-        pushGameRefresh(webSocket, wsSettings, defaultGame, chat)
+        pushGameRefresh(webSocket, wsSettings, defaultGame, chat, character)
     }
 
     const toggleFog = () => {
@@ -68,7 +68,7 @@ const UserTool = ({ toggleOnUser, game, chat, metadata, settings, setFogEnabled,
                     gen: result.data.game.gen + 1,
                 }
                 overwriteGame(loadedGame)
-                pushGameRefresh(webSocket, wsSettings, loadedGame, chat)
+                pushGameRefresh(webSocket, wsSettings, loadedGame, chat, character)
                 setIsLoading(false)
             })
             .catch((error) => {
@@ -100,6 +100,7 @@ const mapStateToProps = (state) => {
         chat: state.chat,
         metadata: state.metadata,
         settings: state.settings,
+        character: state.character,
     }
 }
 

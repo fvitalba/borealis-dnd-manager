@@ -3,8 +3,9 @@ import { connect } from 'react-redux'
 import { setGameSettings } from '../reducers/metadataReducer'
 import { setUsername } from '../reducers/settingsReducer'
 import { overwriteGame } from '../reducers/gameReducer'
+import { setCharacters } from '../reducers/characterReducer'
 import { useLoading } from '../hooks/useLoading'
-import { getRoomFromDatabase } from '../controllers/apiHandler'
+import { getRoomFromDatabase, getCharactersFromDatabase } from '../controllers/apiHandler'
 import GameSetupView from '../views/GameSetupView'
 
 const initialGameSetupState = () => {
@@ -15,7 +16,7 @@ const initialGameSetupState = () => {
     }
 }
 
-const GameSetup = ({ setGameSettings, setUsername, overwriteGame }) => {
+const GameSetup = ({ setGameSettings, setUsername, overwriteGame, setCharacters }) => {
     const [gameSetupState, setGameSetupState] = useState(initialGameSetupState)
     const [roomLookupState, setRoomLookupState] = useState({
         roomFound: false,
@@ -69,12 +70,22 @@ const GameSetup = ({ setGameSettings, setUsername, overwriteGame }) => {
             }
             getRoomFromDatabase(tempWsSettings)
                 .then((result) => {
-                    const loadedGame = {
-                        ...result.data.game,
-                        gen: result.data.game.gen + 1,
+                    if (result.data) {
+                        const loadedGame = {
+                            ...result.data.game,
+                            gen: result.data.game.gen + 1,
+                        }
+                        overwriteGame(loadedGame)
                     }
-                    overwriteGame(loadedGame)
-                    setIsLoading(false)
+                    getCharactersFromDatabase(tempWsSettings)
+                        .then((result) => {
+                            setCharacters(result)
+                            setIsLoading(false)
+                        })
+                        .catch((error) => {
+                            setIsLoading(false)
+                            console.error(error)
+                        })
                 })
                 .catch((error) => {
                     setIsLoading(false)
@@ -185,6 +196,7 @@ const mapDispatchToProps = {
     setGameSettings,
     setUsername,
     overwriteGame,
+    setCharacters,
 }
 
 export default connect(undefined, mapDispatchToProps)(GameSetup)

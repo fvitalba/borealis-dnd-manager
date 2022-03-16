@@ -29,6 +29,7 @@ const characterSchema = new mongoose.Schema({
     currNoOfHitDice: Number,
     hitDiceType: Number,
     timestamp: Number,
+    userGuid: String,
 })
 
 export default mongoose.model('Character', characterSchema, 'room-character')

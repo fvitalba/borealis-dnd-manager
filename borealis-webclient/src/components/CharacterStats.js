@@ -1,35 +1,13 @@
-import { useEffect } from 'react'
+//import { useEffect } from 'react'
 import { connect } from 'react-redux'
 import CharacterStatsView from '../views/CharacterStatsView'
 
-const CharacterStats = ({ toggleOnCharacterStats, /* user, character */ }) => {
-    if (!toggleOnCharacterStats)
+const CharacterStats = ({ toggleOnCharacterStats, character }) => {
+    if (!toggleOnCharacterStats || (character.myCharacterGuid === ''))
         return null
 
-    useEffect(() => {
-
-    }, [])
-
-    const character = {
-        name: '',
-        strength: 16,
-        dexterity: 6,
-        constitution: 20,
-        intelligence: 3,
-        wisdom: 10,
-        charisma: 17,
-        proficiency: 2,
-        armorclass: 10,
-        passivePerception: 10,
-        maxHealth: 12,
-        currHealth: 12,
-        tempHealth: 0,
-        level: 1,
-        class: 'Paladin',
-        maxNoOfHitDice: 1,
-        currNoOfHitDice: 1,
-        hitDiceType: 12,
-    }
+    const selectedCharacter = character.characters.filter((stateCharacter) => stateCharacter.guid === character.myCharacterGuid)[0]
+    console.log(selectedCharacter)
 
     const modifierFromStat = (statValue) => {
         const modifier = Math.floor((statValue - 10) / 2)
@@ -44,12 +22,12 @@ const CharacterStats = ({ toggleOnCharacterStats, /* user, character */ }) => {
     }
 
     const modifiers = {
-        strength: modifierFromStat(character.strength),
-        dexterity: modifierFromStat(character.dexterity),
-        constitution: modifierFromStat(character.constitution),
-        intelligence: modifierFromStat(character.intelligence),
-        wisdom: modifierFromStat(character.wisdom),
-        charisma: modifierFromStat(character.charisma)
+        strength: modifierFromStat(selectedCharacter.strength),
+        dexterity: modifierFromStat(selectedCharacter.dexterity),
+        constitution: modifierFromStat(selectedCharacter.constitution),
+        intelligence: modifierFromStat(selectedCharacter.intelligence),
+        wisdom: modifierFromStat(selectedCharacter.wisdom),
+        charisma: modifierFromStat(selectedCharacter.charisma)
     }
 
     const setCharacterName = () => {
@@ -66,9 +44,9 @@ const CharacterStats = ({ toggleOnCharacterStats, /* user, character */ }) => {
 
     return (
         <CharacterStatsView
-            character={ character }
+            character={ selectedCharacter }
             modifiers={ modifiers }
-            characterName={ character.name }
+            characterName={ selectedCharacter.name }
             setCharacterName={ setCharacterName }
             setCharacterClass={ setCharacterClass }
             onStatChange={ onStatChange } />
@@ -77,7 +55,6 @@ const CharacterStats = ({ toggleOnCharacterStats, /* user, character */ }) => {
 
 const mapStateToProps = (state) => {
     return {
-        user: state.user,
         character: state.character,
     }
 }

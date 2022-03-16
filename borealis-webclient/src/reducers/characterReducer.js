@@ -28,6 +28,7 @@ const characterTemplate = {
     maxNoOfHitDice: 0,
     currNoOfHitDice: 0,
     hitDiceType: 0,
+    userGuid: '',
 }
 
 const characterReducer = (state = initialCharacterReducer(), action) => {

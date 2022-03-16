@@ -11,8 +11,8 @@ const getUrlSchema = (selectedApi) => {
     const protocol = /https/.test(window.location.protocol) ? 'https' : 'http'
 
     return DEBUG_MODE
-        ? `${protocol}://${host}:${SOCKET_SERVER_PORT}/api/${selectedApi}`
-        : `${protocol}://${host}/api/${selectedApi}`
+        ? `${protocol}://${host}:${SOCKET_SERVER_PORT}/api/${selectedApi}/`
+        : `${protocol}://${host}/api/${selectedApi}/`
 }
 
 const usersUrl = (roomName) => {

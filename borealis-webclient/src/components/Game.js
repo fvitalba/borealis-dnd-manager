@@ -3,11 +3,12 @@ import { connect } from 'react-redux'
 import { setGameSettings } from '../reducers/metadataReducer'
 import { overwriteGame, updateMaps, loadMap, addMap, setFogEnabled, updateTokens, toggleTokenValue } from '../reducers/gameReducer'
 import { addChatMessage, overwriteChat } from '../reducers/chatReducer'
+import { setCharacters } from '../reducers/characterReducer'
 import { pushDrawPath, pushFogPath, pushGameRefresh, pushTokens, useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
 import GameView from '../views/GameView'
 
-const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, setFogEnabled, addChatMessage, overwriteChat }) => {
+const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, setFogEnabled, addChatMessage, overwriteChat, setCharacters }) => {
     const overlayRef = React.useRef()
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()
     // eslint-disable-next-line no-unused-vars
@@ -480,11 +481,12 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
         case 'pushGameRefresh': // refresh from host
             overwriteGame(data.game)
             overwriteChat(data.chat)
+            setCharacters(data.characters)
             setIsLoading(false)
             break
         case 'requestRefresh': // refresh request from player
             if (metadata.isHost) {
-                pushGameRefresh(webSocket, wsSettings, game, chat, { to: data.from, })
+                pushGameRefresh(webSocket, wsSettings, game, chat, character.characters, { to: data.from, })
             }
             break
         case 'loadGame':
@@ -573,6 +575,7 @@ const mapStateToProps = (state) => {
         game: state.game,
         settings: state.settings,
         chat: state.chat,
+        character: state.character,
     }
 }
 
@@ -587,6 +590,7 @@ const mapDispatchToProps = {
     toggleTokenValue,
     addChatMessage,
     overwriteChat,
+    setCharacters,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game)

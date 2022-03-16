@@ -39,6 +39,7 @@ const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, tog
                     <ToggleButton title='User' propertyName='User' value={ <UserCircleSolidIcon /> } controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
                     <ToggleButton title='Maps' propertyName='Maps' value={ <MapSolidIcon />} controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
                     <ToggleButton title='Tokens' propertyName='Tokens' value={ <GhostSolidIcon /> } controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
+                    <ToggleButton title='Character Stats' propertyName='CharacterStats' value={ <ChartBarAltSquareSolidIcon /> } controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
                     <Button title='Push refresh to players' value={ <RefreshOutlineIcon /> } onClick={ pushRefreshToPlayers } />
                     <ToolSelectView isHost={ isHost } fogEnabled={ fogEnabled } />
                     <ToolControls />
@@ -49,6 +50,7 @@ const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, tog
                             <MapTool toggleOnMaps={ controlPanelState.toggleOnMaps } />
                             <TokenTool toggleOnTokens={ controlPanelState.toggleOnTokens } />
                             <UserTool toggleOnUser={ controlPanelState.toggleOnUser } />
+                            <CharacterStats toggleOnCharacterStats={ controlPanelState.toggleOnCharacterStats } />
                         </div>
                         : null
                 }
