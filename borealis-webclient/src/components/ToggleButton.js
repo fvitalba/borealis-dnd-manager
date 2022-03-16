@@ -1,13 +1,16 @@
 import Button from '../views/Button'
 
-const ToggleButton = ({ controlPanelState, setControlPanelState, title, value }) => {
-    const toggleKey = `toggleOn${title}`
+const ToggleButton = ({ propertyName, controlPanelState, setControlPanelState, title, value }) => {
+    const toggleKey = propertyName ? `toggleOn${propertyName}`: `toggleOn${title}`
     const onClick = () => {
         setControlPanelState({
             ...controlPanelState,
             toggleOnUser: false,
             toggleOnMaps: false,
             toggleOnTokens: false,
+            toggleOnCharacterStats: false,
+            toggleOnCharacterInventory: false,
+            toggleOnCharacterSpells: false,
             [toggleKey]: !controlPanelState[toggleKey],
         })
     }

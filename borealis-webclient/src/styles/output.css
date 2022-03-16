@@ -414,6 +414,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .invisible {
   visibility: hidden;
 }
+.flex {
+  display: flex;
+}
 .table {
   display: table;
 }
@@ -422,6 +425,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .\!hidden {
   display: none !important;
+}
+.w-12 {
+  width: 3rem;
 }
 .w-48 {
   width: 12rem;
@@ -440,6 +446,12 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .resize {
   resize: both;
+}
+.flex-row {
+  flex-direction: row;
+}
+.flex-nowrap {
+  flex-wrap: nowrap;
 }
 .bg-violet-600 {
   --tw-bg-opacity: 1;
@@ -1425,4 +1437,220 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-style: solid;
   --tw-border-opacity: 1;
   border-color: rgb(249 115 22 / var(--tw-border-opacity));
+}
+
+.character-stats-view-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.character-stats-view-container > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1rem * var(--tw-space-y-reverse));
+}
+
+.character-stats-view-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.character-stats-view-row > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.character-stats-view-row {
+  align-content: center;
+  justify-content: center;
+}
+
+.character-stats-view-row-subgroup {
+  display: flex;
+  flex-direction: row;
+}
+
+.character-stats-view-row-subgroup > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.character-stats-view-row-subgroup {
+  align-content: center;
+  justify-content: center;
+}
+
+.character-stat-input-container {
+  display: flex;
+  flex-direction: column;
+  border-width: 4px;
+  --tw-border-opacity: 1;
+  border-color: rgb(124 45 18 / var(--tw-border-opacity));
+  border-radius: 0.375rem;
+  justify-items: center;
+}
+
+.character-stats-label {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  vertical-align: middle;
+  text-align: center;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  margin: 0.25rem;
+}
+
+.character-stats-input {
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity));
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  justify-content: center;
+  --tw-bg-opacity: 1;
+  background-color: rgb(107 114 128 / var(--tw-bg-opacity));
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+.character-stats-input::placeholder {
+  --tw-placeholder-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-placeholder-opacity));
+}
+
+.character-stats-input {
+  margin: 0.25rem;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  -webkit-appearance: none;
+          appearance: none;
+  height: 2rem;
+}
+
+.character-main-stats-input {
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity));
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  justify-content: center;
+  --tw-bg-opacity: 1;
+  background-color: rgb(107 114 128 / var(--tw-bg-opacity));
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+.character-main-stats-input::placeholder {
+  --tw-placeholder-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-placeholder-opacity));
+}
+
+.character-main-stats-input {
+  margin: 0.25rem;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  -webkit-appearance: none;
+          appearance: none;
+  width: 4rem;
+  height: 4rem;
+  font-size: 3rem;
+  line-height: 1;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.character-stats-modifier-label {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 800;
+  vertical-align: middle;
+  text-align: center;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  margin: 0.25rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(55 65 81 / var(--tw-text-opacity));
+  border-width: 4px;
+  --tw-border-opacity: 1;
+  border-color: rgb(154 52 18 / var(--tw-border-opacity));
+  border-radius: 0.375rem;
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  margin-top: -0.75rem;
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+}
+
+.character-stats-view-select {
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity));
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  justify-content: center;
+  --tw-bg-opacity: 1;
+  background-color: rgb(107 114 128 / var(--tw-bg-opacity));
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+.character-stats-view-select::placeholder {
+  --tw-placeholder-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-placeholder-opacity));
+}
+
+.character-stats-view-select {
+  margin: 0.25rem;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  -webkit-appearance: none;
+          appearance: none;
+  height: 2rem;
+}
+
+.select-character-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.select-character-input-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.select-character-label {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.select-character-select {
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity));
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  justify-content: center;
+  --tw-bg-opacity: 1;
+  background-color: rgb(107 114 128 / var(--tw-bg-opacity));
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+
+.select-character-select::placeholder {
+  --tw-placeholder-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-placeholder-opacity));
+}
+
+.select-character-select {
+  margin: 0.25rem;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  -webkit-appearance: none;
+          appearance: none;
+  height: 2rem;
 }

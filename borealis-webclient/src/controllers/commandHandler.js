@@ -6,7 +6,7 @@ const commandNotValidMessage = {
     publicMessage: COMMAND_NOT_VALID_ERR,
 }
 
-export const convertChatMessage = (playerName, inputChatMessage) => {
+export const convertChatMessage = (playerName, inputChatMessage, character) => {
     const splitMessage = inputChatMessage.split(' ')
     let returnMessage
 
@@ -16,13 +16,13 @@ export const convertChatMessage = (playerName, inputChatMessage) => {
         if (splitMessage.length < 2)
             return commandNotValidMessage
 
-        return rollDiceCommand(playerName, splitMessage[1].toUpperCase())
+        return rollDiceCommand(playerName, splitMessage[1].toUpperCase(), character)
     case '/HR':
     case'/HIDDENROLL':
         if (splitMessage.length < 2)
             return commandNotValidMessage
 
-        return rollHiddenDiceCommand(playerName, splitMessage[1].toUpperCase())
+        return rollHiddenDiceCommand(playerName, splitMessage[1].toUpperCase(), character)
     case '/W':
     case '/WHISPER':
         if (splitMessage.length < 3)

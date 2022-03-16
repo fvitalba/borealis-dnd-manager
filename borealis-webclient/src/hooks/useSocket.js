@@ -108,7 +108,7 @@ export const pushFogEnabled = (webSocket, wsSettings, newFogEnabled) => {
     })
 }
 
-export const pushGameRefresh = (webSocket, wsSettings, game, chat, additionalAttributes) => {
+export const pushGameRefresh = (webSocket, wsSettings, game, chat, characters, additionalAttributes) => {
     sendData(webSocket, {
         type: 'pushGameRefresh',
         from: wsSettings.guid,
@@ -116,6 +116,7 @@ export const pushGameRefresh = (webSocket, wsSettings, game, chat, additionalAtt
         room: wsSettings.room,
         game: game,
         chat: chat,
+        characters: characters,
         ...additionalAttributes,
     })
 }
@@ -171,5 +172,30 @@ export const sendChatMessage = (webSocket, wsSettings, username, playerInfo, pub
         privateMessageText: privateMessageText,
         typeOfMessage: typeOfMessage,
         timestamp: timestamp,
+    })
+}
+
+export const pushAssignCharacter = (webSocket, wsSettings, username, characterGuid) => {
+    sendData(webSocket, {
+        type: 'pushAssignCharacter',
+        from: wsSettings.guid,
+        username: username,
+        characterGuid: characterGuid,
+    })
+}
+
+export const pushUpdateCharacter = (webSocket, wsSettings, updatedCharacter) => {
+    sendData(webSocket, {
+        type: 'pushUpdateCharacter',
+        from: wsSettings.guid,
+        updateCharacter: updatedCharacter,
+    })
+}
+
+export const ping = (webSocket, wsSettings, username) => {
+    sendData(webSocket, {
+        type: 'ping',
+        from: wsSettings.guid,
+        username: username,
     })
 }

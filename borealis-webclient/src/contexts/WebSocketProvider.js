@@ -8,7 +8,7 @@ const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
 const SOCKET_RECONNECTION_TIMEOUT = 2500
 const SOCKET_SERVER_PORT = process.env.PORT || process.env.REACT_APP_PORT || 8000
 
-const generateWebSocketUrl = (room, guid, username) => {
+const generateWebSocketUrl = (room, guid, username, isHost) => {
     const host = window.location.host.replace(/:\d+$/, '')
     const protocol = /https/.test(window.location.protocol) ? 'wss' : 'ws'
 
@@ -16,12 +16,15 @@ const generateWebSocketUrl = (room, guid, username) => {
         ? `${protocol}://${host}:${SOCKET_SERVER_PORT}/${room}?guid=${guid}`
         : `${protocol}://${host}/${room}?guid=${guid}`
 
-    return username ? webSocketUrl + `&username=${username}` : webSocketUrl
+    const userParam = username ? `&username=${username}` : ''
+    const hostParam = (isHost !== undefined) ? `&isHost=${isHost}` : ''
+
+    return webSocketUrl + userParam + hostParam
 }
 
-const createWebSocket = (room, guid, username) => {
+const createWebSocket = (room, guid, username, isHost) => {
     if (room) {
-        const webSocketUrl = generateWebSocketUrl(room, guid, username)
+        const webSocketUrl = generateWebSocketUrl(room, guid, username, isHost)
         return new WebSocket(webSocketUrl)
     } else {
         return undefined
@@ -35,7 +38,7 @@ const saveIdToLocalStorage = (roomName, localGuid) => {
 }
 
 const readIdFromLocalStorage = (roomName) => {
-    const localGuid = DEBUG_MODE ? guid() : localStorage.getItem(`borealis-${roomName}`)
+    const localGuid = localStorage.getItem(`borealis-${roomName}`)
     return localGuid ? localGuid : guid()
 }
 
@@ -44,8 +47,9 @@ const WebSocketProvider = ({ children, metadata }) => {
         guid: readIdFromLocalStorage(metadata.room),
         username: '',
         room: metadata.room,
+        isHost: metadata.isHost,
     })
-    const [ws, setWs] = useState(createWebSocket(metadata.room, wsSettings.guid, wsSettings.username))
+    const [ws, setWs] = useState(createWebSocket(metadata.room, wsSettings.guid, wsSettings.username, wsSettings.isHost))
     // eslint-disable-next-line no-unused-vars
     const [_isLoading, setIsLoading] = useLoading()
 
@@ -59,15 +63,15 @@ const WebSocketProvider = ({ children, metadata }) => {
     }, [ metadata.room ])
 
     useEffect(() => {
-        setWs(createWebSocket(metadata.room, wsSettings.guid, wsSettings.username))
-    }, [ metadata.room, wsSettings.guid, wsSettings.username ])
+        setWs(createWebSocket(metadata.room, wsSettings.guid, wsSettings.username, wsSettings.isHost))
+    }, [ metadata.room, wsSettings.guid, wsSettings.username, wsSettings.isHost ])
 
     useEffect(() => {
         const onClose = () => {
             setIsLoading(true)
             setTimeout(() => {
                 console.debug('Socket Timeout, recreating WebSocket')
-                setWs(createWebSocket(metadata.room, wsSettings.guid, wsSettings.username))
+                setWs(createWebSocket(metadata.room, wsSettings.guid, wsSettings.username, wsSettings.isHost))
             }, SOCKET_RECONNECTION_TIMEOUT)
         }
 
@@ -77,10 +81,11 @@ const WebSocketProvider = ({ children, metadata }) => {
                 setIsLoading(true)
                 requestRefresh(ws, wsSettings)
             }
-            if (metadata.room && !wsSettings.room)
+            if ((metadata.room && !wsSettings.room) || ((metadata.isHost !== undefined) && (wsSettings.isHost === undefined)))
                 setWsSettings({
                     ...wsSettings,
                     room: metadata.room,
+                    isHost: metadata.isHost,
                 })
             setIsLoading(false)
         }

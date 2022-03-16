@@ -1,15 +1,15 @@
 import React, { useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
-import { setGameSettings } from '../reducers/metadataReducer'
 import { overwriteGame, updateMaps, loadMap, addMap, setFogEnabled, updateTokens, toggleTokenValue } from '../reducers/gameReducer'
 import { addChatMessage, overwriteChat } from '../reducers/chatReducer'
-import { pushDrawPath, pushFogPath, pushGameRefresh, pushTokens, useWebSocket } from '../hooks/useSocket'
+import { assignCharacter, assignCharacterToUser, setCharacters, updateCharacter } from '../reducers/characterReducer'
+import { pushDrawPath, pushFogPath, pushGameRefresh, pushTokens, requestRefresh, useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
 import GameView from '../views/GameView'
 
-const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, setFogEnabled, addChatMessage, overwriteChat }) => {
+const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, setFogEnabled, addChatMessage, overwriteChat, setCharacters, assignCharacter, assignCharacterToUser, updateCharacter }) => {
     const overlayRef = React.useRef()
-    const [webSocket, wsSettings, setWsSettings] = useWebSocket()
+    const [webSocket, wsSettings] = useWebSocket()
     // eslint-disable-next-line no-unused-vars
     const [_isLoading, setIsLoading] = useLoading()
     let currentPath = []
@@ -406,6 +406,7 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
         let pathToUpdate = []
         let updatedMaps = []
         let updatedTokens = []
+        let assignedCharacter = ''
         switch (data.type) {
         case 'pushCursor':
             /*
@@ -477,14 +478,25 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
         case 'pushFogEnabled':
             setFogEnabled(data.fogEnabled)
             break
+        case 'pushAssignCharacterToUser':
+            assignCharacterToUser(data.username, data.characterGuid)
+            break
+        case 'pushUpdateCharacter':
+            updateCharacter(data.updatedCharacter)
+            break
         case 'pushGameRefresh': // refresh from host
             overwriteGame(data.game)
             overwriteChat(data.chat)
+            setCharacters(data.characters)
+            assignedCharacter = data.characters.filter((character) => character.username === settings.username)[0]
+            if (assignedCharacter && (!assignedCharacter !== '')) {
+                assignCharacter(assignedCharacter.guid)
+            }
             setIsLoading(false)
             break
         case 'requestRefresh': // refresh request from player
             if (metadata.isHost) {
-                pushGameRefresh(webSocket, wsSettings, game, chat, { to: data.from, })
+                pushGameRefresh(webSocket, wsSettings, game, chat, character.characters, { to: data.from, })
             }
             break
         case 'loadGame':
@@ -508,6 +520,9 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
         //window.addEventListener('keypress', onKeyPress)
         window.addEventListener('keydown', onKeyDown)
 
+        if (!metadata.isHost)
+            requestRefresh(webSocket, wsSettings)
+
         // On Unmount
         return () => {
             window.removeEventListener('resize', onResize)
@@ -519,15 +534,13 @@ const Game = ({ metadata, game, settings, chat, overwriteGame, loadMap, updateMa
     useEffect(() => {
         if (webSocket) {
             webSocket.addEventListener('message', receiveData)
-            if (wsSettings.username === '')
-                setWsSettings({ ...wsSettings, username: settings.username })
         }
 
         return () => {
             if (webSocket)
                 webSocket.removeEventListener('message', receiveData)
         }
-    }, [ webSocket, wsSettings, setWsSettings, receiveData, settings.username ])
+    }, [ webSocket, wsSettings, receiveData, settings.username ])
 
     /*
     useEffect(() => {
@@ -573,11 +586,11 @@ const mapStateToProps = (state) => {
         game: state.game,
         settings: state.settings,
         chat: state.chat,
+        character: state.character,
     }
 }
 
 const mapDispatchToProps = {
-    setGameSettings,
     overwriteGame,
     loadMap,
     updateMaps,
@@ -587,6 +600,10 @@ const mapDispatchToProps = {
     toggleTokenValue,
     addChatMessage,
     overwriteChat,
+    setCharacters,
+    assignCharacter,
+    assignCharacterToUser,
+    updateCharacter,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game)

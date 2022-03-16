@@ -8,6 +8,7 @@ import {
 const initialMetadataState = {
     isHost: undefined,
     room: undefined,
+    userGuid: '',
     cursors: [],
     lastX: undefined,
     lastY: undefined,
@@ -22,6 +23,7 @@ const metadataReducer = (state = initialMetadataState, action) => {
             ...state,
             isHost: action.isHost,
             room: action.room,
+            userGuid: action.guid,
         }
     case SET_CURSORS:
         return {
@@ -46,11 +48,12 @@ const metadataReducer = (state = initialMetadataState, action) => {
 }
 
 //#region Action Creators
-export const setGameSettings = (newIsHost, newRoom) => {
+export const setGameSettings = (newIsHost, newRoom, newGuid) => {
     return {
         type: SET_GAMESETTINGS,
         isHost: newIsHost,
         room: newRoom,
+        guid: newGuid,
     }
 }
 

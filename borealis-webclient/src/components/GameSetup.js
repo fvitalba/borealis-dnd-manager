@@ -3,9 +3,11 @@ import { connect } from 'react-redux'
 import { setGameSettings } from '../reducers/metadataReducer'
 import { setUsername } from '../reducers/settingsReducer'
 import { overwriteGame } from '../reducers/gameReducer'
+import { setCharacters } from '../reducers/characterReducer'
 import { useLoading } from '../hooks/useLoading'
-import { loadRoomFromDatabase } from '../controllers/apiHandler'
+import { getRoomFromDatabase, getCharactersFromDatabase } from '../controllers/apiHandler'
 import GameSetupView from '../views/GameSetupView'
+import { useWebSocket } from '../hooks/useSocket'
 
 const initialGameSetupState = () => {
     return {
@@ -15,12 +17,14 @@ const initialGameSetupState = () => {
     }
 }
 
-const GameSetup = ({ setGameSettings, setUsername, overwriteGame }) => {
+const GameSetup = ({ setGameSettings, setUsername, overwriteGame, setCharacters }) => {
     const [gameSetupState, setGameSetupState] = useState(initialGameSetupState)
     const [roomLookupState, setRoomLookupState] = useState({
         roomFound: false,
         searchingRoom: false,
     })
+    // eslint-disable-next-line no-unused-vars
+    const [_webSocket, wsSettings, setWsSettings] = useWebSocket()
     // eslint-disable-next-line no-unused-vars
     const [_isLoading, setIsLoading] = useLoading()
 
@@ -59,6 +63,10 @@ const GameSetup = ({ setGameSettings, setUsername, overwriteGame }) => {
     const onSubmitSetup = () => {
         setGameSettings(gameSetupState.isHost, gameSetupState.roomName)
         setUsername(gameSetupState.userName)
+        setWsSettings({
+            ...wsSettings,
+            username: gameSetupState.userName,
+        })
         saveSettingsToLocalStorage()
         if (gameSetupState.isHost) {
             setIsLoading(true)
@@ -67,14 +75,24 @@ const GameSetup = ({ setGameSettings, setUsername, overwriteGame }) => {
                 username: gameSetupState.userName,
                 room: gameSetupState.roomName,
             }
-            loadRoomFromDatabase(tempWsSettings)
+            getRoomFromDatabase(tempWsSettings)
                 .then((result) => {
-                    const loadedGame = {
-                        ...result.data.game,
-                        gen: result.data.game.gen + 1,
+                    if (result.data) {
+                        const loadedGame = {
+                            ...result.data.game,
+                            gen: result.data.game.gen + 1,
+                        }
+                        overwriteGame(loadedGame)
                     }
-                    overwriteGame(loadedGame)
-                    setIsLoading(false)
+                    getCharactersFromDatabase(tempWsSettings)
+                        .then((result) => {
+                            setCharacters(result)
+                            setIsLoading(false)
+                        })
+                        .catch((error) => {
+                            setIsLoading(false)
+                            console.error(error)
+                        })
                 })
                 .catch((error) => {
                     setIsLoading(false)
@@ -126,7 +144,7 @@ const GameSetup = ({ setGameSettings, setUsername, overwriteGame }) => {
                     roomFound: false,
                     searchingRoom: true,
                 })
-            loadRoomFromDatabase(tempWsSettings)
+            getRoomFromDatabase(tempWsSettings)
                 .then((result) => {
                     if (result.data) {
                         setRoomLookupState({
@@ -185,6 +203,7 @@ const mapDispatchToProps = {
     setGameSettings,
     setUsername,
     overwriteGame,
+    setCharacters,
 }
 
 export default connect(undefined, mapDispatchToProps)(GameSetup)

@@ -4,15 +4,14 @@ import { sendChatMessage, useWebSocket } from '../hooks/useSocket'
 import { convertChatMessage } from '../controllers/commandHandler'
 import { getUsersFromDatabase } from '../controllers/apiHandler'
 import { addChatMessage } from '../reducers/chatReducer'
+import { setUsersFromAPI } from '../reducers/userReducer'
 import ChatPanelView from '../views/ChatPanelView'
 
 const initialChatPanelState = () => {
     return {
         hidden: false,
         showHelp: false,
-        currentMessage: '',
-        noOfCurrentUsers: 0,
-        users: [],
+        currentMessage: ''
     }
 }
 
@@ -35,10 +34,13 @@ const chatCommands = [{
     example: '/whisper PC be careful with that!',
 }]
 
-const ChatPanel = ({ chat, settings, addChatMessage }) => {
-    const [chatPanelState, setChatPanelState] = useState(initialChatPanelState)
+const ChatPanel = ({ chat, settings, user, character, metadata, addChatMessage, setUsersFromAPI }) => {
+    const [chatPanelState, setChatPanelState] = useState(initialChatPanelState())
     const [showUserHover, setShowUserHover] = useState(false)
     const [webSocket, wsSettings] = useWebSocket()
+    const currentCharacter = character.myCharacterGuid
+        ? character.characters.filter((currCharacter) => currCharacter.guid === character.myCharacterGuid)[0]
+        : ''
 
     const toggleHidden = () => {
         setChatPanelState({
@@ -71,9 +73,17 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
         }
     }
 
+    const getPlayerInfo = () => {
+        if (metadata.isHost)
+            return 'Dungeon Master'
+        else {
+            return currentCharacter ? `lvl. ${currentCharacter.level} ${currentCharacter.class}` : ''
+        }
+    }
+
     const addMessage = () => {
-        const playerInfo = {}
-        const convertedMessage = convertChatMessage(settings.username, chatPanelState.currentMessage)
+        const playerInfo = getPlayerInfo()
+        const convertedMessage = convertChatMessage(settings.username, chatPanelState.currentMessage, currentCharacter)
         if ((convertedMessage.publicMessage.length > 0) || (convertedMessage.privateMessage.length > 0)) {
             const timestamp = Date.now()
             addChatMessage(settings.username, playerInfo, convertedMessage.publicMessage, convertedMessage.privateMessage, convertedMessage.targetPlayerName,
@@ -91,13 +101,7 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
         if (wsSettings.room) {
             getUsersFromDatabase(wsSettings)
                 .then((users) => {
-                    if (users.length !== chatPanelState.noOfCurrentUsers) {
-                        setChatPanelState({
-                            ...chatPanelState,
-                            noOfCurrentUsers: users.length,
-                            users: users,
-                        })
-                    }
+                    setUsersFromAPI(users)
                 })
                 .catch((error) => {
                     console.error(error)
@@ -122,8 +126,8 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
             chatCommands={ chatCommands }
             showUserHover={ showUserHover }
             toggleUserHover={ toggleUserHover }
-            noOfCurrentUsers={ chatPanelState.noOfCurrentUsers }
-            users={ chatPanelState.users }
+            noOfCurrentUsers={ user.users.length }
+            users={ user.users }
             currentMessage={ chatPanelState.currentMessage }
             changeCurrentMessage={ changeCurrentMessage }
             addMessage={ addMessage }
@@ -136,11 +140,15 @@ const mapStateToProps = (state) => {
     return {
         settings: state.settings,
         chat: state.chat,
+        user: state.user,
+        metadata: state.metadata,
+        character: state.character,
     }
 }
 
 const mapDispatchToProps = {
     addChatMessage,
+    setUsersFromAPI,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatPanel)

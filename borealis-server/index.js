@@ -9,9 +9,11 @@ import bodyParser from 'body-parser'
 import queryString from 'query-string'
 import Room from './models/room.js'
 import User from './models/user.js'
+import Character from './models/character.js'
 import Message from './models/chatMessage.js'
 import { handleIncomingMessage } from './controllers/messageHandler.js'
 import { saveUpdateRoomUser } from './controllers/userHandler.js'
+import { saveUpdateRoomCharacter } from './controllers/characterHandler.js'
 import { deleteOfflineUsers } from './middleware/userMiddleware.js'
 
 const app = express()
@@ -44,16 +46,46 @@ app.get('/api/rooms/:roomName?', (request, result) => {
     }
 })
 
-app.get('/api/room-users/:roomName?', (request, result) => {
-    const roomName = request.params.roomName
+app.get('/api/room-users/:roomName?:userGuid?', (request, result) => {
+    const roomName = request.params.roomName ? request.params.roomName : request.query.roomName
+    const userGuid = request.params.userGuid ? request.params.userGuid : request.query.userGuid
+
+
     if (roomName) {
-        User.find({ 'roomName': roomName })
+        const queryParameters = userGuid ? { 'roomName': roomName, 'guid': userGuid, } : { 'roomName': roomName, }
+        User.find({ ...queryParameters, 'active': true, })
             .then((users) => {
                 result.json(users)
             })
     } else {
         result.json([])
     }
+})
+
+app.get('/api/room-characters/:roomName?:characterGuid?', (request, result) => {
+    const roomName = request.params.roomName ? request.params.roomName : request.query.roomName
+    const characterGuid = request.params.characterGuid ? request.params.characterGuid : request.query.characterGuid
+
+    if (roomName) {
+        const queryParameters = characterGuid ? { 'roomName': roomName, 'guid': characterGuid, } : { 'roomName': roomName, }
+        Character.find(queryParameters)
+            .then((characters) => {
+                result.json(characters)
+            })
+    } else {
+        result.json([])
+    }
+})
+
+app.post('/api/room-characters', (request, response) => {
+    const body = request.body
+    if (body.payload === undefined)
+        return response.status(400).json({ error: 'Request Payload is missing.' })
+    if (body.room === undefined)
+        return response.status(400).json({ error: 'Room was not specified.' })
+
+    saveUpdateRoomCharacter(body.room, JSON.parse(body.payload))
+        .then((result) => response.json(result))
 })
 
 app.get('/api/room-chat/:roomName?', (request, result) => {
@@ -72,7 +104,9 @@ app.get('/api/room-chat/:roomName?', (request, result) => {
 app.post('/api/rooms', (request, response) => {
     const body = request.body
     if (body.payload === undefined)
-        return response.status(400).json({ error: 'content missing' })
+        return response.status(400).json({ error: 'Request Payload is missing.' })
+    if (body.room === undefined)
+        return response.status(400).json({ error: 'Room was not specified.' })
 
     const room = new Room({
         ...body.payload,
@@ -117,8 +151,10 @@ wss.on('connection', (websocketConnection, connectionRequest) => {
     websocketConnection.room = path.substring(1)
     websocketConnection.guid = connectionParams.guid
     websocketConnection.username = connectionParams.username
-    saveUpdateRoomUser(websocketConnection.room, websocketConnection.guid, websocketConnection.username)
+    websocketConnection.isHost = connectionParams.isHost
+    saveUpdateRoomUser(websocketConnection.room, websocketConnection.guid, websocketConnection.username, websocketConnection.isHost)
     websocketConnection.on('message', (message) => {
+        saveUpdateRoomUser(websocketConnection.room, websocketConnection.guid, websocketConnection.username, websocketConnection.isHost)
         handleIncomingMessage(websocketConnection, message)
             .then(({ outgoingMessage, sendBackToSender }) => {
                 if (outgoingMessage) {
