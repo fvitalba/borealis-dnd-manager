@@ -30,7 +30,7 @@ const characterTemplate = {
     hitDiceType: 0,
 }
 
-const characterReducer = (state = initialCharacterReducer, action) => {
+const characterReducer = (state = initialCharacterReducer(), action) => {
     let newCharacters = []
     switch (action.type) {
     case ADD_CHARACTER:

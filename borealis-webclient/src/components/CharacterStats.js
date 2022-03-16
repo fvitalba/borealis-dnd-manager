@@ -1,6 +1,7 @@
+import { connect } from 'react-redux'
 import CharacterStatsView from '../views/CharacterStatsView'
 
-const CharacterStats = ({ toggleOnCharacterStats }) => {
+const CharacterStats = ({ toggleOnCharacterStats, /* user, character */ }) => {
     if (!toggleOnCharacterStats)
         return null
 
@@ -69,4 +70,15 @@ const CharacterStats = ({ toggleOnCharacterStats }) => {
     )
 }
 
-export default CharacterStats
+const mapStateToProps = (state) => {
+    return {
+        user: state.user,
+        character: state.character,
+    }
+}
+
+const mapDispatchToProps = {
+
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CharacterStats)

@@ -4,15 +4,14 @@ import { sendChatMessage, useWebSocket } from '../hooks/useSocket'
 import { convertChatMessage } from '../controllers/commandHandler'
 import { getUsersFromDatabase } from '../controllers/apiHandler'
 import { addChatMessage } from '../reducers/chatReducer'
+import { setUsersFromAPI } from '../reducers/userReducer'
 import ChatPanelView from '../views/ChatPanelView'
 
 const initialChatPanelState = () => {
     return {
         hidden: false,
         showHelp: false,
-        currentMessage: '',
-        noOfCurrentUsers: 0,
-        users: [],
+        currentMessage: ''
     }
 }
 
@@ -35,8 +34,8 @@ const chatCommands = [{
     example: '/whisper PC be careful with that!',
 }]
 
-const ChatPanel = ({ chat, settings, addChatMessage }) => {
-    const [chatPanelState, setChatPanelState] = useState(initialChatPanelState)
+const ChatPanel = ({ chat, settings, user, addChatMessage, setUsersFromAPI }) => {
+    const [chatPanelState, setChatPanelState] = useState(initialChatPanelState())
     const [showUserHover, setShowUserHover] = useState(false)
     const [webSocket, wsSettings] = useWebSocket()
 
@@ -91,13 +90,7 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
         if (wsSettings.room) {
             getUsersFromDatabase(wsSettings)
                 .then((users) => {
-                    if (users.length !== chatPanelState.noOfCurrentUsers) {
-                        setChatPanelState({
-                            ...chatPanelState,
-                            noOfCurrentUsers: users.length,
-                            users: users,
-                        })
-                    }
+                    setUsersFromAPI(users)
                 })
                 .catch((error) => {
                     console.error(error)
@@ -122,8 +115,8 @@ const ChatPanel = ({ chat, settings, addChatMessage }) => {
             chatCommands={ chatCommands }
             showUserHover={ showUserHover }
             toggleUserHover={ toggleUserHover }
-            noOfCurrentUsers={ chatPanelState.noOfCurrentUsers }
-            users={ chatPanelState.users }
+            noOfCurrentUsers={ user.users.length }
+            users={ user.users }
             currentMessage={ chatPanelState.currentMessage }
             changeCurrentMessage={ changeCurrentMessage }
             addMessage={ addMessage }
@@ -136,11 +129,13 @@ const mapStateToProps = (state) => {
     return {
         settings: state.settings,
         chat: state.chat,
+        user: state.user,
     }
 }
 
 const mapDispatchToProps = {
     addChatMessage,
+    setUsersFromAPI,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatPanel)

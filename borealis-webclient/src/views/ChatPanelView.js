@@ -110,7 +110,7 @@ const ChatPanelView = ({ username, chatPanelHidden, toggleHidden, showHelp, togg
                     { (showUserHover && (users.length > 0))
                         ? <div className='chat-panel-users'>
                             { users.map((user) =>
-                                <div className='chat-panel-user' key={ user.guid }>{ user.userName }</div>
+                                <div className='chat-panel-user' key={ user.guid }>{ user.username } ({ user.isHost ? 'DM' : 'Player' })</div>
                             )}
                         </div>
                         : null

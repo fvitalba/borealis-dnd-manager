@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
     userName: String,
     roomName: String,
     lastOnline: Number,
+    isHost: Boolean,
 })
 
 export default mongoose.model('User', userSchema, 'room-user')

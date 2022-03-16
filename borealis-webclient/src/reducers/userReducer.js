@@ -14,7 +14,7 @@ const userTemplate = {
     lastOnline: 0,
 }
 
-const userReducer = (state = initialUserReducer, action) => {
+const userReducer = (state = initialUserReducer(), action) => {
     //TODO: Add isHost to implementation of user in Database
     let newUsers = []
     switch (action.type) {

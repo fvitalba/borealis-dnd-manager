@@ -117,7 +117,8 @@ wss.on('connection', (websocketConnection, connectionRequest) => {
     websocketConnection.room = path.substring(1)
     websocketConnection.guid = connectionParams.guid
     websocketConnection.username = connectionParams.username
-    saveUpdateRoomUser(websocketConnection.room, websocketConnection.guid, websocketConnection.username)
+    websocketConnection.isHost = connectionParams.isHost
+    saveUpdateRoomUser(websocketConnection.room, websocketConnection.guid, websocketConnection.username, websocketConnection.isHost)
     websocketConnection.on('message', (message) => {
         handleIncomingMessage(websocketConnection, message)
             .then(({ outgoingMessage, sendBackToSender }) => {

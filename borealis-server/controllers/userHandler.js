@@ -1,14 +1,16 @@
 import User from '../models/user.js'
 
-export const saveUpdateRoomUser = async (room, guid, username) => {
+export const saveUpdateRoomUser = async (room, guid, username, isHost) => {
     if (!room || !guid || !username)
         return undefined
 
     return User.findOneAndUpdate(
         { roomName: room, guid: guid, }, 
-        { userName: username, lastOnline: new Date(), }, 
+        { userName: username, lastOnline: new Date(), isHost: isHost, }, 
         { new: true, upsert: true, }
-    ).then((newUser) => newUser)
+    ).then((newUser) => {
+        return newUser
+    })
 }
 
 export const deleteUsersAfterTimeout = () => {
