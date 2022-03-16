@@ -19,7 +19,7 @@ const chatCommands = [{
     command: '/roll <NO. OF DICE>d<DICE TYPE>',
     shortcut: '/r',
     description: 'Rolls the specified dice.',
-    example: '/roll 3d6',
+    example: '/roll 3d6, /roll 1d20 + DEX, /roll 1d12 + 5 DADV',
 },
 {
     command: '/hiddenroll <NO. OF DICE>d<DICE TYPE>',
