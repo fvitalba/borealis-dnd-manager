@@ -703,3 +703,21 @@
     @apply -mt-3;
     @apply mx-3;
 }
+
+.select-character-container {
+    @apply flex;
+    @apply flex-row;
+}
+
+.select-character-input-container {
+    @apply flex;
+    @apply flex-col;
+}
+
+.select-character-label {
+    @apply text-sm;
+}
+
+.select-character-select {
+
+}

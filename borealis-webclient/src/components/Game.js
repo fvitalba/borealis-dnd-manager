@@ -1,6 +1,5 @@
 import React, { useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
-import { setGameSettings } from '../reducers/metadataReducer'
 import { overwriteGame, updateMaps, loadMap, addMap, setFogEnabled, updateTokens, toggleTokenValue } from '../reducers/gameReducer'
 import { addChatMessage, overwriteChat } from '../reducers/chatReducer'
 import { setCharacters } from '../reducers/characterReducer'
@@ -10,7 +9,7 @@ import GameView from '../views/GameView'
 
 const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, setFogEnabled, addChatMessage, overwriteChat, setCharacters }) => {
     const overlayRef = React.useRef()
-    const [webSocket, wsSettings, setWsSettings] = useWebSocket()
+    const [webSocket, wsSettings] = useWebSocket()
     // eslint-disable-next-line no-unused-vars
     const [_isLoading, setIsLoading] = useLoading()
     let currentPath = []
@@ -521,15 +520,13 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
     useEffect(() => {
         if (webSocket) {
             webSocket.addEventListener('message', receiveData)
-            if (wsSettings.username === '')
-                setWsSettings({ ...wsSettings, username: settings.username })
         }
 
         return () => {
             if (webSocket)
                 webSocket.removeEventListener('message', receiveData)
         }
-    }, [ webSocket, wsSettings, setWsSettings, receiveData, settings.username ])
+    }, [ webSocket, wsSettings, receiveData, settings.username ])
 
     /*
     useEffect(() => {
@@ -580,7 +577,6 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-    setGameSettings,
     overwriteGame,
     loadMap,
     updateMaps,

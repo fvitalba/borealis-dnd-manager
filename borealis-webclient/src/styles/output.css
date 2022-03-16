@@ -1585,3 +1585,22 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-left: 0.75rem;
   margin-right: 0.75rem;
 }
+
+.select-character-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.select-character-input-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.select-character-label {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.select-character-select {
+
+}

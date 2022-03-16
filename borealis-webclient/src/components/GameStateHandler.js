@@ -11,8 +11,11 @@ const GameStateHandler = ({ metadata, setGameSettings }) => {
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
-        setGameSettings(params.get('host'), params.get('room'))
-        setWsSettings(params.get('room'))
+        setGameSettings(params.get('host'), params.get('room'), wsSettings.guid)
+        setWsSettings({
+            ...wsSettings,
+            room: params.get('room')
+        })
     }, [])
 
     useEffect(() => {

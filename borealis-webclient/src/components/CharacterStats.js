@@ -3,11 +3,10 @@ import { connect } from 'react-redux'
 import CharacterStatsView from '../views/CharacterStatsView'
 
 const CharacterStats = ({ toggleOnCharacterStats, character }) => {
-    if (!toggleOnCharacterStats || (character.myCharacterGuid === ''))
+    if (!toggleOnCharacterStats)
         return null
 
     const selectedCharacter = character.characters.filter((stateCharacter) => stateCharacter.guid === character.myCharacterGuid)[0]
-    console.log(selectedCharacter)
 
     const modifierFromStat = (statValue) => {
         const modifier = Math.floor((statValue - 10) / 2)
@@ -22,12 +21,12 @@ const CharacterStats = ({ toggleOnCharacterStats, character }) => {
     }
 
     const modifiers = {
-        strength: modifierFromStat(selectedCharacter.strength),
-        dexterity: modifierFromStat(selectedCharacter.dexterity),
-        constitution: modifierFromStat(selectedCharacter.constitution),
-        intelligence: modifierFromStat(selectedCharacter.intelligence),
-        wisdom: modifierFromStat(selectedCharacter.wisdom),
-        charisma: modifierFromStat(selectedCharacter.charisma)
+        strength: selectedCharacter ? modifierFromStat(selectedCharacter.strength) : 0,
+        dexterity: selectedCharacter ? modifierFromStat(selectedCharacter.dexterity) : 0,
+        constitution: selectedCharacter ? modifierFromStat(selectedCharacter.constitution) : 0,
+        intelligence: selectedCharacter ? modifierFromStat(selectedCharacter.intelligence) : 0,
+        wisdom: selectedCharacter ? modifierFromStat(selectedCharacter.wisdom) : 0,
+        charisma: selectedCharacter ? modifierFromStat(selectedCharacter.charisma) : 0,
     }
 
     const setCharacterName = () => {
@@ -44,9 +43,10 @@ const CharacterStats = ({ toggleOnCharacterStats, character }) => {
 
     return (
         <CharacterStatsView
+            showCharacterStats={ character.myCharacterGuid !== '' }
             character={ selectedCharacter }
             modifiers={ modifiers }
-            characterName={ selectedCharacter.name }
+            characterName={ selectedCharacter ? selectedCharacter.name : '' }
             setCharacterName={ setCharacterName }
             setCharacterClass={ setCharacterClass }
             onStatChange={ onStatChange } />
