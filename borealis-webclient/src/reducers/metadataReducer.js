@@ -23,7 +23,7 @@ const metadataReducer = (state = initialMetadataState, action) => {
             ...state,
             isHost: action.isHost,
             room: action.room,
-            userGuid: action.guid,
+            userGuid: action.guid ? action.guid : state.userGuid,
         }
     case SET_CURSORS:
         return {
