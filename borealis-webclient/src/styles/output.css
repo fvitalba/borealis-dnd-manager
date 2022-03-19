@@ -1167,6 +1167,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   display: flex;
   flex-direction: row;
   margin-left: 1.5rem;
+  padding-top: 0.75rem;
 }
 
 .chat-panel-input-input {
