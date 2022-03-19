@@ -32,22 +32,18 @@ const Fog = ({ game, metadata, settings }) => {
     }
 
     const ereaseFog = (ctx, currPath) => {
-        ctx.beginPath()
         ctx.globalCompositeOperation = 'destination-out'
-        let gradient
+        ctx.beginPath()
         for (let pointId = 0; pointId < currPath.length; pointId++) {
-            const scaledPath = {
-                ...currPath[pointId],
-                x: currPath[pointId].x * settings.scale + settings.deltaX,
-                y: currPath[pointId].y * settings.scale + settings.deltaY,
-                r: currPath[pointId].r * settings.scale,
-                r2: currPath[pointId].r2 ? currPath[pointId].r2 * settings.scale : 1 * settings.scale,
+            ctx.lineCap = 'round'
+            ctx.fillStyle = currPath[pointId].drawColor
+            ctx.lineWidth = currPath[pointId].r * settings.scale
+            ctx.strokeStyle = currPath[pointId].drawColor
+            if (pointId === 0) {
+                ctx.moveTo(currPath[pointId].x * settings.scale + settings.deltaX, currPath[pointId].y * settings.scale + settings.deltaY)
+            } else {
+                ctx.lineTo(currPath[pointId].x * settings.scale + settings.deltaX, currPath[pointId].y * settings.scale + settings.deltaY)
             }
-            gradient = ctx.createRadialGradient(scaledPath.x, scaledPath.y, scaledPath.r2, scaledPath.x, scaledPath.y, scaledPath.r*0.75)
-            gradient.addColorStop(0, 'rgba(0,0,0,255)')
-            gradient.addColorStop(1, 'rgba(0,0,0,0)')
-            ctx.fillStyle = gradient
-            ctx.fillRect(scaledPath.x - scaledPath.r, scaledPath.y - scaledPath.r, scaledPath.x + scaledPath.r, scaledPath.y + currPath[pointId].r)
         }
     }
 

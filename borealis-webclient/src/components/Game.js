@@ -71,7 +71,7 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
         ctx.strokeStyle = color
         ctx.lineWidth = '3'
         ctx.beginPath()
-        ctx.arc(x, y, radius, 0, 2*Math.PI)
+        ctx.arc(x, y, radius / 1.5, 0, 2*Math.PI)
         ctx.stroke()
         ctx.closePath()
     }
@@ -97,14 +97,16 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
     const updateCurrentFogPath = () => {
         const ctx = overlayRef.current.getContext('2d')
         ctx.beginPath()
-        let gradient
         for (let pointId = 0; pointId < currentPath.length; pointId++) {
-            gradient = ctx.createRadialGradient(currentPath[pointId].x, currentPath[pointId].y, currentPath[pointId].r2 || 1, currentPath[pointId].x, currentPath[pointId].y, currentPath[pointId].r*0.75)
             ctx.lineCap = 'round'
-            gradient.addColorStop(0, 'rgba(255,255,255,255)')
-            gradient.addColorStop(1, 'rgba(255,255,255,0)')
-            ctx.fillStyle = gradient
-            ctx.fillRect(currentPath[pointId].x-currentPath[pointId].r, currentPath[pointId].y-currentPath[pointId].r, currentPath[pointId].x+currentPath[pointId].r, currentPath[pointId].y+currentPath[pointId].r)
+            ctx.fillStyle = 'white'
+            ctx.lineWidth = currentPath[pointId].r
+            ctx.strokeStyle = 'white'
+            if (pointId === 0) {
+                ctx.moveTo(currentPath[pointId].x, currentPath[pointId].y)
+            } else {
+                ctx.lineTo(currentPath[pointId].x, currentPath[pointId].y)
+            }
         }
         ctx.stroke()
     }
