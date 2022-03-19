@@ -99,7 +99,11 @@ const ChatPanel = ({ chat, settings, user, character, metadata, addChatMessage, 
     }
 
     const scrollToBottom = () => {
-        endOfMessagesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' })
+        console.log(endOfMessagesRef.current)
+        endOfMessagesRef.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end',
+        })
     }
 
     const loadUsers = useCallback(() => {

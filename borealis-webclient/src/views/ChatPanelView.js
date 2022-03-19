@@ -1,9 +1,10 @@
+import { forwardRef } from 'react'
 import Button from './Button'
 import { PlaySolidIcon, XCircleOutlineIcon, ChatOutlineIcon, HelpCircleSolidIcon } from './Icons'
 
-const ChatPanelMessage = ({ message, playerInfo }) => {
+const ChatPanelMessage = forwardRef(({ message, playerInfo }, ref) => {
     return (
-        <div className='chat-panel-message'>
+        <div className='chat-panel-message' ref={ ref }>
             <div className='chat-panel-message-info'>
                 <div className='chat-panel-message-username' >{ message.username }</div>
                 { playerInfo ? <div className='chat-panel-message-player-info'>| { playerInfo }</div> : null }
@@ -11,9 +12,10 @@ const ChatPanelMessage = ({ message, playerInfo }) => {
             <div className='chat-panel-message-content'>{ message.publicMessage }</div>
         </div>
     )
-}
+})
+ChatPanelMessage.displayName = 'ChatPanelMessage'
 
-const ChatPanelWhisper = ({ message, username, playerInfo }) => {
+const ChatPanelWhisper = forwardRef(({ message, username, playerInfo }, ref) => {
     let textToShow = ''
     if (message.username === username)
         textToShow = `To ${message.targetUsername}: ` + message.privateMessage
@@ -24,7 +26,7 @@ const ChatPanelWhisper = ({ message, username, playerInfo }) => {
         return null
 
     return (
-        <div className='chat-panel-message'>
+        <div className='chat-panel-message' ref={ ref }>
             <div className='chat-panel-message-info'>
                 <div className='chat-panel-message-username' >{ message.username }</div>
                 { playerInfo ? <div className='chat-panel-message-player-info'>| { playerInfo }</div> : null }
@@ -32,24 +34,27 @@ const ChatPanelWhisper = ({ message, username, playerInfo }) => {
             <div className='chat-panel-message-content'>{ textToShow }</div>
         </div>
     )
-}
+})
+ChatPanelWhisper.displayName = 'ChatPanelWhisper'
 
-const ChatPanelCommand = ({ username, message }) => {
+const ChatPanelCommand = forwardRef(({ username, message }, ref) => {
     const textToShow = message.username === username ? message.privateMessage : message.publicMessage
     return (
-        <div className='chat-panel-command'>
+        <div className='chat-panel-command' ref={ ref }>
             <div className='chat-panel-command-content'>{ textToShow }</div>
         </div>
     )
-}
+})
+ChatPanelCommand.displayName = 'ChatPanelCommand'
 
-const ChatPanelError = ({ message }) => {
+const ChatPanelError = forwardRef(({ message }, ref) => {
     return (
-        <div className='chat-panel-error'>
+        <div className='chat-panel-error' ref={ ref }>
             <div className='chat-panel-error-content'>{ message.publicMessage }</div>
         </div>
     )
-}
+})
+ChatPanelError.displayName = 'ChatPanelError'
 
 const ChatCommandsHelp = ({ commands }) => {
     return (
@@ -116,25 +121,26 @@ const ChatPanelView = ({ username, chatPanelHidden, toggleHidden, showHelp, togg
                     }
                 </div>
                 <div className='chat-panel-content'>
-                    { sortedChatMessages.map((message) => {
+                    { sortedChatMessages.map((message, index) => {
+                        const isLastElement = index === (sortedChatMessages.length - 1)
                         switch (message.typeOfMessage) {
                         case 'message':
-                            return (<ChatPanelMessage key={ message.guid } message={ message } playerInfo={ message.playerInfo } />)
+                            return (<ChatPanelMessage key={ message.guid } message={ message } playerInfo={ message.playerInfo } ref={ isLastElement ? endOfMessagesRef : null }/>)
                         case 'whisper':
-                            return (<ChatPanelWhisper key={ message.guid } message={ message } username={ username } playerInfo={ message.playerInfo } />)
+                            return (<ChatPanelWhisper key={ message.guid } message={ message } username={ username } playerInfo={ message.playerInfo } ref={ isLastElement ? endOfMessagesRef : null } />)
                         case 'command':
-                            return (<ChatPanelCommand key={ message.guid } message={ message } username={ username } />)
+                            return (<ChatPanelCommand key={ message.guid } message={ message } username={ username } ref={ isLastElement ? endOfMessagesRef : null } />)
                         case 'error':
-                            return (<ChatPanelError key={ message.guid } message={ message } />)
+                            return (<ChatPanelError key={ message.guid } message={ message } ref={ isLastElement ? endOfMessagesRef : null } />)
                         default: return null
                         }
                     })}
-                    <div ref={ endOfMessagesRef }></div>
-                    <div className='chat-panel-input'>
-                        <input title='Mesage' placeholder='Type your message...' value={ currentMessage } onChange={ changeCurrentMessage } className='chat-panel-input-input' onKeyDown={ inputOnKeyDown } />
-                        <Button title='Push refresh to players' value={ <PlaySolidIcon /> } onClick={ addMessage } />
-                    </div>
                 </div>
+                <div className='chat-panel-input'>
+                    <input title='Mesage' placeholder='Type your message...' value={ currentMessage } onChange={ changeCurrentMessage } className='chat-panel-input-input' onKeyDown={ inputOnKeyDown } />
+                    <Button title='Push refresh to players' value={ <PlaySolidIcon /> } onClick={ addMessage } />
+                </div>
+                <div className='chat-panel-content-bottom' />
             </div>
     )
 }

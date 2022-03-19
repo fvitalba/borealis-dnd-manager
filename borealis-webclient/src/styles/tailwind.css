@@ -355,10 +355,9 @@
     @apply mt-4;
     @apply ml-6;
     @apply mr-6;
-    @apply h-fit;
-    @apply overflow-hidden;
+    @apply h-full;
+    @apply overflow-clip;
     @apply overflow-y-scroll;
-    @apply pb-20;
 }
 
 .chat-panel-message {
@@ -404,11 +403,18 @@
     @apply font-bold;
 }
 
+.chat-panel-content-bottom {
+    @apply h-12;
+    @apply bottom-0;
+    @apply block;
+    @apply relative;
+}
+
 .chat-panel-input {
-    @apply bottom-8;
-    @apply absolute;
+    @apply relative;
     @apply flex;
     @apply flex-row;
+    @apply ml-6;
 }
 
 .chat-panel-input-input {
@@ -416,6 +422,7 @@
     @apply text-primary-700;
     @apply border-b-2;
     @apply border-primary-500;
+    @apply h-8;
 }
 
 .loading-overlay {

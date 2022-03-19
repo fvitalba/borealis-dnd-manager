@@ -417,9 +417,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .block {
   display: block;
 }
-.inline {
-  display: inline;
-}
 .flex {
   display: flex;
 }
@@ -1106,11 +1103,9 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-top: 1rem;
   margin-left: 1.5rem;
   margin-right: 1.5rem;
-  height: -moz-fit-content;
-  height: fit-content;
-  overflow: hidden;
+  height: 100%;
+  overflow: clip;
   overflow-y: scroll;
-  padding-bottom: 5rem;
 }
 
 .chat-panel-message {
@@ -1160,11 +1155,18 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-weight: 700;
 }
 
+.chat-panel-content-bottom {
+  height: 3rem;
+  bottom: 0px;
+  display: block;
+  position: relative;
+}
+
 .chat-panel-input {
-  bottom: 2rem;
-  position: absolute;
+  position: relative;
   display: flex;
   flex-direction: row;
+  margin-left: 1.5rem;
 }
 
 .chat-panel-input-input {
@@ -1175,6 +1177,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-bottom-width: 2px;
   --tw-border-opacity: 1;
   border-color: rgb(107 114 128 / var(--tw-border-opacity));
+  height: 2rem;
 }
 
 .loading-overlay {
