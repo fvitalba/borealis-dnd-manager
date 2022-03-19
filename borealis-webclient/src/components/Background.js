@@ -13,26 +13,25 @@ const Background = ({ game, settings, updateDeltaXY, updateScale }) => {
     const map = selectedMap.length > 0 ? selectedMap[0] : undefined
 
     const draw = useCallback((ctx) => {
-        if (!map) {
-            return
-        }
         ctx.beginPath()
         ctx.clearRect(0, 0, game.width, game.height)
+        if (!map || !backgroundSettings.imageObject) {
+            return
+        }
         drawImageObject(backgroundSettings.imageObject, map.x + settings.deltaX, map.y + settings.deltaY, map.width * settings.scale, map.height * settings.scale, ctx)
-    }, [ settings.deltaX, settings.deltaY, settings.scale, map ])
+    }, [ settings.deltaX, settings.deltaY, settings.scale, map, backgroundSettings.imageObject ])
 
     useEffect(() => {
-        if (map) {
-            const imgObject = new Image()
-            imgObject.onload = () => {
-                setBackgroundSettings({
-                    ...backgroundSettings,
-                    imageObject: imgObject,
-                })
-            }
-            imgObject.src = map.imageUrl
+        const imgObject = new Image()
+        imgObject.onload = () => {
+            setBackgroundSettings({
+                ...backgroundSettings,
+                imageObject: imgObject,
+            })
         }
-    }, [ game.mapId, game.maps ])
+        if (map)
+            imgObject.src = map.imageUrl
+    }, [ map ])
 
     const anyTokenSelected = () => {
         const selectedToken = game.tokens.filter((token) => token.selected)
