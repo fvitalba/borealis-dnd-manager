@@ -2,18 +2,14 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 const Overlay = ({ game, overlayRef }) => {
-    const maps = game.maps
-    const map = maps[game.mapId] || undefined
-    const width = map ? map.width : game.width
-    const height = map ? map.height : game.height
     const canvasRef = overlayRef
 
     return (
         <canvas
             className='overlay'
             ref={ canvasRef }
-            width={ width }
-            height={ height } />
+            width={ game.width }
+            height={ game.height } />
     )
 }
 
