@@ -1,6 +1,4 @@
 import React, { useEffect, useState, createContext } from 'react'
-import { connect } from 'react-redux'
-import { requestRefresh } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
 import guid from '../controllers/guid'
 
@@ -22,8 +20,8 @@ const generateWebSocketUrl = (room, guid, username, isHost) => {
     return webSocketUrl + userParam + hostParam
 }
 
-const createWebSocket = (room, guid, username, isHost) => {
-    if (room) {
+export const createWebSocket = (room, guid, username, isHost) => {
+    if (room && username) {
         const webSocketUrl = generateWebSocketUrl(room, guid, username, isHost)
         return new WebSocket(webSocketUrl)
     } else {
@@ -33,64 +31,33 @@ const createWebSocket = (room, guid, username, isHost) => {
 
 export const WebSocketContext = createContext(createWebSocket('',''))
 
-const saveIdToLocalStorage = (roomName, localGuid) => {
-    localStorage.setItem(`borealis-${roomName}`, localGuid)
-}
-
-const readIdFromLocalStorage = (roomName) => {
-    const localGuid = localStorage.getItem(`borealis-${roomName}`)
-    return localGuid ? localGuid : guid()
-}
-
-const WebSocketProvider = ({ children, metadata }) => {
+const WebSocketProvider = ({ children }) => {
     const [wsSettings, setWsSettings] = useState({
-        guid: readIdFromLocalStorage(metadata.room),
+        guid: guid(),
         username: '',
-        room: metadata.room,
-        isHost: metadata.isHost,
+        room: '',
+        isHost: false,
     })
-    const [ws, setWs] = useState(createWebSocket(metadata.room, wsSettings.guid, wsSettings.username, wsSettings.isHost))
+    const [ws, setWs] = useState(null)
     // eslint-disable-next-line no-unused-vars
     const [_isLoading, setIsLoading] = useLoading()
 
     useEffect(() => {
-        const localGuid = readIdFromLocalStorage(metadata.room)
-        if (localGuid !== wsSettings.guid)
-            setWsSettings({
-                ...wsSettings,
-                guid: localGuid,
-            })
-    }, [ metadata.room ])
-
-    useEffect(() => {
-        setWs(createWebSocket(metadata.room, wsSettings.guid, wsSettings.username, wsSettings.isHost))
-    }, [ metadata.room, wsSettings.guid, wsSettings.username, wsSettings.isHost ])
-
-    useEffect(() => {
         const onClose = () => {
-            setIsLoading(true)
             setTimeout(() => {
+                setIsLoading(true)
                 console.debug('Socket Timeout, recreating WebSocket')
-                setWs(createWebSocket(metadata.room, wsSettings.guid, wsSettings.username, wsSettings.isHost))
+                setWs(createWebSocket(wsSettings.room, wsSettings.guid, wsSettings.username, wsSettings.isHost))
             }, SOCKET_RECONNECTION_TIMEOUT)
         }
 
         const onOpen = () => {
-            saveIdToLocalStorage(wsSettings.room, wsSettings.guid)
-            if (!metadata.isHost) {
-                setIsLoading(true)
-                requestRefresh(ws, wsSettings)
-            }
-            if ((metadata.room && !wsSettings.room) || ((metadata.isHost !== undefined) && (wsSettings.isHost === undefined)))
-                setWsSettings({
-                    ...wsSettings,
-                    room: metadata.room,
-                    isHost: metadata.isHost,
-                })
+            // When the WebSocket is open, close the loading screen
             setIsLoading(false)
         }
 
         const onError = (err) => {
+            setIsLoading(false)
             console.error('WebSocket could not be created. Error: ', err)
         }
 
@@ -107,17 +74,11 @@ const WebSocketProvider = ({ children, metadata }) => {
                 ws.removeEventListener('error', onError)
             }
         }
-    }, [ ws, setWs, wsSettings, metadata ])
+    }, [ ws, setWs, wsSettings ])
 
     return (
-        <WebSocketContext.Provider value={ [ws, wsSettings, setWsSettings] }>{ children }</WebSocketContext.Provider>
+        <WebSocketContext.Provider value={ [ws, wsSettings, setWsSettings, setWs] }>{ children }</WebSocketContext.Provider>
     )
 }
 
-const mapStateToProps = (state) => {
-    return {
-        metadata: state.metadata,
-    }
-}
-
-export default connect(mapStateToProps, undefined)(WebSocketProvider)
+export default WebSocketProvider

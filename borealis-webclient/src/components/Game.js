@@ -408,6 +408,7 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
         let pathToUpdate = []
         let updatedMaps = []
         let updatedTokens = []
+        let receivedCharacters = []
         let assignedCharacter = ''
         switch (data.type) {
         case 'pushCursor':
@@ -489,8 +490,9 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
         case 'pushGameRefresh': // refresh from host
             overwriteGame(data.game)
             overwriteChat(data.chat)
-            setCharacters(data.characters)
-            assignedCharacter = data.characters.filter((character) => character.username === settings.username)[0]
+            receivedCharacters = data.characters.length > 0 ? data.characters : []
+            setCharacters(receivedCharacters)
+            assignedCharacter = receivedCharacters.filter((character) => character.username === settings.username)[0]
             if (assignedCharacter && (!assignedCharacter !== '')) {
                 assignCharacter(assignedCharacter.guid)
             }
@@ -503,6 +505,7 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
             break
         case 'loadGame':
             overwriteGame(data.payload.game)
+            setIsLoading(false)
             break
         case 'sendChatMessage':
             addChatMessage(data.username, data.playerInfo, data.publicMessageText, data.privateMessageText, data.targetUsername, data.timestamp, data.typeOfMessage)
@@ -522,9 +525,6 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
         //window.addEventListener('keypress', onKeyPress)
         window.addEventListener('keydown', onKeyDown)
 
-        if (!metadata.isHost)
-            requestRefresh(webSocket, wsSettings)
-
         // On Unmount
         return () => {
             window.removeEventListener('resize', onResize)
@@ -532,6 +532,13 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
             window.removeEventListener('keydown', onKeyDown)
         }
     }, [])
+
+    useEffect(() => {
+        if (!metadata.isHost && webSocket) {
+            setIsLoading(true)
+            requestRefresh(webSocket, wsSettings)
+        }
+    }, [ webSocket, wsSettings, metadata.isHost ])
 
     useEffect(() => {
         if (webSocket) {
