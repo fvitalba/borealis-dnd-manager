@@ -83,20 +83,23 @@ const characterReducer = (state = initialCharacterReducer(), action) => {
             characters: newCharacters,
         }
     case SET_CHARACTERS:
-        newCharacters = action.newCharacters.map((actionCharacter) => {
-            const stateCharacter = state.characters.filter((character) => character.guid === actionCharacter.guid)
-            if ((stateCharacter.length > 0) && (stateCharacter[0].guid)) {
-                return ({
-                    ...stateCharacter,
-                    ...actionCharacter,
-                })
-            } else {
-                return ({
-                    ...characterTemplate,
-                    ...actionCharacter,
-                })
-            }
-        })
+        if (action.newCharacters.length > 0)
+            newCharacters = action.newCharacters.map((actionCharacter) => {
+                const stateCharacter = state.characters.filter((character) => character.guid === actionCharacter.guid)
+                if ((stateCharacter.length > 0) && (stateCharacter[0].guid)) {
+                    return ({
+                        ...stateCharacter,
+                        ...actionCharacter,
+                    })
+                } else {
+                    return ({
+                        ...characterTemplate,
+                        ...actionCharacter,
+                    })
+                }
+            })
+        else
+            newCharacters = []
         return {
             ...state,
             characters: newCharacters,

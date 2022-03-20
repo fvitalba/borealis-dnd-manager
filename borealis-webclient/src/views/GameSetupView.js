@@ -27,8 +27,6 @@ const GameSetupView = ({ roomName, onRoomNameChange, searchingRoom, roomFound, u
                 </div>
                 <div className='game-setup-user-input'>
                     <input title='User name' placeholder='User name' value={ userName } onChange={ onUserNameChange } className='game-setup-input' />
-                </div>
-                <div className='game-setup-submit'>
                     <Button title='Load game' value={ <PlaySolidIcon /> } onClick={ onSubmitSetup } disabled={ !isSubmitEnabled } />
                 </div>
             </div>

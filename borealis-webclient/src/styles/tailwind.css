@@ -35,9 +35,9 @@
     @apply pr-1;
     @apply placeholder-primary-300;
     @apply h-8;
-    @apply w-96;
     @apply flex;
     @apply mx-auto;
+    @apply grow;
 }
 
 .game-setup-user-selection {
@@ -66,6 +66,8 @@
 
 .game-setup-user-input {
     @apply pt-2;
+    @apply flex;
+    @apply flex-row;
 }
 
 .game-setup-submit {
@@ -355,10 +357,9 @@
     @apply mt-4;
     @apply ml-6;
     @apply mr-6;
-    @apply h-fit;
-    @apply overflow-hidden;
+    @apply h-full;
+    @apply overflow-clip;
     @apply overflow-y-scroll;
-    @apply pb-20;
 }
 
 .chat-panel-message {
@@ -404,11 +405,19 @@
     @apply font-bold;
 }
 
+.chat-panel-content-bottom {
+    @apply h-12;
+    @apply bottom-0;
+    @apply block;
+    @apply relative;
+}
+
 .chat-panel-input {
-    @apply bottom-8;
-    @apply absolute;
+    @apply relative;
     @apply flex;
     @apply flex-row;
+    @apply ml-6;
+    @apply pt-3;
 }
 
 .chat-panel-input-input {
@@ -416,6 +425,8 @@
     @apply text-primary-700;
     @apply border-b-2;
     @apply border-primary-500;
+    @apply h-8;
+    @apply grow;
 }
 
 .loading-overlay {
@@ -555,6 +566,19 @@
     @apply z-overlay;
     @apply absolute;
     @apply pointer-events-none;
+}
+
+.cursors {
+    @apply z-cursors;
+    @apply pointer-events-none;
+    @apply absolute;
+    @apply opacity-75;
+    @apply text-sm;
+}
+
+.cursor {
+    @apply block;
+    @apply absolute;
 }
 
 .bottom-banner-container {

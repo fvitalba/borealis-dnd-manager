@@ -414,6 +414,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .invisible {
   visibility: hidden;
 }
+.block {
+  display: block;
+}
 .flex {
   display: flex;
 }
@@ -499,9 +502,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .opacity-50 {
   opacity: 0.5;
-}
-.outline {
-  outline-style: solid;
 }
 .filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
@@ -591,10 +591,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .game-setup-input {
   height: 2rem;
-  width: 24rem;
   display: flex;
   margin-left: auto;
   margin-right: auto;
+  flex-grow: 1;
 }
 
 .game-setup-user-selection {
@@ -688,6 +688,8 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .game-setup-user-input {
   padding-top: 0.5rem;
+  display: flex;
+  flex-direction: row;
 }
 
 .game-setup-submit {
@@ -1100,11 +1102,9 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-top: 1rem;
   margin-left: 1.5rem;
   margin-right: 1.5rem;
-  height: -moz-fit-content;
-  height: fit-content;
-  overflow: hidden;
+  height: 100%;
+  overflow: clip;
   overflow-y: scroll;
-  padding-bottom: 5rem;
 }
 
 .chat-panel-message {
@@ -1154,11 +1154,19 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-weight: 700;
 }
 
+.chat-panel-content-bottom {
+  height: 3rem;
+  bottom: 0px;
+  display: block;
+  position: relative;
+}
+
 .chat-panel-input {
-  bottom: 2rem;
-  position: absolute;
+  position: relative;
   display: flex;
   flex-direction: row;
+  margin-left: 1.5rem;
+  padding-top: 0.75rem;
 }
 
 .chat-panel-input-input {
@@ -1169,6 +1177,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-bottom-width: 2px;
   --tw-border-opacity: 1;
   border-color: rgb(107 114 128 / var(--tw-border-opacity));
+  height: 2rem;
+  flex-grow: 1;
 }
 
 .loading-overlay {
@@ -1358,6 +1368,20 @@ Ensure the default browser behavior of the `hidden` attribute.
   z-index: 30;
   position: absolute;
   pointer-events: none;
+}
+
+.cursors {
+  z-index: 40;
+  pointer-events: none;
+  position: absolute;
+  opacity: 0.75;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.cursor {
+  display: block;
+  position: absolute;
 }
 
 .bottom-banner-container {

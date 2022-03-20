@@ -1,24 +1,37 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { updateDeltaXY, updateScale } from '../reducers/settingsReducer'
-import drawImage from '../controllers/drawImage'
+import { drawImageObject } from '../controllers/drawImage'
 import Canvas from './Canvas'
 
 const Background = ({ game, settings, updateDeltaXY, updateScale }) => {
     const [backgroundSettings, setBackgroundSettings] = useState({
         isDragging: false,
+        imageObject: undefined,
     })
     const selectedMap = game.maps.filter((map) => map.id === game.mapId)
     const map = selectedMap.length > 0 ? selectedMap[0] : undefined
 
     const draw = useCallback((ctx) => {
-        if (!map) {
-            return
-        }
         ctx.beginPath()
         ctx.clearRect(0, 0, game.width, game.height)
-        drawImage(map.imageUrl, map.name, map.x + settings.deltaX, map.y + settings.deltaY, map.width * settings.scale, map.height * settings.scale, ctx)
-    }, [ settings.deltaX, settings.deltaY, settings.scale, map ])
+        if (!map || !backgroundSettings.imageObject) {
+            return
+        }
+        drawImageObject(backgroundSettings.imageObject, map.x + settings.deltaX, map.y + settings.deltaY, map.width * settings.scale, map.height * settings.scale, ctx)
+    }, [ settings.deltaX, settings.deltaY, settings.scale, map, backgroundSettings.imageObject ])
+
+    useEffect(() => {
+        const imgObject = new Image()
+        imgObject.onload = () => {
+            setBackgroundSettings({
+                ...backgroundSettings,
+                imageObject: imgObject,
+            })
+        }
+        if (map)
+            imgObject.src = map.imageUrl
+    }, [ map ])
 
     const anyTokenSelected = () => {
         const selectedToken = game.tokens.filter((token) => token.selected)

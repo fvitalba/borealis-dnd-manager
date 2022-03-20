@@ -2,12 +2,13 @@ import React, { useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
 import { overwriteGame, updateMaps, loadMap, addMap, setFogEnabled, updateTokens, toggleTokenValue } from '../reducers/gameReducer'
 import { addChatMessage, overwriteChat } from '../reducers/chatReducer'
+import { updateCursor } from '../reducers/metadataReducer'
 import { assignCharacter, assignCharacterToUser, setCharacters, updateCharacter } from '../reducers/characterReducer'
-import { pushDrawPath, pushFogPath, pushGameRefresh, pushTokens, requestRefresh, useWebSocket } from '../hooks/useSocket'
+import { pushCursor, pushDrawPath, pushFogPath, pushGameRefresh, pushTokens, requestRefresh, useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
 import GameView from '../views/GameView'
 
-const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, setFogEnabled, addChatMessage, overwriteChat, setCharacters, assignCharacter, assignCharacterToUser, updateCharacter }) => {
+const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, setFogEnabled, addChatMessage, overwriteChat, setCharacters, assignCharacter, assignCharacterToUser, updateCharacter, updateCursor }) => {
     const overlayRef = React.useRef()
     const [webSocket, wsSettings] = useWebSocket()
     // eslint-disable-next-line no-unused-vars
@@ -71,7 +72,7 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
         ctx.strokeStyle = color
         ctx.lineWidth = '3'
         ctx.beginPath()
-        ctx.arc(x, y, radius, 0, 2*Math.PI)
+        ctx.arc(x, y, radius / 1.5, 0, 2*Math.PI)
         ctx.stroke()
         ctx.closePath()
     }
@@ -97,14 +98,16 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
     const updateCurrentFogPath = () => {
         const ctx = overlayRef.current.getContext('2d')
         ctx.beginPath()
-        let gradient
         for (let pointId = 0; pointId < currentPath.length; pointId++) {
-            gradient = ctx.createRadialGradient(currentPath[pointId].x, currentPath[pointId].y, currentPath[pointId].r2 || 1, currentPath[pointId].x, currentPath[pointId].y, currentPath[pointId].r*0.75)
             ctx.lineCap = 'round'
-            gradient.addColorStop(0, 'rgba(255,255,255,255)')
-            gradient.addColorStop(1, 'rgba(255,255,255,0)')
-            ctx.fillStyle = gradient
-            ctx.fillRect(currentPath[pointId].x-currentPath[pointId].r, currentPath[pointId].y-currentPath[pointId].r, currentPath[pointId].x+currentPath[pointId].r, currentPath[pointId].y+currentPath[pointId].r)
+            ctx.fillStyle = 'white'
+            ctx.lineWidth = currentPath[pointId].r
+            ctx.strokeStyle = 'white'
+            if (pointId === 0) {
+                ctx.moveTo(currentPath[pointId].x, currentPath[pointId].y)
+            } else {
+                ctx.lineTo(currentPath[pointId].x, currentPath[pointId].y)
+            }
         }
         ctx.stroke()
     }
@@ -315,6 +318,9 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
 
         clearOverlay()
         let x = e.pageX, y = e.pageY
+        if (settings.shareMouse) {
+            pushCursor(webSocket, wsSettings, x, y)
+        }
         const currentlySelectedTool = settings.tool
         switch (currentlySelectedTool) {
         case 'fog':
@@ -406,13 +412,12 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
         let pathToUpdate = []
         let updatedMaps = []
         let updatedTokens = []
+        let receivedCharacters = []
         let assignedCharacter = ''
         switch (data.type) {
         case 'pushCursor':
-            /*
-            if (data.u !== this.gameState.settings.username)
-                this.gameState.updateCursors(data.x, data.y, data.u, data.from)
-            */
+            if (data.username !== settings.username)
+                updateCursor(data.username, data.x, data.y)
             break
         case 'pushDrawPath':
             pathToUpdate = currMap.drawPaths ? currMap.drawPaths : []
@@ -487,8 +492,9 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
         case 'pushGameRefresh': // refresh from host
             overwriteGame(data.game)
             overwriteChat(data.chat)
-            setCharacters(data.characters)
-            assignedCharacter = data.characters.filter((character) => character.username === settings.username)[0]
+            receivedCharacters = data.characters.length > 0 ? data.characters : []
+            setCharacters(receivedCharacters)
+            assignedCharacter = receivedCharacters.filter((character) => character.username === settings.username)[0]
             if (assignedCharacter && (!assignedCharacter !== '')) {
                 assignCharacter(assignedCharacter.guid)
             }
@@ -501,6 +507,7 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
             break
         case 'loadGame':
             overwriteGame(data.payload.game)
+            setIsLoading(false)
             break
         case 'sendChatMessage':
             addChatMessage(data.username, data.playerInfo, data.publicMessageText, data.privateMessageText, data.targetUsername, data.timestamp, data.typeOfMessage)
@@ -520,9 +527,6 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
         //window.addEventListener('keypress', onKeyPress)
         window.addEventListener('keydown', onKeyDown)
 
-        if (!metadata.isHost)
-            requestRefresh(webSocket, wsSettings)
-
         // On Unmount
         return () => {
             window.removeEventListener('resize', onResize)
@@ -530,6 +534,13 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
             window.removeEventListener('keydown', onKeyDown)
         }
     }, [])
+
+    useEffect(() => {
+        if (!metadata.isHost && webSocket) {
+            setIsLoading(true)
+            requestRefresh(webSocket, wsSettings)
+        }
+    }, [ webSocket, wsSettings, metadata.isHost ])
 
     useEffect(() => {
         if (webSocket) {
@@ -542,32 +553,16 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
         }
     }, [ webSocket, wsSettings, receiveData, settings.username ])
 
-    /*
-    useEffect(() => {
-        if (websocket && gameState.settings.shareMouse)
-            websocket.pushCursor(gameState.metadata.lastX, gameState.metadata.lastY)
-    }, [gameState.metadata.lastX, gameState.metadata.lastY, gameState.settings.shareMouse])
-    */
-
     /****************************************************
      * Component Render                                 *
      ****************************************************/
-    const deadline = new Date() - 30000
-    const cursorsCopy = metadata.cursors
-
-    for (let name in cursorsCopy) {
-        let time = cursorsCopy[name].time
-        if (!time || time < deadline)
-            delete cursorsCopy[name]
-    }
 
     try {
         return (
             <GameView
                 isHost={ metadata.isHost }
                 overlayRef={ overlayRef }
-                cursors={ cursorsCopy }
-                cursorSize={ settings.cursorSize }
+                cursors={ metadata.cursors }
                 tokens={ game.tokens }
                 onMouseMove={ onMouseMove }
                 onMouseUp={ onMouseUp }
@@ -604,6 +599,7 @@ const mapDispatchToProps = {
     assignCharacter,
     assignCharacterToUser,
     updateCharacter,
+    updateCursor,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Game)

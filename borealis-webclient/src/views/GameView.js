@@ -9,7 +9,8 @@ import ChatPanel from '../components/ChatPanel'
 import Cursor from './Cursor'
 import Banner from '../components/Banner'
 
-const GameView = ({ isHost, overlayRef, cursors, cursorSize, tokens, onMouseMove, onMouseUp, onMouseDown }) => {
+const GameView = ({ isHost, overlayRef, cursors, tokens, onMouseMove, onMouseUp, onMouseDown }) => {
+    console.log('cursors',cursors)
     return (
         <div id='game' onMouseMove={ (e) => onMouseMove(e) } onMouseDown={ (e) => onMouseDown(e) } onMouseUp={ (e) => onMouseUp(e) }>
             <div>
@@ -25,14 +26,13 @@ const GameView = ({ isHost, overlayRef, cursors, cursorSize, tokens, onMouseMove
                 }
                 <Fog />
                 { cursors ?
-                    <div id='cursors'>
+                    <div className='cursors'>
                         { cursors.map((cursor) => (
-                            <Cursor key={ `cursor${cursor.id}` } name={ cursor.username } cursor={ cursor } size={ cursorSize } />
+                            <Cursor key={ `cursor${cursor.username}` } cursor={ cursor } />
                         )) }
                     </div>
                     : null
                 }
-                {/* Overlay: Holds outline for fog & draw tools */ }
                 <Overlay overlayRef={ overlayRef } />
             </div>
             <ControlPanel />

@@ -19,4 +19,13 @@ const drawImage = (url, which, xPos, yPos, imageWidth, imageHeight, context) => 
     })
 }
 
+export const drawImageObject = (imgObject, xPos, yPos, imageWidth, imageHeight, context) => {
+    if (!imgObject) {
+        return Promise.resolve(imageWidth, imageHeight)
+    }
+
+    context.drawImage(imgObject, xPos, yPos, imageWidth, imageHeight)
+    Promise.resolve(imageWidth, imageHeight)
+}
+
 export default drawImage
