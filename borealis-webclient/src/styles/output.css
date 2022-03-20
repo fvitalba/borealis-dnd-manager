@@ -503,9 +503,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .opacity-50 {
   opacity: 0.5;
 }
-.outline {
-  outline-style: solid;
-}
 .filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
@@ -1371,6 +1368,19 @@ Ensure the default browser behavior of the `hidden` attribute.
   z-index: 30;
   position: absolute;
   pointer-events: none;
+}
+
+.cursors {
+  z-index: 40;
+  pointer-events: none;
+  position: absolute;
+  opacity: 0.5;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.cursor {
+  display: block;
 }
 
 .bottom-banner-container {

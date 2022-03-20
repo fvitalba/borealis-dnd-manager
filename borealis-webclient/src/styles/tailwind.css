@@ -568,6 +568,18 @@
     @apply pointer-events-none;
 }
 
+.cursors {
+    @apply z-cursors;
+    @apply pointer-events-none;
+    @apply absolute;
+    @apply opacity-50;
+    @apply text-sm;
+}
+
+.cursor {
+    @apply block;
+}
+
 .bottom-banner-container {
     @apply z-banner;
     @apply absolute;
