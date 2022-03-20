@@ -1374,13 +1374,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   z-index: 40;
   pointer-events: none;
   position: absolute;
-  opacity: 0.5;
+  opacity: 0.75;
   font-size: 0.875rem;
   line-height: 1.25rem;
 }
 
 .cursor {
   display: block;
+  position: absolute;
 }
 
 .bottom-banner-container {

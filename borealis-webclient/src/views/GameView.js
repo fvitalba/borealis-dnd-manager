@@ -9,7 +9,7 @@ import ChatPanel from '../components/ChatPanel'
 import Cursor from './Cursor'
 import Banner from '../components/Banner'
 
-const GameView = ({ isHost, overlayRef, cursors, cursorSize, tokens, onMouseMove, onMouseUp, onMouseDown }) => {
+const GameView = ({ isHost, overlayRef, cursors, tokens, onMouseMove, onMouseUp, onMouseDown }) => {
     console.log('cursors',cursors)
     return (
         <div id='game' onMouseMove={ (e) => onMouseMove(e) } onMouseDown={ (e) => onMouseDown(e) } onMouseUp={ (e) => onMouseUp(e) }>
@@ -28,7 +28,7 @@ const GameView = ({ isHost, overlayRef, cursors, cursorSize, tokens, onMouseMove
                 { cursors ?
                     <div className='cursors'>
                         { cursors.map((cursor) => (
-                            <Cursor key={ `cursor${cursor.username}` } cursor={ cursor } size={ cursorSize } />
+                            <Cursor key={ `cursor${cursor.username}` } cursor={ cursor } />
                         )) }
                     </div>
                     : null

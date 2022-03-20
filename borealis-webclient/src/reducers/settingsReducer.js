@@ -20,7 +20,7 @@ const initialSettingsState = () => {
         tool: 'move',
         subtool: undefined,
         username: params.get('host') ? 'DM' : 'PC',
-        shareMouse: true,
+        shareMouse: false,
         deltaX: 0,
         deltaY: 0,
         scale: 1.0,

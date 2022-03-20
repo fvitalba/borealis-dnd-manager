@@ -572,12 +572,13 @@
     @apply z-cursors;
     @apply pointer-events-none;
     @apply absolute;
-    @apply opacity-50;
+    @apply opacity-75;
     @apply text-sm;
 }
 
 .cursor {
     @apply block;
+    @apply absolute;
 }
 
 .bottom-banner-container {

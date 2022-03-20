@@ -2,11 +2,11 @@ import React, { useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
 import { overwriteGame, updateMaps, loadMap, addMap, setFogEnabled, updateTokens, toggleTokenValue } from '../reducers/gameReducer'
 import { addChatMessage, overwriteChat } from '../reducers/chatReducer'
+import { updateCursor } from '../reducers/metadataReducer'
 import { assignCharacter, assignCharacterToUser, setCharacters, updateCharacter } from '../reducers/characterReducer'
 import { pushCursor, pushDrawPath, pushFogPath, pushGameRefresh, pushTokens, requestRefresh, useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
 import GameView from '../views/GameView'
-import { updateCursor } from '../reducers/metadataReducer'
 
 const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, setFogEnabled, addChatMessage, overwriteChat, setCharacters, assignCharacter, assignCharacterToUser, updateCharacter, updateCursor }) => {
     const overlayRef = React.useRef()
@@ -416,7 +416,6 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
         let assignedCharacter = ''
         switch (data.type) {
         case 'pushCursor':
-            console.log('received cursor')
             if (data.username !== settings.username)
                 updateCursor(data.username, data.x, data.y)
             break
@@ -557,22 +556,13 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
     /****************************************************
      * Component Render                                 *
      ****************************************************/
-    const deadline = new Date() - 30000
-    const cursorsCopy = metadata.cursors
-
-    for (let name in cursorsCopy) {
-        let time = cursorsCopy[name].time
-        if (!time || time < deadline)
-            delete cursorsCopy[name]
-    }
 
     try {
         return (
             <GameView
                 isHost={ metadata.isHost }
                 overlayRef={ overlayRef }
-                cursors={ cursorsCopy }
-                cursorSize={ settings.cursorSize }
+                cursors={ metadata.cursors }
                 tokens={ game.tokens }
                 onMouseMove={ onMouseMove }
                 onMouseUp={ onMouseUp }
