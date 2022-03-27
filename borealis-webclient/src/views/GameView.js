@@ -10,7 +10,6 @@ import Cursor from './Cursor'
 import Banner from '../components/Banner'
 
 const GameView = ({ isHost, overlayRef, cursors, tokens, onMouseMove, onMouseUp, onMouseDown }) => {
-    console.log('cursors',cursors)
     return (
         <div id='game' onMouseMove={ (e) => onMouseMove(e) } onMouseDown={ (e) => onMouseDown(e) } onMouseUp={ (e) => onMouseUp(e) }>
             <div>
