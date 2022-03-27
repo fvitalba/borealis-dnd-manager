@@ -27,6 +27,7 @@ module.exports = {
                 'cursors': '40',
                 'control-panel': '100',
                 'chat-panel': '110',
+                'chat-panel-roll': '120',
                 'banner': '120',
                 'loading': '130',
             },

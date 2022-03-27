@@ -416,8 +416,8 @@
     @apply relative;
     @apply flex;
     @apply flex-row;
-    @apply ml-6;
     @apply pt-3;
+    @apply px-3;
 }
 
 .chat-panel-input-input {
@@ -427,6 +427,28 @@
     @apply border-primary-500;
     @apply h-8;
     @apply grow;
+}
+
+.dice-roll-button-container {
+    @apply w-10;
+}
+
+.dice-roll-selector-container {
+    @apply absolute;
+    @apply z-chat-panel-roll;
+    @apply border-2;
+    @apply rounded-xl;
+    @apply shadow-md;
+    @apply flex;
+    @apply flex-col;
+    @apply bg-primary-700;
+    @apply text-primary-300;
+}
+
+.dice-roll-button {
+    @apply button;
+    @apply bg-primary-700;
+    @apply text-primary-300;
 }
 
 .loading-overlay {

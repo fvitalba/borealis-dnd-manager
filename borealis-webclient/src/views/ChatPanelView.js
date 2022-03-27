@@ -1,4 +1,5 @@
 import { forwardRef } from 'react'
+import DiceRollButton from '../components/DiceRollButton'
 import Button from './Button'
 import { PlaySolidIcon, XCircleOutlineIcon, ChatOutlineIcon, HelpCircleSolidIcon } from './Icons'
 
@@ -137,6 +138,7 @@ const ChatPanelView = ({ username, chatPanelHidden, toggleHidden, showHelp, togg
                     })}
                 </div>
                 <div className='chat-panel-input'>
+                    <DiceRollButton />
                     <input title='Mesage' placeholder='Type your message...' value={ currentMessage } onChange={ changeCurrentMessage } className='chat-panel-input-input' onKeyDown={ inputOnKeyDown } />
                     <Button title='Push refresh to players' value={ <PlaySolidIcon /> } onClick={ addMessage } />
                 </div>
