@@ -4,6 +4,9 @@ export const saveUpdateRoomUser = async (room, guid, username, isHost) => {
     if (!room || !username)
         return undefined
 
+    if (!isHost)
+        isHost = false
+
     return User.findOneAndUpdate(
         { roomName: room, userName: username, }, 
         { guid: guid, lastOnline: new Date(), isHost: isHost, active: true, }, 
