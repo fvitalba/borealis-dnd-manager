@@ -7,6 +7,9 @@ import { useLoading } from '../hooks/useLoading'
 import { saveRoomToDatabase, getRoomFromDatabase } from '../controllers/apiHandler'
 import UserToolView from '../views/UserToolView'
 
+const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
+const REACT_APP_PORT = 3000
+
 const UserTool = ({ toggleOnUser, game, chat, character, metadata, settings, setFogEnabled, overwriteGame, incrementGen, setUsername, toggleMousesharing, setToolSettings, loadDefaultBattleGame }) => {
     const [webSocket, wsSettings, setWsSettings] = useWebSocket()
     // eslint-disable-next-line no-unused-vars
@@ -77,6 +80,13 @@ const UserTool = ({ toggleOnUser, game, chat, character, metadata, settings, set
             })
     }
 
+    const copyUrlToClipboard = () => {
+        const host = window.location.host.replace(/:\d+$/, '')
+        const protocol = /https/.test(window.location.protocol) ? 'https' : 'http'
+        const userUrl = DEBUG_MODE ? `${protocol}://${host}:${REACT_APP_PORT}/?room=${metadata.room}` : `https://${host}/?room=${metadata.room}`
+        navigator.clipboard.writeText(userUrl)
+    }
+
     return (
         toggleOnUser ?
             <UserToolView
@@ -89,7 +99,8 @@ const UserTool = ({ toggleOnUser, game, chat, character, metadata, settings, set
                 updateUsername={ updateUsername }
                 cursorSize={ settings.cursorSize }
                 mouseIsShared={ settings.shareMouse }
-                toggleShareMouse={ toggleShareMouse } />
+                toggleShareMouse={ toggleShareMouse }
+                copyUrlToClipboard={ copyUrlToClipboard } />
             : null
     )
 }
