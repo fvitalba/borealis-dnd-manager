@@ -15,12 +15,14 @@ const GameStateHandler = ({ metadata, settings, setGameSettings }) => {
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
-        setGameSettings(params.get('host'), params.get('room'), wsSettings.guid)
+        setGameSettings(params.get('host') ? true : false, params.get('room'), wsSettings.guid)
+        /*
         setWsSettings({
             ...wsSettings,
             room: params.get('room'),
             isHost: params.get('host') ? true : false,
         })
+        */
     }, [])
 
     useEffect(() => {
@@ -29,22 +31,24 @@ const GameStateHandler = ({ metadata, settings, setGameSettings }) => {
         else
             document.title = 'Borealis D&D'
 
-        setWsSettings({
-            ...wsSettings,
-            room: metadata.room,
-            username: settings.username,
-            isHost: metadata.isHost,
-        })
+        if ((metadata.room !== '') && (settings.username !== '')) {
+            setWsSettings({
+                ...wsSettings,
+                room: metadata.room,
+                username: settings.username,
+                isHost: metadata.isHost,
+            })
 
-        setIsLoading(true)
-        const newWebSocket = createWebSocket(metadata.room, metadata.guid, settings.username, metadata.isHost)
-        if (newWebSocket) {
-            newWebSocket.addEventListener('close', () => setIsLoading(false))
-            newWebSocket.addEventListener('open', () => setIsLoading(false))
-            newWebSocket.addEventListener('error', () => setIsLoading(false))
-            setWs(newWebSocket)
-        } else {
-            setIsLoading(false)
+            setIsLoading(true)
+            const newWebSocket = createWebSocket(metadata.room, metadata.guid, settings.username, metadata.isHost)
+            if (newWebSocket) {
+                newWebSocket.addEventListener('close', () => setIsLoading(false))
+                newWebSocket.addEventListener('open', () => setIsLoading(false))
+                newWebSocket.addEventListener('error', () => setIsLoading(false))
+                setWs(newWebSocket)
+            } else {
+                setIsLoading(false)
+            }
         }
     }, [ metadata.room, settings.username, metadata.isHost ])
 

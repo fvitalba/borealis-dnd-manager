@@ -16,7 +16,7 @@ const initialGameSetupState = () => {
     }
 }
 
-const GameSetup = ({ setGameSettings, setUsername, overwriteGame, setCharacters }) => {
+const GameSetup = ({ metadata, setGameSettings, setUsername, overwriteGame, setCharacters }) => {
     const [gameSetupState, setGameSetupState] = useState(initialGameSetupState)
     const [roomLookupState, setRoomLookupState] = useState({
         roomFound: false,
@@ -115,7 +115,7 @@ const GameSetup = ({ setGameSettings, setUsername, overwriteGame, setCharacters 
     const updateSettingsFromLocalStorage = (skipRoomUpdate) => {
         let [lastRoomName, roomUsername, isHost] = readSettingsFromLocalStorage(gameSetupState.roomName)
         if (skipRoomUpdate)
-            lastRoomName = gameSetupState.roomName
+            lastRoomName = metadata.room ? metadata.room : gameSetupState.roomName
         if ((lastRoomName !== gameSetupState.roomName) || (roomUsername !== gameSetupState.userName))
             setGameSetupState({
                 ...gameSetupState,
@@ -168,8 +168,12 @@ const GameSetup = ({ setGameSettings, setUsername, overwriteGame, setCharacters 
     }, [ searchRoom ])
 
     useEffect(() => {
-        updateSettingsFromLocalStorage(false)
-    }, [])
+        if (metadata.room !== '') {
+            updateSettingsFromLocalStorage(true)
+        } else {
+            updateSettingsFromLocalStorage(false)
+        }
+    }, [ metadata.room ])
 
     const isHost = (gameSetupState.isHost === true)
     const isPlayer = (gameSetupState.isHost === false)
@@ -192,6 +196,12 @@ const GameSetup = ({ setGameSettings, setUsername, overwriteGame, setCharacters 
     )
 }
 
+const mapStateToProps = (state) => {
+    return {
+        metadata: state.metadata,
+    }
+}
+
 const mapDispatchToProps = {
     setGameSettings,
     setUsername,
@@ -199,4 +209,4 @@ const mapDispatchToProps = {
     setCharacters,
 }
 
-export default connect(undefined, mapDispatchToProps)(GameSetup)
+export default connect(mapStateToProps, mapDispatchToProps)(GameSetup)

@@ -10,7 +10,6 @@ import {
 } from '../redux/constants'
 
 const initialSettingsState = () => {
-    const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
     return {
         cursorSize: 50,
         fogOpacity: 0.5,
@@ -19,7 +18,7 @@ const initialSettingsState = () => {
         drawSize: 8,
         tool: 'move',
         subtool: undefined,
-        username: params.get('host') ? 'DM' : 'PC',
+        username: '',
         shareMouse: false,
         deltaX: 0,
         deltaY: 0,
