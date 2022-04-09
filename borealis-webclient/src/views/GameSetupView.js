@@ -14,6 +14,7 @@ const GameSetupView = ({ roomName, onRoomNameChange, searchingRoom, roomFound, u
     return (
         <div className='game-setup-container'>
             <div className='game-setup-form'>
+                <h1>Borealis D&D</h1>
                 <div className='game-setup-room-input'>
                     <input title='Room name' placeholder='Room name' value={ roomName } onChange={ onRoomNameChange } className='game-setup-input' />
                     { !searchingRoom
