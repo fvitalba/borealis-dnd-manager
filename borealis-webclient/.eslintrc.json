@@ -1,4 +1,5 @@
 {
+    "root": true,
     "env": {
         "node": true,
         "browser": true,
@@ -7,8 +8,11 @@
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:tailwindcss/recommended"
+        "plugin:tailwindcss/recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
@@ -18,7 +22,8 @@
     },
     "plugins": [
         "react",
-        "tailwindcss"
+        "tailwindcss",
+        "@typescript-eslint"
     ],
     "rules": {
         "indent": [

@@ -28,7 +28,7 @@
     "build": "npm run watch:css && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint .",
+    "lint": "eslint . --ext .ts",
     "watch:css": "postcss src/styles/tailwind.css -o src/styles/output.css",
     "buildandcopy": "react-scripts build && cp -r build ../borealis-server/build"
   },
@@ -51,7 +51,9 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^7.32.0",
+    "@typescript-eslint/eslint-plugin": "^5.18.0",
+    "@typescript-eslint/parser": "^5.18.0",
+    "eslint": "^8.13.0",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-tailwindcss": "^3.4.4",
     "postcss-cli": "^9.1.0"
