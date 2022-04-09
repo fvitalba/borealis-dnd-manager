@@ -1607,8 +1607,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin: 0.25rem;
   outline: 2px solid transparent;
   outline-offset: 2px;
-  -webkit-appearance: none;
-          appearance: none;
+  appearance: none;
   height: 2rem;
 }
 
@@ -1634,8 +1633,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin: 0.25rem;
   outline: 2px solid transparent;
   outline-offset: 2px;
-  -webkit-appearance: none;
-          appearance: none;
+  appearance: none;
   width: 4rem;
   height: 4rem;
   font-size: 3rem;
@@ -1691,8 +1689,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin: 0.25rem;
   outline: 2px solid transparent;
   outline-offset: 2px;
-  -webkit-appearance: none;
-          appearance: none;
+  appearance: none;
   height: 2rem;
 }
 
@@ -1733,7 +1730,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin: 0.25rem;
   outline: 2px solid transparent;
   outline-offset: 2px;
-  -webkit-appearance: none;
-          appearance: none;
+  appearance: none;
   height: 2rem;
 }
