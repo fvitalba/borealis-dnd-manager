@@ -3,7 +3,7 @@ import express from 'express'
 import fs from 'fs'
 import http from 'http'
 import https from 'https'
-import ws from 'ws'
+import { WebSocketServer } from 'ws'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import queryString from 'query-string'
@@ -142,7 +142,7 @@ const createServer = () => {
 const server = createServer()
 
 // Initialize the WebSocket server instance
-const wss = new ws.Server({ server: server, autoAcceptConnections: true, })
+const wss = new WebSocketServer({ server: server, autoAcceptConnections: true, })
 
 wss.on('connection', (websocketConnection, connectionRequest) => {
     const [path, params] = connectionRequest?.url?.split('?')
@@ -160,7 +160,7 @@ wss.on('connection', (websocketConnection, connectionRequest) => {
                 if (outgoingMessage) {
                     // Forward message to all other clients (for this room)
                     wss.clients.forEach(client => {
-                        if (client.readyState === ws.OPEN) {
+                        if (client.readyState === client.OPEN) {
                             if (client.room !== websocketConnection.room)
                                 return // Don't send to other rooms
                             if ((client === websocketConnection) && !sendBackToSender)
