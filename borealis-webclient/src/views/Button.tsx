@@ -1,6 +1,17 @@
-import { forwardRef } from 'react'
+import { CSSProperties, ForwardedRef, forwardRef } from 'react'
 
-const Button = forwardRef(({ title, value, onClick, isSelected, style, disabled, customClass, customSelectedClass, ...additionalAttr }, ref) => {
+interface ButtonProps {
+    title: string,
+    value: JSX.Element,
+    onClick: () => void,
+    isSelected?: boolean,
+    style?: CSSProperties,
+    disabled?: boolean,
+    customClass?: string,
+    customSelectedClass?: string,
+}
+
+const Button = forwardRef(({ title, value, onClick, isSelected, style, disabled, customClass, customSelectedClass, ...additionalAttr } : ButtonProps, ref : ForwardedRef<HTMLButtonElement>): JSX.Element => {
     const className = customClass ? customClass : 'button'
     const selectedClassName = customSelectedClass ? customSelectedClass : 'selected-button'
 
