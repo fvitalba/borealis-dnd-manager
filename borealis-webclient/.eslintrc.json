@@ -3,7 +3,8 @@
     "env": {
         "node": true,
         "browser": true,
-        "es2021": true
+        "esnext": true,
+        "jest": true
     },
     "extends": [
         "eslint:recommended",
@@ -57,6 +58,7 @@
     },
     "settings": {
         "react": {
+            "pragma": "React",
             "version": "detect"
         },
         "tailwindcss": {

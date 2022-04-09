@@ -10,5 +10,7 @@
 			"path": "borealis-server"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"typescript.tsdk": "borealis-webclient/node_modules/typescript/lib"
+	}
 }
