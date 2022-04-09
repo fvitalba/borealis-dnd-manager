@@ -1,7 +1,4 @@
-enum UserType {
-    "host" = 0,
-    "player" = 1,
-}
+import UserType from '../enums/UserType'
 
 class User {
     public guid: string

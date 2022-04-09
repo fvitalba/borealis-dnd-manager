@@ -43,11 +43,11 @@ class Character {
     public hitDice: Array<CharacterHitDice>
     public username: string
 
-    public constructor(newGuid: string, newName: string, newMaxHealth: number, newClassLevel?: CharacterClassLevel, newHitDice?: CharacterHitDice, newUsername?: string) {
+    public constructor(newGuid: string, newName: string, newMaxHealth: number, newClassLevel?: Array<CharacterClassLevel>, newHitDice?: Array<CharacterHitDice>, newUsername?: string) {
         this.guid = newGuid
         this.name = newName
-        this.class = new Array<CharacterClassLevel>()
-        this.hitDice = new Array<CharacterHitDice>()
+        this.class = newClassLevel ? newClassLevel : new Array<CharacterClassLevel>()
+        this.hitDice = newHitDice ? newHitDice : new Array<CharacterHitDice>()
         this.maxHealth = newMaxHealth
         this.currHealth = this.maxHealth
         this.strength = 10
@@ -60,13 +60,7 @@ class Character {
         this.armorclass = 10
         this.passivePerception = 10
         this.tempHealth = 0
-        this.username = ''
-        if (newClassLevel)
-            this.class.push(newClassLevel)
-        if (newHitDice)
-            this.hitDice.push(newHitDice)
-        if (newUsername)
-            this.username = newUsername
+        this.username = newUsername ? newUsername : ''
     }
 
     public getModifier(attribute: CharacterAttribute): number {
