@@ -1,40 +1,36 @@
 import { SET_USERS_FROM_API } from '../redux/constants'
+import User from '../classes/User'
 
-const initialUserReducer = () => {
+interface UserState {
+    users: Array<User>,
+}
+
+const initialUserReducer = (): UserState => {
     return {
         users: [],
     }
 }
 
-const userTemplate = {
-    guid: '',
-    username: '',
-    isHost: false,
-    selectedCharacterGuid: '',
-    lastOnline: 0,
+interface UserAction {
+    type: string,
+    newUsers: Array<User>,
 }
 
-const userReducer = (state = initialUserReducer(), action) => {
+const userReducer = (state: UserState = initialUserReducer(), action: UserAction) => {
     let newUsers = []
     switch (action.type) {
     case SET_USERS_FROM_API:
-        newUsers = action.newUsers.map((actionUser) => {
-            const currUser = state.users.filter((stateUser) => stateUser.guid === actionUser.guid)
+        newUsers = action.newUsers.map((actionUser: User) => {
+            const currUser = state.users.filter((stateUser: User) => stateUser.guid === actionUser.guid)
             if ((currUser.length > 0) && (currUser[0].guid)) {
                 return {
                     ...currUser,
+                    name: actionUser.name,
+                    type: actionUser.type,
                     lastOnline: actionUser.lastOnline,
-                    username: actionUser.userName,
-                    isHost: actionUser.isHost,
                 }
             } else {
-                return {
-                    ...userTemplate,
-                    guid: actionUser.guid,
-                    lastOnline: actionUser.lastOnline,
-                    username: actionUser.userName,
-                    isHost: actionUser.isHost,
-                }
+                return new User(actionUser.guid, actionUser.name, actionUser.type)
             }
         })
         return {
@@ -47,7 +43,7 @@ const userReducer = (state = initialUserReducer(), action) => {
 }
 
 //#region Action Creators
-export const setUsersFromAPI = (newUsers) => {
+export const setUsersFromAPI = (newUsers: Array<User>) => {
     return {
         type: SET_USERS_FROM_API,
         newUsers: newUsers,
