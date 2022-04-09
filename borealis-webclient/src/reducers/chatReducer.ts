@@ -1,86 +1,73 @@
-import guid from '../controllers/guid'
-import { ADD_CHAT_MESSAGE, SET_CHAT_USERNAME, OVERWRITE_CHAT } from '../redux/constants'
+import {
+    ADD_CHAT_MESSAGE,
+    SET_CHAT_USERNAME,
+    OVERWRITE_CHAT
+} from '../redux/constants'
+import Message from '../classes/Message'
 
-const initialChatState = () => {
+interface ChatState {
+    username: string,
+    messages: Array<Message>
+}
+
+const initialChatState = (): ChatState => {
     return {
         username: '',
         messages: [],
     }
 }
 
-const chatMessage = () => {
-    return {
-        guid: undefined,
-        timestamp: undefined,
-        username: '',
-        targetUsername: '',
-        playerInfo: undefined,
-        publicMessage: '',
-        privateMessage: '',
-        typeOfMessage: '',
-        read: false,
-    }
+interface ChatAction {
+    type: string,
+    message?: Message,
+    username?: string,
+    messages?: Array<Message>
 }
 
-const chatReducer = (state = initialChatState(), action) => {
-    let message = chatMessage
+const chatReducer = (state: ChatState = initialChatState(), action: ChatAction): ChatState => {
     switch (action.type) {
     case ADD_CHAT_MESSAGE:
-        message = {
-            ...message,
-            guid: guid(),
-            username: action.username,
-            timestamp: action.timestamp,
-            targetUsername: action.targetUsername,
-            privateMessage: action.privateMessageText,
-            publicMessage: action.publicMessageText,
-            typeOfMessage: action.typeOfMessage,
-            playerInfo: action.playerInfo,
-        }
         return {
             ...state,
-            messages: state.messages.concat(message)
+            messages: action.message ? state.messages.concat(action.message): state.messages
         }
     case SET_CHAT_USERNAME:
         return {
             ...state,
-            username: action.username,
+            username: action.username? action.username : state.username,
         }
     case OVERWRITE_CHAT:
-        return {
-            ...state,
-            ...action.chat,
-        }
+        if (action.messages)
+            return {
+                ...state,
+                messages: action.messages,
+            }
+        else
+            return state
     default:
         return state
     }
 }
 
 //#region Action Creators
-export const addChatMessage = (username, playerInfo, publicMessageText, privateMessageText, targetUsername, timestamp, typeOfMessage) => {
+export const addChatMessage = (newMessage: Message): ChatAction => {
     return {
         type: ADD_CHAT_MESSAGE,
-        username: username,
-        targetUsername: targetUsername,
-        publicMessageText: publicMessageText,
-        privateMessageText: privateMessageText,
-        playerInfo: playerInfo,
-        typeOfMessage: typeOfMessage,
-        timestamp: timestamp ? timestamp : Date.now(),
+        message: newMessage
     }
 }
 
-export const setUsername = (newUsername) => {
+export const setUsername = (newUsername: string): ChatAction => {
     return {
         type: SET_CHAT_USERNAME,
         username: newUsername,
     }
 }
 
-export const overwriteChat = (newChat) => {
+export const overwriteChat = (newMessages: Array<Message>): ChatAction => {
     return {
         type: OVERWRITE_CHAT,
-        chat: newChat,
+        messages: newMessages,
     }
 }
 //#endregion Action Creators

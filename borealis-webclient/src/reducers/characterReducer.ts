@@ -33,7 +33,7 @@ const characterReducer = (state: CharacterState = initialCharacterReducer(), act
     switch (action.type) {
     case ADD_CHARACTER:
         if (action.character)
-            newCharacters.push(action.character)
+            newCharacters = newCharacters.concat(action.character)
         return {
             ...state,
             characters: newCharacters,
@@ -65,6 +65,7 @@ const characterReducer = (state: CharacterState = initialCharacterReducer(), act
     case ASSIGN_CHARACTER_TO_USER:
         newCharacters = newCharacters.map((character: Character) => {
             if (character.guid === action.characterGuid) {
+                //TODO: Verify if this is actually OK with state management
                 if (action.username)
                     character.username = action.username
                 return character
