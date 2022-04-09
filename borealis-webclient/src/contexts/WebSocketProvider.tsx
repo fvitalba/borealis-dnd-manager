@@ -6,7 +6,7 @@ const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
 const SOCKET_RECONNECTION_TIMEOUT = 2500
 const SOCKET_SERVER_PORT = process.env.PORT || process.env.REACT_APP_PORT || 8000
 
-const generateWebSocketUrl = (room, guid, username, isHost) => {
+const generateWebSocketUrl = (room: string, guid: string, username: string, isHost?: boolean) => {
     const host = window.location.host.replace(/:\d+$/, '')
     const protocol = /https/.test(window.location.protocol) ? 'wss' : 'ws'
 
@@ -20,32 +20,47 @@ const generateWebSocketUrl = (room, guid, username, isHost) => {
     return webSocketUrl + userParam + hostParam
 }
 
-export const createWebSocket = (room, guid, username, isHost) => {
+export const createWebSocket = (room: string, guid: string, username?: string, isHost?: boolean) : WebSocket | null => {
     if (room && username) {
         const webSocketUrl = generateWebSocketUrl(room, guid, username, isHost)
         return new WebSocket(webSocketUrl)
     } else {
-        return undefined
+        return null
     }
 }
 
-export const WebSocketContext = createContext(createWebSocket('',''))
+export interface IWsSettings {
+    guid: string,
+    username: string,
+    room: string,
+    isHost: boolean,
+}
 
-const WebSocketProvider = ({ children }) => {
-    const [wsSettings, setWsSettings] = useState({
+interface IWebSocketContext {
+    ws: WebSocket | null,
+    wsSettings?: IWsSettings,
+    setWs?: (arg0: WebSocket) => void,
+    setWsSettings?: (arg0: IWsSettings) => void,
+}
+
+export const WebSocketContext = createContext<IWebSocketContext>({ ws: null })
+
+const WebSocketProvider = ({ children } : { children: JSX.Element }) => {
+    const [wsSettings, setWsSettings] = useState<IWsSettings>({
         guid: guid(),
         username: '',
         room: '',
         isHost: false,
     })
-    const [ws, setWs] = useState(null)
+    const [ws, setWs] = useState<WebSocket | null>(null)
     // eslint-disable-next-line no-unused-vars
-    const [_isLoading, setIsLoading] = useLoading()
+    const { isLoading, setIsLoading } = useLoading()
 
     useEffect(() => {
         const onClose = () => {
             setTimeout(() => {
-                setIsLoading(true)
+                if (setIsLoading)
+                    setIsLoading(true)
                 console.debug('Socket Timeout, recreating WebSocket')
                 setWs(createWebSocket(wsSettings.room, wsSettings.guid, wsSettings.username, wsSettings.isHost))
             }, SOCKET_RECONNECTION_TIMEOUT)
@@ -53,11 +68,13 @@ const WebSocketProvider = ({ children }) => {
 
         const onOpen = () => {
             // When the WebSocket is open, close the loading screen
-            setIsLoading(false)
+            if (setIsLoading)
+                setIsLoading(false)
         }
 
-        const onError = (err) => {
-            setIsLoading(false)
+        const onError = (err: Event) => {
+            if (setIsLoading)
+                setIsLoading(false)
             console.error('WebSocket could not be created. Error: ', err)
         }
 
@@ -77,7 +94,7 @@ const WebSocketProvider = ({ children }) => {
     }, [ ws, setWs, wsSettings ])
 
     return (
-        <WebSocketContext.Provider value={ [ws, wsSettings, setWsSettings, setWs] }>{ children }</WebSocketContext.Provider>
+        <WebSocketContext.Provider value={{ ws, wsSettings, setWs, setWsSettings }}>{ children }</WebSocketContext.Provider>
     )
 }
 
