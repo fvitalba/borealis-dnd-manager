@@ -43,7 +43,7 @@ const userReducer = (state: UserState = initialUserReducer(), action: UserAction
 }
 
 //#region Action Creators
-export const setUsersFromAPI = (newUsers: Array<User>) => {
+export const setUsersFromAPI = (newUsers: Array<User>): UserAction => {
     return {
         type: SET_USERS_FROM_API,
         newUsers: newUsers,

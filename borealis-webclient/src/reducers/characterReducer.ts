@@ -1,65 +1,57 @@
-import guid from '../controllers/guid'
-import { ADD_CHARACTER, UPDATE_CHARACTER, DELETE_CHARACTER, ASSIGN_CHARACTER, ASSIGN_CHARACTER_TO_USER, SET_CHARACTERS } from '../redux/constants'
+import {
+    ADD_CHARACTER,
+    UPDATE_CHARACTER,
+    DELETE_CHARACTER,
+    ASSIGN_CHARACTER,
+    ASSIGN_CHARACTER_TO_USER,
+    SET_CHARACTERS
+} from '../redux/constants'
+import Character from '../classes/Character'
 
-const initialCharacterReducer = () => {
+interface CharacterState {
+    characters: Array<Character>,
+    currentCharacterGuid: string
+}
+
+const initialCharacterReducer = (): CharacterState => {
     return {
         characters: [],
-        myCharacterGuid: '',
+        currentCharacterGuid: '',
     }
 }
 
-export const characterTemplate = {
-    guid: '',
-    name: '',
-    strength: 10,
-    dexterity: 10,
-    constitution: 10,
-    intelligence: 10,
-    wisdom: 10,
-    charisma: 10,
-    proficiency: 0,
-    armorclass: 0,
-    passivePerception: 10,
-    maxHealth: 0,
-    currHealth: 0,
-    tempHealth: 0,
-    level: 1,
-    class: '',
-    maxNoOfHitDice: 0,
-    currNoOfHitDice: 0,
-    hitDiceType: 0,
-    username: '',
+interface CharacterAction {
+    type: string,
+    character?: Character,
+    characterGuid?: string,
+    username?: string,
+    characters?: Array<Character>,
 }
 
-const characterReducer = (state = initialCharacterReducer(), action) => {
-    let newCharacters = []
+const characterReducer = (state: CharacterState = initialCharacterReducer(), action: CharacterAction) => {
+    let newCharacters = state.characters
     switch (action.type) {
     case ADD_CHARACTER:
-        newCharacters = state.characters.concat({
-            ...characterTemplate,
-            ...action.newCharacter,
-            guid: action.newCharacter.guid ? action.newCharacter.guid : guid(),
-        })
+        if (action.character)
+            newCharacters.push(action.character)
         return {
             ...state,
             characters: newCharacters,
         }
     case UPDATE_CHARACTER:
-        newCharacters = state.characters.map((stateCharacter) => {
-            if (stateCharacter.guid === action.updatedCharacter.guid) {
-                return {
-                    ...stateCharacter,
-                    ...action.updatedCharacter,
-                }
-            } else
-                return stateCharacter
-        })
+        if (action.character)
+            newCharacters = newCharacters.map((stateCharacter: Character) => {
+                if ((stateCharacter.guid === action.character?.guid)) {
+                    return action.character
+                } else
+                    return stateCharacter
+            })
         return {
             ...state,
             characters: newCharacters,
         }
     case DELETE_CHARACTER:
-        newCharacters = state.characters.filter((character) => character.guid !== action.characterGuidToDelete)
+        newCharacters = newCharacters.filter((character: Character) => character.guid !== action.characterGuid)
         return {
             ...state,
             characters: newCharacters,
@@ -68,12 +60,14 @@ const characterReducer = (state = initialCharacterReducer(), action) => {
     case ASSIGN_CHARACTER:
         return {
             ...state,
-            myCharacterGuid: action.guidToAssign,
+            myCharacterGuid: action.characterGuid,
         }
     case ASSIGN_CHARACTER_TO_USER:
-        newCharacters = state.characters.map((character) => {
-            if (character.guid === action.guidToAssign) {
-                return { ...character, username: action.username, }
+        newCharacters = newCharacters.map((character: Character) => {
+            if (character.guid === action.characterGuid) {
+                if (action.username)
+                    character.username = action.username
+                return character
             } else {
                 return character
             }
@@ -83,73 +77,59 @@ const characterReducer = (state = initialCharacterReducer(), action) => {
             characters: newCharacters,
         }
     case SET_CHARACTERS:
-        if (action.newCharacters.length > 0)
-            newCharacters = action.newCharacters.map((actionCharacter) => {
-                const stateCharacter = state.characters.filter((character) => character.guid === actionCharacter.guid)
-                if ((stateCharacter.length > 0) && (stateCharacter[0].guid)) {
-                    return ({
-                        ...stateCharacter,
-                        ...actionCharacter,
-                    })
-                } else {
-                    return ({
-                        ...characterTemplate,
-                        ...actionCharacter,
-                    })
-                }
-            })
+        if (action.characters)
+            return {
+                ...state,
+                characters: action.characters,
+            }
         else
-            newCharacters = []
-        return {
-            ...state,
-            characters: newCharacters,
-        }
+            return state
     default:
         return state
     }
 }
 
 //#region Action Creators
-export const addChararacter = (newCharacter) => {
+export const addChararacter = (newCharacter: Character): CharacterAction => {
     return {
         type: ADD_CHARACTER,
-        newCharacter: newCharacter,
+        character: newCharacter,
     }
 }
 
-export const updateCharacter = (updatedCharacter) => {
+export const updateCharacter = (updatedCharacter: Character): CharacterAction => {
     return {
         type: UPDATE_CHARACTER,
-        updatedCharacter: updatedCharacter,
+        character: updatedCharacter,
     }
 }
 
-export const deleteCharacter = (characterGuidToDelete) => {
+export const deleteCharacter = (characterGuidToDelete: string): CharacterAction => {
     return {
         type: DELETE_CHARACTER,
-        characterGuidToDelete: characterGuidToDelete,
+        characterGuid: characterGuidToDelete,
     }
 }
 
-export const assignCharacter = (guidToAssign) => {
+export const assignCharacter = (guidToAssign: string): CharacterAction => {
     return {
         type: ASSIGN_CHARACTER,
-        guidToAssign: guidToAssign,
+        characterGuid: guidToAssign,
     }
 }
 
-export const assignCharacterToUser = (username, guidToAssign) => {
+export const assignCharacterToUser = (username: string, guidToAssign: string): CharacterAction => {
     return {
         type: ASSIGN_CHARACTER_TO_USER,
         username: username,
-        guidToAssign: guidToAssign,
+        characterGuid: guidToAssign,
     }
 }
 
-export const setCharacters = (newCharacters) => {
+export const setCharacters = (newCharacters: Array<Character>): CharacterAction => {
     return {
         type: SET_CHARACTERS,
-        newCharacters: newCharacters,
+        characters: newCharacters,
     }
 }
 //#endregion Action Creators
