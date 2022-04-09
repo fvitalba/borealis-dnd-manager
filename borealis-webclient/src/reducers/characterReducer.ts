@@ -28,7 +28,7 @@ interface CharacterAction {
     characters?: Array<Character>,
 }
 
-const characterReducer = (state: CharacterState = initialCharacterReducer(), action: CharacterAction) => {
+const characterReducer = (state: CharacterState = initialCharacterReducer(), action: CharacterAction): CharacterState => {
     let newCharacters = state.characters
     switch (action.type) {
     case ADD_CHARACTER:
@@ -55,12 +55,12 @@ const characterReducer = (state: CharacterState = initialCharacterReducer(), act
         return {
             ...state,
             characters: newCharacters,
-            myCharacterGuid: '',
+            currentCharacterGuid: '',
         }
     case ASSIGN_CHARACTER:
         return {
             ...state,
-            myCharacterGuid: action.characterGuid,
+            currentCharacterGuid: action.characterGuid ? action.characterGuid : state.currentCharacterGuid,
         }
     case ASSIGN_CHARACTER_TO_USER:
         newCharacters = newCharacters.map((character: Character) => {

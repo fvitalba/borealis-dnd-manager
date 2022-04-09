@@ -35,11 +35,8 @@ interface TokenAction {
 }
 
 const tokenReducer = (state: TokenState = initialTokenState(), action: TokenAction): TokenState => {
-    const tokens = JSON.parse(JSON.stringify(state.tokens))
-
     let newTokens = state.tokens
     let newToken: Token
-    let tokenToCopy: Token
 
     switch(action.type) {
     case ADD_TOKEN:
@@ -58,16 +55,18 @@ const tokenReducer = (state: TokenState = initialTokenState(), action: TokenActi
         }
     case DELETE_TOKEN:
         if (action.guid)
-            newTokens = tokens.filter((token: Token) => token.guid !== action.guid)
+            newTokens = newTokens.filter((token: Token) => token.guid !== action.guid)
         return {
             ...state,
             tokens: newTokens,
         }
     case COPY_TOKEN:
         if (action.guid) {
-            tokenToCopy = state.tokens.filter((token) => token.guid === action.guid)[0]
-            newToken = new Token(tokenToCopy.name, tokenToCopy.imageUrl, tokenToCopy.mapId, tokenToCopy.x, tokenToCopy.y, tokenToCopy.condition, tokenToCopy.type, guid(), tokenToCopy.size, false, tokenToCopy.hidden, tokenToCopy.showLabel, 0, 0)
-            newTokens = state.tokens.concat(newToken)
+            const tokenToCopy = newTokens.filter((token) => token.guid === action.guid)
+            if (tokenToCopy.length > 0) {
+                newToken = new Token(tokenToCopy[0].name, tokenToCopy[0].imageUrl, tokenToCopy[0].mapId, tokenToCopy[0].x, tokenToCopy[0].y, tokenToCopy[0].condition, tokenToCopy[0].type, guid(), tokenToCopy[0].size, false, tokenToCopy[0].hidden, tokenToCopy[0].showLabel, 0, 0)
+                newTokens = newTokens.concat(newToken)
+            }
         }
         return {
             ...state,

@@ -16,23 +16,22 @@ interface UserAction {
     newUsers: Array<User>,
 }
 
-const userReducer = (state: UserState = initialUserReducer(), action: UserAction) => {
-    let newUsers = []
+const userReducer = (state: UserState = initialUserReducer(), action: UserAction): UserState => {
+    let newUsers = state.users
     switch (action.type) {
     case SET_USERS_FROM_API:
-        newUsers = action.newUsers.map((actionUser: User) => {
-            const currUser = state.users.filter((stateUser: User) => stateUser.guid === actionUser.guid)
-            if ((currUser.length > 0) && (currUser[0].guid)) {
-                return {
-                    ...currUser,
-                    name: actionUser.name,
-                    type: actionUser.type,
-                    lastOnline: actionUser.lastOnline,
+        if (action.newUsers)
+            newUsers = action.newUsers.map((actionUser: User) => {
+                const currUser = state.users.filter((stateUser: User) => stateUser.guid === actionUser.guid)
+                if ((currUser.length > 0) && (currUser[0].guid)) {
+                    currUser[0].name = actionUser.name
+                    currUser[0].type = actionUser.type
+                    currUser[0].lastOnline = actionUser.lastOnline
+                    return currUser[0]
+                } else {
+                    return new User(actionUser.guid, actionUser.name, actionUser.type)
                 }
-            } else {
-                return new User(actionUser.guid, actionUser.name, actionUser.type)
-            }
-        })
+            })
         return {
             ...state,
             users: newUsers,
