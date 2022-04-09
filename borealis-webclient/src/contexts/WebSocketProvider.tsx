@@ -36,7 +36,7 @@ export interface IWsSettings {
     isHost: boolean,
 }
 
-interface IWebSocketContext {
+export interface IWebSocketContext {
     ws: WebSocket | null,
     wsSettings?: IWsSettings,
     setWs?: (arg0: WebSocket) => void,

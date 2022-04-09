@@ -1,4 +1,4 @@
-import { CSSProperties, ForwardedRef, forwardRef } from 'react'
+import React, { CSSProperties, ForwardedRef, forwardRef } from 'react'
 
 interface ButtonProps {
     title: string,
@@ -11,7 +11,7 @@ interface ButtonProps {
     customSelectedClass?: string,
 }
 
-const Button = forwardRef(({ title, value, onClick, isSelected, style, disabled, customClass, customSelectedClass, ...additionalAttr } : ButtonProps, ref : ForwardedRef<HTMLButtonElement>): JSX.Element => {
+const Button = forwardRef(({ title, value, onClick, isSelected, style, disabled, customClass, customSelectedClass, ...additionalAttr }: ButtonProps, ref: ForwardedRef<HTMLButtonElement>): JSX.Element => {
     const className = customClass ? customClass : 'button'
     const selectedClassName = customSelectedClass ? customSelectedClass : 'selected-button'
 

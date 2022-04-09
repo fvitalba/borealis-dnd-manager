@@ -1,7 +1,7 @@
-import { useContext } from 'react'
-import { WebSocketContext } from '../contexts/WebSocketProvider'
+import React, { useContext } from 'react'
+import { WebSocketContext, IWsSettings, IWebSocketContext } from '../contexts/WebSocketProvider'
 
-export const useWebSocket = () => {
+export const useWebSocket = (): IWebSocketContext => {
     const webSocket = useContext(WebSocketContext)
     if (!webSocket) {
         throw new Error('useSocket must be used with WebSocketContext')
@@ -9,14 +9,14 @@ export const useWebSocket = () => {
     return webSocket
 }
 
-const sendData = (webSocket, data) => {
+const sendData = (webSocket: WebSocket, data: any) => {
     if (webSocket && webSocket.readyState === WebSocket.OPEN)
         webSocket.send(JSON.stringify(data))
     else
         console.error('no websocket')
 }
 
-export const pushCursor = (webSocket, wsSettings, x, y) => {
+export const pushCursor = (webSocket: WebSocket, wsSettings: IWsSettings, x: number, y: number) => {
     sendData(webSocket, {
         type: 'pushCursor',
         from: wsSettings.guid,
@@ -27,7 +27,7 @@ export const pushCursor = (webSocket, wsSettings, x, y) => {
     })
 }
 
-export const pushDrawPath = (webSocket, wsSettings, newDrawPath) => {
+export const pushDrawPath = (webSocket: WebSocket, wsSettings: IWsSettings, newDrawPath) => {
     sendData(webSocket, {
         type: 'pushDrawPath',
         from: wsSettings.guid,
@@ -37,7 +37,7 @@ export const pushDrawPath = (webSocket, wsSettings, newDrawPath) => {
     })
 }
 
-export const pushDrawReset = (webSocket, wsSettings) => {
+export const pushDrawReset = (webSocket: WebSocket, wsSettings: IWsSettings) => {
     sendData(webSocket, {
         type: 'pushDrawReset',
         from: wsSettings.guid,
@@ -46,7 +46,7 @@ export const pushDrawReset = (webSocket, wsSettings) => {
     })
 }
 
-export const pushFogPath = (webSocket, wsSettings, newFogPath) => {
+export const pushFogPath = (webSocket: WebSocket, wsSettings: IWsSettings, newFogPath) => {
     sendData(webSocket, {
         type: 'pushFogPath',
         from: wsSettings.guid,
@@ -56,7 +56,7 @@ export const pushFogPath = (webSocket, wsSettings, newFogPath) => {
     })
 }
 
-export const pushFogReset = (webSocket, wsSettings) => {
+export const pushFogReset = (webSocket: WebSocket, wsSettings: IWsSettings) => {
     sendData(webSocket, {
         type: 'pushFogReset',
         from: wsSettings.guid,
@@ -65,7 +65,7 @@ export const pushFogReset = (webSocket, wsSettings) => {
     })
 }
 
-export const pushMapState = (webSocket, wsSettings, maps, mapId) => {
+export const pushMapState = (webSocket: WebSocket, wsSettings: IWsSettings, maps, mapId: number) => {
     sendData(webSocket, {
         type: 'pushMapState',
         from: wsSettings.guid,
@@ -76,7 +76,7 @@ export const pushMapState = (webSocket, wsSettings, maps, mapId) => {
     })
 }
 
-export const pushMapId = (webSocket, wsSettings, mapId) => {
+export const pushMapId = (webSocket: WebSocket, wsSettings: IWsSettings, mapId: number) => {
     sendData(webSocket, {
         type: 'pushMapId',
         from: wsSettings.guid,
@@ -86,7 +86,7 @@ export const pushMapId = (webSocket, wsSettings, mapId) => {
     })
 }
 
-export const pushCreateMap = (webSocket, wsSettings, newMapName, newWidth, newHeight) => {
+export const pushCreateMap = (webSocket: WebSocket, wsSettings: IWsSettings, newMapName: string, newWidth: number, newHeight: number) => {
     sendData(webSocket, {
         type: 'pushCreateMap',
         from: wsSettings.guid,
@@ -98,7 +98,7 @@ export const pushCreateMap = (webSocket, wsSettings, newMapName, newWidth, newHe
     })
 }
 
-export const pushFogEnabled = (webSocket, wsSettings, newFogEnabled) => {
+export const pushFogEnabled = (webSocket: WebSocket, wsSettings: IWsSettings, newFogEnabled: boolean) => {
     sendData(webSocket, {
         type: 'pushFogEnabled',
         from: wsSettings.guid,
@@ -108,7 +108,7 @@ export const pushFogEnabled = (webSocket, wsSettings, newFogEnabled) => {
     })
 }
 
-export const pushGameRefresh = (webSocket, wsSettings, game, chat, characters, additionalAttributes) => {
+export const pushGameRefresh = (webSocket: WebSocket, wsSettings: IWsSettings, game, chat, characters, additionalAttributes) => {
     sendData(webSocket, {
         type: 'pushGameRefresh',
         from: wsSettings.guid,
@@ -121,7 +121,7 @@ export const pushGameRefresh = (webSocket, wsSettings, game, chat, characters, a
     })
 }
 
-export const pushSingleToken = (webSocket, wsSettings, token) => {
+export const pushSingleToken = (webSocket: WebSocket, wsSettings: IWsSettings, token) => {
     sendData(webSocket, {
         type: 'pushSingleToken',
         from: wsSettings.guid,
@@ -131,7 +131,7 @@ export const pushSingleToken = (webSocket, wsSettings, token) => {
     })
 }
 
-export const deleteSingleToken = (webSocket, wsSettings, tokenGuid) => {
+export const deleteSingleToken = (webSocket: WebSocket, wsSettings: IWsSettings, tokenGuid: string) => {
     sendData(webSocket, {
         type: 'deleteSingleToken',
         from: wsSettings.guid,
@@ -141,7 +141,7 @@ export const deleteSingleToken = (webSocket, wsSettings, tokenGuid) => {
     })
 }
 
-export const pushTokens = (webSocket, wsSettings, tokens) => {
+export const pushTokens = (webSocket: WebSocket, wsSettings: IWsSettings, tokens) => {
     sendData(webSocket, {
         type: 'pushTokens',
         from: wsSettings.guid,
@@ -151,7 +151,7 @@ export const pushTokens = (webSocket, wsSettings, tokens) => {
     })
 }
 
-export const requestRefresh = (webSocket, wsSettings) => {
+export const requestRefresh = (webSocket: WebSocket, wsSettings: IWsSettings) => {
     sendData(webSocket, {
         type: 'requestRefresh',
         from: wsSettings.guid,
@@ -160,7 +160,7 @@ export const requestRefresh = (webSocket, wsSettings) => {
     })
 }
 
-export const sendChatMessage = (webSocket, wsSettings, username, playerInfo, publicMessageText, privateMessageText, targetUsername, timestamp, typeOfMessage) => {
+export const sendChatMessage = (webSocket: WebSocket, wsSettings: IWsSettings, username: string, playerInfo, publicMessageText, privateMessageText, targetUsername, timestamp, typeOfMessage) => {
     sendData(webSocket, {
         type: 'sendChatMessage',
         from: wsSettings.guid,
@@ -175,7 +175,7 @@ export const sendChatMessage = (webSocket, wsSettings, username, playerInfo, pub
     })
 }
 
-export const pushAssignCharacter = (webSocket, wsSettings, username, characterGuid) => {
+export const pushAssignCharacter = (webSocket: WebSocket, wsSettings: IWsSettings, username: string, characterGuid: string) => {
     sendData(webSocket, {
         type: 'pushAssignCharacter',
         from: wsSettings.guid,
@@ -184,7 +184,7 @@ export const pushAssignCharacter = (webSocket, wsSettings, username, characterGu
     })
 }
 
-export const pushUpdateCharacter = (webSocket, wsSettings, updatedCharacter) => {
+export const pushUpdateCharacter = (webSocket: WebSocket, wsSettings: IWsSettings, updatedCharacter) => {
     sendData(webSocket, {
         type: 'pushUpdateCharacter',
         from: wsSettings.guid,
@@ -192,7 +192,7 @@ export const pushUpdateCharacter = (webSocket, wsSettings, updatedCharacter) => 
     })
 }
 
-export const ping = (webSocket, wsSettings, username) => {
+export const ping = (webSocket: WebSocket, wsSettings: IWsSettings, username: string) => {
     sendData(webSocket, {
         type: 'ping',
         from: wsSettings.guid,

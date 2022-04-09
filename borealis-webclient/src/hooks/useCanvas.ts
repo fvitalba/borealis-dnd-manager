@@ -1,13 +1,15 @@
-import { useRef, useEffect } from 'react'
+import React, { useRef, useEffect } from 'react'
 
-const useCanvas = (draw, options={}) => {
-    const canvasRef = useRef(null)
+const useCanvas = (draw: Function) => {
+    const canvasRef = useRef<HTMLCanvasElement>(null)
 
     useEffect(() => {
         const canvas = canvasRef.current
-        const context = canvas.getContext(options.context || '2d')
+        if (canvas) {
+            const context = canvas.getContext('2d')
 
-        draw(context)
+            draw(context)
+        }
     }, [draw])
 
     return canvasRef

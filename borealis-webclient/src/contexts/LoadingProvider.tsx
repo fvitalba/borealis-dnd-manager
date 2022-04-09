@@ -1,6 +1,6 @@
 import React, { createContext, useState } from 'react'
 
-interface ILoadingContext {
+export interface ILoadingContext {
     isLoading: boolean,
     setIsLoading?: (arg0: boolean) => void,
 }
