@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import BannerView from '../views/BannerView'
 
-const Banner = ({ bannerContent, linkToAction }) => {
+const Banner = ({ bannerContent, linkToAction }: { bannerContent: string, linkToAction: string }) => {
     const [bannerState, setBannerState] = useState({
         hidden: false,
         content: bannerContent,
