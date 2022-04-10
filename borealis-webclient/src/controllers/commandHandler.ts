@@ -6,7 +6,7 @@ const commandNotValidMessage = {
     publicMessage: COMMAND_NOT_VALID_ERR,
 }
 
-export const convertChatMessage = (playerName, inputChatMessage, character) => {
+export const convertChatMessage = (playerName: string, inputChatMessage: string, character: string) => {
     const splitMessage = inputChatMessage.split(' ')
     let returnMessage
 
@@ -40,9 +40,9 @@ export const convertChatMessage = (playerName, inputChatMessage, character) => {
     }
 }
 
-const rollDiceCommand = (playerName, character, diceText, additionalText) => {
+const rollDiceCommand = (playerName: string, character: string, diceText: string, additionalText: Array<string>) => {
     // eslint-disable-next-line no-unused-vars
-    const [_noOfDice, _diceType, rolledValues, totalValue] = executeDiceRolls(character, diceText, additionalText)
+    const [noOfDice, diceType, rolledValues, totalValue] = executeDiceRolls(character, diceText, additionalText)
     const convertedMessage = `${playerName} rolled the following values ${formatRolledValues(rolledValues)}, for a total of: ${totalValue}.`
     const returnMessage = {
         messageType: 'command',
@@ -53,7 +53,7 @@ const rollDiceCommand = (playerName, character, diceText, additionalText) => {
     return returnMessage
 }
 
-const rollHiddenDiceCommand = (playerName, character, diceText, additionalText) => {
+const rollHiddenDiceCommand = (playerName: string, character: string, diceText: string, additionalText: Array<string>) => {
     // eslint-disable-next-line no-unused-vars
     const [noOfDice, diceType, _rolledValues, totalValue] = executeDiceRolls(character, diceText, additionalText)
     const returnMessage = {
@@ -65,7 +65,7 @@ const rollHiddenDiceCommand = (playerName, character, diceText, additionalText) 
     return returnMessage
 }
 
-const whisperCommand = (targetPlayerName, whisperText) => {
+const whisperCommand = (targetPlayerName: string, whisperText: Array<string>) => {
     const returnMessage = {
         messageType: 'whisper',
         targetPlayerName: targetPlayerName,
@@ -75,7 +75,7 @@ const whisperCommand = (targetPlayerName, whisperText) => {
     return returnMessage
 }
 
-const executeDiceRolls = (character, diceText, additionalText) => {
+const executeDiceRolls = (character: string, diceText: string, additionalText: Array<string>) => {
     const splitDiceText = diceText.split('D')
     if (splitDiceText.length !== 2)
         return commandNotValidMessage
@@ -121,13 +121,13 @@ const executeDiceRolls = (character, diceText, additionalText) => {
     return [noOfDice, diceType, rolledValues, totalValue]
 }
 
-const rollDice = (diceType) => {
+const rollDice = (diceType: number) => {
     const minimum = 1
     const maximum = diceType
     return Math.floor((Math.random() * (maximum - minimum + 1)) + minimum)
 }
 
-const modifierFromText = (character, inputText) => {
+const modifierFromText = (character, inputText: string) => {
     if (!inputText || (inputText === ''))
         return 0
     const characterValue = extractAttributeFromCharacter(character, inputText)
@@ -140,7 +140,7 @@ const modifierFromText = (character, inputText) => {
     return 0
 }
 
-const extractAttributeFromCharacter = (character, attributeCode) => {
+const extractAttributeFromCharacter = (character, attributeCode: string) => {
     if (!character || !attributeCode)
         return 0
     switch (attributeCode.toUpperCase()) {
@@ -167,11 +167,11 @@ const extractAttributeFromCharacter = (character, attributeCode) => {
     }
 }
 
-const modifierFromStat = (statValue) => {
+const modifierFromStat = (statValue: number): number => {
     return Math.floor((statValue - 10) / 2)
 }
 
-const formatRolledValues = (rolledValues) => {
+const formatRolledValues = (rolledValues: Array<number>): string => {
     let formattedRolls = ''
     rolledValues.map((rolledValue) => {
         if (isNaN(rolledValue))
@@ -182,7 +182,7 @@ const formatRolledValues = (rolledValues) => {
     return formattedRolls
 }
 
-const retrieveRollCondition = (inputTextArray) => {
+const retrieveRollCondition = (inputTextArray: Array<string>): string => {
     const condition = inputTextArray.filter((inputText) => {
         switch (inputText.toUpperCase()) {
         case 'DADV':
