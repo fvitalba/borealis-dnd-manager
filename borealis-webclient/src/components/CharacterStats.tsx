@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { characterTemplate, updateCharacter, deleteCharacter } from '../reducers/characterReducer'
 import { pushUpdateCharacter, ping, useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
-import { saveCharacterToDatabase } from '../controllers/apiHandler'
+import { saveCharacterToDatabase } from '../utils/apiHandler'
 import CharacterStatsView from '../views/CharacterStatsView'
 
 const CharacterStats = ({ toggleOnCharacterStats, character, user, metadata, settings, updateCharacter, deleteCharacter }) => {

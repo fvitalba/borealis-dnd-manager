@@ -1,4 +1,4 @@
-import guid from '../controllers/guid.js'
+import guid from '../utils/guid.js'
 import TokenCondition from '../enums/TokenCondition'
 import TokenSize from '../enums/TokenSize'
 import TokenType from '../enums/TokenType'

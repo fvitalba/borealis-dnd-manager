@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { sendChatMessage, useWebSocket } from '../hooks/useSocket'
-import { convertChatMessage } from '../controllers/commandHandler'
+import { convertChatMessage } from '../utils/commandHandler'
 import { addChatMessage } from '../reducers/chatReducer'
 import DiceRollButtonView from '../views/DiceRollButtonView'
 

@@ -5,7 +5,7 @@ import { setUsername } from '../reducers/settingsReducer'
 import { overwriteGame } from '../reducers/gameReducer'
 import { setCharacters } from '../reducers/characterReducer'
 import { useLoading } from '../hooks/useLoading'
-import { getRoomFromDatabase, getCharactersFromDatabase } from '../controllers/apiHandler'
+import { getRoomFromDatabase, getCharactersFromDatabase } from '../utils/apiHandler'
 import GameSetupView from '../views/GameSetupView'
 
 const initialGameSetupState = () => {

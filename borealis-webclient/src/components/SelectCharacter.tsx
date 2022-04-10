@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import guid from '../controllers/guid'
+import guid from '../utils/guid'
 import { addChararacter, assignCharacter } from '../reducers/characterReducer'
 import SelectCharacterView from '../views/SelectCharacterView'
 

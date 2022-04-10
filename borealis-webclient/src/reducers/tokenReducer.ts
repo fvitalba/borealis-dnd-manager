@@ -9,7 +9,7 @@ import {
     TOGGLE_TOKEN_VALUE,
     SET_TOKEN_ORIGIN
 } from '../redux/constants'
-import guid from '../controllers/guid'
+import guid from '../utils/guid'
 import Token from '../classes/Token'
 
 export interface TokenState {

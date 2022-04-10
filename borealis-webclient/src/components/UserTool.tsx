@@ -1,10 +1,10 @@
 import { connect } from 'react-redux'
-import { toJson } from '../controllers/jsonHandler'
+import { toJson } from '../utils/jsonHandler'
 import { defaultGameState, overwriteGame, incrementGen, loadDefaultBattleGame, setFogEnabled } from '../reducers/gameReducer'
 import { setUsername, setCursorSize, setToolSettings, toggleMousesharing } from '../reducers/settingsReducer'
 import { pushGameRefresh, pushFogEnabled, useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
-import { saveRoomToDatabase, getRoomFromDatabase } from '../controllers/apiHandler'
+import { saveRoomToDatabase, getRoomFromDatabase } from '../utils/apiHandler'
 import UserToolView from '../views/UserToolView'
 
 const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true

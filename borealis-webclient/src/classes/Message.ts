@@ -1,4 +1,4 @@
-import guid from '../controllers/guid'
+import guid from '../utils/guid'
 import MessageType from '../enums/MessageType'
 
 class Message {

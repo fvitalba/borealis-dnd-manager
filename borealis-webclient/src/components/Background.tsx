@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { updateDeltaXY, updateScale } from '../reducers/settingsReducer'
-import { drawImageObject } from '../controllers/drawImage'
+import { drawImageObject } from '../utils/drawImage'
 import Canvas from './Canvas'
 
 const Background = ({ game, settings, updateDeltaXY, updateScale }) => {

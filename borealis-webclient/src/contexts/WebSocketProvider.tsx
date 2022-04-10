@@ -1,6 +1,6 @@
 import React, { useEffect, useState, createContext } from 'react'
 import { useLoading } from '../hooks/useLoading'
-import guid from '../controllers/guid'
+import guid from '../utils/guid'
 
 const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
 const SOCKET_RECONNECTION_TIMEOUT = 2500
