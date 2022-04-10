@@ -1,95 +1,89 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { characterTemplate, updateCharacter, deleteCharacter } from '../reducers/characterReducer'
-import { pushUpdateCharacter, ping, useWebSocket } from '../hooks/useSocket'
+import Character from '../classes/Character'
+import CharacterClass from '../enums/CharacterClass'
+import UserType from '../enums/UserType'
+import { pushUpdateCharacter, useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
+import StateInterface from '../interfaces/StateInterface'
+import { updateCharacter, deleteCharacter, CharacterState } from '../reducers/characterReducer'
+import { UserState } from '../reducers/userReducer'
+import { MetadataState } from '../reducers/metadataReducer'
 import { saveCharacterToDatabase } from '../utils/apiHandler'
 import CharacterStatsView from '../views/CharacterStatsView'
 
-const CharacterStats = ({ toggleOnCharacterStats, character, user, metadata, settings, updateCharacter, deleteCharacter }) => {
+interface CharacterStatsProps {
+    toggleOnCharacterStats: boolean,
+    characterState: CharacterState,
+    userState: UserState,
+    metadataState: MetadataState,
+    updateCharacter: (arg0: Character) => void,
+    deleteCharacter: (arg0: string) => void,
+}
+
+const CharacterStats = ({ toggleOnCharacterStats, characterState, userState, metadataState, updateCharacter, deleteCharacter }: CharacterStatsProps) => {
     if (!toggleOnCharacterStats)
-        return null
+        return <></>
 
-    const [selectedCharacter, setSelectedCharacter] = useState(characterTemplate)
-    // eslint-disable-next-line no-unused-vars
-    const [webSocket, wsSettings] = useWebSocket()
-    // eslint-disable-next-line no-unused-vars
-    const [_isLoading, setIsLoading] = useLoading()
-
-    const modifierFromStat = (statValue) => {
-        const modifier = Math.floor((statValue - 10) / 2)
-        switch(true) {
-        case modifier === 0:
-            return modifier
-        case modifier > 0:
-            return '+' + modifier
-        case modifier < 0:
-            return modifier
-        }
-    }
+    const [selectedCharacter, setSelectedCharacter] = useState(new Character('','',0))
+    const webSocketContext = useWebSocket()
+    const loadingContext = useLoading()
 
     useEffect(() => {
-        const currCharacter = character.characters.filter((stateCharacter) => stateCharacter.guid === character.myCharacterGuid)[0]
+        const currCharacter = characterState.characters.filter((stateCharacter: Character) => stateCharacter.guid === characterState.currentCharacterGuid)[0]
         if (currCharacter)
             setSelectedCharacter(currCharacter)
-    }, [ character.myCharacterGuid ])
-
-    useEffect(() => {
-        const interval = setInterval(() => ping(webSocket, wsSettings, settings.username), 10000)
-        return () => {
-            clearInterval(interval)
-        }
-    },[ ping ])
+    }, [ characterState.currentCharacterGuid ])
 
     const modifiers = {
-        strength: modifierFromStat(selectedCharacter.strength),
-        dexterity: modifierFromStat(selectedCharacter.dexterity),
-        constitution: modifierFromStat(selectedCharacter.constitution),
-        intelligence: modifierFromStat(selectedCharacter.intelligence),
-        wisdom: modifierFromStat(selectedCharacter.wisdom),
-        charisma: modifierFromStat(selectedCharacter.charisma),
+        strength: selectedCharacter.getFormattedModifier(0),
+        dexterity: selectedCharacter.getFormattedModifier(1),
+        constitution: selectedCharacter.getFormattedModifier(2),
+        intelligence: selectedCharacter.getFormattedModifier(3),
+        wisdom: selectedCharacter.getFormattedModifier(4),
+        charisma: selectedCharacter.getFormattedModifier(5),
     }
 
-    const setCharacterName = (newName) => {
-        setSelectedCharacter({
-            ...selectedCharacter,
-            name: newName,
-        })
+    const setCharacterName = (newName: string) => {
+        const updatedCharacter = selectedCharacter
+        updatedCharacter.name = newName
+        setSelectedCharacter(updatedCharacter)
     }
 
-    const setCharacterClass = (newClass) => {
-        setSelectedCharacter({
-            ...selectedCharacter,
-            class: newClass,
-        })
+    const setCharacterClass = (newClass: CharacterClass, level: number) => {
+        const updatedCharacter = selectedCharacter
+        updatedCharacter.setClassLevel(newClass, level)
+        setSelectedCharacter(updatedCharacter)
     }
 
-    const onStatChange = (attributeName, e) => {
-        setSelectedCharacter({
-            ...selectedCharacter,
-            [attributeName]: parseInt(e.target.value),
-        })
+    const onStatChange = (attributeName: string, e: React.ChangeEvent<HTMLInputElement>) => {
+        const updatedCharacter = selectedCharacter
+        updatedCharacter.SetNumberAttributeValue(attributeName, parseInt(e.target.value))
+        setSelectedCharacter(updatedCharacter)
     }
 
-    const onSelectUser = (e) => {
-        setSelectedCharacter({
-            ...selectedCharacter,
-            username: e.target.value,
-        })
+    const onSelectUser = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const updatedCharacter = selectedCharacter
+        updatedCharacter.username = e.target.value
+        setSelectedCharacter(updatedCharacter)
     }
 
     const saveCurrCharacter = () => {
-        setIsLoading(true)
-        updateCharacter(selectedCharacter)
-        saveCharacterToDatabase(wsSettings, JSON.stringify(selectedCharacter))
-            .then(() => {
-                setIsLoading(false)
-                pushUpdateCharacter(selectedCharacter)
-            })
-            .catch((error) => {
-                console.error(error)
-                setIsLoading(false)
-            })
+        if (webSocketContext.wsSettings && loadingContext.setIsLoading) {
+            loadingContext.setIsLoading(true)
+            updateCharacter(selectedCharacter)
+            saveCharacterToDatabase(webSocketContext.wsSettings, JSON.stringify(selectedCharacter))
+                .then(() => {
+                    if (loadingContext.setIsLoading)
+                        loadingContext.setIsLoading(false)
+                    if (webSocketContext.ws && webSocketContext.wsSettings)
+                        pushUpdateCharacter(webSocketContext.ws, webSocketContext.wsSettings, selectedCharacter)
+                })
+                .catch(() => {
+                    if (loadingContext.setIsLoading)
+                        loadingContext.setIsLoading(false)
+                })
+        }
     }
 
     const deleteCurrCharacter = () => {
@@ -100,10 +94,10 @@ const CharacterStats = ({ toggleOnCharacterStats, character, user, metadata, set
 
     return (
         <CharacterStatsView
-            showCharacterStats={ character.myCharacterGuid !== '' }
-            isHost={ metadata.isHost }
+            showCharacterStats={ characterState.currentCharacterGuid !== '' }
+            isHost={ metadataState.userType === UserType.host }
             character={ selectedCharacter }
-            users={ user.users }
+            users={ userState.users }
             modifiers={ modifiers }
             characterName={ selectedCharacter.name }
             setCharacterName={ setCharacterName }
@@ -115,12 +109,11 @@ const CharacterStats = ({ toggleOnCharacterStats, character, user, metadata, set
     )
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: StateInterface) => {
     return {
-        character: state.character,
-        settings: state.settings,
-        metadata: state.metadata,
-        user: state.user,
+        characterState: state.character,
+        metadataState: state.metadata,
+        userState: state.user,
     }
 }
 

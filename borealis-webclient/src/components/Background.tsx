@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import Game from '../classes/Game'
+import Canvas from './Canvas'
 import ControlTool from '../enums/Tool'
 import StateInterface from '../interfaces/StateInterface'
 import { SettingsState, updateDeltaXY, updateScale } from '../reducers/settingsReducer'
 import { MapState } from '../reducers/mapReducer'
 import { drawImageObject } from '../utils/drawImage'
-import Canvas from './Canvas'
 
 interface BackgroundProps {
     gameState: Game,

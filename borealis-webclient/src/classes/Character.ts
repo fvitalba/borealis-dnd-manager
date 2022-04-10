@@ -63,6 +63,10 @@ class Character {
         this.username = newUsername ? newUsername : ''
     }
 
+    public isEmpty(): boolean {
+        return this.guid === ''
+    }
+
     public getModifier(attribute: CharacterAttribute): number {
         switch(attribute) {
         case CharacterAttribute.Strength:
@@ -103,6 +107,28 @@ class Character {
         default:
             return -20
         }
+    }
+
+    public getFormattedModifier(attribute: CharacterAttribute): string {
+        const modifier = this.getModifier(attribute)
+        switch(true) {
+        case modifier === 0:
+            return `${modifier}`
+        case modifier > 0:
+            return `+${modifier}`
+        case modifier < 0:
+            return `-${Math.abs(modifier)}`
+        default:
+            return ''
+        }
+    }
+
+    public SetNumberAttributeValue(attributeName: string, newAttributeValue: number) {
+
+    }
+
+    public setClassLevel(newClass: CharacterClass, newLevel: number) {
+
     }
 
     public useHitDice(noOfDiceToUse: number, diceTypeToUse?: DiceType): number {
