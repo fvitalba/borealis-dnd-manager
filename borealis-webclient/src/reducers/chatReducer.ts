@@ -7,7 +7,7 @@ import Message from '../classes/Message'
 
 interface ChatState {
     username: string,
-    messages: Array<Message>
+    messages: Array<Message>,
 }
 
 const initialChatState = (): ChatState => {
@@ -21,7 +21,7 @@ interface ChatAction {
     type: string,
     message?: Message,
     username?: string,
-    messages?: Array<Message>
+    messages?: Array<Message>,
 }
 
 const chatReducer = (state: ChatState = initialChatState(), action: ChatAction): ChatState => {

@@ -10,7 +10,7 @@ import Character from '../classes/Character'
 
 interface CharacterState {
     characters: Array<Character>,
-    currentCharacterGuid: string
+    currentCharacterGuid: string,
 }
 
 const initialCharacterReducer = (): CharacterState => {

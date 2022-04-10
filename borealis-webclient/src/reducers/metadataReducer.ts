@@ -5,62 +5,77 @@ import {
     SET_LAST_COORDINATES,
     SET_DOWN_COORDINATES
 } from '../redux/constants'
+import UserType from '../enums/UserType'
+import Cursor from '../classes/Cursor'
+import Point from '../classes/Point'
 
-const initialMetadataState = {
-    isHost: undefined,
-    room: undefined,
-    userGuid: '',
-    cursors: [],
-    lastX: undefined,
-    lastY: undefined,
-    downX: undefined,
-    downY: undefined,
+interface MetadataState {
+    userType: UserType,
+    userGuid: string,
+    room: string,
+    cursors: Array<Cursor>,
+    lastPos: Point,
+    downPos: Point,
 }
 
-const metadataReducer = (state = initialMetadataState, action) => {
-    let newCursors = []
-    let newCursor = {
-        username: '',
-        x: 0,
-        y: 0,
+const initialMetadataState = (): MetadataState => {
+    return {
+        userType: UserType.player,
+        userGuid: '',
+        room: '',
+        cursors: [],
+        lastPos: new Point(-1, -1),
+        downPos: new Point(-1, -1),
     }
+}
+
+interface MetadataAction {
+    type: string,
+    userType?: UserType,
+    userGuid?: string,
+    room?: string,
+    cursor?: Cursor,
+    cursors?: Array<Cursor>,
+    lastPos?: Point,
+    downPos?: Point,
+}
+
+const metadataReducer = (state: MetadataState = initialMetadataState(), action: MetadataAction): MetadataState => {
+    let newCursors = state.cursors
     switch (action.type) {
     case SET_GAMESETTINGS:
-        return {
-            ...state,
-            isHost: action.isHost,
-            room: action.room,
-            userGuid: action.guid ? action.guid : state.userGuid,
-        }
+        if ((action.userType) && (action.room))
+            return {
+                ...state,
+                userType: action.userType,
+                room: action.room,
+                userGuid: action.userGuid ? action.userGuid : state.userGuid,
+            }
+        else
+            return state
     case SET_CURSORS:
         return {
             ...state,
-            cursors: action.cursors,
+            cursors: action.cursors ? action.cursors : state.cursors,
         }
     case UPDATE_CURSOR:
-        if ((action.username === '') || !action.newX || !action.newY)
+        if (action.cursor) {
+            newCursors = state.cursors.filter((crs) => (crs.username !== action.cursor?.username))
+            return {
+                ...state,
+                cursors: newCursors.concat(action.cursor),
+            }
+        } else
             return state
-        newCursor = {
-            username: action.username,
-            x: action.newX,
-            y: action.newY,
-        }
-        newCursors = state.cursors.filter((crs) => (crs.username !== newCursor.username))
-        return {
-            ...state,
-            cursors: newCursors.concat(newCursor),
-        }
     case SET_LAST_COORDINATES:
         return {
             ...state,
-            lastX: action.lastX,
-            lastY: action.lastY,
+            lastPos: action.lastPos ? action.lastPos : state.lastPos,
         }
     case SET_DOWN_COORDINATES:
         return {
             ...state,
-            downX: action.downX,
-            downY: action.downY,
+            downPos: action.downPos ? action.downPos : state.downPos
         }
     default:
         return state
@@ -68,44 +83,43 @@ const metadataReducer = (state = initialMetadataState, action) => {
 }
 
 //#region Action Creators
-export const setGameSettings = (newIsHost, newRoom, newGuid) => {
+export const setGameSettings = (newUserType: UserType, newUserGuid: string, newRoom: string): MetadataAction => {
     return {
         type: SET_GAMESETTINGS,
-        isHost: newIsHost,
+        userType: newUserType,
+        userGuid: newUserGuid,
         room: newRoom,
-        guid: newGuid,
     }
 }
 
-export const setCursors = (newCursors) => {
+export const setCursors = (newCursors: Array<Cursor>): MetadataAction => {
     return {
         type: SET_CURSORS,
         cursors: newCursors,
     }
 }
 
-export const updateCursor = (username, newX, newY) => {
+export const updateCursor = (newUsername: string, newX: number, newY: number): MetadataAction => {
+    const newCursor = new Cursor(newUsername, newX, newY)
     return {
         type: UPDATE_CURSOR,
-        username: username,
-        newX: newX,
-        newY: newY,
+        cursor: newCursor,
     }
 }
 
-export const setLastCoordinates = (newLastX, newLastY) => {
+export const setLastCoordinates = (newLastX: number, newLastY: number): MetadataAction => {
+    const newLastPos = new Point(newLastX, newLastY)
     return {
         type: SET_LAST_COORDINATES,
-        lastX: newLastX,
-        lastY: newLastY,
+        lastPos: newLastPos,
     }
 }
 
-export const setDownCoordinates = (newDownX, newDownY) => {
+export const setDownCoordinates = (newDownX: number, newDownY: number): MetadataAction => {
+    const newDownPos = new Point(newDownX, newDownY)
     return {
         type: SET_DOWN_COORDINATES,
-        downX: newDownX,
-        downY: newDownY,
+        downPos: newDownPos,
     }
 }
 //#endregion Action Creators
