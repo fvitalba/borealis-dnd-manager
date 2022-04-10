@@ -2,9 +2,9 @@ import { useLoading } from '../hooks/useLoading'
 import { LoadingOverlayView } from '../views/LoadingOverlayView'
 
 const LoadingOverlay = () => {
-    const [isLoading] = useLoading()
+    const loadingContext = useLoading()
     return (
-        isLoading
+        loadingContext.isLoading
             ? <LoadingOverlayView />
             : null
     )
