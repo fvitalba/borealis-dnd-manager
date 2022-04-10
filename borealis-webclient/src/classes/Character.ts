@@ -65,18 +65,18 @@ class Character {
 
     public getModifier(attribute: CharacterAttribute): number {
         switch(attribute) {
-            case CharacterAttribute.Strength:
-                return modifierFromStat(this.strength)
-            case CharacterAttribute.Dexterity:
-                return modifierFromStat(this.dexterity)
-            case CharacterAttribute.Constitution:
-                return modifierFromStat(this.constitution)
-            case CharacterAttribute.Intelligence:
-                return modifierFromStat(this.intelligence)
-            case CharacterAttribute.Wisdom:
-                return modifierFromStat(this.wisdom)
-            case CharacterAttribute.Charisma:
-                return modifierFromStat(this.charisma)
+        case CharacterAttribute.Strength:
+            return modifierFromStat(this.strength)
+        case CharacterAttribute.Dexterity:
+            return modifierFromStat(this.dexterity)
+        case CharacterAttribute.Constitution:
+            return modifierFromStat(this.constitution)
+        case CharacterAttribute.Intelligence:
+            return modifierFromStat(this.intelligence)
+        case CharacterAttribute.Wisdom:
+            return modifierFromStat(this.wisdom)
+        case CharacterAttribute.Charisma:
+            return modifierFromStat(this.charisma)
         }
     }
 
@@ -107,14 +107,14 @@ class Character {
 
     public useHitDice(noOfDiceToUse: number, diceTypeToUse?: DiceType): number {
         const diceTypeToReduce = diceTypeToUse ? diceTypeToUse : findFirstAvailableDiceType(this.hitDice)
-        let noOfUsedDice: number = 0
+        let noOfUsedDice = 0
         this.hitDice = this.hitDice.map(
             (currHitDice: CharacterHitDice) => {
                 if (currHitDice.hitDiceType === diceTypeToReduce) {
                     if (currHitDice.remainingNoOfDice < noOfDiceToUse)
                         noOfUsedDice = currHitDice.remainingNoOfDice
                     else
-                        noOfDiceToUse = noOfDiceToUse
+                        noOfUsedDice = noOfDiceToUse
                     return {
                         ...currHitDice,
                         remainingNoOfDice: currHitDice.remainingNoOfDice - noOfUsedDice
