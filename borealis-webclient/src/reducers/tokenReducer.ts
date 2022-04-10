@@ -12,13 +12,13 @@ import {
 import guid from '../controllers/guid'
 import Token from '../classes/Token'
 
-interface TokenState {
+export interface TokenState {
     tokens: Array<Token>,
 }
 
 const initialTokenState = (): TokenState => {
     return {
-        tokens: []
+        tokens: new Array<Token>(),
     }
 }
 

@@ -5,7 +5,7 @@ import {
 } from '../redux/constants'
 import Message from '../classes/Message'
 
-interface ChatState {
+export interface ChatState {
     username: string,
     messages: Array<Message>,
 }
@@ -29,7 +29,7 @@ const chatReducer = (state: ChatState = initialChatState(), action: ChatAction):
     case ADD_CHAT_MESSAGE:
         return {
             ...state,
-            messages: action.message ? state.messages.concat(action.message): state.messages
+            messages: action.message ? state.messages.concat(action.message): state.messages,
         }
     case SET_CHAT_USERNAME:
         return {
@@ -37,13 +37,10 @@ const chatReducer = (state: ChatState = initialChatState(), action: ChatAction):
             username: action.username? action.username : state.username,
         }
     case OVERWRITE_CHAT:
-        if (action.messages)
-            return {
-                ...state,
-                messages: action.messages,
-            }
-        else
-            return state
+        return {
+            ...state,
+            messages: action.messages ? action.messages : state.messages,
+        }
     default:
         return state
     }
@@ -53,7 +50,7 @@ const chatReducer = (state: ChatState = initialChatState(), action: ChatAction):
 export const addChatMessage = (newMessage: Message): ChatAction => {
     return {
         type: ADD_CHAT_MESSAGE,
-        message: newMessage
+        message: newMessage,
     }
 }
 

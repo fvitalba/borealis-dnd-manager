@@ -6,14 +6,15 @@ import {
     RESET_DRAW
 } from '../redux/constants'
 import Map from '../classes/Map'
+import Path from '../classes/Path'
 
-interface MapState {
+export interface MapState {
     maps: Array<Map>,
 }
 
 const initialMapState = (): MapState => {
     return {
-        maps: [],
+        maps: new Array<Map>(),
     }
 }
 
@@ -61,7 +62,7 @@ const mapReducer = (state: MapState = initialMapState(), action: MapAction): Map
             newMaps = state.maps.map((map) => {
                 return map.id === action.mapId ? {
                     ...map,
-                    fogPaths: [],
+                    fogPaths: new Array<Path>(),
                 }
                     : map
             })
@@ -74,7 +75,7 @@ const mapReducer = (state: MapState = initialMapState(), action: MapAction): Map
             newMaps = state.maps.map((map) => {
                 return map.id === action.mapId ? {
                     ...map,
-                    drawPaths: [],
+                    drawPaths: new Array<Path>(),
                 }
                     : map
             })

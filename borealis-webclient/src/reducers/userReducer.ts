@@ -7,7 +7,7 @@ interface UserState {
 
 const initialUserReducer = (): UserState => {
     return {
-        users: [],
+        users: new Array<User>(),
     }
 }
 

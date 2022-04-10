@@ -8,7 +8,7 @@ import {
 } from '../redux/constants'
 import Character from '../classes/Character'
 
-interface CharacterState {
+export interface CharacterState {
     characters: Array<Character>,
     currentCharacterGuid: string,
 }

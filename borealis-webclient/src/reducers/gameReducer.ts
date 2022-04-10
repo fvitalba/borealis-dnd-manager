@@ -39,27 +39,27 @@ const gameReducer = (state: Game = new Game(), action: GameAction): Game => {
 }
 
 //#region Action Creators
-export const overwriteGame = (newGame: Game) => {
+export const overwriteGame = (newGame: Game): GameAction => {
     return {
         type: OVERWRITE_GAME,
         game: newGame,
     }
 }
 
-export const loadMap = (newMapId: number) => {
+export const loadMap = (newMapId: number): GameAction => {
     return {
         type: LOAD_MAP,
         mapId: newMapId,
     }
 }
 
-export const incrementGen = () => {
+export const incrementGen = (): GameAction => {
     return {
         type: INCREMENT_GEN,
     }
 }
 
-export const setFogEnabled = (newFogEnabled: boolean) => {
+export const setFogEnabled = (newFogEnabled: boolean): GameAction => {
     return {
         type: SET_FOG_ENABLED,
         fogEnabled: newFogEnabled,
