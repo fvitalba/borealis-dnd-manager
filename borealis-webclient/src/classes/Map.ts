@@ -1,4 +1,5 @@
 import Path from './Path'
+import Rectangle from './Rectangle'
 
 class Map {
     public id: number
@@ -21,6 +22,15 @@ class Map {
         this.height = newHeight
         this.drawPaths = newDrawPaths ? newDrawPaths : new Array<Path>()
         this.fogPaths = newFogPaths ? newFogPaths : new Array<Path>()
+    }
+
+    public isEmpty(): boolean {
+        return this.id < 0
+    }
+
+    public getScaledAndOffsetSize(offsetX: number, offsetY: number, scale: number): Rectangle {
+        const scaledAndOffsetSize = new Rectangle(this.x + offsetX, this.y + offsetY, this.width * scale, this.height * scale)
+        return scaledAndOffsetSize
     }
 }
 

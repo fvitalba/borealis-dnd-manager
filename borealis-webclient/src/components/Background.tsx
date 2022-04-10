@@ -1,25 +1,37 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { updateDeltaXY, updateScale } from '../reducers/settingsReducer'
+import Game from '../classes/Game'
+import ControlTool from '../enums/Tool'
+import StateInterface from '../interfaces/StateInterface'
+import { SettingsState, updateDeltaXY, updateScale } from '../reducers/settingsReducer'
+import { MapState } from '../reducers/mapReducer'
 import { drawImageObject } from '../utils/drawImage'
 import Canvas from './Canvas'
 
-const Background = ({ game, settings, updateDeltaXY, updateScale }) => {
+interface BackgroundProps {
+    gameState: Game,
+    mapState: MapState,
+    settingsState: SettingsState,
+    updateDeltaXY: (arg0: number, arg1: number) => void,
+    updateScale: (arg0: number) => void,
+}
+
+const Background = ({ gameState, mapState, settingsState, updateDeltaXY, updateScale }: BackgroundProps) => {
     const [backgroundSettings, setBackgroundSettings] = useState({
         isDragging: false,
-        imageObject: undefined,
+        imageObject: new Image(),
     })
-    const selectedMap = game.maps.filter((map) => map.id === game.mapId)
-    const map = selectedMap.length > 0 ? selectedMap[0] : undefined
+    const currentMap = gameState.getCurrentMap(mapState.maps)
 
-    const draw = useCallback((ctx) => {
+    const draw = useCallback((ctx: CanvasRenderingContext2D) => {
         ctx.beginPath()
-        ctx.clearRect(0, 0, game.width, game.height)
-        if (!map || !backgroundSettings.imageObject) {
+        ctx.clearRect(0, 0, gameState.width, gameState.height)
+        if (!currentMap.isEmpty() || !backgroundSettings.imageObject) {
             return
         }
-        drawImageObject(backgroundSettings.imageObject, map.x + settings.deltaX, map.y + settings.deltaY, map.width * settings.scale, map.height * settings.scale, ctx)
-    }, [ settings.deltaX, settings.deltaY, settings.scale, map, backgroundSettings.imageObject ])
+        const imageSize = currentMap.getScaledAndOffsetSize(settingsState.deltaX, settingsState.deltaY, settingsState.scale)
+        drawImageObject(backgroundSettings.imageObject, imageSize.x, imageSize.y, imageSize.width, imageSize.height, ctx)
+    }, [ settingsState.deltaX, settingsState.deltaY, settingsState.scale, currentMap, backgroundSettings.imageObject ])
 
     useEffect(() => {
         const imgObject = new Image()
@@ -29,17 +41,9 @@ const Background = ({ game, settings, updateDeltaXY, updateScale }) => {
                 imageObject: imgObject,
             })
         }
-        if (map)
-            imgObject.src = map.imageUrl
-    }, [ map ])
-
-    const anyTokenSelected = () => {
-        const selectedToken = game.tokens.filter((token) => token.selected)
-        if (selectedToken[0])
-            return true
-        else
-            return false
-    }
+        if (!currentMap.isEmpty())
+            imgObject.src = currentMap.backgroundUrl
+    }, [ currentMap ])
 
     const onMouseDown = () => {
         setBackgroundSettings({
@@ -55,23 +59,24 @@ const Background = ({ game, settings, updateDeltaXY, updateScale }) => {
         })
     }
 
-    const onMouseMove = (e) => {
-        if (backgroundSettings.isDragging && (settings.tool === 'move') && (!anyTokenSelected()))
-            updateDeltaXY(settings.deltaX + e.movementX, settings.deltaY + e.movementY)
+    const onMouseMove = (e: MouseEvent) => {
+        if (backgroundSettings.isDragging && (settingsState.tool === ControlTool.Move) && (!gameState.tokenSelected))
+            updateDeltaXY(settingsState.deltaX + e.movementX, settingsState.deltaY + e.movementY)
     }
 
-    const onWheel = (e) => {
+    const onWheel = (e: WheelEvent) => {
         e.preventDefault()
 
-        const scale = Math.min(Math.max(.125, (settings.scale + e.deltaY * -0.01)), 4)
+        const scale = Math.min(Math.max(.125, (settingsState.scale + e.deltaY * -0.01)), 4)
         updateScale(scale)
     }
 
     return (
         <Canvas
+            id='background'
             className='background'
-            width={ game.width }
-            height={ game.height }
+            width={ gameState.width }
+            height={ gameState.height }
             draw={ draw }
             onMouseUp={ onMouseUp }
             onMouseDown={ onMouseDown }
@@ -80,10 +85,11 @@ const Background = ({ game, settings, updateDeltaXY, updateScale }) => {
     )
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: StateInterface) => {
     return {
-        game: state.game,
-        settings: state.settings,
+        gameState: state.game,
+        mapState: state.map,
+        settingsState: state.settings,
     }
 }
 

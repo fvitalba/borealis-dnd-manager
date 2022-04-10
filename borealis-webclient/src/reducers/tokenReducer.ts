@@ -209,7 +209,7 @@ export const updateTokenMapId = (tokenGuidToUpdate: string, mapId: number): Toke
     return {
         type: UPDATE_TOKEN_MAPID,
         guid: tokenGuidToUpdate,
-        mapId: mapId,   
+        mapId: mapId,
     }
 }
 

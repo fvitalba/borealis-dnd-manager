@@ -1,7 +1,7 @@
 import { SET_USERS_FROM_API } from '../redux/constants'
 import User from '../classes/User'
 
-interface UserState {
+export interface UserState {
     users: Array<User>,
 }
 

@@ -10,7 +10,7 @@ import {
 } from '../redux/constants'
 import ControlTool from '../enums/Tool'
 
-interface SettingsState {
+export interface SettingsState {
     cursorSize: number,
     fogOpacity: number,
     fogRadius: number,
@@ -143,7 +143,7 @@ export const setUsername = (newUsername: string): SettingsAction => {
     }
 }
 
-export const toggleMousesharing = (): SettingsAction=> {
+export const toggleMousesharing = (): SettingsAction => {
     return {
         type: TOGGLE_MOUSESHARING,
     }

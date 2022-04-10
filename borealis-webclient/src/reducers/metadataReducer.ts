@@ -9,7 +9,7 @@ import UserType from '../enums/UserType'
 import Cursor from '../classes/Cursor'
 import Point from '../classes/Point'
 
-interface MetadataState {
+export interface MetadataState {
     userType: UserType,
     userGuid: string,
     room: string,
