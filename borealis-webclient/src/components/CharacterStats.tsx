@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import Character from '../classes/Character'
 import CharacterClass from '../enums/CharacterClass'
 import UserType from '../enums/UserType'
-import { pushUpdateCharacter, useWebSocket } from '../hooks/useSocket'
+import { pushDeleteCharacter, pushUpdateCharacter, useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
 import StateInterface from '../interfaces/StateInterface'
 import { updateCharacter, deleteCharacter, CharacterState } from '../reducers/characterReducer'
@@ -90,6 +90,8 @@ const CharacterStats = ({ toggleOnCharacterStats, characterState, userState, met
         if (!window.confirm('Are you sure you want to delete the character?'))
             return
         deleteCharacter(selectedCharacter.guid)
+        if (webSocketContext.ws && webSocketContext.wsSettings)
+            pushDeleteCharacter(webSocketContext.ws, webSocketContext.wsSettings, selectedCharacter.guid)
     }
 
     return (

@@ -124,11 +124,55 @@ class Character {
     }
 
     public SetNumberAttributeValue(attributeName: string, newAttributeValue: number) {
-
+        switch(attributeName.toUpperCase()) {
+        case 'MAXHEALTH':
+            this.maxHealth = newAttributeValue
+            break
+        case 'CURRHEALTH':
+            this.currHealth = newAttributeValue
+            break
+        case 'STRENGTH':
+            this.strength = newAttributeValue
+            break
+        case 'DEXTERITY':
+            this.dexterity = newAttributeValue
+            break
+        case 'CONSTITUTION':
+            this.constitution = newAttributeValue
+            break
+        case 'INTELLIGENCE':
+            this.intelligence = newAttributeValue
+            break
+        case 'WISDOM':
+            this.wisdom = newAttributeValue
+            break
+        case 'CHARISMA':
+            this.charisma = newAttributeValue
+            break
+        case 'PROFICIENCY':
+            this.proficiency = newAttributeValue
+            break
+        case 'ARMORCLASS':
+            this.armorclass = newAttributeValue
+            break
+        case 'PASSIVEPERCEPTION':
+            this.passivePerception = newAttributeValue
+            break
+        case 'TEMPHEALTH':
+            this.tempHealth = newAttributeValue
+            break
+        }
     }
 
     public setClassLevel(newClass: CharacterClass, newLevel: number) {
-
+        const currentClass = this.class.filter((currClass) => currClass.class === newClass)
+        const newClassLevel = new CharacterClassLevel(newClass, newLevel)
+        let updatedClass = this.class
+        if (currentClass.length > 0)
+            updatedClass = this.class.map((currentClass) => currentClass.class === newClass ? newClassLevel : currentClass)
+        else
+            updatedClass = this.class.concat(newClassLevel)
+        this.class = updatedClass
     }
 
     public useHitDice(noOfDiceToUse: number, diceTypeToUse?: DiceType): number {

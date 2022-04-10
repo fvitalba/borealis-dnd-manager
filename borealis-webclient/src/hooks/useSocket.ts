@@ -189,6 +189,13 @@ export const pushUpdateCharacter = (webSocket: WebSocket, wsSettings: IWsSetting
     })
 }
 
+export const pushDeleteCharacter = (webSocket: WebSocket, wsSettings: IWsSettings, characterGuid: string) => {
+    sendData(webSocket, wsSettings, {
+        type: 'pushDeleteCharacter',
+        entityGuid: characterGuid,
+    })
+}
+
 export const ping = (webSocket: WebSocket, wsSettings: IWsSettings, username: string) => {
     sendData(webSocket, wsSettings, {
         type: 'ping',
