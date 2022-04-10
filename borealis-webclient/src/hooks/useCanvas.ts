@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 
-const useCanvas = (draw: Function) => {
+const useCanvas = (draw: (arg0: CanvasRenderingContext2D) => void) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
     useEffect(() => {
@@ -8,7 +8,8 @@ const useCanvas = (draw: Function) => {
         if (canvas) {
             const context = canvas.getContext('2d')
 
-            draw(context)
+            if (context)
+                draw(context)
         }
     }, [draw])
 

@@ -59,12 +59,12 @@ const Background = ({ gameState, mapState, settingsState, updateDeltaXY, updateS
         })
     }
 
-    const onMouseMove = (e: MouseEvent) => {
+    const onMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
         if (backgroundSettings.isDragging && (settingsState.tool === ControlTool.Move) && (!gameState.tokenSelected))
             updateDeltaXY(settingsState.deltaX + e.movementX, settingsState.deltaY + e.movementY)
     }
 
-    const onWheel = (e: WheelEvent) => {
+    const onWheel = (e: React.WheelEvent<HTMLCanvasElement>) => {
         e.preventDefault()
 
         const scale = Math.min(Math.max(.125, (settingsState.scale + e.deltaY * -0.01)), 4)
