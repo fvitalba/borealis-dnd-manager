@@ -1,13 +1,28 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import { connect } from 'react-redux'
+import Character from '../classes/Character'
+import Message from '../classes/Message'
+import User from '../classes/User'
+import MessageType from '../enums/MessageType'
+import UserType from '../enums/UserType'
 import { sendChatMessage, useWebSocket } from '../hooks/useSocket'
+import StateInterface from '../interfaces/StateInterface'
+import { addChatMessage, ChatState } from '../reducers/chatReducer'
+import { setUsersFromAPI, UserState } from '../reducers/userReducer'
+import { SettingsState } from '../reducers/settingsReducer'
+import { CharacterState } from '../reducers/characterReducer'
+import { MetadataState } from '../reducers/metadataReducer'
 import { convertChatMessage } from '../utils/commandHandler'
 import { getUsersFromDatabase } from '../utils/apiHandler'
-import { addChatMessage } from '../reducers/chatReducer'
-import { setUsersFromAPI } from '../reducers/userReducer'
 import ChatPanelView from '../views/ChatPanelView'
 
-const initialChatPanelState = () => {
+interface ChatPanelState {
+    hidden: boolean,
+    showHelp: boolean,
+    currentMessage: string,
+}
+
+const initialChatPanelState = (): ChatPanelState => {
     return {
         hidden: false,
         showHelp: false,
@@ -34,14 +49,24 @@ const chatCommands = [{
     example: '/whisper PC be careful with that!',
 }]
 
-const ChatPanel = ({ chat, settings, user, character, metadata, addChatMessage, setUsersFromAPI }) => {
+interface ChatPanelProps {
+    chatState: ChatState,
+    settingsState: SettingsState,
+    userState: UserState,
+    characterState: CharacterState,
+    metadataState: MetadataState,
+    addChatMessage: (arg0: Message) => void,
+    setUsersFromAPI: (arg0: Array<User>) => void,
+}
+
+const ChatPanel = ({ chatState, settingsState, userState, characterState, metadataState, addChatMessage, setUsersFromAPI }: ChatPanelProps) => {
     const [chatPanelState, setChatPanelState] = useState(initialChatPanelState())
     const [showUserHover, setShowUserHover] = useState(false)
-    const endOfMessagesRef = useRef(null)
-    const [webSocket, wsSettings] = useWebSocket()
-    const currentCharacter = character.myCharacterGuid
-        ? character.characters.filter((currCharacter) => currCharacter.guid === character.myCharacterGuid)[0]
-        : ''
+    const endOfMessagesRef = useRef<HTMLDivElement>(null)
+    const webSocketContext = useWebSocket()
+    const currentCharacter = characterState.currentCharacterGuid
+        ? characterState.characters.filter((currCharacter) => currCharacter.guid === characterState.currentCharacterGuid)[0]
+        : new Character('', '', 0)
 
     const toggleHidden = () => {
         setChatPanelState({
@@ -61,36 +86,34 @@ const ChatPanel = ({ chat, settings, user, character, metadata, addChatMessage, 
         setShowUserHover(!showUserHover)
     }
 
-    const changeCurrentMessage = (e) => {
+    const changeCurrentMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
         setChatPanelState({
             ...chatPanelState,
             currentMessage: e.target.value,
         })
     }
 
-    const inputOnKeyDown = (e) => {
-        if (e.keyCode === 13) {
+    const inputOnKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
             addMessage()
         }
     }
 
     const getPlayerInfo = () => {
-        if (metadata.isHost)
+        if (metadataState.userType === UserType.host)
             return 'Dungeon Master'
         else {
-            return currentCharacter ? `lvl. ${currentCharacter.level} ${currentCharacter.class}` : ''
+            return currentCharacter ? currentCharacter.getCharacterClassInfo() : ''
         }
     }
 
     const addMessage = () => {
         const playerInfo = getPlayerInfo()
-        const convertedMessage = convertChatMessage(settings.username, chatPanelState.currentMessage, currentCharacter)
+        const convertedMessage = convertChatMessage(settingsState.username, chatPanelState.currentMessage, currentCharacter, playerInfo)
         if ((convertedMessage.publicMessage.length > 0) || (convertedMessage.privateMessage.length > 0)) {
-            const timestamp = Date.now()
-            addChatMessage(settings.username, playerInfo, convertedMessage.publicMessage, convertedMessage.privateMessage, convertedMessage.targetPlayerName,
-                timestamp, convertedMessage.messageType)
-            sendChatMessage(webSocket, wsSettings, settings.username, playerInfo, convertedMessage.publicMessage, convertedMessage.privateMessage,
-                convertedMessage.targetPlayerName, timestamp, convertedMessage.messageType)
+            addChatMessage(convertedMessage)
+            if (webSocketContext.ws && webSocketContext.wsSettings && (convertedMessage.type !== MessageType.Error ))
+                sendChatMessage(webSocketContext.ws, webSocketContext.wsSettings, convertedMessage)
             setChatPanelState({
                 ...chatPanelState,
                 currentMessage: '',
@@ -106,20 +129,22 @@ const ChatPanel = ({ chat, settings, user, character, metadata, addChatMessage, 
     }
 
     const loadUsers = useCallback(() => {
-        if (wsSettings.room) {
-            getUsersFromDatabase(wsSettings)
-                .then((users) => {
-                    setUsersFromAPI(users)
-                })
-                .catch((error) => {
-                    console.error(error)
-                })
-        }
-    }, [ wsSettings, chatPanelState, setChatPanelState ])
+        if (webSocketContext.wsSettings)
+            if (webSocketContext.wsSettings.room !== '') {
+                getUsersFromDatabase(webSocketContext.wsSettings)
+                    .then((result: any) => {
+                        const users: Array<User> = result
+                        setUsersFromAPI(users)
+                    })
+                    .catch((error) => {
+                        console.error(error)
+                    })
+            }
+    }, [ webSocketContext, chatPanelState, setChatPanelState ])
 
     useEffect(() => {
         scrollToBottom()
-    }, [ chat.messages ])
+    }, [ chatState.messages ])
 
     useEffect(() => {
         const interval = setInterval(() => loadUsers(), 5000)
@@ -130,7 +155,7 @@ const ChatPanel = ({ chat, settings, user, character, metadata, addChatMessage, 
 
     return (
         <ChatPanelView
-            username={ settings.username }
+            username={ settingsState.username }
             chatPanelHidden={ chatPanelState.hidden }
             toggleHidden={ toggleHidden }
             showHelp={ chatPanelState.showHelp }
@@ -138,24 +163,24 @@ const ChatPanel = ({ chat, settings, user, character, metadata, addChatMessage, 
             chatCommands={ chatCommands }
             showUserHover={ showUserHover }
             toggleUserHover={ toggleUserHover }
-            noOfCurrentUsers={ user.users.length }
-            users={ user.users }
+            noOfCurrentUsers={ userState.users.length }
+            users={ userState.users }
             currentMessage={ chatPanelState.currentMessage }
             changeCurrentMessage={ changeCurrentMessage }
             addMessage={ addMessage }
-            chatMessages={ chat.messages }
+            chatMessages={ chatState.messages }
             inputOnKeyDown={ inputOnKeyDown }
             endOfMessagesRef={ endOfMessagesRef } />
     )
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: StateInterface) => {
     return {
-        settings: state.settings,
-        chat: state.chat,
-        user: state.user,
-        metadata: state.metadata,
-        character: state.character,
+        metadataState: state.metadata,
+        settingsState: state.settings,
+        chatState: state.chat,
+        userState: state.user,
+        characterState: state.character,
     }
 }
 

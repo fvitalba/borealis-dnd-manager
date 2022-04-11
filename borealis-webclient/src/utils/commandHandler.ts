@@ -1,12 +1,35 @@
+import Character from '../classes/Character'
+import Message from '../classes/Message'
+import DiceType from '../enums/DiceType'
+import MessageType from '../enums/MessageType'
+
 const COMMAND_NOT_VALID_ERR = 'Command is not valid.'
-const commandNotValidMessage = {
-    messageType: 'error',
-    targetPlayerName: '',
+interface PartialMessage {
+    type: MessageType,
+    targetUsername: string,
+    publicMessage: string,
+    privateMessage: string,
+}
+const commandNotValidMessage: PartialMessage = {
+    type: MessageType.Error,
+    targetUsername: '',
     privateMessage: COMMAND_NOT_VALID_ERR,
     publicMessage: COMMAND_NOT_VALID_ERR,
 }
 
-export const convertChatMessage = (playerName: string, inputChatMessage: string, character: string) => {
+interface DiceRoll {
+    firstRoll: number,
+    secondRoll: number,
+}
+
+interface DiceRollResult {
+    noOfDice: number,
+    diceType: DiceType,
+    rolledValues: Array<DiceRoll>,
+    totalValue: number,
+}
+
+export const convertChatMessage = (userName: string, inputChatMessage: string, character: Character, playerInfo?: string, timestamp?: number): Message => {
     const splitMessage = inputChatMessage.split(' ')
     let returnMessage
 
@@ -14,98 +37,99 @@ export const convertChatMessage = (playerName: string, inputChatMessage: string,
     case '/R':
     case '/ROLL':
         if (splitMessage.length < 2)
-            return commandNotValidMessage
+            return parseFullMessage(commandNotValidMessage, userName, playerInfo, timestamp)
 
-        return rollDiceCommand(playerName, character, splitMessage[1].toUpperCase(), splitMessage.splice(2, splitMessage.length - 2))
+        return parseFullMessage(rollDiceCommand(userName, character, splitMessage[1].toUpperCase(), splitMessage.splice(2, splitMessage.length - 2)), userName, playerInfo, timestamp)
     case '/HR':
     case '/HIDDENROLL':
         if (splitMessage.length < 2)
-            return commandNotValidMessage
+            return parseFullMessage(commandNotValidMessage, userName, playerInfo, timestamp)
 
-        return rollHiddenDiceCommand(playerName, character, splitMessage[1].toUpperCase(), splitMessage.splice(2, splitMessage.length - 2))
+        return parseFullMessage(rollHiddenDiceCommand(userName, character, splitMessage[1].toUpperCase(), splitMessage.splice(2, splitMessage.length - 2)), userName, playerInfo, timestamp)
     case '/W':
     case '/WHISPER':
         if (splitMessage.length < 3)
-            return commandNotValidMessage
+            return parseFullMessage(commandNotValidMessage, userName, playerInfo, timestamp)
 
-        return whisperCommand(splitMessage[1].toUpperCase(), splitMessage.splice(2, splitMessage.length - 2))
+        return parseFullMessage(whisperCommand(splitMessage[1].toUpperCase(), splitMessage.splice(2, splitMessage.length - 2)), userName, playerInfo, timestamp)
     default:
-        returnMessage = {
-            messageType: 'message',
-            targetPlayerName: '',
-            publicMessage: inputChatMessage,
-            privateMessage: inputChatMessage,
-        }
+        returnMessage = new Message(MessageType.Message, userName, playerInfo ? playerInfo : '', inputChatMessage, undefined, timestamp, '', inputChatMessage, false)
         return returnMessage
     }
 }
 
-const rollDiceCommand = (playerName: string, character: string, diceText: string, additionalText: Array<string>) => {
-    // eslint-disable-next-line no-unused-vars
-    const [noOfDice, diceType, rolledValues, totalValue] = executeDiceRolls(character, diceText, additionalText)
-    const convertedMessage = `${playerName} rolled the following values ${formatRolledValues(rolledValues)}, for a total of: ${totalValue}.`
-    const returnMessage = {
-        messageType: 'command',
-        targetPlayerName: '',
+const parseFullMessage = (partialMessage: PartialMessage, userName: string, playerInfo?: string, timestamp?: number): Message => {
+    return new Message(partialMessage.type, userName, playerInfo ? playerInfo : '', partialMessage.publicMessage, undefined, timestamp, partialMessage.targetUsername, partialMessage.privateMessage, false)
+}
+
+const rollDiceCommand = (userName: string, character: Character, diceText: string, additionalText: Array<string>): PartialMessage => {
+    const diceRollResult = executeDiceRolls(character, diceText, additionalText)
+    if (diceRollResult === null)
+        return commandNotValidMessage
+    const convertedMessage = `${userName} rolled the following values ${formatRolledValues(diceRollResult.rolledValues)}, for a total of: ${diceRollResult.totalValue}.`
+    const returnMessage: PartialMessage = {
+        type: MessageType.Command,
+        targetUsername: '',
         publicMessage: convertedMessage,
         privateMessage: convertedMessage,
     }
     return returnMessage
 }
 
-const rollHiddenDiceCommand = (playerName: string, character: string, diceText: string, additionalText: Array<string>) => {
-    // eslint-disable-next-line no-unused-vars
-    const [noOfDice, diceType, _rolledValues, totalValue] = executeDiceRolls(character, diceText, additionalText)
-    const returnMessage = {
-        messageType: 'command',
-        targetPlayerName: '',
-        publicMessage: `${playerName} rolled ${noOfDice}d${diceType}.`,
-        privateMessage: `${playerName} rolled ${noOfDice}d${diceType}. (For a total of: ${totalValue})`,
+const rollHiddenDiceCommand = (userName: string, character: Character, diceText: string, additionalText: Array<string>): PartialMessage => {
+    const diceRollResult = executeDiceRolls(character, diceText, additionalText)
+    if (diceRollResult === null)
+        return commandNotValidMessage
+    const returnMessage: PartialMessage = {
+        type: MessageType.Command,
+        targetUsername: '',
+        publicMessage: `${userName} rolled ${diceRollResult.noOfDice}${diceRollResult.diceType}.`,
+        privateMessage: `${userName} rolled ${diceRollResult.noOfDice}${diceRollResult.diceType}. (For a total of: ${diceRollResult.totalValue})`,
     }
     return returnMessage
 }
 
-const whisperCommand = (targetPlayerName: string, whisperText: Array<string>) => {
-    const returnMessage = {
-        messageType: 'whisper',
-        targetPlayerName: targetPlayerName,
+const whisperCommand = (targetUserName: string, whisperText: Array<string>): PartialMessage => {
+    const returnMessage: PartialMessage = {
+        type: MessageType.Whisper,
+        targetUsername: targetUserName,
         publicMessage: '',
         privateMessage: whisperText.join(' '),
     }
     return returnMessage
 }
 
-const executeDiceRolls = (character: string, diceText: string, additionalText: Array<string>) => {
+const executeDiceRolls = (character: Character, diceText: string, additionalText: Array<string>): DiceRollResult | null => {
     const splitDiceText = diceText.split('D')
     if (splitDiceText.length !== 2)
-        return commandNotValidMessage
+        return null
 
     const noOfDice = parseInt(splitDiceText[0])
     const diceType = parseInt(splitDiceText[1])
 
     let totalValue = 0
-    let rolledValues = []
-    const rollCondition = retrieveRollCondition(additionalText)
+    const rolledValues = new Array<DiceRoll>()
+    const rollCondition: string = retrieveRollCondition(additionalText)
     for (let i = 0; i < noOfDice; i++) {
-        let diceValue = 0
-        let diceValue2 = 0
+        let firstRoll = 0
+        let secondRoll = 0
         switch (rollCondition) {
         case 'DADV':
-            diceValue = rollDice(diceType)
-            diceValue2 = rollDice(diceType)
-            rolledValues.push({ diceValue, diceValue2 })
-            totalValue += diceValue < diceValue2 ? diceValue : diceValue2
+            firstRoll = rollDice(diceType)
+            secondRoll = rollDice(diceType)
+            rolledValues.push({ firstRoll, secondRoll })
+            totalValue += firstRoll < secondRoll ? firstRoll : secondRoll
             break
         case 'ADV':
-            diceValue = rollDice(diceType)
-            diceValue2 = rollDice(diceType)
-            rolledValues.push({ diceValue, diceValue2 })
-            totalValue += diceValue > diceValue2 ? diceValue : diceValue2
+            firstRoll = rollDice(diceType)
+            secondRoll = rollDice(diceType)
+            rolledValues.push({ firstRoll, secondRoll })
+            totalValue += firstRoll > secondRoll ? firstRoll : secondRoll
             break
         default:
-            diceValue = rollDice(diceType)
-            rolledValues.push(diceValue)
-            totalValue += diceValue
+            firstRoll = rollDice(diceType)
+            rolledValues.push({ firstRoll, secondRoll })
+            totalValue += firstRoll
             break
         }
     }
@@ -118,19 +142,24 @@ const executeDiceRolls = (character: string, diceText: string, additionalText: A
             totalValue -= modifierFromText(character,additionalText[1])
             break
         }
-    return [noOfDice, diceType, rolledValues, totalValue]
+    return {
+        noOfDice: noOfDice,
+        diceType: diceType,
+        rolledValues: rolledValues,
+        totalValue: totalValue,
+    }
 }
 
-const rollDice = (diceType: number) => {
+const rollDice = (diceType: number): number => {
     const minimum = 1
     const maximum = diceType
     return Math.floor((Math.random() * (maximum - minimum + 1)) + minimum)
 }
 
-const modifierFromText = (character, inputText: string) => {
+const modifierFromText = (character: Character, inputText: string): number => {
     if (!inputText || (inputText === ''))
         return 0
-    const characterValue = extractAttributeFromCharacter(character, inputText)
+    const characterValue = character.getModifierFromString(inputText)
     if (characterValue === -20) {
         if (parseInt(inputText))
             return parseInt(inputText)
@@ -140,44 +169,13 @@ const modifierFromText = (character, inputText: string) => {
     return 0
 }
 
-const extractAttributeFromCharacter = (character, attributeCode: string) => {
-    if (!character || !attributeCode)
-        return 0
-    switch (attributeCode.toUpperCase()) {
-    case 'STR':
-    case 'STRENGTH':
-        return modifierFromStat(character.strength)
-    case 'DEX':
-    case 'DEXTERITY':
-        return modifierFromStat(character.dexterity)
-    case 'CON':
-    case 'CONSTITUTION':
-        return modifierFromStat(character.constitution)
-    case 'INT':
-    case 'INTELLIGENCE':
-        return modifierFromStat(character.intelligence)
-    case 'WIS':
-    case 'WISDOM':
-        return modifierFromStat(character.wisdom)
-    case 'CHA':
-    case 'CHARISMA':
-        return modifierFromStat(character.charisma)
-    default:
-        return -20
-    }
-}
-
-const modifierFromStat = (statValue: number): number => {
-    return Math.floor((statValue - 10) / 2)
-}
-
-const formatRolledValues = (rolledValues: Array<number>): string => {
+const formatRolledValues = (rolledValues: Array<DiceRoll>): string => {
     let formattedRolls = ''
     rolledValues.map((rolledValue) => {
-        if (isNaN(rolledValue))
-            formattedRolls += `[${rolledValue.diceValue}, ${rolledValue.diceValue2}]`
+        if (rolledValue.secondRoll > 0)
+            formattedRolls += `[${rolledValue.firstRoll}, ${rolledValue.secondRoll}]`
         else
-            formattedRolls += `${rolledValue}`
+            formattedRolls += `${rolledValue.firstRoll}`
     })
     return formattedRolls
 }
@@ -194,7 +192,7 @@ const retrieveRollCondition = (inputTextArray: Array<string>): string => {
         case 'INSPIRATION':
             return 'ADV'
         default:
-            return null
+            return ''
         }
     })
 
