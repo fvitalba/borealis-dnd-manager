@@ -6,6 +6,10 @@ class Point {
         this.x = newX
         this.y = newY
     }
+
+    public translatePoint(offsetX: number, offsetY: number, scale: number): Point {
+        return new Point(this.x * scale + offsetX, this.y * scale + offsetY)
+    }
 }
 
 export default Point

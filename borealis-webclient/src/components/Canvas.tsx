@@ -7,10 +7,10 @@ interface CanvasProps {
     width: number,
     height: number,
     draw: (arg0: CanvasRenderingContext2D) => void,
-    onMouseUp: MouseEventHandler<HTMLCanvasElement>,
-    onMouseDown: MouseEventHandler<HTMLCanvasElement>,
-    onMouseMove: MouseEventHandler<HTMLCanvasElement>,
-    onWheel: WheelEventHandler<HTMLCanvasElement>,
+    onMouseUp?: MouseEventHandler<HTMLCanvasElement>,
+    onMouseDown?: MouseEventHandler<HTMLCanvasElement>,
+    onMouseMove?: MouseEventHandler<HTMLCanvasElement>,
+    onWheel?: WheelEventHandler<HTMLCanvasElement>,
 }
 
 const Canvas = ({ id, className, width, height, draw, onMouseUp, onMouseDown, onMouseMove, onWheel }: CanvasProps) => {

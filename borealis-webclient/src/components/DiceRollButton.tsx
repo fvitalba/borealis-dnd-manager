@@ -1,40 +1,53 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { connect } from 'react-redux'
+import Message from '../classes/Message'
+import MessageType from '../enums/MessageType'
+import UserType from '../enums/UserType'
 import { sendChatMessage, useWebSocket } from '../hooks/useSocket'
-import { convertChatMessage } from '../utils/commandHandler'
+import StateInterface from '../interfaces/StateInterface'
 import { addChatMessage } from '../reducers/chatReducer'
+import { SettingsState } from '../reducers/settingsReducer'
+import { CharacterState } from '../reducers/characterReducer'
+import { MetadataState } from '../reducers/metadataReducer'
+import { convertChatMessage } from '../utils/commandHandler'
 import DiceRollButtonView from '../views/DiceRollButtonView'
+import Character from '../classes/Character'
 
-const DiceRollButton = ({ settings, character, metadata, addChatMessage }) => {
+interface DiceRollButtonProps {
+    settingsState: SettingsState,
+    characterState: CharacterState,
+    metadataState: MetadataState,
+    addChatMessage: (arg0: Message) => void,
+}
+
+const DiceRollButton = ({ settingsState, characterState, metadataState, addChatMessage }: DiceRollButtonProps) => {
     const [selectorState, setSelectorState] = useState({
         showSelector: false,
         top: 0,
         left: 0,
     })
-    const selectorRef = useRef(null)
-    const rollDiceButtonRef = useRef(null)
-    const [webSocket, wsSettings] = useWebSocket()
-    const currentCharacter = character.myCharacterGuid
-        ? character.characters.filter((currCharacter) => currCharacter.guid === character.myCharacterGuid)[0]
-        : ''
+    const selectorRef = useRef<HTMLDivElement>(null)
+    const rollDiceButtonRef = useRef<HTMLButtonElement>(null)
+    const webSocketContext = useWebSocket()
+    const currentCharacter = characterState.currentCharacterGuid
+        ? characterState.characters.filter((currCharacter) => currCharacter.guid === characterState.currentCharacterGuid)[0]
+        : new Character('', '', 0)
 
     const getPlayerInfo = () => {
-        if (metadata.isHost)
+        if (metadataState.userType === UserType.host)
             return 'Dungeon Master'
         else {
-            return currentCharacter ? `lvl. ${currentCharacter.level} ${currentCharacter.class}` : ''
+            return currentCharacter ? currentCharacter.getCharacterClassInfo() : ''
         }
     }
 
-    const rollDice = (eyes) => {
+    const rollDice = (eyes: number) => {
         const playerInfo = getPlayerInfo()
-        const convertedMessage = convertChatMessage(settings.username, `/roll 1d${eyes}`, currentCharacter)
+        const convertedMessage = convertChatMessage(settingsState.username, `/roll 1d${eyes}`, currentCharacter, playerInfo)
         if ((convertedMessage.publicMessage.length > 0) || (convertedMessage.privateMessage.length > 0)) {
-            const timestamp = Date.now()
-            addChatMessage(settings.username, playerInfo, convertedMessage.publicMessage, convertedMessage.privateMessage, convertedMessage.targetPlayerName,
-                timestamp, convertedMessage.messageType)
-            sendChatMessage(webSocket, wsSettings, settings.username, playerInfo, convertedMessage.publicMessage, convertedMessage.privateMessage,
-                convertedMessage.targetPlayerName, timestamp, convertedMessage.messageType)
+            addChatMessage(convertedMessage)
+            if (webSocketContext.ws && webSocketContext.wsSettings && (convertedMessage.type !== MessageType.Error ))
+                sendChatMessage(webSocketContext.ws, webSocketContext.wsSettings, convertedMessage)
         }
     }
 
@@ -74,11 +87,11 @@ const DiceRollButton = ({ settings, character, metadata, addChatMessage }) => {
     )
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: StateInterface) => {
     return {
-        settings: state.settings,
-        metadata: state.metadata,
-        character: state.character,
+        settingsState: state.settings,
+        metadataState: state.metadata,
+        characterState: state.character,
     }
 }
 

@@ -1,17 +1,29 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import Game from '../classes/Game'
+import Path from '../classes/Path'
+import ControlTool from '../enums/Tool'
+import StateInterface from '../interfaces/StateInterface'
+import { MapState } from '../reducers/mapReducer'
+import { SettingsState } from '../reducers/settingsReducer'
 import Canvas from './Canvas'
 
-const Drawing = ({ game, settings }) => {
+interface DrawingProps {
+    gameState: Game,
+    mapState: MapState,
+    settingsState: SettingsState,
+}
+
+const Drawing = ({ gameState, mapState, settingsState }: DrawingProps) => {
     const getMap = () => {
-        if (game.maps.length === 0)
+        if (mapState.maps.length === 0)
             return undefined
-        const currMap = game.maps.filter((map) => parseInt(map.id) === parseInt(game.mapId))
-        return currMap.length > 0 ? currMap[0] : game.maps[0]
+        const currMap = mapState.maps.filter((map) => map.id === gameState.currentMapId)
+        return currMap.length > 0 ? currMap[0] : mapState.maps[0]
     }
     const map = getMap()
 
-    const renderDrawingLayer = (ctx) => {
+    const renderDrawingLayer = (ctx: CanvasRenderingContext2D) => {
         if (!map) {
             return
         }
@@ -19,15 +31,15 @@ const Drawing = ({ game, settings }) => {
             return
 
         ctx.beginPath()
-        ctx.clearRect(0, 0, game.width, game.height)
+        ctx.clearRect(0, 0, gameState.width, gameState.height)
         for(let pathId = 0; pathId < map.drawPaths.length; pathId++) {
             const currPath = map.drawPaths[pathId]
-            const tool = currPath.length > 0 ? currPath[0].tool : ''
+            const tool = currPath.points.length > 0 ? currPath.tool : ControlTool.Move
             switch (tool) {
-            case 'draw':
+            case ControlTool.Draw:
                 draw(ctx, currPath)
                 break
-            case 'erease':
+            case ControlTool.EreaseDraw:
                 erease(ctx, currPath)
                 break
             default:
@@ -37,49 +49,53 @@ const Drawing = ({ game, settings }) => {
         }
     }
 
-    const draw = (ctx, currPath) => {
+    const draw = (ctx: CanvasRenderingContext2D, currPath: Path) => {
         ctx.globalCompositeOperation = 'source-over'
         ctx.beginPath()
-        for (let pointId = 0; pointId < currPath.length; pointId++) {
+        for (let pointId = 0; pointId < currPath.points.length; pointId++) {
             ctx.lineCap = 'round'
-            ctx.fillStyle = currPath[pointId].drawColor
-            ctx.lineWidth = currPath[pointId].drawSize
-            ctx.strokeStyle = currPath[pointId].drawColor
+            ctx.fillStyle = currPath.drawColor
+            ctx.lineWidth = currPath.drawSize
+            ctx.strokeStyle = currPath.drawColor
+            const translatedPoint = currPath.points[pointId].translatePoint(settingsState.deltaX, settingsState.deltaY, settingsState.scale)
             if (pointId === 0) {
-                ctx.moveTo(currPath[pointId].x * settings.scale + settings.deltaX, currPath[pointId].y * settings.scale + settings.deltaY)
+                ctx.moveTo(translatedPoint.x, translatedPoint.y)
             } else {
-                ctx.lineTo(currPath[pointId].x * settings.scale + settings.deltaX, currPath[pointId].y * settings.scale + settings.deltaY)
+                ctx.lineTo(translatedPoint.x, translatedPoint.y)
             }
         }
     }
 
-    const erease = (ctx, currPath) => {
+    const erease = (ctx: CanvasRenderingContext2D, currPath: Path) => {
         ctx.globalCompositeOperation = 'destination-out'
         ctx.beginPath()
-        for (let pointId = 0; pointId < currPath.length; pointId++) {
+        for (let pointId = 0; pointId < currPath.points.length; pointId++) {
             ctx.lineCap = 'round'
-            ctx.lineWidth = currPath[pointId].drawSize
+            ctx.lineWidth = currPath.drawSize
+            const translatedPoint = currPath.points[pointId].translatePoint(settingsState.deltaX, settingsState.deltaY, settingsState.scale)
             if (pointId === 0) {
-                ctx.moveTo(currPath[pointId].x * settings.scale + settings.deltaX, currPath[pointId].y * settings.scale + settings.deltaY)
+                ctx.moveTo(translatedPoint.x, translatedPoint.y)
             } else {
-                ctx.lineTo(currPath[pointId].x * settings.scale + settings.deltaX, currPath[pointId].y * settings.scale + settings.deltaY)
+                ctx.lineTo(translatedPoint.x, translatedPoint.y)
             }
         }
     }
 
     return (
         <Canvas
+            id='drawing'
             className='drawing passthrough'
-            width={ game.width }
-            height={ game.height }
+            width={ gameState.width }
+            height={ gameState.height }
             draw={ renderDrawingLayer } />
     )
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: StateInterface) => {
     return {
-        game: state.game,
-        settings: state.settings,
+        gameState: state.game,
+        mapState: state.map,
+        settingsState: state.settings,
     }
 }
 
