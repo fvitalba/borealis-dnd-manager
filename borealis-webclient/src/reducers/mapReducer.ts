@@ -28,15 +28,15 @@ interface MapAction {
 const mapReducer = (state: MapState = initialMapState(), action: MapAction): MapState => {
     let newMapId = -1
     let newMaps = state.maps
+    let newMap
 
     switch(action.type) {
     case ADD_MAP:
         if (action.map) {
             newMapId = state.maps.length
-            newMaps = newMaps.concat({
-                ...action.map,
-                id: newMapId,
-            })
+            newMap = action.map
+            newMap.id = newMapId
+            newMaps = newMaps.concat(newMap)
         }
         return {
             ...state,
@@ -60,11 +60,10 @@ const mapReducer = (state: MapState = initialMapState(), action: MapAction): Map
     case RESET_FOG:
         if (action.mapId)
             newMaps = state.maps.map((map) => {
-                return map.id === action.mapId ? {
-                    ...map,
-                    fogPaths: new Array<Path>(),
-                }
-                    : map
+                newMap = map
+                if (map.id === action.mapId)
+                    newMap.fogPaths = new Array<Path>()
+                return newMap
             })
         return {
             ...state,
@@ -73,11 +72,10 @@ const mapReducer = (state: MapState = initialMapState(), action: MapAction): Map
     case RESET_DRAW:
         if (action.mapId)
             newMaps = state.maps.map((map) => {
-                return map.id === action.mapId ? {
-                    ...map,
-                    drawPaths: new Array<Path>(),
-                }
-                    : map
+                newMap = map
+                if (map.id === action.mapId)
+                    newMap.drawPaths = new Array<Path>()
+                return newMap
             })
         return {
             ...state,
@@ -89,8 +87,7 @@ const mapReducer = (state: MapState = initialMapState(), action: MapAction): Map
 }
 
 //#region Action Creators
-export const addMap = (mapName: string, width: number, height: number): MapAction => {
-    const newMap = new Map(-1, mapName, '', 0, 0, width, height)
+export const addMap = (newMap: Map): MapAction => {
     return {
         type: ADD_MAP,
         map: newMap,

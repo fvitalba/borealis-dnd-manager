@@ -19,7 +19,7 @@ export const useWebSocket = (): IWebSocketContext => {
     return webSocket
 }
 
-interface WebSocketPayload {
+export interface WebSocketPayload {
     type: string,
     targetGuid?: string,
     targetUsername?: string,
@@ -45,7 +45,7 @@ interface WebSocketPayload {
     characterState?: CharacterState,
 }
 
-interface FormattedWebSocketPayload extends WebSocketPayload {
+export interface FormattedWebSocketPayload extends WebSocketPayload {
     fromGuid: string,
     fromUsername: string,
     room: string,

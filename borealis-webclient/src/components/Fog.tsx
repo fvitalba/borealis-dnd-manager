@@ -1,19 +1,33 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import Game from '../classes/Game'
+import Path from '../classes/Path'
 import Canvas from './Canvas'
+import UserType from '../enums/UserType'
+import StateInterface from '../interfaces/StateInterface'
+import { MapState } from '../reducers/mapReducer'
+import { MetadataState } from '../reducers/metadataReducer'
+import { SettingsState } from '../reducers/settingsReducer'
 
-const Fog = ({ game, metadata, settings }) => {
-    const fogOpacity = metadata.isHost ? settings.fogOpacity : 1
+interface FogProps {
+    gameState: Game,
+    mapState: MapState,
+    metadataState: MetadataState,
+    settingsState: SettingsState,
+}
+
+const Fog = ({ gameState, mapState, metadataState, settingsState }: FogProps) => {
+    const fogOpacity = metadataState.userType === UserType.host ? settingsState.fogOpacity : 1
 
     const getMap = () => {
-        if (game.maps.length === 0)
+        if (mapState.maps.length === 0)
             return undefined
-        const currMap = game.maps.filter((map) => parseInt(map.id) === parseInt(game.mapId))
-        return currMap.length > 0 ? currMap[0] : game.maps[0]
+        const currMap = mapState.maps.filter((map) => map.id === gameState.currentMapId)
+        return currMap.length > 0 ? currMap[0] : mapState.maps[0]
     }
     const map = getMap()
 
-    const renderFogLayer = (ctx) => {
+    const renderFogLayer = (ctx: CanvasRenderingContext2D) => {
         if (!map) {
             return
         }
@@ -23,7 +37,7 @@ const Fog = ({ game, metadata, settings }) => {
         ctx.beginPath()
         ctx.globalCompositeOperation = 'destination-over'
         ctx.fillStyle = 'black'
-        ctx.fillRect(0, 0, game.width, game.height)
+        ctx.fillRect(0, 0, gameState.width, gameState.height)
         for(let pathId = 0; pathId < map.fogPaths.length; pathId++) {
             const currPath = map.fogPaths[pathId]
             ereaseFog(ctx, currPath)
@@ -31,39 +45,41 @@ const Fog = ({ game, metadata, settings }) => {
         }
     }
 
-    const ereaseFog = (ctx, currPath) => {
+    const ereaseFog = (ctx: CanvasRenderingContext2D, currPath: Path) => {
         ctx.globalCompositeOperation = 'destination-out'
         ctx.beginPath()
-        for (let pointId = 0; pointId < currPath.length; pointId++) {
+        for (let pointId = 0; pointId < currPath.points.length; pointId++) {
             ctx.lineCap = 'round'
-            ctx.fillStyle = currPath[pointId].drawColor
-            ctx.lineWidth = currPath[pointId].r * settings.scale
-            ctx.strokeStyle = currPath[pointId].drawColor
+            ctx.fillStyle = currPath.drawColor
+            ctx.lineWidth = currPath.r * settingsState.scale
+            ctx.strokeStyle = currPath.drawColor
+            const translatedPoint = currPath.points[pointId].translatePoint(settingsState.deltaX, settingsState.deltaY, settingsState.scale)
             if (pointId === 0) {
-                ctx.moveTo(currPath[pointId].x * settings.scale + settings.deltaX, currPath[pointId].y * settings.scale + settings.deltaY)
+                ctx.moveTo(translatedPoint.x, translatedPoint.y)
             } else {
-                ctx.lineTo(currPath[pointId].x * settings.scale + settings.deltaX, currPath[pointId].y * settings.scale + settings.deltaY)
+                ctx.lineTo(translatedPoint.x, translatedPoint.y)
             }
         }
     }
 
     return (
-        game.fogEnabled ?
+        gameState.fogEnabled ?
             <Canvas
+                id='fog'
                 className='fog passthrough'
                 style={{ opacity: fogOpacity }}
-                width={ game.width }
-                height={ game.height }
+                width={ gameState.width }
+                height={ gameState.height }
                 draw={ renderFogLayer } />
             : null
     )
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: StateInterface) => {
     return {
-        game: state.game,
-        settings: state.settings,
-        metadata: state.metadata,
+        gameState: state.game,
+        settingsState: state.settings,
+        metadataState: state.metadata,
     }
 }
 

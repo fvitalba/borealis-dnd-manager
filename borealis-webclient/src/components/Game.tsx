@@ -11,7 +11,6 @@ import GameView from '../views/GameView'
 const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, setFogEnabled, addChatMessage, overwriteChat, setCharacters, assignCharacter, assignCharacterToUser, updateCharacter, updateCursor }) => {
     const overlayRef = React.useRef()
     const [webSocket, wsSettings] = useWebSocket()
-    // eslint-disable-next-line no-unused-vars
     const [_isLoading, setIsLoading] = useLoading()
     let currentPath = []
 
@@ -273,7 +272,7 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
         const selectedTokens = game.tokens.filter((token) => token.selected)
         if (selectedTokens.length > 0) {
             let deselectTokens = false
-            for (let x of [document.activeElement, e.target])
+            for (const x of [document.activeElement, e.target])
                 if (x.id.toUpperCase() === 'BACKGROUND')
                     deselectTokens = true
             if (deselectTokens)
@@ -287,13 +286,13 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
         const selectedTokens = game.tokens.filter((token) => token.selected)
         if (selectedTokens.length > 0) {
             let deselectTokens = false
-            for (let x of [document.activeElement, e.target])
+            for (const x of [document.activeElement, e.target])
                 if (x.className === 'background')
                     deselectTokens = true
             if (deselectTokens)
                 game.tokens.map((token) => token.selected ? toggleTokenValue(token.guid,'selected') : null)
         }
-        for (let x of [document.activeElement, e.target])
+        for (const x of [document.activeElement, e.target])
             if ((x.tagName.toUpperCase() === 'INPUT' && (x.type.toUpperCase() === 'TEXT' || x.type.toUpperCase() === 'NUMBER')) || (x.tagName.toUpperCase() === 'BUTTON'))
                 return e
 
@@ -317,7 +316,7 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
             return
 
         clearOverlay()
-        let x = e.pageX, y = e.pageY
+        const x = e.pageX, y = e.pageY
         if (settings.shareMouse) {
             pushCursor(webSocket, wsSettings, x, y)
         }
@@ -390,134 +389,6 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
     }
 
     /****************************************************
-     * Receiving Data                                   *
-     ****************************************************/
-    const receiveData = useCallback((evt) => {
-        let data = JSON.parse(evt.data)
-        if (data.from === wsSettings.guid) {
-            return // ignore messages sent by self
-        }
-        if (data.to && data.to !== wsSettings.guid) {
-            return // ignore messages sent to different recipients
-        }
-
-        const getMap = () => {
-            if (game.maps.length === 0)
-                return undefined
-            const currMap = game.maps.filter((map) => map.id === game.mapId)
-            return currMap.length > 0 ? currMap[0] : game.maps[0]
-        }
-
-        const currMap = getMap()
-        let pathToUpdate = []
-        let updatedMaps = []
-        let updatedTokens = []
-        let receivedCharacters = []
-        let assignedCharacter = ''
-        switch (data.type) {
-        case 'pushCursor':
-            if (data.username !== settings.username)
-                updateCursor(data.username, data.x, data.y)
-            break
-        case 'pushDrawPath':
-            pathToUpdate = currMap.drawPaths ? currMap.drawPaths : []
-            pathToUpdate.push(data.drawPath)
-            updatedMaps = game.maps.map((map) => {
-                return map.id === currMap.id ? { ...currMap, drawPaths: pathToUpdate, } : map
-            })
-            updateMaps(updatedMaps)
-            break
-        case 'pushDrawReset':
-            updatedMaps = game.maps.map((map) => {
-                return map.id === currMap.id ? { ...currMap, drawPaths: [], } : map
-            })
-            updateMaps(updatedMaps)
-            break
-        case 'pushFogPath':
-            pathToUpdate = currMap.fogPaths ? currMap.fogPaths : []
-            pathToUpdate.push(data.fogPath)
-            updatedMaps = game.maps.map((map) => {
-                return map.id === currMap.id ? { ...currMap, fogPaths: pathToUpdate, } : map
-            })
-            updateMaps(updatedMaps)
-            break
-        case 'pushFogReset':
-            updatedMaps = game.maps.map((map) => {
-                return map.id === currMap.id ? { ...currMap, fogPaths: [], } : map
-            })
-            updateMaps(updatedMaps)
-            break
-        case 'pushSingleToken':
-            updatedTokens = game.tokens.map((token) => {
-                return token.guid !== data.token.guid ? token : {
-                    ...data.token,
-                    selected: (token.pc === data.token.pc) ? token.selected : false,
-                }
-            })
-            updateTokens(updatedTokens)
-            break
-        case 'deleteSingleToken':
-            updatedTokens = game.tokens.filter((token) => token.guid !== data.tokenGuid)
-            updateTokens(updatedTokens)
-            break
-        case 'pushTokens':
-            updatedTokens = data.tokens.map((token) => {
-                let tokenSelected = false
-                const currentToken = game.tokens.filter((token2) => token2.guid === token.guid)
-                if (currentToken.length > 0)
-                    tokenSelected = currentToken.selected
-                return { ...token, selected: tokenSelected, }
-            })
-            updateTokens(updatedTokens)
-            break
-        case 'pushMapId':
-            loadMap(data.mapId)
-            break
-        case 'pushMapState':
-            updateMaps(data.maps)
-            loadMap(data.mapId)
-            break
-        case 'pushCreateMap':
-            addMap(data.mapName, data.width, data.height)
-            break
-        case 'pushFogEnabled':
-            setFogEnabled(data.fogEnabled)
-            break
-        case 'pushAssignCharacterToUser':
-            assignCharacterToUser(data.username, data.characterGuid)
-            break
-        case 'pushUpdateCharacter':
-            updateCharacter(data.updatedCharacter)
-            break
-        case 'pushGameRefresh': // refresh from host
-            overwriteGame(data.game)
-            overwriteChat(data.chat)
-            receivedCharacters = data.characters.length > 0 ? data.characters : []
-            setCharacters(receivedCharacters)
-            assignedCharacter = receivedCharacters.filter((character) => character.username === settings.username)[0]
-            if (assignedCharacter && (!assignedCharacter !== '')) {
-                assignCharacter(assignedCharacter.guid)
-            }
-            setIsLoading(false)
-            break
-        case 'requestRefresh': // refresh request from player
-            if (metadata.isHost) {
-                pushGameRefresh(webSocket, wsSettings, game, chat, character.characters, { to: data.from, })
-            }
-            break
-        case 'loadGame':
-            overwriteGame(data.payload.game)
-            setIsLoading(false)
-            break
-        case 'sendChatMessage':
-            addChatMessage(data.username, data.playerInfo, data.publicMessageText, data.privateMessageText, data.targetUsername, data.timestamp, data.typeOfMessage)
-            break
-        default:
-            console.error(`Unrecognized websocket message type: ${data.type}`)
-        }
-    },[ game, chat, metadata.isHost, loadMap, overwriteGame, setFogEnabled, updateMaps, addMap, updateTokens, webSocket, wsSettings ])
-
-    /****************************************************
      * React Hooks                                      *
      ****************************************************/
     // On Mount
@@ -541,17 +412,6 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
             requestRefresh(webSocket, wsSettings)
         }
     }, [ webSocket, wsSettings, metadata.isHost ])
-
-    useEffect(() => {
-        if (webSocket) {
-            webSocket.addEventListener('message', receiveData)
-        }
-
-        return () => {
-            if (webSocket)
-                webSocket.removeEventListener('message', receiveData)
-        }
-    }, [ webSocket, wsSettings, receiveData, settings.username ])
 
     /****************************************************
      * Component Render                                 *

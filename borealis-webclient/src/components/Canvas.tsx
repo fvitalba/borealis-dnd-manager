@@ -4,6 +4,7 @@ import useCanvas from '../hooks/useCanvas'
 interface CanvasProps {
     id: string,
     className: string,
+    style?: object,
     width: number,
     height: number,
     draw: (arg0: CanvasRenderingContext2D) => void,
@@ -13,7 +14,7 @@ interface CanvasProps {
     onWheel?: WheelEventHandler<HTMLCanvasElement>,
 }
 
-const Canvas = ({ id, className, width, height, draw, onMouseUp, onMouseDown, onMouseMove, onWheel }: CanvasProps) => {
+const Canvas = ({ id, className, style, width, height, draw, onMouseUp, onMouseDown, onMouseMove, onWheel }: CanvasProps) => {
     const canvasRef = useCanvas(draw)
 
     return (
@@ -23,6 +24,7 @@ const Canvas = ({ id, className, width, height, draw, onMouseUp, onMouseDown, on
             className={ className }
             width={ width }
             height={ height }
+            style={ style }
             onMouseUp={ onMouseUp }
             onMouseDown={ onMouseDown }
             onMouseMove={ onMouseMove }

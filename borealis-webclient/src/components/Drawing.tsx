@@ -2,11 +2,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import Game from '../classes/Game'
 import Path from '../classes/Path'
+import Canvas from './Canvas'
 import ControlTool from '../enums/Tool'
 import StateInterface from '../interfaces/StateInterface'
 import { MapState } from '../reducers/mapReducer'
 import { SettingsState } from '../reducers/settingsReducer'
-import Canvas from './Canvas'
 
 interface DrawingProps {
     gameState: Game,
@@ -55,7 +55,7 @@ const Drawing = ({ gameState, mapState, settingsState }: DrawingProps) => {
         for (let pointId = 0; pointId < currPath.points.length; pointId++) {
             ctx.lineCap = 'round'
             ctx.fillStyle = currPath.drawColor
-            ctx.lineWidth = currPath.drawSize
+            ctx.lineWidth = currPath.drawSize * settingsState.scale
             ctx.strokeStyle = currPath.drawColor
             const translatedPoint = currPath.points[pointId].translatePoint(settingsState.deltaX, settingsState.deltaY, settingsState.scale)
             if (pointId === 0) {
@@ -71,7 +71,7 @@ const Drawing = ({ gameState, mapState, settingsState }: DrawingProps) => {
         ctx.beginPath()
         for (let pointId = 0; pointId < currPath.points.length; pointId++) {
             ctx.lineCap = 'round'
-            ctx.lineWidth = currPath.drawSize
+            ctx.lineWidth = currPath.drawSize * settingsState.scale
             const translatedPoint = currPath.points[pointId].translatePoint(settingsState.deltaX, settingsState.deltaY, settingsState.scale)
             if (pointId === 0) {
                 ctx.moveTo(translatedPoint.x, translatedPoint.y)

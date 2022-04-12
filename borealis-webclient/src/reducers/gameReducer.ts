@@ -15,24 +15,20 @@ interface GameAction {
 }
 
 const gameReducer = (state: Game = new Game(), action: GameAction): Game => {
+    let newGame = state
     switch (action.type) {
     case OVERWRITE_GAME:
-        return {
-            ...state,
-            ...action.game,
-            width: window.innerWidth,
-            height: window.innerHeight,
-        }
+        if (action.game)
+            newGame = action.game
+        newGame.width = window.innerWidth
+        newGame.height = window.innerHeight
+        return newGame
     case INCREMENT_GEN:
-        return {
-            ...state,
-            version: state.version + 1,
-        }
+        newGame.version = state.version + 1
+        return newGame
     case SET_FOG_ENABLED:
-        return {
-            ...state,
-            fogEnabled: action.fogEnabled !== undefined ? action.fogEnabled : state.fogEnabled,
-        }
+        newGame.fogEnabled = action.fogEnabled !== undefined ? action.fogEnabled : state.fogEnabled
+        return newGame
     default:
         return state
     }
