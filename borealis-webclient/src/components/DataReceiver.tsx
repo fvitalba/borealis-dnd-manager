@@ -17,7 +17,7 @@ import { addChatMessage, ChatState, overwriteChat } from '../reducers/chatReduce
 import { MetadataState, updateCursor } from '../reducers/metadataReducer'
 import { SettingsState } from '../reducers/settingsReducer'
 import { assignCharacter, assignCharacterToUser, CharacterState, setCharacters, updateCharacter } from '../reducers/characterReducer'
-
+import { getMap } from '../utils/mapHandler'
 
 interface DataReceiverProps {
     gameState: Game,
@@ -45,14 +45,7 @@ interface DataReceiverProps {
 const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settingsState, characterState, chatState, updateCursor, updateMaps, updateTokens, loadMap, addMap, setFogEnabled, assignCharacterToUser, updateCharacter, overwriteGame, overwriteChat, setCharacters, addChatMessage }: DataReceiverProps) => {
     const webSocketContext = useWebSocket()
     const loadingContext = useLoading()
-
-    const getMap = () => {
-        if (mapState.maps.length === 0)
-            return undefined
-        const currMap = mapState.maps.filter((map) => map.id === gameState.currentMapId)
-        return currMap.length > 0 ? currMap[0] : mapState.maps[0]
-    }
-    const currMap = getMap()
+    const currMap = getMap(mapState, gameState.currentMapId)
 
     const receiveData = useCallback((evt: MessageEvent<any>) => {
         if (!webSocketContext.ws || !webSocketContext.wsSettings)

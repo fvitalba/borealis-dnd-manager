@@ -7,6 +7,7 @@ import ControlTool from '../enums/Tool'
 import StateInterface from '../interfaces/StateInterface'
 import { MapState } from '../reducers/mapReducer'
 import { SettingsState } from '../reducers/settingsReducer'
+import { getMap } from '../utils/mapHandler'
 
 interface DrawingProps {
     gameState: Game,
@@ -15,13 +16,7 @@ interface DrawingProps {
 }
 
 const Drawing = ({ gameState, mapState, settingsState }: DrawingProps) => {
-    const getMap = () => {
-        if (mapState.maps.length === 0)
-            return undefined
-        const currMap = mapState.maps.filter((map) => map.id === gameState.currentMapId)
-        return currMap.length > 0 ? currMap[0] : mapState.maps[0]
-    }
-    const map = getMap()
+    const map = getMap(mapState, gameState.currentMapId)
 
     const renderDrawingLayer = (ctx: CanvasRenderingContext2D) => {
         if (!map) {

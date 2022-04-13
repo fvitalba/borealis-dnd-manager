@@ -1,28 +1,38 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { overwriteGame, updateMaps, loadMap, addMap, setFogEnabled, updateTokens, toggleTokenValue } from '../reducers/gameReducer'
-import { addChatMessage, overwriteChat } from '../reducers/chatReducer'
-import { updateCursor } from '../reducers/metadataReducer'
-import { assignCharacter, assignCharacterToUser, setCharacters, updateCharacter } from '../reducers/characterReducer'
-import { pushCursor, pushDrawPath, pushFogPath, pushGameRefresh, pushTokens, requestRefresh, useWebSocket } from '../hooks/useSocket'
+import Game from '../classes/Game'
+import Map from '../classes/Map'
+import Path from '../classes/Path'
+import Point from '../classes/Point'
+import Token from '../classes/Token'
+import ControlTool from '../enums/Tool'
+import UserType from '../enums/UserType'
 import { useLoading } from '../hooks/useLoading'
+import { pushCursor, pushDrawPath, pushFogPath, pushTokens, requestRefresh, useWebSocket } from '../hooks/useSocket'
+import StateInterface from '../interfaces/StateInterface'
+import { MapState, updateMaps } from '../reducers/mapReducer'
+import { MetadataState } from '../reducers/metadataReducer'
+import { SettingsState } from '../reducers/settingsReducer'
+import { TokenState, updateTokens, toggleTokenValue } from '../reducers/tokenReducer'
+import { getMap } from '../utils/mapHandler'
 import GameView from '../views/GameView'
 
-const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMap, updateMaps, addMap, updateTokens, toggleTokenValue, setFogEnabled, addChatMessage, overwriteChat, setCharacters, assignCharacter, assignCharacterToUser, updateCharacter, updateCursor }) => {
-    const overlayRef = React.useRef()
-    const [webSocket, wsSettings] = useWebSocket()
-    const [_isLoading, setIsLoading] = useLoading()
-    let currentPath = []
+interface GameProps {
+    gameState: Game,
+    mapState: MapState,
+    tokensState: TokenState,
+    settingsState: SettingsState,
+    metadataState: MetadataState,
+    updateTokens: (arg0: Array<Token>) => void,
+    toggleTokenValue: (arg0: string, arg1: string) => void,
+    updateMaps: (arg0: Array<Map>) => void,
+}
 
-    /****************************************************
-     * Map Functions                                    *
-     ****************************************************/
-    const getMap = () => {
-        if (game.maps.length === 0)
-            return undefined
-        const currMap = game.maps.filter((map) => map.id === game.mapId)
-        return currMap.length > 0 ? currMap[0] : game.maps[0]
-    }
+const GameComponent = ({ gameState, mapState, tokensState, settingsState, metadataState, updateTokens, toggleTokenValue, updateMaps }: GameProps) => {
+    const overlayRef = React.useRef<HTMLCanvasElement>()
+    const webSocketContext = useWebSocket()
+    const loadingContext = useLoading()
+    let currentPath = new Path([], settingsState.drawSize, 0, settingsState.tool, settingsState.drawColor, settingsState.drawSize)
 
     /****************************************************
      * Update Functions                                 *
@@ -44,18 +54,17 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
     /****************************************************
      * Control Functions                                *
      ****************************************************/
-    const dragSelectedTokens = (e) => {
-        if (settings.tool !== 'move')
+    const dragSelectedTokens = (e: MouseEvent) => {
+        if (settingsState.tool !== ControlTool.Move)
             return
 
-        const selectedTokens = game.tokens.filter((token) => token.selected)
+        const selectedTokens = tokensState.tokens.filter((token) => token.selected)
         if (selectedTokens.length > 0) {
-            const newTokens = game.tokens.map((token) => {
-                return !token.selected ? token : {
-                    ...token,
-                    x: token.x + (e.movementX / settings.scale),
-                    y: token.y + (e.movementY / settings.scale),
-                }
+            const newTokens = tokensState.tokens.map((token) => {
+                const newToken = token
+                newToken.x = token.x + (e.movementX / settingsState.scale)
+                newToken.y = token.y + (e.movementY / settingsState.scale)
+                return !token.selected ? token : newToken
             })
             updateTokens(newTokens)
         }
@@ -64,12 +73,16 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
     /****************************************************
      * Drawing Functions                                *
      ****************************************************/
-    const setPointerOutline = (x, y, color, radius) => {
+    const setPointerOutline = (x: number, y: number, color: string, radius: number) => {
         if (color === null)
             return
+        if (!overlayRef || !overlayRef.current)
+            return
         const ctx = overlayRef.current.getContext('2d')
+        if (!ctx)
+            return
         ctx.strokeStyle = color
-        ctx.lineWidth = '3'
+        ctx.lineWidth = 3
         ctx.beginPath()
         ctx.arc(x, y, radius / 1.5, 0, 2*Math.PI)
         ctx.stroke()
@@ -77,55 +90,60 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
     }
 
     const updateCurrentDrawPath = () => {
+        if (!overlayRef || !overlayRef.current)
+            return
         const ctx = overlayRef.current.getContext('2d')
+        if (!ctx)
+            return
         ctx.beginPath()
-        for (let pointId = 0; pointId < currentPath.length; pointId++) {
-            const drawColor = currentTool() === 'draw' ? currentPath[pointId].drawColor : 'black'
+        for (let pointId = 0; pointId < currentPath.points.length; pointId++) {
+            const drawColor = settingsState.tool === ControlTool.Draw ? currentPath.drawColor : 'black'
             ctx.lineCap = 'round'
             ctx.fillStyle = drawColor
-            ctx.lineWidth = currentPath[pointId].drawSize
+            ctx.lineWidth = currentPath.drawSize
             ctx.strokeStyle = drawColor
             if (pointId === 0) {
-                ctx.moveTo(currentPath[pointId].x, currentPath[pointId].y)
+                ctx.moveTo(currentPath.points[pointId].x, currentPath.points[pointId].y)
             } else {
-                ctx.lineTo(currentPath[pointId].x, currentPath[pointId].y)
+                ctx.lineTo(currentPath.points[pointId].x, currentPath.points[pointId].y)
             }
         }
         ctx.stroke()
     }
 
     const updateCurrentFogPath = () => {
+        if (!overlayRef || !overlayRef.current)
+            return
         const ctx = overlayRef.current.getContext('2d')
+        if (!ctx)
+            return
         ctx.beginPath()
-        for (let pointId = 0; pointId < currentPath.length; pointId++) {
+        for (let pointId = 0; pointId < currentPath.points.length; pointId++) {
             ctx.lineCap = 'round'
             ctx.fillStyle = 'white'
-            ctx.lineWidth = currentPath[pointId].r
+            ctx.lineWidth = currentPath.r
             ctx.strokeStyle = 'white'
             if (pointId === 0) {
-                ctx.moveTo(currentPath[pointId].x, currentPath[pointId].y)
+                ctx.moveTo(currentPath.points[pointId].x, currentPath.points[pointId].y)
             } else {
-                ctx.lineTo(currentPath[pointId].x, currentPath[pointId].y)
+                ctx.lineTo(currentPath.points[pointId].x, currentPath.points[pointId].y)
             }
         }
         ctx.stroke()
     }
 
     const clearOverlay = () => {
+        if (!overlayRef || !overlayRef.current)
+            return
         const ctx = overlayRef.current.getContext('2d')
         if (!ctx)
             return
-        ctx.clearRect(0, 0, game.width, game.height)
+        ctx.clearRect(0, 0, gameState.width, gameState.height)
     }
 
     /****************************************************
      * Event Handlers                                   *
      ****************************************************/
-    /* Callback when the window resizes */
-    const onResize = () => {
-        //loadMap(null, true, true)
-    }
-
     const onKeyDown = (/*e*/) => {
         //TODO: Update onKeyDown function
         /*
@@ -239,153 +257,105 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
     }
     */
 
-    const onMouseUp = (e) => {
-        const currMap = getMap()
-        if ((currMap) && (currentPath.length > 0)) {
-            const scaledCurrPath = currentPath.map((point) => ({
-                ...point,
-                x: (point.x - settings.deltaX) / settings.scale,
-                y: (point.y - settings.deltaY) / settings.scale,
-                r: point.r / settings.scale,
-            }))
+    const onMouseUp = (e: MouseEvent) => {
+        const currMap = getMap(mapState, gameState.currentMapId)
+        if ((currMap) && (currentPath.points.length > 0)) {
+            const scaledCurrPath = currentPath
+            scaledCurrPath.points = currentPath.points.map((point) => {
+                return new Point((point.x - settingsState.deltaX) / settingsState.scale, (point.y - settingsState.deltaY) / settingsState.scale)
+            })
+            scaledCurrPath.r = currentPath.r / settingsState.scale
             const fogPaths = currMap.fogPaths
             const drawPaths = currMap.drawPaths
-            switch (settings.tool) {
-            case 'fog':
+            switch (settingsState.tool) {
+            case ControlTool.Fog:
+            case ControlTool.EreaseFog:
                 fogPaths.push(scaledCurrPath)
-                pushFogPath(webSocket, wsSettings, scaledCurrPath)
+                if (webSocketContext.ws && webSocketContext.wsSettings)
+                    pushFogPath(webSocketContext.ws, webSocketContext.wsSettings, scaledCurrPath)
                 break
-            case 'draw':
+            case ControlTool.Draw:
+            case ControlTool.EreaseDraw:
                 drawPaths.push(scaledCurrPath)
-                pushDrawPath(webSocket, wsSettings, scaledCurrPath)
+                if (webSocketContext.ws && webSocketContext.wsSettings)
+                    pushDrawPath(webSocketContext.ws, webSocketContext.wsSettings, scaledCurrPath)
                 break
             default: break
             }
-            currentPath = []
-            const updatedMaps = game.maps.map((map) => {
-                return map.id === currMap.id ? { ...currMap, fogPaths: fogPaths, drawPaths: drawPaths, } : map
+            currentPath = new Path([], settingsState.drawSize, 0, settingsState.tool, settingsState.drawColor, settingsState.drawSize)
+            const updatedMaps = mapState.maps.map((map) => {
+                const newMap = map
+                newMap.fogPaths = fogPaths
+                newMap.drawPaths = drawPaths
+                return map.id === currMap.id ? newMap : map
             })
-
             updateMaps(updatedMaps)
         }
 
-        const selectedTokens = game.tokens.filter((token) => token.selected)
-        if (selectedTokens.length > 0) {
+        if (gameState.tokenSelected) {
             let deselectTokens = false
             for (const x of [document.activeElement, e.target])
-                if (x.id.toUpperCase() === 'BACKGROUND')
+                if (x?.id?.toUpperCase() === 'BACKGROUND')
                     deselectTokens = true
             if (deselectTokens)
-                game.tokens.map((token) => token.selected ? toggleTokenValue(token.guid,'selected') : null)
+                tokensState.tokens.map((token) => token.selected ? toggleTokenValue(token.guid,'selected') : null)
 
-            pushTokens(webSocket, wsSettings, game.tokens)
+            if (webSocketContext.ws && webSocketContext.wsSettings)
+                pushTokens(webSocketContext.ws, webSocketContext.wsSettings, tokensState.tokens)
         }
     }
 
-    const onMouseDown = (e) => {
-        const selectedTokens = game.tokens.filter((token) => token.selected)
+    const onMouseDown = (e: MouseEvent) => {
+        const selectedTokens = tokensState.tokens.filter((token) => token.selected)
         if (selectedTokens.length > 0) {
             let deselectTokens = false
             for (const x of [document.activeElement, e.target])
-                if (x.className === 'background')
+                if (x?.className.toUpperCase() === 'BACKGROUND')
                     deselectTokens = true
             if (deselectTokens)
-                game.tokens.map((token) => token.selected ? toggleTokenValue(token.guid,'selected') : null)
+                tokensState.tokens.map((token) => token.selected ? toggleTokenValue(token.guid,'selected') : null)
         }
         for (const x of [document.activeElement, e.target])
-            if ((x.tagName.toUpperCase() === 'INPUT' && (x.type.toUpperCase() === 'TEXT' || x.type.toUpperCase() === 'NUMBER')) || (x.tagName.toUpperCase() === 'BUTTON'))
+            if ((['INPUT', 'BUTTON'].indexOf(x?.tagName.toUpperCase()) >= 0) || (['TEXT', 'NUMBER'].indexOf(x?.type.toUpperCase()) >= 0))
                 return e
 
         if (e.buttons & 1) {
-            currentPath = []
-            currentPath.push({
-                x: e.pageX,
-                y: e.pageY,
-                r: settings.fogRadius,
-                r2: undefined,
-                tool: currentTool(),
-                drawColor: settings.drawColor,
-                drawSize: settings.drawSize,
-            })
+            currentPath = new Path([], settingsState.drawSize, 0, settingsState.tool, settingsState.drawColor, settingsState.drawSize)
+            currentPath.points.push(new Point(e.pageX, e.pageY))
         }
     }
 
-    const onMouseMove = (e) => {
+    const onMouseMove = (e: MouseEvent) => {
         const overlay = overlayRef
         if (!overlay)
             return
 
         clearOverlay()
         const x = e.pageX, y = e.pageY
-        if (settings.shareMouse) {
-            pushCursor(webSocket, wsSettings, x, y)
+        if (settingsState.shareMouse) {
+            if (webSocketContext.ws && webSocketContext.wsSettings)
+                pushCursor(webSocketContext.ws, webSocketContext.wsSettings, x, y)
         }
-        const currentlySelectedTool = settings.tool
-        switch (currentlySelectedTool) {
-        case 'fog':
+        switch (settingsState.tool) {
+        case ControlTool.Fog:
+        case ControlTool.EreaseFog:
             updateCurrentFogPath()
-            setPointerOutline(x, y, 'yellow', settings.fogRadius)
+            setPointerOutline(x, y, 'yellow', settingsState.fogRadius)
             break
-        case 'draw':
+        case ControlTool.Draw:
+        case ControlTool.EreaseDraw:
             updateCurrentDrawPath()
-            setPointerOutline(x, y, settings.drawColor, settings.drawSize)
+            setPointerOutline(x, y, settingsState.drawColor, settingsState.drawSize)
             break
-        case 'move':
+        case ControlTool.Move:
             if (e.buttons & 1)
                 dragSelectedTokens(e)
             break
         default: break
         }
-        if ((currentlySelectedTool === 'fog' || currentlySelectedTool === 'draw') && (e.buttons & 1)) {
-            currentPath.push({
-                x: x,
-                y: y,
-                r: settings.fogRadius,
-                r2: undefined,
-                tool: currentTool(),
-                drawColor: settings.drawColor,
-                drawSize: settings.drawSize,
-            })
+        if (([ControlTool.Draw, ControlTool.EreaseDraw, ControlTool.Fog, ControlTool.EreaseFog].indexOf(settingsState.tool) >= 0) && (e.buttons & 1)) {
+            currentPath.points.push(new Point(x, y))
         }
-    }
-
-    const currentTool = () => {
-        const isEraser = settings.subtool === 'eraser'
-        switch (settings.tool) {
-        case 'draw':
-            if (isEraser) {
-                return 'erease'
-            } else {
-                return 'draw'
-            }
-        default:
-            return settings.tool
-        }
-    }
-
-    /****************************************************
-     * Helper Functions                                 *
-     ****************************************************/
-    /*
-    const notify = (msg, ttl, tag) => {
-        console.log(msg)
-        if (window.Notification) {
-            if (window.Notification.permission !== 'granted')
-                window.Notification.requestPermission()
-            else {
-                const note = new window.Notification(msg, { tag: tag })
-                setTimeout(() => note.close(), ttl || 1000)
-                return note
-            }
-        }
-    }
-    */
-
-    function handleError (ex) {
-        console.error(ex)
-        console.error('Exception in `render`. Clearing localStorage...')
-        localStorage.removeItem(metadata.room)
-        window.alert('Fatal error. Local storage cleared.')
     }
 
     /****************************************************
@@ -393,73 +363,55 @@ const Game = ({ metadata, game, settings, chat, character, overwriteGame, loadMa
      ****************************************************/
     // On Mount
     useEffect(() => {
-        window.addEventListener('resize', onResize)
         //TODO: reenable keypresses
         //window.addEventListener('keypress', onKeyPress)
         window.addEventListener('keydown', onKeyDown)
 
         // On Unmount
         return () => {
-            window.removeEventListener('resize', onResize)
             //window.removeEventListener('keypress', onKeyPress)
             window.removeEventListener('keydown', onKeyDown)
         }
     }, [])
 
     useEffect(() => {
-        if (!metadata.isHost && webSocket) {
-            setIsLoading(true)
-            requestRefresh(webSocket, wsSettings)
+        if ((metadataState.userType === UserType.player) && (webSocketContext.ws && webSocketContext.wsSettings)) {
+            if (loadingContext.setIsLoading)
+                loadingContext.setIsLoading(true)
+            requestRefresh(webSocketContext.ws, webSocketContext.wsSettings)
         }
-    }, [ webSocket, wsSettings, metadata.isHost ])
+    }, [ webSocketContext, loadingContext.setIsLoading, metadataState.userType ])
 
     /****************************************************
      * Component Render                                 *
      ****************************************************/
-
-    try {
-        return (
-            <GameView
-                isHost={ metadata.isHost }
-                overlayRef={ overlayRef }
-                cursors={ metadata.cursors }
-                tokens={ game.tokens }
-                onMouseMove={ onMouseMove }
-                onMouseUp={ onMouseUp }
-                onMouseDown={ onMouseDown }
-                /* TODO: reenable notify={ notify } */
-            />
-        )
-    } catch (ex) {
-        handleError(ex)
-    }
+    return (
+        <GameView
+            isHost={ metadataState.userType === UserType.host }
+            overlayRef={ overlayRef }
+            cursors={ metadataState.cursors }
+            tokens={ tokensState.tokens }
+            onMouseMove={ onMouseMove }
+            onMouseUp={ onMouseUp }
+            onMouseDown={ onMouseDown }
+        />
+    )
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: StateInterface) => {
     return {
-        metadata: state.metadata,
-        game: state.game,
-        settings: state.settings,
-        chat: state.chat,
-        character: state.character,
+        gameState: state.game,
+        mapState: state.map,
+        tokenState: state.token,
+        settingsState: state.settings,
+        metadataState: state.metadata,
     }
 }
 
 const mapDispatchToProps = {
-    overwriteGame,
-    loadMap,
-    updateMaps,
-    addMap,
-    setFogEnabled,
     updateTokens,
     toggleTokenValue,
-    addChatMessage,
-    overwriteChat,
-    setCharacters,
-    assignCharacter,
-    assignCharacterToUser,
-    updateCharacter,
-    updateCursor,
+    updateMaps,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Game)
+export default connect(mapStateToProps, mapDispatchToProps)(GameComponent)

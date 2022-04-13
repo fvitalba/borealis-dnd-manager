@@ -8,6 +8,7 @@ import StateInterface from '../interfaces/StateInterface'
 import { MapState } from '../reducers/mapReducer'
 import { MetadataState } from '../reducers/metadataReducer'
 import { SettingsState } from '../reducers/settingsReducer'
+import { getMap } from '../utils/mapHandler'
 
 interface FogProps {
     gameState: Game,
@@ -18,14 +19,7 @@ interface FogProps {
 
 const Fog = ({ gameState, mapState, metadataState, settingsState }: FogProps) => {
     const fogOpacity = metadataState.userType === UserType.host ? settingsState.fogOpacity : 1
-
-    const getMap = () => {
-        if (mapState.maps.length === 0)
-            return undefined
-        const currMap = mapState.maps.filter((map) => map.id === gameState.currentMapId)
-        return currMap.length > 0 ? currMap[0] : mapState.maps[0]
-    }
-    const map = getMap()
+    const map = getMap(mapState, gameState.currentMapId)
 
     const renderFogLayer = (ctx: CanvasRenderingContext2D) => {
         if (!map) {
