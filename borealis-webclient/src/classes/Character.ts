@@ -123,6 +123,7 @@ class Character {
         }
     }
 
+    //TODO: retrieve attribute by using a type instead of a string
     public SetNumberAttributeValue(attributeName: string, newAttributeValue: number) {
         switch(attributeName.toUpperCase()) {
         case 'MAXHEALTH':

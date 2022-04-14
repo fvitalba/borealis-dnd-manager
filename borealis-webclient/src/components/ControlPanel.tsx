@@ -12,7 +12,7 @@ import { TokenState } from '../reducers/tokenReducer'
 import { MapState } from '../reducers/mapReducer'
 import ControlPanelView from '../views/ControlPanelView'
 
-interface ControlPanelState {
+export interface ControlPanelState {
     hidden: boolean,
     toggleOnMaps: boolean,
     toggleOnUser: boolean,
@@ -20,6 +20,7 @@ interface ControlPanelState {
     toggleOnCharacterStats: boolean,
     toggleOnCharacterInventory: boolean,
     toggleOnCharacterSpells: boolean,
+   [key: string]: boolean,
 }
 
 const initialControlPanelState = (): ControlPanelState => {

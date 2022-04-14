@@ -1,31 +1,39 @@
 import { useState } from 'react'
 import { connect } from 'react-redux'
+import Map from '../classes/Map'
 import { pushCreateMap, useWebSocket } from '../hooks/useSocket'
-import { addMap } from '../reducers/gameReducer'
+import StateInterface from '../interfaces/StateInterface'
+import { addMap, MapState } from '../reducers/mapReducer'
 import MapToolView from '../views/MapToolView'
 
-const MapTool = ({ toggleOnMaps, game, addMap }) => {
-    const [newMapName, setNewMapName] = useState('')
-    const [webSocket, wsSettings] = useWebSocket()
+interface MapToolProps {
+    toggleOnMaps: boolean,
+    mapState: MapState,
+    addMap: (arg0: Map) => void,
+}
 
-    const maps = game.maps
+const MapTool = ({ toggleOnMaps, mapState, addMap }: MapToolProps) => {
+    const [newMapName, setNewMapName] = useState('')
+    const webSocketContext = useWebSocket()
 
     const createMap = () => {
-        addMap(newMapName, window.innerWidth, window.innerHeight)
+        const newMap = new Map(0, newMapName, '', 0, 0, window.innerWidth, window.innerHeight)
+        addMap(newMap)
         setNewMapName('')
-        pushCreateMap(webSocket, wsSettings, newMapName, window.innerWidth, window.innerHeight)
+        if (webSocketContext.ws && webSocketContext.wsSettings)
+            pushCreateMap(webSocketContext.ws, webSocketContext.wsSettings, newMap)
     }
 
     return (
         toggleOnMaps ?
-            <MapToolView maps={ maps } newMapName={ newMapName } setNewMapName={ setNewMapName } createMap={ createMap } />
+            <MapToolView maps={ mapState.maps } newMapName={ newMapName } setNewMapName={ setNewMapName } createMap={ createMap } />
             : null
     )
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: StateInterface) => {
     return {
-        game: state.game,
+        mapState: state.map,
     }
 }
 

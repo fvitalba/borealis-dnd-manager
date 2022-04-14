@@ -1,43 +1,57 @@
+import React from 'react'
 import { connect } from 'react-redux'
+import Character from '../classes/Character'
+import UserType from '../enums/UserType'
+import StateInterface from '../interfaces/StateInterface'
+import { addCharacter, assignCharacter, CharacterState } from '../reducers/characterReducer'
+import { MetadataState } from '../reducers/metadataReducer'
+import { SettingsState } from '../reducers/settingsReducer'
 import guid from '../utils/guid'
-import { addChararacter, assignCharacter } from '../reducers/characterReducer'
 import SelectCharacterView from '../views/SelectCharacterView'
 
-const SelectCharacter = ({ character, metadata, settings, assignCharacter, addChararacter }) => {
-    const onCharacterSelect = (e) => {
+interface SelectCharacterProps {
+    characterState: CharacterState,
+    metadataState: MetadataState,
+    settingsState: SettingsState,
+    assignCharacter: (arg0: string) => void,
+    addCharacter: (arg0: Character) => void,
+}
+
+const SelectCharacter = ({ characterState, metadataState, settingsState, assignCharacter, addCharacter }: SelectCharacterProps) => {
+    const onCharacterSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         assignCharacter(e.target.value)
     }
 
     const addNewCharacter = () => {
-        const newGuid = guid()
-        addChararacter({ guid: newGuid, username: settings.username, })
-        assignCharacter(newGuid)
+        const newCharacter = new Character(guid(), '', 0)
+        addCharacter(newCharacter)
+        assignCharacter(newCharacter.guid)
     }
 
-    const filteredCharacters = character.characters.filter((stateCharacter) => (stateCharacter.username === settings.username) || (metadata.isHost))
+    const filteredCharacters = characterState.characters.filter((stateCharacter) => (stateCharacter.username === settingsState.username) || (metadataState.userType === UserType.host))
 
     return (
         <SelectCharacterView
             characters={ filteredCharacters }
-            isHost={ metadata.isHost }
-            selectedCharacterGuid={ character.myCharacterGuid }
+            isHost={ metadataState.userType === UserType.host }
+            selectedCharacterGuid={ characterState.currentCharacterGuid }
             onCharacterSelect={ onCharacterSelect }
             addNewCharacter={ addNewCharacter }
         />
     )
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: StateInterface) => {
     return {
-        character: state.character,
-        metadata: state.metadata,
-        settings: state.settings,
+        characterState: state.character,
+        metadataState: state.metadata,
+        settingsState: state.settings,
     }
 }
 
 const mapDispatchToProps = {
     assignCharacter,
-    addChararacter,
+    addCharacter,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelectCharacter)

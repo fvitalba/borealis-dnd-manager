@@ -20,7 +20,7 @@ import GameView from '../views/GameView'
 interface GameProps {
     gameState: Game,
     mapState: MapState,
-    tokensState: TokenState,
+    tokenState: TokenState,
     settingsState: SettingsState,
     metadataState: MetadataState,
     updateTokens: (arg0: Array<Token>) => void,
@@ -28,7 +28,7 @@ interface GameProps {
     updateMaps: (arg0: Array<Map>) => void,
 }
 
-const GameComponent = ({ gameState, mapState, tokensState, settingsState, metadataState, updateTokens, toggleTokenValue, updateMaps }: GameProps) => {
+const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadataState, updateTokens, toggleTokenValue, updateMaps }: GameProps) => {
     const overlayRef = React.useRef<HTMLCanvasElement>()
     const webSocketContext = useWebSocket()
     const loadingContext = useLoading()
@@ -58,9 +58,9 @@ const GameComponent = ({ gameState, mapState, tokensState, settingsState, metada
         if (settingsState.tool !== ControlTool.Move)
             return
 
-        const selectedTokens = tokensState.tokens.filter((token) => token.selected)
+        const selectedTokens = tokenState.tokens.filter((token) => token.selected)
         if (selectedTokens.length > 0) {
-            const newTokens = tokensState.tokens.map((token) => {
+            const newTokens = tokenState.tokens.map((token) => {
                 const newToken = token
                 newToken.x = token.x + (e.movementX / settingsState.scale)
                 newToken.y = token.y + (e.movementY / settingsState.scale)
@@ -294,29 +294,31 @@ const GameComponent = ({ gameState, mapState, tokensState, settingsState, metada
 
         if (gameState.tokenSelected) {
             let deselectTokens = false
-            for (const x of [document.activeElement, e.target])
+            for (const x of [document.activeElement, (e.target as HTMLElement)])
                 if (x?.id?.toUpperCase() === 'BACKGROUND')
                     deselectTokens = true
             if (deselectTokens)
-                tokensState.tokens.map((token) => token.selected ? toggleTokenValue(token.guid,'selected') : null)
+                tokenState.tokens.map((token) => token.selected ? toggleTokenValue(token.guid,'selected') : null)
 
             if (webSocketContext.ws && webSocketContext.wsSettings)
-                pushTokens(webSocketContext.ws, webSocketContext.wsSettings, tokensState.tokens)
+                pushTokens(webSocketContext.ws, webSocketContext.wsSettings, tokenState.tokens)
         }
     }
 
     const onMouseDown = (e: MouseEvent) => {
-        const selectedTokens = tokensState.tokens.filter((token) => token.selected)
+        const selectedTokens = tokenState.tokens.filter((token) => token.selected)
         if (selectedTokens.length > 0) {
             let deselectTokens = false
-            for (const x of [document.activeElement, e.target])
+            for (const x of [document.activeElement, (e.target as HTMLElement)])
                 if (x?.className.toUpperCase() === 'BACKGROUND')
                     deselectTokens = true
             if (deselectTokens)
-                tokensState.tokens.map((token) => token.selected ? toggleTokenValue(token.guid,'selected') : null)
+                tokenState.tokens.map((token) => token.selected ? toggleTokenValue(token.guid,'selected') : null)
         }
-        for (const x of [document.activeElement, e.target])
-            if ((['INPUT', 'BUTTON'].indexOf(x?.tagName.toUpperCase()) >= 0) || (['TEXT', 'NUMBER'].indexOf(x?.type.toUpperCase()) >= 0))
+        for (const x of [document.activeElement, (e.target as HTMLElement)])
+            //TODO: Verify if this is still ok
+            //if ((['INPUT', 'BUTTON'].indexOf(x?.tagName.toUpperCase() || '') >= 0) || (['TEXT', 'NUMBER'].indexOf(x?.type.toUpperCase()) >= 0))
+            if (['INPUT', 'BUTTON'].indexOf(x?.tagName.toUpperCase() || '') >= 0)
                 return e
 
         if (e.buttons & 1) {
@@ -390,7 +392,7 @@ const GameComponent = ({ gameState, mapState, tokensState, settingsState, metada
             isHost={ metadataState.userType === UserType.host }
             overlayRef={ overlayRef }
             cursors={ metadataState.cursors }
-            tokens={ tokensState.tokens }
+            tokens={ tokenState.tokens }
             onMouseMove={ onMouseMove }
             onMouseUp={ onMouseUp }
             onMouseDown={ onMouseDown }

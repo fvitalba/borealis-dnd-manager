@@ -1,12 +1,12 @@
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
+import { IWsSettings } from '../contexts/WebSocketProvider'
+import UserType from '../enums/UserType'
+import StateInterface from '../interfaces/StateInterface'
 import { MetadataState, setGameSettings } from '../reducers/metadataReducer'
 import { setUsername } from '../reducers/settingsReducer'
 import { getRoomFromDatabase } from '../utils/apiHandler'
 import GameSetupView from '../views/GameSetupView'
-import UserType from '../enums/UserType'
-import StateInterface from '../interfaces/StateInterface'
-import { IWsSettings } from '../contexts/WebSocketProvider'
 
 interface GameSetupState {
     roomName: string,
@@ -56,7 +56,7 @@ const GameSetup = ({ metadataState, setGameSettings, setUsername }: GameSetupPro
     }
 
     const onToggleUserButton = (e: React.MouseEvent<HTMLButtonElement>) => {
-        const userType = e.target.innerText === 'DM' ? UserType.host : UserType.player
+        const userType = (e.target as HTMLElement).innerText === 'DM' ? UserType.host : UserType.player
         const defaultUserName = userType === UserType.host ? 'DM' : 'PC'
         if (userType !== gameSetupState.userType) {
             setGameSetupState({
@@ -70,6 +70,7 @@ const GameSetup = ({ metadataState, setGameSettings, setUsername }: GameSetupPro
     const onSubmitSetup = () => {
         // TODO: Handle loading from database
         // check gameLoadHandler.ts
+        saveSettingsToLocalStorage()
     }
 
     const readSettingsFromLocalStorage = (roomName: string) => {

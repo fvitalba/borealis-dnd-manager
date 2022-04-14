@@ -1,30 +1,30 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { useWebSocket } from '../hooks/useSocket'
-import { useLoading } from '../hooks/useLoading'
-import { createWebSocket } from '../contexts/WebSocketProvider'
-import { MetadataState, setGameSettings } from '../reducers/metadataReducer'
+import DataReceiver from './DataReceiver'
 import Game from './Game'
 import GameSetup from './GameSetup'
+import { createWebSocket } from '../contexts/WebSocketProvider'
+import UserType from '../enums/UserType'
+import { useWebSocket } from '../hooks/useSocket'
+import { useLoading } from '../hooks/useLoading'
 import StateInterface from '../interfaces/StateInterface'
+import { MetadataState, setGameSettings } from '../reducers/metadataReducer'
 import { SettingsState } from '../reducers/settingsReducer'
-import DataReceiver from './DataReceiver'
 
 interface GameStateHandlerProps {
     metadataState: MetadataState,
     settingsState: SettingsState,
-    setGameSettings: () => void,
+    setGameSettings: (arg0: UserType, arg1: string, arg2: string) => void,
 }
 
 const GameStateHandler = ({ metadataState, settingsState, setGameSettings }: GameStateHandlerProps) => {
-    // eslint-disable-next-line no-unused-vars
-    const [webSocket, wsSettings, setWsSettings, setWs] = useWebSocket()
-    // eslint-disable-next-line no-unused-vars
-    const [_isLoading, setIsLoading] = useLoading()
+    const webSocketContext = useWebSocket()
+    const loadingContext = useLoading()
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
-        setGameSettings(params.get('host') ? true : false, params.get('room'), wsSettings.guid)
+        if (webSocketContext.wsSettings)
+            setGameSettings(params.get('host') ? UserType.host : UserType.player, params.get('room') || '', webSocketContext.wsSettings.guid)
         /*
         setWsSettings({
             ...wsSettings,
@@ -40,30 +40,37 @@ const GameStateHandler = ({ metadataState, settingsState, setGameSettings }: Gam
         else
             document.title = 'Borealis D&D'
 
+        if (!loadingContext.setIsLoading || !webSocketContext.setWsSettings || !webSocketContext.wsSettings || !webSocketContext.setWs)
+            return
+
         if ((metadataState.room !== '') && (settingsState.username !== '')) {
-            setWsSettings({
-                ...wsSettings,
+            webSocketContext.setWsSettings({
+                ...webSocketContext.wsSettings,
                 room: metadataState.room,
                 username: settingsState.username,
-                isHost: metadataState.isHost,
+                isHost: metadataState.userType === UserType.host,
             })
 
-            setIsLoading(true)
-            const newWebSocket = createWebSocket(metadataState.room, metadataState.guid, settingsState.username, metadataState.isHost)
+            loadingContext.setIsLoading(true)
+            const newWebSocket = createWebSocket(metadataState.room, metadataState.userGuid, settingsState.username, metadataState.userType === UserType.host)
             if (newWebSocket) {
-                newWebSocket.addEventListener('close', () => setIsLoading(false))
-                newWebSocket.addEventListener('open', () => setIsLoading(false))
-                newWebSocket.addEventListener('error', () => setIsLoading(false))
-                setWs(newWebSocket)
+                const stopLoading = () => {
+                    if (loadingContext.setIsLoading)
+                        loadingContext.setIsLoading(false)
+                }
+                newWebSocket.addEventListener('close', stopLoading)
+                newWebSocket.addEventListener('open', stopLoading)
+                newWebSocket.addEventListener('error', stopLoading)
+                webSocketContext.setWs(newWebSocket)
             } else {
-                setIsLoading(false)
+                loadingContext.setIsLoading(false)
             }
         }
-    }, [ metadataState.room, settingsState.username, metadataState.isHost ])
+    }, [ metadataState.room, settingsState.username, metadataState.userType ])
 
     return(
         <DataReceiver>
-            { (webSocket && (webSocket.readyState === 1))
+            { (webSocketContext.ws && (webSocketContext.ws.readyState === 1))
                 ? <Game />
                 : <GameSetup />
             }

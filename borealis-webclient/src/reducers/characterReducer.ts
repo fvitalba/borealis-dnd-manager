@@ -91,7 +91,7 @@ const characterReducer = (state: CharacterState = initialCharacterReducer(), act
 }
 
 //#region Action Creators
-export const addChararacter = (newCharacter: Character): CharacterAction => {
+export const addCharacter = (newCharacter: Character): CharacterAction => {
     return {
         type: ADD_CHARACTER,
         character: newCharacter,

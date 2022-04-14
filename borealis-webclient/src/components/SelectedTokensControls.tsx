@@ -1,16 +1,23 @@
+import React from 'react'
 import { connect } from 'react-redux'
+import StateInterface from '../interfaces/StateInterface'
+import { TokenState } from '../reducers/tokenReducer'
 import SelectedTokensControlsView from '../views/SelectedTokensControlsView'
 
-const SelectedTokensControls = ({ game }) => {
-    const filteredTokens = game.tokens.filter(t => t.selected)
+interface SelectedTokensControlsProps {
+    tokenState: TokenState,
+}
+
+const SelectedTokensControls = ({ tokenState }: SelectedTokensControlsProps) => {
+    const filteredTokens = tokenState.tokens.filter(token => token.selected)
     return (
         <SelectedTokensControlsView tokens={ filteredTokens } />
     )
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: StateInterface) => {
     return {
-        game: state.game,
+        tokenState: state.token,
     }
 }
 

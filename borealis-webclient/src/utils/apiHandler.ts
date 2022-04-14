@@ -16,15 +16,15 @@ const getUrlSchema = (selectedApi: string) => {
         : `${protocol}://${host}/api/${selectedApi}/`
 }
 
-const usersUrl = (roomName: string) => {
+const usersUrl = (roomName: string): string => {
     return getUrlSchema(USER_API_URL) + `?roomName=${roomName}`
 }
 
-const roomUrl = (roomName: string) => {
+const roomUrl = (roomName: string): string => {
     return getUrlSchema(ROOM_API_URL) + `${roomName}`
 }
 
-const charactersUrl = (roomName: string) => {
+const charactersUrl = (roomName: string): string => {
     return getUrlSchema(CHARACTER_API_URL) + `?roomName=${roomName}`
 }
 
