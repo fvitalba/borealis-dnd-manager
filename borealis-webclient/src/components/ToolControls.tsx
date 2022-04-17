@@ -1,15 +1,24 @@
 import { useRef, useState } from 'react'
 import { connect } from 'react-redux'
-import { setToolSettings, setDrawToolSettings, setFogToolSettings } from '../reducers/settingsReducer'
+import { setToolSettings, setDrawToolSettings, setFogToolSettings, SettingsState } from '../reducers/settingsReducer'
 import { resetFog, resetDraw } from '../reducers/gameReducer'
 import { pushDrawReset, pushFogReset, useWebSocket } from '../hooks/useSocket'
 import ToolControlsView from '../views/ToolControlsView'
 
-const ToolControls = ({ settings, setToolSettings, setDrawToolSettings, setFogToolSettings, resetFog, resetDraw }) => {
+interface ToolControlsProps {
+    settingsState: SettingsState,
+    setToolSettings: () => void,
+    setDrawToolSettings: () => void,
+    setFogToolSettings: () => void,
+    resetFog: () => void,
+    resetDraw: () => void,
+}
+
+const ToolControls = ({ settingsState, setToolSettings, setDrawToolSettings, setFogToolSettings, resetFog, resetDraw }: ToolControlsProps) => {
     const [toolControlState, setToolControlState] = useState({
         showColorPicker: false,
     })
-    const [webSocket, wsSettings] = useWebSocket()
+    const webSocketContext = useWebSocket()
     const drawColorRef = useRef(null)
 
     const toggleColorPicker = () => {

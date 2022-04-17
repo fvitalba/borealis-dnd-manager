@@ -1,14 +1,22 @@
+import React from 'react'
 import { connect } from 'react-redux'
-import { setToolSettings } from '../reducers/settingsReducer'
+import ControlTool from '../enums/Tool'
+import StateInterface from '../interfaces/StateInterface'
+import { SettingsState, setToolSettings } from '../reducers/settingsReducer'
 import Button from '../views/Button'
 
-const ToolButton = ({ title, value, settings, setToolSettings }) => {
-    const isSelected = title === settings.tool
+interface ToolButtonProps {
+    title: string,
+    value: JSX.Element,
+    controlTool: ControlTool,
+    settingsState: SettingsState,
+    setToolSettings: (arg0: ControlTool) => void,
+}
+
+const ToolButton = ({ title, value, controlTool, settingsState, setToolSettings }: ToolButtonProps) => {
+    const isSelected = controlTool === settingsState.tool
     const onClick = () => {
-        if (title === 'draw')
-            setToolSettings(title, 'pencil')
-        else
-            setToolSettings(title, undefined)
+        setToolSettings(controlTool)
     }
 
     return (
@@ -16,9 +24,9 @@ const ToolButton = ({ title, value, settings, setToolSettings }) => {
     )
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: StateInterface) => {
     return {
-        settings: state.settings,
+        settingsState: state.settings,
     }
 }
 

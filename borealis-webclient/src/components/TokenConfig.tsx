@@ -1,109 +1,98 @@
-import React from 'react'
+import React, { ChangeEvent } from 'react'
 import { connect } from 'react-redux'
-import { deleteToken, copyToken, updateTokenValue, toggleTokenValue, updateTokens } from '../reducers/gameReducer'
+import Token, { TokenBooleanProperty, TokenNumberProperty, TokenTextProperty } from '../classes/Token'
+import UserType from '../enums/UserType'
+import TokenSize, { TokenSizeArray } from '../enums/TokenSize'
 import { pushSingleToken, deleteSingleToken, useWebSocket } from '../hooks/useSocket'
+import StateInterface from '../interfaces/StateInterface'
+import { TokenState } from '../reducers/tokenReducer'
+import { MetadataState } from '../reducers/metadataReducer'
+import { deleteToken, copyToken, updateTokenTextValue, updateTokenNumberValue, toggleTokenValue, updateTokens } from '../reducers/tokenReducer'
+import { MapState } from '../reducers/mapReducer'
 import HostTokenConfig from '../views/HostTokenConfigView'
 import GuestTokenConfigView from '../views/GuestTokenConfigView'
 
-const tokenSizes = [{
-    id: 'tiny',
-    width: 10,
-    height: 10,
-},
-{
-    id: 'small',
-    width: 25,
-    height: 25,
-},
-{
-    id: 'medium',
-    width: 50,
-    height: 50,
-},
-{
-    id: 'large',
-    width: 75,
-    height: 75,
-},
-{
-    id: 'huge',
-    width: 100,
-    height: 100,
-},
-{
-    id: 'gargantuan',
-    width: 150,
-    height: 150,
-}]
+interface TokenConfigProps {
+    token: Token,
+    mapState: MapState,
+    tokenState: TokenState,
+    metadataState: MetadataState,
+    deleteToken: (arg0: string) => void,
+    copyToken: (arg0: string) => void,
+    updateTokenTextValue: (arg0: string, arg1: TokenTextProperty, arg2: string) => void,
+    updateTokenNumberValue: (arg0: string, arg1: TokenNumberProperty, arg2: number) => void,
+    toggleTokenValue: (arg0: string, arg1: TokenBooleanProperty) => void,
+    updateTokens: (arg0: Array<Token>) => void,
+}
 
-const TokenConfig = ({ token, game, metadata, deleteToken, copyToken, updateTokenValue, toggleTokenValue, updateTokens }) => {
-    const [webSocket, wsSettings] = useWebSocket()
+const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, copyToken, updateTokenTextValue, updateTokenNumberValue, toggleTokenValue, updateTokens }: TokenConfigProps) => {
+    const webSocketContext = useWebSocket()
 
-    const selectToken = (token) => {
-        if (!token.pc && !metadata.isHost)
+    const selectToken = (selectedToken: Token) => {
+        if (!selectedToken.isAllowedToMove(metadataState.userType))
             return
-        toggleTokenValue(token.guid, 'selected')
+        toggleTokenValue(selectedToken.guid, 'selected')
     }
 
     const deleteCurrToken = () => {
         deleteToken(token.guid)
-        deleteSingleToken(webSocket, wsSettings, token.guid)
+        if (webSocketContext.ws && webSocketContext.wsSettings)
+            deleteSingleToken(webSocketContext.ws, webSocketContext.wsSettings, token.guid)
     }
 
     const copy = () => {
         copyToken(token.guid)
     }
 
-    const onSizeSelect = (e) => {
-        const size = tokenSizes.filter((tokenSize) => tokenSize.id === e.target.value)
-        const newToken = {
-            ...token,
-            size: size[0].id,
-            width: size[0].width,
-            height: size[0].height,
-        }
-        const newTokens = game.tokens.map((gtoken) => gtoken.guid === newToken.guid ? newToken : gtoken)
+    const onSizeSelect = (e: ChangeEvent<HTMLSelectElement>) => {
+        const size = TokenSizeArray.filter((tokenSize) => tokenSize === e.target.value)
+        const newToken = token.copy()
+        const newSize: TokenSize = TokenSize[size[0]]
+        newToken.setTokenSize(newSize)
+        const newTokens = tokenState.tokens.map((gtoken) => gtoken.guid === newToken.guid ? newToken : gtoken)
         updateTokens(newTokens)
-        pushSingleToken(webSocket,wsSettings,newToken)
+        if (webSocketContext.ws && webSocketContext.wsSettings)
+            pushSingleToken(webSocketContext.ws, webSocketContext.wsSettings, newToken)
     }
 
-    const onMapSelect = (e) => {
+    const onMapSelect = (e: ChangeEvent<HTMLSelectElement>) => {
         let value = parseInt(e.target.value)
         if (value < 0)
-            value = undefined
-        updateTokenValue(token.guid, 'mapId', value)
-        const newToken = {
-            ...token,
-            mapId: value,
+            value = -1
+
+        updateTokenNumberValue(token.guid, 'mapId', value)
+        if (webSocketContext.ws && webSocketContext.wsSettings) {
+            const newToken = token.copy()
+            newToken.mapId = value
+            pushSingleToken(webSocketContext.ws, webSocketContext.wsSettings, newToken)
         }
-        pushSingleToken(webSocket,wsSettings,newToken)
     }
 
-    const onToggle = (key) => {
-        toggleTokenValue(token.guid, key)
-        const newToken = {
-            ...token,
-            [key]: !token[key],
+    const onToggle = (attributeKey: TokenBooleanProperty /*, e: React.MouseEvent<HTMLButtonElement>*/) => {
+        toggleTokenValue(token.guid, attributeKey)
+        if (webSocketContext.ws && webSocketContext.wsSettings) {
+            const newToken = token.copy()
+            newToken.toggleValue(attributeKey)
+            pushSingleToken(webSocketContext.ws, webSocketContext.wsSettings, newToken)
         }
-        pushSingleToken(webSocket,wsSettings,newToken)
     }
 
-    const onTextChange = (key, e) => {
-        updateTokenValue(token.guid, key, e.target.value)
-        const newToken = {
-            ...token,
-            [key]: e.target.value,
+    const onTextChange = (attributeKey: TokenTextProperty, e: ChangeEvent<HTMLInputElement>) => {
+        updateTokenTextValue(token.guid, attributeKey, e.target.value)
+        if (webSocketContext.ws && webSocketContext.wsSettings) {
+            const newToken = token.copy()
+            newToken.setTextValue(attributeKey, e.target.value)
+            pushSingleToken(webSocketContext.ws, webSocketContext.wsSettings, newToken)
         }
-        pushSingleToken(webSocket,wsSettings,newToken)
     }
 
     return (
         <div>
             { token ?
-                metadata.isHost ?
+                (metadataState.userType === UserType.host) ?
                     <HostTokenConfig
-                        tokenSizes={ tokenSizes }
-                        maps={ game.maps }
+                        tokenSizes={ TokenSizeArray }
+                        maps={ mapState.maps }
                         token={ token }
                         copy={ copy }
                         onToggle={ onToggle }
@@ -124,17 +113,20 @@ const TokenConfig = ({ token, game, metadata, deleteToken, copyToken, updateToke
     )
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: StateInterface) => {
     return {
-        game: state.game,
-        metadata: state.metadata,
+        gameState: state.game,
+        mapState: state.map,
+        tokenState: state.token,
+        metadataState: state.metadata,
     }
 }
 
 const mapDispatchToProps = {
     deleteToken,
     copyToken,
-    updateTokenValue,
+    updateTokenTextValue,
+    updateTokenNumberValue,
     toggleTokenValue,
     updateTokens,
 }

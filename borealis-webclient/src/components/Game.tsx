@@ -4,7 +4,7 @@ import Game from '../classes/Game'
 import Map from '../classes/Map'
 import Path from '../classes/Path'
 import Point from '../classes/Point'
-import Token from '../classes/Token'
+import Token, { TokenBooleanProperty } from '../classes/Token'
 import ControlTool from '../enums/Tool'
 import UserType from '../enums/UserType'
 import { useLoading } from '../hooks/useLoading'
@@ -24,7 +24,7 @@ interface GameProps {
     settingsState: SettingsState,
     metadataState: MetadataState,
     updateTokens: (arg0: Array<Token>) => void,
-    toggleTokenValue: (arg0: string, arg1: string) => void,
+    toggleTokenValue: (arg0: string, arg1: TokenBooleanProperty) => void,
     updateMaps: (arg0: Array<Map>) => void,
 }
 
@@ -298,7 +298,7 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
                 if (x?.id?.toUpperCase() === 'BACKGROUND')
                     deselectTokens = true
             if (deselectTokens)
-                tokenState.tokens.map((token) => token.selected ? toggleTokenValue(token.guid,'selected') : null)
+                tokenState.tokens.map((token) => token.selected ? toggleTokenValue(token.guid, 'selected') : null)
 
             if (webSocketContext.ws && webSocketContext.wsSettings)
                 pushTokens(webSocketContext.ws, webSocketContext.wsSettings, tokenState.tokens)

@@ -53,14 +53,13 @@ const WebSocketProvider = ({ children } : { children: JSX.Element }) => {
         isHost: false,
     })
     const [ws, setWs] = useState<WebSocket | null>(null)
-    // eslint-disable-next-line no-unused-vars
-    const { isLoading, setIsLoading } = useLoading()
+    const loadingContext = useLoading()
 
     useEffect(() => {
         const onClose = () => {
             setTimeout(() => {
-                if (setIsLoading)
-                    setIsLoading(true)
+                if (loadingContext.setIsLoading)
+                    loadingContext.setIsLoading(true)
                 console.debug('Socket Timeout, recreating WebSocket')
                 setWs(createWebSocket(wsSettings.room, wsSettings.guid, wsSettings.username, wsSettings.isHost))
             }, SOCKET_RECONNECTION_TIMEOUT)
@@ -68,13 +67,13 @@ const WebSocketProvider = ({ children } : { children: JSX.Element }) => {
 
         const onOpen = () => {
             // When the WebSocket is open, close the loading screen
-            if (setIsLoading)
-                setIsLoading(false)
+            if (loadingContext.setIsLoading)
+                loadingContext.setIsLoading(false)
         }
 
         const onError = (err: Event) => {
-            if (setIsLoading)
-                setIsLoading(false)
+            if (loadingContext.setIsLoading)
+                loadingContext.setIsLoading(false)
             console.error('WebSocket could not be created. Error: ', err)
         }
 

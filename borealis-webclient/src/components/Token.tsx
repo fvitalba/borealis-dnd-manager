@@ -1,36 +1,41 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
-import { setTokenOrigin, updateTokens } from '../reducers/gameReducer'
+import Game from '../classes/Game'
+import Token from '../classes/Token'
+import ControlTool from '../enums/Tool'
+import UserType from '../enums/UserType'
+import StateInterface from '../interfaces/StateInterface'
+import { SettingsState } from '../reducers/settingsReducer'
+import { TokenState, setTokenOrigin, updateTokens } from '../reducers/tokenReducer'
 import TokenView from '../views/TokenView'
 
-const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) => {
-    const scaledToken = {
-        ...token,
-        x: token.x * settings.scale + settings.deltaX,
-        y: token.y * settings.scale + settings.deltaY,
-        width: token.width * settings.scale,
-        height: token.height * settings.scale,
-    }
-    const labelRef = useRef(null)
+interface TokenProps {
+    token: Token,
+    userType: UserType,
+    gameSate: Game,
+    tokenState: TokenState,
+    settingsState: SettingsState,
+    updateTokens: (arg0: Array<Token>) => void,
+    setTokenOrigin: (arg0: string, arg1: number, arg2: number) => void,
+}
+
+const TokenComponent = ({ token, userType, gameSate, tokenState, settingsState, updateTokens, setTokenOrigin }: TokenProps) => {
+    const scaledToken = token.scaleToken(settingsState.deltaX, settingsState.deltaY, settingsState.scale)
+    const labelRef = useRef<HTMLLabelElement>(null)
     const [labelPosition, setLabelPosition] = useState({
         top: scaledToken.y + scaledToken.height,
         left: scaledToken.x + Math.floor(scaledToken.width / 2),
     })
 
-    const isMoveTool = () => {
-        return settings.tool === 'move'
-    }
-
     const onMouseDown = () => {
-        if (!isMoveTool())
+        if (settingsState.tool !== ControlTool.Move)
             return
-        if (!isHost && (!scaledToken.pc))
+        if (!scaledToken.isAllowedToMove(userType))
             return
-        const updatedTokensWithSelection = game.tokens.map((currToken) => {
-            return {
-                ...currToken,
-                selected: currToken.guid === scaledToken.guid ? true : false
-            }
+        const updatedTokensWithSelection = tokenState.tokens.map((currToken) => {
+            const newToken = currToken
+            newToken.selected = newToken.guid === scaledToken.guid
+            return newToken
         })
         updateTokens(updatedTokensWithSelection)
         setTokenOrigin(scaledToken.guid, token.x, token.y)
@@ -45,26 +50,19 @@ const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) 
         }
     }, [ labelRef.current, scaledToken.x, scaledToken.y, scaledToken.width, scaledToken.height, scaledToken.showLabel ])
 
-    if (!scaledToken.url || !scaledToken.url.trim())
+    if (scaledToken.imageUrl === '')
         return null
 
-    const hiddenClass = isHost ? 'opacity-50' : 'invisible'
-    const classes = [
-        'token',
-        scaledToken.ko && 'token-dead',
-        scaledToken.pc ? 'token-pc' : 'token-npc',
-        isHost && !scaledToken.pc && 'token-grabbable',
-        scaledToken.hidden && hiddenClass,
-    ]
+    const classes = scaledToken.generateTokenClasses(userType)
     const divStyle = {
         left: scaledToken.x || 0,
         top: scaledToken.y || 0,
     }
     const imgStyle = {
-        width: scaledToken.width || undefined,
-        height: scaledToken.height || undefined,
+        width: scaledToken.width || 0,
+        height: scaledToken.height || 0,
     }
-    const showToken = ((scaledToken.mapId === undefined) || (game.mapId === scaledToken.mapId))
+    const showToken = ((scaledToken.mapId === -1) || (gameSate.currentMapId === scaledToken.mapId))
 
     return (
         showToken ?
@@ -82,10 +80,11 @@ const Token = ({ token, isHost, game, settings, updateTokens, setTokenOrigin }) 
     )
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: StateInterface) => {
     return {
-        game: state.game,
-        settings: state.settings,
+        gameState: state.game,
+        tokenState: state.token,
+        settingsState: state.settings,
     }
 }
 
@@ -94,4 +93,4 @@ const mapDispatchToProps = {
     setTokenOrigin,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Token)
+export default connect(mapStateToProps, mapDispatchToProps)(TokenComponent)

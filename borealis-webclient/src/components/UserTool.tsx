@@ -11,9 +11,8 @@ const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
 const REACT_APP_PORT = 3000
 
 const UserTool = ({ toggleOnUser, game, chat, character, metadata, settings, setFogEnabled, overwriteGame, incrementGen, setUsername, toggleMousesharing, setToolSettings, loadDefaultBattleGame }) => {
-    const [webSocket, wsSettings, setWsSettings] = useWebSocket()
-    // eslint-disable-next-line no-unused-vars
-    const [_isLoading, setIsLoading] = useLoading()
+    const webSocketContext = useWebSocket()
+    const loadingContext = useLoading()
 
     if (!toggleOnUser)
         return null

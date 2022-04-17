@@ -21,4 +21,4 @@ const mapStateToProps = (state: StateInterface) => {
     }
 }
 
-export default connect(mapStateToProps, undefined)(SelectedTokensControls)
+export default connect(mapStateToProps, {})(SelectedTokensControls)

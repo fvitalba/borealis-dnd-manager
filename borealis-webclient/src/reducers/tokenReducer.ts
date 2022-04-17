@@ -3,14 +3,13 @@ import {
     UPDATE_TOKENS,
     DELETE_TOKEN,
     COPY_TOKEN,
-    UPDATE_TOKEN_NAME,
-    UPDATE_TOKEN_IMAGEURL,
-    UPDATE_TOKEN_MAPID,
+    UPDATE_TOKEN_TEXT_VALUE,
     TOGGLE_TOKEN_VALUE,
-    SET_TOKEN_ORIGIN
+    SET_TOKEN_ORIGIN,
+    UPDATE_TOKEN_NUMBER_VALUE,
 } from '../redux/constants'
 import guid from '../utils/guid'
-import Token from '../classes/Token'
+import Token, { TokenTextProperty, TokenNumberProperty, TokenBooleanProperty } from '../classes/Token'
 
 export interface TokenState {
     tokens: Array<Token>,
@@ -27,8 +26,11 @@ interface TokenAction {
     tokens?: Array<Token>,
     token?: Token,
     guid?: string,
-    key?: string,
-    value?: string,
+    textKey?: TokenTextProperty,
+    numberKey?: TokenNumberProperty,
+    booleanKey?: TokenBooleanProperty,
+    textValue?: string,
+    numberValue?: number,
     mapId?: number,
     xOrigin?: number,
     yOrigin?: number,
@@ -72,30 +74,23 @@ const tokenReducer = (state: TokenState = initialTokenState(), action: TokenActi
             ...state,
             tokens: newTokens
         }
-    case UPDATE_TOKEN_NAME:
-        if ((action.guid) && (action.value))
-            newTokens = updateSingleTokenName(state.tokens, action.guid, action.value)
+    case UPDATE_TOKEN_TEXT_VALUE:
+        if ((action.guid) && (action.textKey) && (action.textValue))
+            newTokens = updateSingleTokenTextAttribute(state.tokens, action.guid, action.textKey, action.textValue)
         return {
             ...state,
             tokens: newTokens,
         }
-    case UPDATE_TOKEN_IMAGEURL:
-        if ((action.guid) && (action.value))
-            newTokens = updateSingleTokenImageUrl(state.tokens, action.guid, action.value)
+    case UPDATE_TOKEN_NUMBER_VALUE:
+        if ((action.guid) && (action.numberKey) && (action.numberValue))
+            newTokens = updateSingleTokenNumberAttribute(state.tokens, action.guid, action.numberKey, action.numberValue)
         return {
             ...state,
-            tokens: newTokens
-        }
-    case UPDATE_TOKEN_MAPID:
-        if ((action.guid) && (action.mapId))
-            newTokens = updateSingleTokenMapId(state.tokens, action.guid, action.mapId)
-        return {
-            ...state,
-            tokens: newTokens
+            tokens: newTokens,
         }
     case TOGGLE_TOKEN_VALUE:
-        if ((action.guid) && (action.key))
-            newTokens = toggleSingleAttributeInTokens(newTokens, action.guid, action.key)
+        if ((action.guid) && (action.booleanKey))
+            newTokens = toggleSingleTokenAttribute(newTokens, action.guid, action.booleanKey)
         return {
             ...state,
             tokens: newTokens,
@@ -112,37 +107,28 @@ const tokenReducer = (state: TokenState = initialTokenState(), action: TokenActi
     }
 }
 
-const toggleSingleAttributeInTokens = (tokens: Array<Token>, guidToUpdate: string, attributeKey: string): Array<Token> => {
+const toggleSingleTokenAttribute = (tokens: Array<Token>, guidToUpdate: string, attributeKey: TokenBooleanProperty): Array<Token> => {
     return tokens.map((token) => {
         if (token.guid === guidToUpdate) {
-            token.toggleTokenValue(attributeKey)
+            token.toggleValue(attributeKey)
         }
         return token
     })
 }
 
-const updateSingleTokenName = (tokens: Array<Token>, guidToUpdate: string, newName: string): Array<Token> => {
+const updateSingleTokenTextAttribute = (tokens: Array<Token>, guidToUpdate: string, key: TokenTextProperty, newValue: string): Array<Token> => {
     return tokens.map((token) => {
         if (token.guid === guidToUpdate) {
-            token.name = newName
+            token.setTextValue(key, newValue)
         }
         return token
     })
 }
 
-const updateSingleTokenImageUrl = (tokens: Array<Token>, guidToUpdate: string, newImageUrl: string): Array<Token> => {
+const updateSingleTokenNumberAttribute = (tokens: Array<Token>, guidToUpdate: string, key: TokenNumberProperty, newValue: number): Array<Token> => {
     return tokens.map((token) => {
         if (token.guid === guidToUpdate) {
-            token.imageUrl = newImageUrl
-        }
-        return token
-    })
-}
-
-const updateSingleTokenMapId = (tokens: Array<Token>, guidToUpdate: string, newMapId: number): Array<Token> => {
-    return tokens.map((token) => {
-        if (token.guid === guidToUpdate) {
-            token.mapId = newMapId
+            token.setNumberValue(key, newValue)
         }
         return token
     })
@@ -159,9 +145,7 @@ const updateSingleTokenOrigin = (tokens: Array<Token>, guidToUpdate: string, xOr
 }
 
 //#region Action Creators
-export const addToken = (tokenName: string, imageUrl: string, mapId: number): TokenAction => {
-    const newToken = new Token(tokenName, imageUrl, mapId, 0, 0)
-
+export const addToken = (newToken: Token): TokenAction => {
     return {
         type: ADD_TOKEN,
         token: newToken,
@@ -189,35 +173,29 @@ export const copyToken = (tokenGuidToCopy: string): TokenAction => {
     }
 }
 
-export const updateTokenName = (tokenGuidToUpdate: string, name: string): TokenAction => {
+export const updateTokenTextValue = (tokenGuidToUpdate: string, key: TokenTextProperty, newValue: string): TokenAction => {
     return {
-        type: UPDATE_TOKEN_NAME,
+        type: UPDATE_TOKEN_TEXT_VALUE,
         guid: tokenGuidToUpdate,
-        value: name,
+        textKey: key,
+        textValue: newValue,
     }
 }
 
-export const updateTokenImageUrl = (tokenGuidToUpdate: string, imageUrl: string): TokenAction => {
+export const updateTokenNumberValue = (tokenGuidToUpdate: string, key: TokenNumberProperty, newValue: number): TokenAction => {
     return {
-        type: UPDATE_TOKEN_IMAGEURL,
+        type: UPDATE_TOKEN_NUMBER_VALUE,
         guid: tokenGuidToUpdate,
-        value: imageUrl,
+        numberKey: key,
+        numberValue: newValue,
     }
 }
 
-export const updateTokenMapId = (tokenGuidToUpdate: string, mapId: number): TokenAction => {
-    return {
-        type: UPDATE_TOKEN_MAPID,
-        guid: tokenGuidToUpdate,
-        mapId: mapId,
-    }
-}
-
-export const toggleTokenValue = (tokenGuidToUpdate: string, key: string): TokenAction => {
+export const toggleTokenValue = (tokenGuidToUpdate: string, key: TokenBooleanProperty): TokenAction => {
     return {
         type: TOGGLE_TOKEN_VALUE,
         guid: tokenGuidToUpdate,
-        key: key,
+        booleanKey: key,
     }
 }
 

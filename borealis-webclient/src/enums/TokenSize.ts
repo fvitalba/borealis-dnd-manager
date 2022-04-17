@@ -7,4 +7,7 @@ enum TokenSize {
     'gargantuan' = 150,
 }
 
+export type TokenSizeType = 'tiny' | 'small' | 'medium' | 'large' | 'huge' | 'gargantuan'
+export const TokenSizeArray: Array<TokenSizeType> = ['tiny', 'small', 'medium', 'large', 'huge', 'gargantuan']
+
 export default TokenSize
