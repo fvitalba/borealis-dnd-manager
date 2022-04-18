@@ -1,18 +1,26 @@
-
 import React, { useEffect, useRef, useState } from 'react'
 import ColorPickerView from '../views/ColorPickerView'
 
 interface ColorPickerProps {
     currentColor: string,
     colorPreviewRef: React.RefObject<HTMLButtonElement>,
-    setDrawColor: () => void,
+    setDrawColor: (arg0: string) => void,
+}
+
+export interface ColorPickerState {
+    xPos: number,
+    yPos: number,
+}
+
+const initialColorPickerState = (): ColorPickerState => {
+    return {
+        xPos: 0,
+        yPos: 0,
+    }
 }
 
 const ColorPicker = ({ currentColor, colorPreviewRef, setDrawColor }: ColorPickerProps) => {
-    const [colorPickerState, setColorPickerState] = useState({
-        xPos: 0,
-        yPos: 0,
-    })
+    const [colorPickerState, setColorPickerState] = useState(initialColorPickerState())
     const colorPickerRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {

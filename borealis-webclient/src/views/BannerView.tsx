@@ -1,7 +1,15 @@
+import React from 'react'
 import Button from './Button'
 import { XAltOutlineIcon } from './Icons'
 
-const BannerView = ({ bannerContent, linkToAction, hidden, toggleHidden }) => {
+interface BannerViewProps {
+    bannerContent: JSX.Element,
+    linkToAction: string,
+    hidden: boolean,
+    toggleHidden: () => void,
+}
+
+const BannerView = ({ bannerContent, linkToAction, hidden, toggleHidden }: BannerViewProps) => {
     return (
         !hidden
             ? <div className='bottom-banner-container'>

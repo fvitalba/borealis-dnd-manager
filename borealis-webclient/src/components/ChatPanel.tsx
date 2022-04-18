@@ -15,7 +15,7 @@ import { MetadataState } from '../reducers/metadataReducer'
 import { convertChatMessage } from '../utils/commandHandler'
 import { getUsersFromDatabase } from '../utils/apiHandler'
 import { ChatCommands } from '../utils/constants'
-import ChatPanelView from '../views/ChatPanelView'
+import ChatPanelView from '../views/ChatPanel/ChatPanelView'
 
 interface ChatPanelState {
     hidden: boolean,
