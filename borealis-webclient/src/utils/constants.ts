@@ -23,4 +23,3 @@ export const ChatCommands: Array<ChatCommand> = [{
     description: 'Sends a message only to the specified target.',
     example: '/whisper PC be careful with that!',
 }]
-

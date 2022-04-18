@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { LoadingContext, ILoadingContext } from '../contexts/LoadingProvider'
 
 export const useLoading = (): ILoadingContext => {

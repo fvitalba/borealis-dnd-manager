@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { WebSocketContext, IWsSettings, IWebSocketContext } from '../contexts/WebSocketProvider'
 import Path from '../classes/Path'
 import Message from '../classes/Message'

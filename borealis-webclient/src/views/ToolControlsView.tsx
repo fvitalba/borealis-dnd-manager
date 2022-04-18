@@ -3,7 +3,7 @@ import Button from './Button'
 import { PencilAltSolidIcon, PencilAltOutlineIcon, CloudFogSolidIcon, SquareOutlineIcon, DropletSolidIcon } from './Icons'
 
 
-const ToolControlsView = ({ tool, subtool, drawColor, setDrawColor, drawColorRef, showColorPicker, toggleColorPicker, drawSize, setDrawSize, fogRadius, setFogRadius, setSubtool, resetFog, resetDrawing }) => {
+const ToolControlsView = ({ tool, drawColor, setDrawColor, drawColorRef, showColorPicker, toggleColorPicker, drawSize, setDrawSize, fogRadius, setFogRadius, resetFog, resetDrawing }) => {
     switch (tool) {
     case 'draw':
         return (

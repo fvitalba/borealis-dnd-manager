@@ -1,28 +1,52 @@
+import React from 'react'
 import { connect } from 'react-redux'
 import { toJson } from '../utils/jsonHandler'
-import { defaultGameState, overwriteGame, incrementGen, loadDefaultBattleGame, setFogEnabled } from '../reducers/gameReducer'
-import { setUsername, setCursorSize, setToolSettings, toggleMousesharing } from '../reducers/settingsReducer'
+import { overwriteGame, incrementVersion, setFogEnabled } from '../reducers/gameReducer'
+import { setUsername, setCursorSize, setToolSettings, toggleMousesharing, SettingsState } from '../reducers/settingsReducer'
 import { pushGameRefresh, pushFogEnabled, useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
 import { saveRoomToDatabase, getRoomFromDatabase } from '../utils/apiHandler'
 import UserToolView from '../views/UserToolView'
+import StateInterface from '../interfaces/StateInterface'
+import Game from '../classes/Game'
+import { ChatState } from '../reducers/chatReducer'
+import { CharacterState } from '../reducers/characterReducer'
+import { MetadataState } from '../reducers/metadataReducer'
+import ControlTool from '../enums/Tool'
+import UserType from '../enums/UserType'
 
 const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
 const REACT_APP_PORT = 3000
 
-const UserTool = ({ toggleOnUser, game, chat, character, metadata, settings, setFogEnabled, overwriteGame, incrementGen, setUsername, toggleMousesharing, setToolSettings, loadDefaultBattleGame }) => {
+interface UserToolProps {
+    toggleOnUser: boolean,
+    gameState: Game,
+    chatState: ChatState,
+    characterState: CharacterState,
+    metadataState: MetadataState,
+    settingsState: SettingsState,
+    setFogEnabled: (arg0: boolean) => void,
+    overwriteGame: (arg0: Game) => void,
+    incrementVersion: () => void,
+    setUsername: (arg0: string) => void,
+    toggleMousesharing: () => void,
+    setToolSettings: (arg0: ControlTool) => void,
+}
+
+const UserTool = ({ toggleOnUser, gameState, chatState, characterState, metadataState, settingsState, setFogEnabled, overwriteGame, incrementVersion, setUsername, toggleMousesharing, setToolSettings }: UserToolProps) => {
     const webSocketContext = useWebSocket()
     const loadingContext = useLoading()
 
     if (!toggleOnUser)
         return null
 
-    const updateUsername = (value) => {
+    const updateUsername = (value: string) => {
         setUsername(value)
-        setWsSettings({
-            ...wsSettings,
-            username: value,
-        })
+        if (webSocketContext.setWsSettings && webSocketContext.wsSettings)
+            webSocketContext.setWsSettings({
+                ...webSocketContext.wsSettings,
+                username: value,
+            })
     }
 
     const toggleShareMouse = () => {
@@ -30,6 +54,8 @@ const UserTool = ({ toggleOnUser, game, chat, character, metadata, settings, set
     }
 
     const initAsDev = () => {
+        //TODO: Reenable Demo
+        /*
         const mapsExist = game.maps.length > 0
         const tokensExist = game.tokens.length > 0
         if ((mapsExist && tokensExist) && !window.confirm('Overwrite game with defaults?'))
@@ -37,16 +63,20 @@ const UserTool = ({ toggleOnUser, game, chat, character, metadata, settings, set
         loadDefaultBattleGame()
         const defaultGame = defaultGameState
         pushGameRefresh(webSocket, wsSettings, defaultGame, chat, character)
+        */
     }
 
     const toggleFog = () => {
-        setFogEnabled(!game.fogEnabled)
-        pushFogEnabled(webSocket, wsSettings, !game.fogEnabled)
-        if (settings.tool === 'fog')
-            setToolSettings('move','')
+        setFogEnabled(!gameState.fogEnabled)
+        if (webSocketContext.ws && webSocketContext.wsSettings)
+            pushFogEnabled(webSocketContext.ws, webSocketContext.wsSettings, !gameState.fogEnabled)
+        if ((settingsState.tool === ControlTool.Fog) || (settingsState.tool === ControlTool.EreaseFog))
+            setToolSettings(ControlTool.Move)
     }
 
     const saveGameInServer = () => {
+        //TODO: Reenable saving of game
+        /*
         setIsLoading(true)
         incrementGen()
         const json = toJson(game, metadata)
@@ -59,9 +89,12 @@ const UserTool = ({ toggleOnUser, game, chat, character, metadata, settings, set
                 setIsLoading(false)
                 console.error(error)
             })
+        */
     }
 
     const loadGameFromServer = () => {
+        //TODO: reenable loading of game
+        /*
         setIsLoading(true)
         getRoomFromDatabase(wsSettings)
             .then((result) => {
@@ -77,50 +110,48 @@ const UserTool = ({ toggleOnUser, game, chat, character, metadata, settings, set
                 setIsLoading(false)
                 console.error(error)
             })
+        */
     }
 
     const copyUrlToClipboard = () => {
         const host = window.location.host.replace(/:\d+$/, '')
         const protocol = /https/.test(window.location.protocol) ? 'https' : 'http'
-        const userUrl = DEBUG_MODE ? `${protocol}://${host}:${REACT_APP_PORT}/?room=${metadata.room}` : `https://${host}/?room=${metadata.room}`
+        const userUrl = DEBUG_MODE ? `${protocol}://${host}:${REACT_APP_PORT}/?room=${metadataState.room}` : `https://${host}/?room=${metadataState.room}`
         navigator.clipboard.writeText(userUrl)
     }
 
     return (
         toggleOnUser ?
             <UserToolView
-                isHost={ metadata.isHost }
+                isHost={ metadataState.userType === UserType.host }
                 initAsDev={ initAsDev }
                 toggleFog={ toggleFog }
                 saveGameInServer={ saveGameInServer }
                 loadGameFromServer={ loadGameFromServer }
-                username={ settings.username }
+                username={ settingsState.username }
                 updateUsername={ updateUsername }
-                cursorSize={ settings.cursorSize }
-                mouseIsShared={ settings.shareMouse }
+                mouseIsShared={ settingsState.shareMouse }
                 toggleShareMouse={ toggleShareMouse }
                 copyUrlToClipboard={ copyUrlToClipboard } />
             : null
     )
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: StateInterface) => {
     return {
-        game: state.game,
-        chat: state.chat,
-        metadata: state.metadata,
-        settings: state.settings,
-        character: state.character,
+        gameState: state.game,
+        chatState: state.chat,
+        characterState: state.character,
+        metadataState: state.metadata,
+        settingsState: state.settings,
     }
 }
 
 const mapDispatchToProps = {
     setUsername,
-    setCursorSize,
     setFogEnabled,
     setToolSettings,
-    loadDefaultBattleGame,
-    incrementGen,
+    incrementVersion,
     overwriteGame,
     toggleMousesharing,
 }

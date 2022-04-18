@@ -1,20 +1,22 @@
-import { useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { connect } from 'react-redux'
-import { setToolSettings, setDrawToolSettings, setFogToolSettings, SettingsState } from '../reducers/settingsReducer'
-import { resetFog, resetDraw } from '../reducers/gameReducer'
+import Game from '../classes/Game'
 import { pushDrawReset, pushFogReset, useWebSocket } from '../hooks/useSocket'
+import StateInterface from '../interfaces/StateInterface'
+import { setDrawToolSettings, setFogToolSettings, SettingsState } from '../reducers/settingsReducer'
+import { resetFog, resetDraw } from '../reducers/mapReducer'
 import ToolControlsView from '../views/ToolControlsView'
 
 interface ToolControlsProps {
+    gameState: Game,
     settingsState: SettingsState,
-    setToolSettings: () => void,
-    setDrawToolSettings: () => void,
-    setFogToolSettings: () => void,
-    resetFog: () => void,
-    resetDraw: () => void,
+    setDrawToolSettings: (arg0: string, arg1: number) => void,
+    setFogToolSettings: (arg0: number, arg1: number) => void,
+    resetFog: (arg0: number) => void,
+    resetDraw: (arg0: number) => void,
 }
 
-const ToolControls = ({ settingsState, setToolSettings, setDrawToolSettings, setFogToolSettings, resetFog, resetDraw }: ToolControlsProps) => {
+const ToolControls = ({ gameState, settingsState, setDrawToolSettings, setFogToolSettings, resetFog, resetDraw }: ToolControlsProps) => {
     const [toolControlState, setToolControlState] = useState({
         showColorPicker: false,
     })
@@ -28,71 +30,59 @@ const ToolControls = ({ settingsState, setToolSettings, setDrawToolSettings, set
         })
     }
 
-    const setSubtool = (subtool) => {
-        setToolSettings(settings.tool, subtool)
+    const setDrawColor = (value: string) => {
+        setDrawToolSettings(value, settingsState.drawSize)
     }
 
-    const setDrawColor = (value) => {
-        setDrawToolSettings(value, settings.drawSize)
-    }
-
-    const setDrawSize = (value) => {
+    const setDrawSize = (value: number) => {
         const newSize = value
         if (!isNaN(newSize))
-            setDrawToolSettings(settings.drawColor, newSize)
+            setDrawToolSettings(settingsState.drawColor, newSize)
     }
 
-    const setFogOpacity = (value) => {
-        const newOpacity = value
-        if (!isNaN(newOpacity))
-            setFogToolSettings(newOpacity, settings.fogRadius)
-    }
-
-    const setFogRadius = (value) => {
+    const setFogRadius = (value: number) => {
         const newRadius = value
         if (!isNaN(newRadius))
-            setFogToolSettings(settings.fogOpacity, newRadius)
+            setFogToolSettings(settingsState.fogOpacity, newRadius)
     }
 
     const resetFogOnCurrentMap = () => {
-        resetFog()
-        pushFogReset(webSocket, wsSettings)
+        resetFog(gameState.currentMapId)
+        if (webSocketContext.ws && webSocketContext.wsSettings)
+            pushFogReset(webSocketContext.ws, webSocketContext.wsSettings)
     }
 
     const resetDrawOnCurrentMap = () => {
-        resetDraw()
-        pushDrawReset(webSocket, wsSettings)
+        resetDraw(gameState.currentMapId)
+        if (webSocketContext.ws && webSocketContext.wsSettings)
+            pushDrawReset(webSocketContext.ws, webSocketContext.wsSettings)
     }
 
     return (
         <ToolControlsView
-            tool={ settings.tool }
-            subtool={ settings.subtool }
-            drawColor={ settings.drawColor }
+            tool={ settingsState.tool }
+            drawColor={ settingsState.drawColor }
             setDrawColor={ setDrawColor }
             drawColorRef={ drawColorRef }
             showColorPicker={ toolControlState.showColorPicker }
             toggleColorPicker={ toggleColorPicker }
-            drawSize={ settings.drawSize }
+            drawSize={ settingsState.drawSize }
             setDrawSize={ setDrawSize }
-            fogOpacity={ settings.fogOpacity }
-            setFogOpacity={ setFogOpacity }
-            fogRadius={ settings.fogRadius }
+            fogRadius={ settingsState.fogRadius }
             setFogRadius={ setFogRadius }
-            setSubtool={ setSubtool }
             resetFog={ resetFogOnCurrentMap }
             resetDrawing={ resetDrawOnCurrentMap } />
     )
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: StateInterface) => {
     return {
-        settings: state.settings,
+        gameState: state.game,
+        settingsState: state.settings,
     }
 }
 
 const mapDispatchToProps = {
-    setToolSettings,
     setDrawToolSettings,
     setFogToolSettings,
     resetFog,

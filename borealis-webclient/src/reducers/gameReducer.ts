@@ -1,7 +1,7 @@
 import {
     OVERWRITE_GAME,
     LOAD_MAP,
-    INCREMENT_GEN,
+    INCREMENT_VERSION,
     SET_FOG_ENABLED,
 } from '../redux/constants'
 import Game from '../classes/Game'
@@ -23,7 +23,7 @@ const gameReducer = (state: Game = new Game(), action: GameAction): Game => {
         newGame.width = window.innerWidth
         newGame.height = window.innerHeight
         return newGame
-    case INCREMENT_GEN:
+    case INCREMENT_VERSION:
         newGame.version = state.version + 1
         return newGame
     case SET_FOG_ENABLED:
@@ -49,9 +49,9 @@ export const loadMap = (newMapId: number): GameAction => {
     }
 }
 
-export const incrementGen = (): GameAction => {
+export const incrementVersion = (): GameAction => {
     return {
-        type: INCREMENT_GEN,
+        type: INCREMENT_VERSION,
     }
 }
 
