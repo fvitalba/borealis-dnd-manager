@@ -10,7 +10,7 @@ export interface ChatState {
     messages: Array<Message>,
 }
 
-const initialChatState = (): ChatState => {
+export const initialChatState = (): ChatState => {
     return {
         username: '',
         messages: [],

@@ -13,7 +13,7 @@ export interface CharacterState {
     currentCharacterGuid: string,
 }
 
-const initialCharacterReducer = (): CharacterState => {
+export const initialCharacterState = (): CharacterState => {
     return {
         characters: [],
         currentCharacterGuid: '',
@@ -28,7 +28,7 @@ interface CharacterAction {
     characters?: Array<Character>,
 }
 
-const characterReducer = (state: CharacterState = initialCharacterReducer(), action: CharacterAction): CharacterState => {
+const characterReducer = (state: CharacterState = initialCharacterState(), action: CharacterAction): CharacterState => {
     let newCharacters = state.characters
     switch (action.type) {
     case ADD_CHARACTER:

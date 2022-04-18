@@ -18,7 +18,7 @@ export interface MetadataState {
     downPos: Point,
 }
 
-const initialMetadataState = (): MetadataState => {
+export const initialMetadataState = (): MetadataState => {
     return {
         userType: UserType.player,
         userGuid: '',

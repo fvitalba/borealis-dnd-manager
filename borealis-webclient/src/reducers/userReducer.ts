@@ -5,7 +5,7 @@ export interface UserState {
     users: Array<User>,
 }
 
-const initialUserReducer = (): UserState => {
+export const initialUserState = (): UserState => {
     return {
         users: new Array<User>(),
     }
@@ -16,7 +16,7 @@ interface UserAction {
     newUsers: Array<User>,
 }
 
-const userReducer = (state: UserState = initialUserReducer(), action: UserAction): UserState => {
+const userReducer = (state: UserState = initialUserState(), action: UserAction): UserState => {
     let newUsers = state.users
     switch (action.type) {
     case SET_USERS_FROM_API:

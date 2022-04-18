@@ -15,7 +15,7 @@ export interface TokenState {
     tokens: Array<Token>,
 }
 
-const initialTokenState = (): TokenState => {
+export const initialTokenState = (): TokenState => {
     return {
         tokens: new Array<Token>(),
     }

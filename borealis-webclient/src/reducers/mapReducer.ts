@@ -12,7 +12,7 @@ export interface MapState {
     maps: Array<Map>,
 }
 
-const initialMapState = (): MapState => {
+export const initialMapState = (): MapState => {
     return {
         maps: new Array<Map>(),
     }
