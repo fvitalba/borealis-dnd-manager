@@ -1,6 +1,12 @@
+import React from 'react'
+import Cursor from '../classes/Cursor'
 import { CursorAltOutlineIcon } from './Icons'
 
-const Cursor = ({ cursor }) => {
+interface CursorProps {
+    cursor: Cursor,
+}
+
+const CursorView = ({ cursor }: CursorProps) => {
     const divStyle = {
         top: cursor.y,
         left: cursor.x,
@@ -14,4 +20,4 @@ const Cursor = ({ cursor }) => {
     )
 }
 
-export default Cursor
+export default CursorView

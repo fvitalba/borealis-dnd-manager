@@ -12,14 +12,14 @@ import TokenView from '../views/TokenView'
 interface TokenProps {
     token: Token,
     userType: UserType,
-    gameSate: Game,
+    gameState: Game,
     tokenState: TokenState,
     settingsState: SettingsState,
     updateTokens: (arg0: Array<Token>) => void,
     setTokenOrigin: (arg0: string, arg1: number, arg2: number) => void,
 }
 
-const TokenComponent = ({ token, userType, gameSate, tokenState, settingsState, updateTokens, setTokenOrigin }: TokenProps) => {
+const TokenComponent = ({ token, userType, gameState, tokenState, settingsState, updateTokens, setTokenOrigin }: TokenProps) => {
     const scaledToken = token.scaleToken(settingsState.deltaX, settingsState.deltaY, settingsState.scale)
     const labelRef = useRef<HTMLLabelElement>(null)
     const [labelPosition, setLabelPosition] = useState({
@@ -62,7 +62,7 @@ const TokenComponent = ({ token, userType, gameSate, tokenState, settingsState, 
         width: scaledToken.width || 0,
         height: scaledToken.height || 0,
     }
-    const showToken = ((scaledToken.mapId === -1) || (gameSate.currentMapId === scaledToken.mapId))
+    const showToken = ((scaledToken.mapId === -1) || (gameState.currentMapId === scaledToken.mapId))
 
     return (
         showToken ?

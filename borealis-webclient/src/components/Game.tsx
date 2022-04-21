@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { MouseEvent, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
 import Game from '../classes/Game'
 import Map from '../classes/Map'
@@ -29,7 +29,7 @@ interface GameProps {
 }
 
 const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadataState, updateTokens, toggleTokenValue, updateMaps }: GameProps) => {
-    const overlayRef = React.useRef<HTMLCanvasElement>()
+    const overlayRef = useRef<HTMLCanvasElement>(null)
     const webSocketContext = useWebSocket()
     const loadingContext = useLoading()
     let currentPath = new Path([], settingsState.drawSize, 0, settingsState.tool, settingsState.drawColor, settingsState.drawSize)
@@ -257,7 +257,7 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
     }
     */
 
-    const onMouseUp = (e: MouseEvent) => {
+    const onMouseUp = (e: MouseEvent<Element, globalThis.MouseEvent>) => {
         const currMap = getMap(mapState, gameState.currentMapId)
         if ((currMap) && (currentPath.points.length > 0)) {
             const scaledCurrPath = currentPath
@@ -305,7 +305,7 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
         }
     }
 
-    const onMouseDown = (e: MouseEvent) => {
+    const onMouseDown = (e: MouseEvent<Element, globalThis.MouseEvent>) => {
         const selectedTokens = tokenState.tokens.filter((token) => token.selected)
         if (selectedTokens.length > 0) {
             let deselectTokens = false
@@ -327,7 +327,7 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
         }
     }
 
-    const onMouseMove = (e: MouseEvent) => {
+    const onMouseMove = (e: MouseEvent<Element, globalThis.MouseEvent>) => {
         const overlay = overlayRef
         if (!overlay)
             return
@@ -389,7 +389,7 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
      ****************************************************/
     return (
         <GameView
-            isHost={ metadataState.userType === UserType.host }
+            userType={ metadataState.userType }
             overlayRef={ overlayRef }
             cursors={ metadataState.cursors }
             tokens={ tokenState.tokens }

@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { connect } from 'react-redux'
+import Character from '../classes/Character'
 import Message from '../classes/Message'
+import DiceType, { DiceTypeType } from '../enums/DiceType'
 import MessageType from '../enums/MessageType'
 import UserType from '../enums/UserType'
 import { sendChatMessage, useWebSocket } from '../hooks/useSocket'
@@ -11,7 +13,6 @@ import { CharacterState } from '../reducers/characterReducer'
 import { MetadataState } from '../reducers/metadataReducer'
 import { convertChatMessage } from '../utils/commandHandler'
 import DiceRollButtonView from '../views/DiceRollButtonView'
-import Character from '../classes/Character'
 
 interface DiceRollButtonProps {
     settingsState: SettingsState,
@@ -41,9 +42,10 @@ const DiceRollButton = ({ settingsState, characterState, metadataState, addChatM
         }
     }
 
-    const rollDice = (eyes: number) => {
+    const rollDice = (diceType: DiceTypeType) => {
+        const diceTypeEnum = DiceType[diceType]
         const playerInfo = getPlayerInfo()
-        const convertedMessage = convertChatMessage(settingsState.username, `/roll 1d${eyes}`, currentCharacter, playerInfo)
+        const convertedMessage = convertChatMessage(settingsState.username, `/roll 1d${diceTypeEnum}`, currentCharacter, playerInfo)
         if ((convertedMessage.publicMessage.length > 0) || (convertedMessage.privateMessage.length > 0)) {
             addChatMessage(convertedMessage)
             if (webSocketContext.ws && webSocketContext.wsSettings && (convertedMessage.type !== MessageType.Error ))

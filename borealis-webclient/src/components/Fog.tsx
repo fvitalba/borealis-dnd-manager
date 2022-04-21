@@ -72,9 +72,10 @@ const Fog = ({ gameState, mapState, metadataState, settingsState }: FogProps) =>
 const mapStateToProps = (state: StateInterface) => {
     return {
         gameState: state.game,
+        mapState: state.map,
         settingsState: state.settings,
         metadataState: state.metadata,
     }
 }
 
-export default connect(mapStateToProps, undefined)(Fog)
+export default connect(mapStateToProps, {})(Fog)

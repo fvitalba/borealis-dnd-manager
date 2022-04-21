@@ -94,4 +94,4 @@ const mapStateToProps = (state: StateInterface) => {
     }
 }
 
-export default connect(mapStateToProps, undefined)(Drawing)
+export default connect(mapStateToProps, {})(Drawing)

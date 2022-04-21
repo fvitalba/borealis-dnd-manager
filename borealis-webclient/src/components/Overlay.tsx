@@ -1,11 +1,11 @@
-import React, { MutableRefObject } from 'react'
+import React, { Ref } from 'react'
 import { connect } from 'react-redux'
 import Game from '../classes/Game'
 import StateInterface from '../interfaces/StateInterface'
 
 interface OverlayProps {
     gameState: Game,
-    overlayRef: MutableRefObject<HTMLCanvasElement>
+    overlayRef: Ref<HTMLCanvasElement>
 }
 
 const Overlay = ({ gameState, overlayRef }: OverlayProps) => {
@@ -26,4 +26,4 @@ const mapStateToProps = (state: StateInterface) => {
     }
 }
 
-export default connect(mapStateToProps, undefined)(Overlay)
+export default connect(mapStateToProps, {})(Overlay)

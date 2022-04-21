@@ -1,9 +1,11 @@
+import React from 'react'
 import ToggleButton from '../components/ToggleButton'
 import ToolControls from '../components/ToolControls'
 import MapTool from '../components/MapTool'
 import TokenTool from '../components/TokenTool'
 import UserTool from '../components/UserTool'
 import CharacterStats from '../components/CharacterStats'
+import { ControlPanelState } from '../components/ControlPanel'
 import ToolSelectView from './ToolSelectView'
 import Button from './Button'
 import {
@@ -18,9 +20,20 @@ import {
     BoxSolidIcon
 } from './Icons'
 
+interface ControlPanelViewProps {
+    controlPanelState: ControlPanelState,
+    setControlPanelState: (arg0: ControlPanelState) => void,
+    hidden: boolean,
+    toggleHidden: () => void,
+    submenuHidden: boolean,
+    fogEnabled: boolean,
+    isHost: boolean,
+    socketRequestRefresh: () => void,
+    pushRefreshToPlayers: () => void,
+}
 
 
-const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, toggleHidden, submenuHidden, fogEnabled, isHost, socketRequestRefresh, pushRefreshToPlayers }) => {
+const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, toggleHidden, submenuHidden, fogEnabled, isHost, socketRequestRefresh, pushRefreshToPlayers }: ControlPanelViewProps) => {
     //TODO: move submenuhidden from prop to part of sub-components
     if (hidden)
         return (

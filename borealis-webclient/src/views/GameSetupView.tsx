@@ -1,8 +1,16 @@
-import Button from '../views/Button'
+import React, { MouseEvent, ChangeEvent } from 'react'
 import LoadingOverlay from '../components/LoadingOverlay'
+import Button from './Button'
 import { PlaySolidIcon, CheckAltOutlineIcon, XAltOutlineIcon, RepeatOutlineIcon } from './Icons'
 
-const GameSetupToggleButton = ({ title, value, isSelected, onClick }) => {
+interface GameSetupToggleButtonProps {
+    title: string,
+    value: string,
+    isSelected: boolean,
+    onClick: (arg0: MouseEvent<HTMLButtonElement>) => void,
+}
+
+const GameSetupToggleButton = ({ title, value, isSelected, onClick }: GameSetupToggleButtonProps) => {
     return (
         <button title={ title } onClick={ onClick } className={ isSelected ? 'game-setup-selected-button' : 'game-setup-button' }>
             <span>{ value }</span>
@@ -10,7 +18,21 @@ const GameSetupToggleButton = ({ title, value, isSelected, onClick }) => {
     )
 }
 
-const GameSetupView = ({ roomName, onRoomNameChange, searchingRoom, roomFound, userName, onUserNameChange, onToggleUserButton, onSubmitSetup, isHost, isPlayer, isSubmitEnabled }) => {
+interface GameSetupViewProps {
+    roomName: string,
+    onRoomNameChange: (arg0: ChangeEvent<HTMLInputElement>) => void,
+    searchingRoom: boolean,
+    roomFound: boolean,
+    userName: string,
+    onUserNameChange: (arg0: ChangeEvent<HTMLInputElement>) => void,
+    onToggleUserButton: (arg0: MouseEvent<HTMLButtonElement>) => void,
+    onSubmitSetup: () => void,
+    isHost: boolean,
+    isPlayer: boolean,
+    isSubmitEnabled: boolean,
+}
+
+const GameSetupView = ({ roomName, onRoomNameChange, searchingRoom, roomFound, userName, onUserNameChange, onToggleUserButton, onSubmitSetup, isHost, isPlayer, isSubmitEnabled }: GameSetupViewProps) => {
     return (
         <div className='game-setup-container'>
             <div className='game-setup-form'>

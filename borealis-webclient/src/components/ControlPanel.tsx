@@ -96,4 +96,4 @@ const mapStateToProps = (state: StateInterface) => {
     }
 }
 
-export default connect(mapStateToProps, undefined)(ControlPanel)
+export default connect(mapStateToProps, {})(ControlPanel)

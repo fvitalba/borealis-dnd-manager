@@ -8,4 +8,7 @@ enum DiceType {
     'd100' = 100,
 }
 
+export type DiceTypeType = 'd4' | 'd6' | 'd8' | 'd10' | 'd12' | 'd100'
+export const DiceTypeArray: Array<DiceTypeType> = ['d4', 'd6', 'd8', 'd10', 'd12', 'd100']
+
 export default DiceType

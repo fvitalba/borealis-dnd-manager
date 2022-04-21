@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
+import React, { MouseEvent, ChangeEvent, useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { IWsSettings } from '../contexts/WebSocketProvider'
 import UserType from '../enums/UserType'
@@ -55,7 +55,7 @@ const GameSetup = ({ metadataState, setGameSettings, setUsername }: GameSetupPro
         })
     }
 
-    const onToggleUserButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const onToggleUserButton = (e: MouseEvent<HTMLButtonElement>) => {
         const userType = (e.target as HTMLElement).innerText === 'DM' ? UserType.host : UserType.player
         const defaultUserName = userType === UserType.host ? 'DM' : 'PC'
         if (userType !== gameSetupState.userType) {
