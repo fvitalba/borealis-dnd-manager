@@ -1,3 +1,4 @@
+import React from 'react'
 import { RepeatOutlineIcon } from './Icons'
 
 export const LoadingOverlayView = () => {

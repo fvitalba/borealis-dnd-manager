@@ -1,7 +1,17 @@
+import React, { ChangeEvent } from 'react'
+import Character from '../classes/Character'
 import Button from './Button'
 import { PlusSquareSolidIcon } from './Icons'
 
-const SelectCharacterView = ({ characters, isHost, selectedCharacterGuid, onCharacterSelect, addNewCharacter }) => {
+interface SelectCharacterViewProps {
+    characters: Array<Character>,
+    isHost: boolean,
+    selectedCharacterGuid: string,
+    onCharacterSelect: (arg0: ChangeEvent<HTMLSelectElement>) => void,
+    addNewCharacter: () => void,
+}
+
+const SelectCharacterView = ({ characters, isHost, selectedCharacterGuid, onCharacterSelect, addNewCharacter }: SelectCharacterViewProps) => {
     return (
         <div className='select-character-container'>
             <div className='select-character-input-container'>
@@ -10,7 +20,7 @@ const SelectCharacterView = ({ characters, isHost, selectedCharacterGuid, onChar
                     <option key='' value=''>None</option>
                     { characters.map((character) => (
                         <option key={ character.guid } value={ character.guid } >
-                            { `${character.name} ( Lvl. ${character.level}, ${character.class})` }
+                            { `${character.name} (${character.getCharacterClassInfo()})` }
                             { isHost ? `[${character.username}]` : ''}
                         </option>
                     ))}

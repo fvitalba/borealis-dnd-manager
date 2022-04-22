@@ -22,4 +22,9 @@ enum TokenCondition {
     'Death' = 20
 }
 
+export const TokenConditionArray: Array<TokenCondition> = [TokenCondition.Alive, TokenCondition.Blinded, TokenCondition.Charmed, TokenCondition.Deafened, TokenCondition.Frightened,
+    TokenCondition.Grappled, TokenCondition.Incapacitated, TokenCondition.Invisible, TokenCondition.Paralyzed, TokenCondition.Petrified, TokenCondition.Poisoned,
+    TokenCondition.Prone, TokenCondition.Restrained, TokenCondition.Stunned, TokenCondition.Unconscious, TokenCondition['Exhaustion 1'], TokenCondition['Exhaustion 2'],
+    TokenCondition['Exhaustion 3'], TokenCondition['Exhaustion 4'], TokenCondition['Exhaustion 5'], TokenCondition.Death]
+
 export default TokenCondition

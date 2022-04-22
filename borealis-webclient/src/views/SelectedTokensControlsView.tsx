@@ -1,6 +1,12 @@
+import React from 'react'
+import Token from '../classes/Token'
 import TokenConfig from '../components/TokenConfig'
 
-const SelectedTokensControlsView = ({ tokens }) => {
+interface SelectedTokensControlsViewProps {
+    tokens: Array<Token>,
+}
+
+const SelectedTokensControlsView = ({ tokens }: SelectedTokensControlsViewProps) => {
     const filteredTokens = tokens.filter(t => t.selected)
     return (
         <div>

@@ -1,8 +1,17 @@
+import React from 'react'
+import Token from '../classes/Token'
 import TokenConfig from '../components/TokenConfig'
 import Button from './Button'
 import { UserAddSolidIcon } from './Icons'
 
-const TokenToolView = ({ newTokenName, setNewTokenName, createToken, tokens }) => {
+interface TokenToolViewProps {
+    newTokenName: string,
+    setNewTokenName: (arg0: string) => void,
+    createToken: () => void,
+    tokens: Array<Token>,
+}
+
+const TokenToolView = ({ newTokenName, setNewTokenName, createToken, tokens }: TokenToolViewProps) => {
     return (
         <div className='token-tool-view'>
             <div className='token-tool-creation'>

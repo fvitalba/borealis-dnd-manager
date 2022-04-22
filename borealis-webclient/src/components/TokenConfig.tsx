@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import Token, { TokenBooleanProperty, TokenNumberProperty, TokenTextProperty } from '../classes/Token'
 import UserType from '../enums/UserType'
 import TokenSize, { TokenSizeArray } from '../enums/TokenSize'
+import TokenType, { TokenTypeArray } from '../enums/TokenType'
+import TokenCondition, { TokenConditionArray } from '../enums/TokenCondition'
 import { pushSingleToken, deleteSingleToken, useWebSocket } from '../hooks/useSocket'
 import StateInterface from '../interfaces/StateInterface'
 import { TokenState } from '../reducers/tokenReducer'
@@ -28,10 +30,10 @@ interface TokenConfigProps {
 const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, copyToken, updateTokenTextValue, updateTokenNumberValue, toggleTokenValue, updateTokens }: TokenConfigProps) => {
     const webSocketContext = useWebSocket()
 
-    const selectToken = (selectedToken: Token) => {
-        if (!selectedToken.isAllowedToMove(metadataState.userType))
+    const selectToken = () => {
+        if (!token.isAllowedToMove(metadataState.userType))
             return
-        toggleTokenValue(selectedToken.guid, 'selected')
+        toggleTokenValue(token.guid, 'selected')
     }
 
     const deleteCurrToken = () => {
@@ -44,10 +46,29 @@ const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, 
         copyToken(token.guid)
     }
 
-    const onSizeSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-        const size = TokenSizeArray.filter((tokenSize) => tokenSize === e.target.value)
+    const onTypeSelect = (e: ChangeEvent<HTMLSelectElement>) => {
+        const newType = TokenType[e.target.value as keyof typeof TokenType]
         const newToken = token.copy()
-        const newSize: TokenSize = TokenSize[size[0]]
+        newToken.type = newType
+        const newTokens = tokenState.tokens.map((gtoken) => gtoken.guid === newToken.guid ? newToken : gtoken)
+        updateTokens(newTokens)
+        if (webSocketContext.ws && webSocketContext.wsSettings)
+            pushSingleToken(webSocketContext.ws, webSocketContext.wsSettings, newToken)
+    }
+
+    const onConditionSelect = (e: ChangeEvent<HTMLSelectElement>) => {
+        const newCondition = TokenCondition[e.target.value as keyof typeof TokenCondition]
+        const newToken = token.copy()
+        newToken.condition = newCondition
+        const newTokens = tokenState.tokens.map((gtoken) => gtoken.guid === newToken.guid ? newToken : gtoken)
+        updateTokens(newTokens)
+        if (webSocketContext.ws && webSocketContext.wsSettings)
+            pushSingleToken(webSocketContext.ws, webSocketContext.wsSettings, newToken)
+    }
+
+    const onSizeSelect = (e: ChangeEvent<HTMLSelectElement>) => {
+        const newSize = TokenSize[e.target.value as keyof typeof TokenSize]
+        const newToken = token.copy()
         newToken.setTokenSize(newSize)
         const newTokens = tokenState.tokens.map((gtoken) => gtoken.guid === newToken.guid ? newToken : gtoken)
         updateTokens(newTokens)
@@ -88,22 +109,25 @@ const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, 
 
     return (
         <div>
-            { token ?
-                (metadataState.userType === UserType.host) ?
-                    <HostTokenConfig
+            { token
+                ? (metadataState.userType === UserType.host)
+                    ? <HostTokenConfig
+                        tokenTypes={ TokenTypeArray }
+                        tokenConditions={ TokenConditionArray }
                         tokenSizes={ TokenSizeArray }
                         maps={ mapState.maps }
                         token={ token }
                         copy={ copy }
                         onToggle={ onToggle }
-                        selectToken={ selectToken }
                         onTextChange={ onTextChange }
+                        selectToken={ selectToken }
+                        onTypeSelect={ onTypeSelect }
+                        onConditionSelect={ onConditionSelect }
                         onSizeSelect={ onSizeSelect }
                         onMapSelect={ onMapSelect }
                         deleteToken={ deleteCurrToken }
                     />
-                    :
-                    <GuestTokenConfigView
+                    : <GuestTokenConfigView
                         token={ token }
                         onTextChange={ onTextChange }
                     />

@@ -9,7 +9,7 @@ import { loadMap } from '../reducers/gameReducer'
 import { MapState, updateMaps, deleteMap } from '../reducers/mapReducer'
 import MapConfigView from '../views/MapConfigView'
 
-interface MapConfigState {
+export interface MapConfigState {
     id: number,
     name: string,
     imageUrl: string,

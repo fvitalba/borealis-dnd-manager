@@ -1,12 +1,19 @@
+import React from 'react'
 import ToolButton from '../components/ToolButton'
+import ControlTool from '../enums/Tool'
 import { LocationSolidIcon, EditSolidIcon, CloudOffSolidIcon } from './Icons'
 
-const ToolSelectView = ({ isHost, fogEnabled }) => {
+interface ToolSelectViewProps {
+    isHost: boolean,
+    fogEnabled: boolean,
+}
+
+const ToolSelectView = ({ isHost, fogEnabled }: ToolSelectViewProps) => {
     return (
         <div className='tool-select-view'>
-            <ToolButton title='move' value={ <LocationSolidIcon /> } />
-            <ToolButton title='draw' value={ <EditSolidIcon /> } />
-            { (fogEnabled && isHost) ? <ToolButton title='fog'  value={ <CloudOffSolidIcon /> } /> : null }
+            <ToolButton title='move' controlTool={ ControlTool.Move } value={ <LocationSolidIcon /> } />
+            <ToolButton title='draw' controlTool={ ControlTool.Draw } value={ <EditSolidIcon /> } />
+            { (fogEnabled && isHost) ? <ToolButton title='fog' controlTool={ ControlTool.Fog } value={ <CloudOffSolidIcon /> } /> : null }
         </div>
     )
 }
