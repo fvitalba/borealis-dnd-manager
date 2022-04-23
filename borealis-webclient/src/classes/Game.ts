@@ -1,3 +1,4 @@
+import { GameSchema } from '../utils/mongoDbSchemas'
 import Map from './Map'
 
 class Game {
@@ -16,6 +17,11 @@ class Game {
         this.fogEnabled = newFogEnabled ? newFogEnabled : false
         //TODO: Enable this and disable this when selecting/unselecting tokens
         this.tokenSelected = false
+    }
+
+    static fromDbSchema(dbGame: GameSchema): Game {
+        const newGame = new Game(dbGame.currentMapId, dbGame.version, dbGame.width, dbGame.height, dbGame.fogEnabled)
+        return newGame
     }
 
     public getCurrentMap(maps: Array<Map>): Map {

@@ -1,3 +1,4 @@
+import { MapSchema } from '../utils/mongoDbSchemas'
 import Path from './Path'
 import Rectangle from './Rectangle'
 
@@ -22,6 +23,11 @@ class Map {
         this.height = newHeight
         this.drawPaths = newDrawPaths ? newDrawPaths : new Array<Path>()
         this.fogPaths = newFogPaths ? newFogPaths : new Array<Path>()
+    }
+
+    static fromDbSchema(dbMap: MapSchema): Map {
+        const newMap = new Map(dbMap.id, dbMap.name, dbMap.backgroundUrl, dbMap.x, dbMap.y, dbMap.width, dbMap.height, dbMap.drawPaths, dbMap.fogPaths)
+        return newMap
     }
 
     public isEmpty(): boolean {

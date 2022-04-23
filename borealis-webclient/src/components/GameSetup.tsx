@@ -2,31 +2,44 @@ import React, { MouseEvent, ChangeEvent, useCallback, useEffect, useState } from
 import { connect } from 'react-redux'
 import { IWsSettings } from '../contexts/WebSocketProvider'
 import UserType from '../enums/UserType'
+import { useLoading } from '../hooks/useLoading'
+import { useWebSocket } from '../hooks/useSocket'
 import StateInterface from '../interfaces/StateInterface'
+import { assignCharacter, setCharacters } from '../reducers/characterReducer'
+import { overwriteChat } from '../reducers/chatReducer'
+import { overwriteGame } from '../reducers/gameReducer'
+import { updateMaps } from '../reducers/mapReducer'
 import { MetadataState, setGameSettings } from '../reducers/metadataReducer'
 import { setUsername } from '../reducers/settingsReducer'
+import { updateTokens } from '../reducers/tokenReducer'
+import { setUsersFromAPI } from '../reducers/userReducer'
 import { getRoomFromDatabase } from '../utils/apiHandler'
+import loadAllFromDatabase from '../utils/gameLoadHandler'
 import guid from '../utils/guid'
 import GameSetupView from '../views/GameSetupView'
 
 interface GameSetupState {
     roomName: string,
+    roomId: string,
     userName: string,
+    userGuid: string,
     userType: UserType | undefined,
 }
 
 const initialGameSetupState = (): GameSetupState => {
     return {
         roomName: '',
+        roomId: '',
         userName: '',
+        userGuid: '',
         userType: undefined,
     }
 }
 
 interface GameSetupProps {
     metadataState: MetadataState,
-    setGameSettings: (arg0: UserType, arg1: string, arg2: string) => void,
-    setUsername: (arg0: string) => void,
+    setGameSettings: (userType: UserType, userGuid: string, roomName: string, roomGuid: string) => void,
+    setUsername: (username: string) => void,
 }
 
 const GameSetup = ({ metadataState, setGameSettings, setUsername }: GameSetupProps) => {
@@ -35,6 +48,8 @@ const GameSetup = ({ metadataState, setGameSettings, setUsername }: GameSetupPro
         roomFound: false,
         searchingRoom: false,
     })
+    const webSocketContext = useWebSocket()
+    const loadingContext = useLoading()
 
     const onRoomNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newRoomName = e.target.value
@@ -53,6 +68,7 @@ const GameSetup = ({ metadataState, setGameSettings, setUsername }: GameSetupPro
         setGameSetupState({
             ...gameSetupState,
             userName: newUserName,
+            userGuid: gameSetupState.userGuid !== '' ? gameSetupState.userGuid : guid(),
         })
     }
 
@@ -64,46 +80,74 @@ const GameSetup = ({ metadataState, setGameSettings, setUsername }: GameSetupPro
                 ...gameSetupState,
                 userType: userType,
                 userName: gameSetupState.userName !== '' ? gameSetupState.userName : defaultUserName,
+                userGuid: gameSetupState.userGuid !== '' ? gameSetupState.userGuid : guid(),
             })
         }
     }
 
     const onSubmitSetup = () => {
-        // TODO: Handle loading from database
-        // check gameLoadHandler.ts
         if (gameSetupState.userType)
-            setGameSettings(gameSetupState.userType, guid(), gameSetupState.roomName)
+            setGameSettings(gameSetupState.userType, gameSetupState.userGuid, gameSetupState.roomName, gameSetupState.roomId)
         setUsername(gameSetupState.userName)
         saveSettingsToLocalStorage()
+
+        loadAllFromDatabase(webSocketContext, loadingContext)
+            .then((result) => {
+                if (result.gameState)
+                    overwriteGame(result.gameState)
+                if (result.mapState)
+                    updateMaps(result.mapState.maps)
+                if (result.tokenState)
+                    updateTokens(result.tokenState.tokens)
+                if (result.chatState)
+                    overwriteChat(result.chatState.messages)
+                if (result.characterState) {
+                    setCharacters(result.characterState.characters)
+                    if (result.characterState.currentCharacterGuid !== '')
+                        assignCharacter(result.characterState.currentCharacterGuid)
+                }
+                if (result.usersState)
+                    setUsersFromAPI(result.usersState.users)
+            })
     }
 
     const readSettingsFromLocalStorage = (roomName: string) => {
-        const lastRoomNameText = (!roomName || (roomName === '')) ? localStorage.getItem('borealis-room') : roomName
-        const lastRoomName = lastRoomNameText ? lastRoomNameText : ''
+        const lastRoomIdText = (!roomName || (roomName === '')) ? localStorage.getItem('borealis-room') : roomName
+        const lastRoomId = lastRoomIdText ? lastRoomIdText : ''
 
-        const roomUsernameText = localStorage.getItem(`borealis-${lastRoomName}-username`)
-        const roomUsername = roomUsernameText ? roomUsernameText : ''
+        const roomUserGuidText = localStorage.getItem(`borealis-${lastRoomId}-userGuid`)
+        const roomUserGuid = roomUserGuidText ? roomUserGuidText : ''
 
-        const userTypeText = localStorage.getItem(`borealis-${lastRoomName}-${roomUsername}`)
-        const userType = userTypeText === 'host' ? UserType.host : UserType.player
-        return { lastRoomName, roomUsername, userType }
+        const roomUserNameText = localStorage.getItem(`borealis-${lastRoomId}-userName`)
+        const roomUserName = roomUserNameText ? roomUserNameText : ''
+
+        const roomRoomNameText = localStorage.getItem(`borealis-${lastRoomId}-roomName`)
+        const roomRoomName = roomRoomNameText ? roomRoomNameText : ''
+
+        const userTypeText = localStorage.getItem(`borealis-${lastRoomId}-${roomUserGuid}`)
+        const userType = userTypeText?.toUpperCase() === 'HOST' ? UserType.host : UserType.player
+        return { lastRoomId, roomRoomName, roomUserGuid, roomUserName, userType }
     }
 
     const saveSettingsToLocalStorage = () => {
-        localStorage.setItem('borealis-room',`${gameSetupState.roomName}`)
-        localStorage.setItem(`borealis-${gameSetupState.roomName}-username`,`${gameSetupState.userName}`)
-        localStorage.setItem(`borealis-${gameSetupState.roomName}-${gameSetupState.userName}`,`${gameSetupState.userType}`)
+        localStorage.setItem('borealis-room',`${gameSetupState.roomId}`)
+        localStorage.setItem(`borealis-${gameSetupState.roomId}-roomName`,`${gameSetupState.roomName}`)
+        localStorage.setItem(`borealis-${gameSetupState.roomId}-userGuid`,`${gameSetupState.userGuid}`)
+        localStorage.setItem(`borealis-${gameSetupState.roomId}-userName`,`${gameSetupState.userName}`)
+        localStorage.setItem(`borealis-${gameSetupState.roomId}-${gameSetupState.userGuid}`,`${gameSetupState.userType}`)
     }
 
     const updateSettingsFromLocalStorage = (skipRoomUpdate: boolean) => {
         const localSettings = readSettingsFromLocalStorage(gameSetupState.roomName)
         if (skipRoomUpdate)
-            localSettings.lastRoomName = metadataState.room ? metadataState.room : gameSetupState.roomName
-        if ((localSettings.lastRoomName !== gameSetupState.roomName) || (localSettings.roomUsername !== gameSetupState.userName))
+            localSettings.lastRoomId = metadataState.roomName ? metadataState.roomName : gameSetupState.roomName
+        if ((localSettings.lastRoomId !== gameSetupState.roomName) || (localSettings.roomUserGuid !== gameSetupState.userName))
             setGameSetupState({
                 ...gameSetupState,
-                roomName: localSettings.lastRoomName,
-                userName: localSettings.roomUsername,
+                roomId: localSettings.lastRoomId,
+                roomName: localSettings.roomRoomName,
+                userGuid: localSettings.roomUserGuid,
+                userName: localSettings.roomUserName,
                 userType: localSettings.userType,
             })
     }
@@ -111,10 +155,10 @@ const GameSetup = ({ metadataState, setGameSettings, setUsername }: GameSetupPro
     const searchRoom = useCallback(() => {
         if ((gameSetupState.roomName !== '') && (!roomLookupState.roomFound)) {
             const tempWsSettings: IWsSettings = {
-                guid: '',
-                username: gameSetupState.userName,
-                room: gameSetupState.roomName,
-                isHost: gameSetupState.userType === UserType.host
+                socketGuid: '',
+                userGuid: gameSetupState.userGuid,
+                roomId: gameSetupState.roomId,
+                userType: gameSetupState.userType ? gameSetupState.userType : UserType.player,
             }
             if (!roomLookupState.searchingRoom)
                 setRoomLookupState({
@@ -122,13 +166,22 @@ const GameSetup = ({ metadataState, setGameSettings, setUsername }: GameSetupPro
                     searchingRoom: true,
                 })
             getRoomFromDatabase(tempWsSettings)
-                .then((result: any) => {
-                    if (result.data) {
+                .then((result) => {
+                    if (result.length > 0) {
+                        if (result[0].roomId !== '')
+                            setGameSetupState({
+                                ...gameSetupState,
+                                roomId: result[0].roomId,
+                            })
                         setRoomLookupState({
                             roomFound: true,
                             searchingRoom: false,
                         })
                     } else {
+                        setGameSetupState({
+                            ...gameSetupState,
+                            roomId: guid(),
+                        })
                         setRoomLookupState({
                             roomFound: false,
                             searchingRoom: false,
@@ -152,12 +205,12 @@ const GameSetup = ({ metadataState, setGameSettings, setUsername }: GameSetupPro
     }, [ searchRoom ])
 
     useEffect(() => {
-        if (metadataState.room !== '') {
+        if (metadataState.roomGuid !== '') {
             updateSettingsFromLocalStorage(true)
         } else {
             updateSettingsFromLocalStorage(false)
         }
-    }, [ metadataState.room ])
+    }, [ metadataState.roomGuid ])
 
     const isHost = (gameSetupState.userType === UserType.host)
     const isPlayer = (gameSetupState.userType === UserType.player)

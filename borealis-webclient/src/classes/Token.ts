@@ -3,6 +3,7 @@ import TokenCondition from '../enums/TokenCondition'
 import TokenSize from '../enums/TokenSize'
 import TokenType from '../enums/TokenType'
 import UserType from '../enums/UserType'
+import { TokenSchema } from '../utils/mongoDbSchemas'
 
 export type TokenTextProperty = 'guid' | 'name' | 'imageUrl'
 export type TokenNumberProperty = 'mapId' | 'x' | 'y' | 'width' | 'height' | 'x0' | 'y0'
@@ -43,6 +44,11 @@ class Token {
         this.showLabel = newShowLabel ? newShowLabel : false
         this.x0 = newX0 ? newX0 : 0
         this.y0 = newY0 ? newY0 : 0
+    }
+
+    static fromDbSchema(dbToken: TokenSchema): Token {
+        const newToken = new Token(dbToken.name, dbToken.imageUrl, dbToken.mapId, dbToken.x, dbToken.y, dbToken.condition, dbToken.type, dbToken.guid, dbToken.size, dbToken.selected, dbToken.hidden, dbToken.showLabel, dbToken.x0, dbToken.y0)
+        return newToken
     }
 
     public copy(): Token {

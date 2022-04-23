@@ -1,4 +1,5 @@
 import UserType from '../enums/UserType'
+import { UserSchema } from '../utils/mongoDbSchemas'
 
 class User {
     public guid: string
@@ -13,6 +14,11 @@ class User {
         this.type = newType
         this.assignedCharacterGuid = ''
         this.lastOnline = 0
+    }
+
+    static fromDbSchema(dbUser: UserSchema): User {
+        const newUser = new User(dbUser.guid, dbUser.name, dbUser.type)
+        return newUser
     }
 }
 

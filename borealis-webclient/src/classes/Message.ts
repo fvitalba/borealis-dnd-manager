@@ -1,5 +1,6 @@
 import guid from '../utils/guid'
 import MessageType from '../enums/MessageType'
+import { ChatMessageSchema } from '../utils/mongoDbSchemas'
 
 class Message {
     public guid: string
@@ -22,6 +23,11 @@ class Message {
         this.privateMessage = newPrivateMessage ? newPrivateMessage : ''
         this.timestamp = newTimestamp ? newTimestamp : Date.now()
         this.read = (newRead !== undefined) ? newRead : false
+    }
+
+    static fromDbSchema(dbMessage: ChatMessageSchema): Message {
+        const newMessage = new Message(dbMessage.type, dbMessage.username, dbMessage.playerInfo, dbMessage.publicMessage, dbMessage.guid, dbMessage.timestamp, dbMessage.targetUsername, dbMessage.privateMessage, dbMessage.read)
+        return newMessage
     }
 }
 

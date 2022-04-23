@@ -1,4 +1,4 @@
-import { CHARACTER_SAVE, GAME_LOAD_MAP, GAME_REQUEST_REFRESH, WEBSOCKET_OPEN_CONNECTION } from './loadingTasks'
+import { API_LOAD_CHARACTERS, API_LOAD_CHAT, API_LOAD_MAPS, API_LOAD_ROOM, API_LOAD_TOKENS, API_LOAD_USERS, CHARACTER_SAVE, GAME_LOAD_MAP, GAME_REQUEST_REFRESH, WEBSOCKET_OPEN_CONNECTION } from './loadingTasks'
 
 export interface ChatCommand {
     command: string,
@@ -80,5 +80,29 @@ export const LoadingTaskDescriptions = [
     {
         code: GAME_LOAD_MAP,
         description: 'Loading Map',
+    },
+    {
+        code: API_LOAD_ROOM,
+        description: 'Loading Room',
+    },
+    {
+        code: API_LOAD_MAPS,
+        description: 'Loading Maps',
+    },
+    {
+        code: API_LOAD_TOKENS,
+        description: 'Loading Tokens',
+    },
+    {
+        code: API_LOAD_CHAT,
+        description: 'Loading Chat',
+    },
+    {
+        code: API_LOAD_CHARACTERS,
+        description: 'Loading Characters',
+    },
+    {
+        code: API_LOAD_USERS,
+        description: 'Loading Users',
     }
 ]

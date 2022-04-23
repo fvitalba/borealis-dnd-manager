@@ -65,7 +65,7 @@ const CharacterStats = ({ toggleOnCharacterStats, characterState, userState, met
     const saveCurrCharacter = () => {
         loadingContext.startLoadingTask(CHARACTER_SAVE)
         updateCharacter(selectedCharacter)
-        saveCharacterToDatabase(webSocketContext.wsSettings, JSON.stringify(selectedCharacter))
+        saveCharacterToDatabase(webSocketContext.wsSettings, [selectedCharacter])
             .then(() => {
                 loadingContext.stopLoadingTask(CHARACTER_SAVE)
                 if (webSocketContext.ws)

@@ -1,5 +1,12 @@
 import axios from 'axios'
+import Character from '../classes/Character'
+import Game from '../classes/Game'
+import Map from '../classes/Map'
+import Message from '../classes/Message'
+import Token from '../classes/Token'
+import User from '../classes/User'
 import { IWsSettings } from '../contexts/WebSocketProvider'
+import { CharacterSchema, ChatMessageSchema, GameSchema, MapSchema, TokenSchema, UserSchema } from './mongoDbSchemas'
 
 const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
 const CHARACTER_API_URL = 'characters'
@@ -47,16 +54,16 @@ interface APIRequestParams {
     fromSocketGuid: string,
     fromUserGuid: string,
     roomId: string,
-    payload: any,
+    payload: string,
 }
 
-export const saveRoomToDatabase = (wsSettings: IWsSettings, payload: any) => {
+export const saveRoomToDatabase = (wsSettings: IWsSettings, payload: Game) => {
     return new Promise((resolve, reject) => {
         const params: APIRequestParams = {
             fromSocketGuid: wsSettings.socketGuid,
             fromUserGuid: wsSettings.userGuid,
             roomId: wsSettings.roomId,
-            payload: payload,
+            payload: JSON.stringify(payload),
         }
 
         axios.post(roomsUrl(''), params)
@@ -69,11 +76,11 @@ export const saveRoomToDatabase = (wsSettings: IWsSettings, payload: any) => {
     })
 }
 
-export const getRoomFromDatabase = (wsSettings: IWsSettings) => {
+export const getRoomFromDatabase = (wsSettings: IWsSettings): Promise<Array<GameSchema>> => {
     return new Promise((resolve, reject) => {
         axios.get(roomsUrl(wsSettings.roomId))
             .then((result) => {
-                resolve(result)
+                resolve(result.data)
             })
             .catch((error) => {
                 reject(error)
@@ -81,7 +88,26 @@ export const getRoomFromDatabase = (wsSettings: IWsSettings) => {
     })
 }
 
-export const getUsersFromDatabase = (wsSettings: IWsSettings) => {
+export const saveUsersToDatabase = (wsSettings: IWsSettings, payload: Array<User>) => {
+    return new Promise((resolve, reject) => {
+        const params: APIRequestParams = {
+            fromSocketGuid: wsSettings.socketGuid,
+            fromUserGuid: wsSettings.userGuid,
+            roomId: wsSettings.roomId,
+            payload: JSON.stringify(payload),
+        }
+
+        axios.post(usersUrl(wsSettings.roomId), params)
+            .then((result) => {
+                resolve(result.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
+export const getUsersFromDatabase = (wsSettings: IWsSettings): Promise<Array<UserSchema>> => {
     return new Promise ((resolve, reject) => {
         axios.get(usersUrl(wsSettings.roomId))
             .then((result) => {
@@ -93,13 +119,13 @@ export const getUsersFromDatabase = (wsSettings: IWsSettings) => {
     })
 }
 
-export const saveCharacterToDatabase = (wsSettings: IWsSettings, payload: any) => {
+export const saveCharacterToDatabase = (wsSettings: IWsSettings, payload: Array<Character>) => {
     return new Promise((resolve, reject) => {
         const params: APIRequestParams = {
             fromSocketGuid: wsSettings.socketGuid,
             fromUserGuid: wsSettings.userGuid,
             roomId: wsSettings.roomId,
-            payload: payload,
+            payload: JSON.stringify(payload),
         }
 
         axios.post(charactersUrl(wsSettings.roomId), params)
@@ -112,9 +138,102 @@ export const saveCharacterToDatabase = (wsSettings: IWsSettings, payload: any) =
     })
 }
 
-export const getCharactersFromDatabase = (wsSettings: IWsSettings) => {
+export const getCharactersFromDatabase = (wsSettings: IWsSettings): Promise<Array<CharacterSchema>> => {
     return new Promise ((resolve, reject) => {
         axios.get(charactersUrl(wsSettings.roomId))
+            .then((result) => {
+                resolve(result.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
+export const saveMapsToDatabase = (wsSettings: IWsSettings, payload: Array<Map>) => {
+    return new Promise((resolve, reject) => {
+        const params: APIRequestParams = {
+            fromSocketGuid: wsSettings.socketGuid,
+            fromUserGuid: wsSettings.userGuid,
+            roomId: wsSettings.roomId,
+            payload: JSON.stringify(payload),
+        }
+
+        axios.post(mapsUrl(wsSettings.roomId), params)
+            .then((result) => {
+                resolve(result.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
+export const getMapsFromDatabase = (wsSettings: IWsSettings): Promise<Array<MapSchema>> => {
+    return new Promise ((resolve, reject) => {
+        axios.get(mapsUrl(wsSettings.roomId))
+            .then((result) => {
+                resolve(result.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
+export const saveTokensToDatabase = (wsSettings: IWsSettings, payload: Array<Token>) => {
+    return new Promise((resolve, reject) => {
+        const params: APIRequestParams = {
+            fromSocketGuid: wsSettings.socketGuid,
+            fromUserGuid: wsSettings.userGuid,
+            roomId: wsSettings.roomId,
+            payload: JSON.stringify(payload),
+        }
+
+        axios.post(tokensUrl(wsSettings.roomId), params)
+            .then((result) => {
+                resolve(result.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
+export const getTokensFromDatabase = (wsSettings: IWsSettings): Promise<Array<TokenSchema>> => {
+    return new Promise ((resolve, reject) => {
+        axios.get(tokensUrl(wsSettings.roomId))
+            .then((result) => {
+                resolve(result.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
+export const saveChatToDatabase = (wsSettings: IWsSettings, payload: Array<Message>) => {
+    return new Promise((resolve, reject) => {
+        const params: APIRequestParams = {
+            fromSocketGuid: wsSettings.socketGuid,
+            fromUserGuid: wsSettings.userGuid,
+            roomId: wsSettings.roomId,
+            payload: JSON.stringify(payload),
+        }
+
+        axios.post(chatsUrl(wsSettings.roomId), params)
+            .then((result) => {
+                resolve(result.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
+export const getChatFromDatabase = (wsSettings: IWsSettings): Promise<Array<ChatMessageSchema>> => {
+    return new Promise ((resolve, reject) => {
+        axios.get(chatsUrl(wsSettings.roomId))
             .then((result) => {
                 resolve(result.data)
             })

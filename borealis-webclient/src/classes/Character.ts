@@ -1,6 +1,7 @@
 import CharacterAttribute from '../enums/CharacterAttribute'
 import CharacterClass, { CharacterClassArray } from '../enums/CharacterClass'
 import DiceType, { DiceTypeArray } from '../enums/DiceType'
+import { CharacterSchema } from '../utils/mongoDbSchemas'
 
 export type ClassTextProperty = 'guid' | 'name' | 'username'
 export type ClassNumberProperty = 'strength' | 'dexterity' | 'constitution' | 'intelligence' | 'wisdom' | 'charisma' | 'proficiency' | 'armorclass' | 'passivePerception' | 'maxHealth' | 'currHealth' | 'tempHealth'
@@ -66,6 +67,22 @@ class Character {
         this.passivePerception = 10
         this.tempHealth = 0
         this.username = newUsername ? newUsername : ''
+    }
+
+    static fromDbSchema(dbCharacter: CharacterSchema): Character {
+        const newCharacter = new Character(dbCharacter.guid, dbCharacter.name, dbCharacter.maxHealth, dbCharacter.class, dbCharacter.hitDice, dbCharacter.username)
+        newCharacter.currHealth = dbCharacter.currHealth
+        newCharacter.strength = dbCharacter.strength
+        newCharacter.dexterity = dbCharacter.dexterity
+        newCharacter.constitution = dbCharacter.constitution
+        newCharacter.intelligence = dbCharacter.intelligence
+        newCharacter.wisdom = dbCharacter.wisdom
+        newCharacter.charisma = dbCharacter.charisma
+        newCharacter.proficiency = dbCharacter.proficiency
+        newCharacter.armorclass = dbCharacter.armorclass
+        newCharacter.passivePerception = dbCharacter.passivePerception
+        newCharacter.tempHealth = dbCharacter.tempHealth
+        return newCharacter
     }
 
     public isEmpty(): boolean {
