@@ -41,7 +41,7 @@ const ToolControlsView = ({ tool, setTool, drawColor, setDrawColor, drawColorRef
             </div>
         )
     case ControlTool.Move:
-        return null
+        return <></>
     case ControlTool.Fog:
     case ControlTool.EreaseFog:
         return (
@@ -51,7 +51,7 @@ const ToolControlsView = ({ tool, setTool, drawColor, setDrawColor, drawColorRef
             </div>
         )
     default:
-        return null
+        return <></>
     }
 }
 

@@ -58,14 +58,14 @@ const ControlPanel = ({ metadataState, gameState, mapState, tokenState, chatStat
     }
 
     const socketRequestRefresh = () => {
-        if (webSocketContext.ws && webSocketContext.wsSettings) {
+        if (webSocketContext.ws) {
             loadingContext.startLoadingTask(GAME_REQUEST_REFRESH)
             requestRefresh(webSocketContext.ws, webSocketContext.wsSettings)
         }
     }
 
     const pushRefreshToPlayers = () => {
-        if (webSocketContext.ws && webSocketContext.wsSettings)
+        if (webSocketContext.ws)
             pushGameRefresh(webSocketContext.ws, webSocketContext.wsSettings, gameState, mapState, tokenState, chatState, characterState)
     }
 

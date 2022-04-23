@@ -76,7 +76,7 @@ const ChatPanelView = ({ username, chatPanelHidden, toggleHidden, showHelp, togg
                             return (<ChatPanelCommand key={ message.guid } message={ message } username={ username } ref={ isLastElement ? endOfMessagesRef : null } />)
                         case MessageType.Error:
                             return (<ChatPanelError key={ message.guid } message={ message } ref={ isLastElement ? endOfMessagesRef : null } />)
-                        default: return null
+                        default: return <></>
                         }
                     })}
                 </div>

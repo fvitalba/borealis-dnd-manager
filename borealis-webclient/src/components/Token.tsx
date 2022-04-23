@@ -51,7 +51,7 @@ const TokenComponent = ({ token, userType, gameState, tokenState, settingsState,
     }, [ labelRef.current, scaledToken.x, scaledToken.y, scaledToken.width, scaledToken.height, scaledToken.showLabel ])
 
     if (scaledToken.imageUrl === '')
-        return null
+        return <></>
 
     const classes = scaledToken.generateTokenClasses(userType)
     const divStyle = {

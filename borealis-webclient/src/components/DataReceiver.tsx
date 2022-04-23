@@ -49,13 +49,13 @@ const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settings
     const currMap = getMap(mapState, gameState.currentMapId)
 
     const receiveData = useCallback((evt: MessageEvent<any>) => {
-        if (!webSocketContext.ws || !webSocketContext.wsSettings)
+        if (!webSocketContext.ws)
             return  // Web Socket Connection is not active
         const data: FormattedWebSocketPayload = JSON.parse(evt.data)
-        if (data.fromGuid === webSocketContext.wsSettings.guid) {
+        if (data.fromSocketGuid === webSocketContext.wsSettings.socketGuid) {
             return  // ignore messages sent by self
         }
-        if (data.targetGuid && data.targetGuid !== webSocketContext.wsSettings.guid) {
+        if (data.targetGuid && data.targetGuid !== webSocketContext.wsSettings.socketGuid) {
             return  // ignore messages sent to different recipients
         }
 
@@ -64,8 +64,8 @@ const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settings
         let updatedTokens = tokenState.tokens
         switch (data.type) {
         case 'pushCursor':
-            if ((data.x && data.y) && (data.fromUsername !== settingsState.username))
-                updateCursor(data.fromUsername, data.x, data.y)
+            if ((data.x && data.y) && (data.fromUserGuid !== metadataState.userGuid))
+                updateCursor(data.fromUserGuid, data.x, data.y)
             break
         case 'pushDrawPath':
             if (currMap) {
@@ -214,7 +214,7 @@ const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settings
         }
     }, [ webSocketContext.ws, receiveData ])
 
-    return null
+    return <></>
 }
 
 const mapStateToProps = (state: StateInterface) => {

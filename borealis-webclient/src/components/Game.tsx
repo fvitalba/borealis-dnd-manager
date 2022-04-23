@@ -272,13 +272,13 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
             case ControlTool.Fog:
             case ControlTool.EreaseFog:
                 fogPaths.push(scaledCurrPath)
-                if (webSocketContext.ws && webSocketContext.wsSettings)
+                if (webSocketContext.ws)
                     pushFogPath(webSocketContext.ws, webSocketContext.wsSettings, scaledCurrPath)
                 break
             case ControlTool.Draw:
             case ControlTool.EreaseDraw:
                 drawPaths.push(scaledCurrPath)
-                if (webSocketContext.ws && webSocketContext.wsSettings)
+                if (webSocketContext.ws)
                     pushDrawPath(webSocketContext.ws, webSocketContext.wsSettings, scaledCurrPath)
                 break
             default: break
@@ -301,7 +301,7 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
             if (deselectTokens)
                 tokenState.tokens.map((token) => token.selected ? toggleTokenValue(token.guid, 'selected') : null)
 
-            if (webSocketContext.ws && webSocketContext.wsSettings)
+            if (webSocketContext.ws)
                 pushTokens(webSocketContext.ws, webSocketContext.wsSettings, tokenState.tokens)
         }
     }
@@ -336,7 +336,7 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
         clearOverlay()
         const x = e.pageX, y = e.pageY
         if (settingsState.shareMouse) {
-            if (webSocketContext.ws && webSocketContext.wsSettings)
+            if (webSocketContext.ws)
                 pushCursor(webSocketContext.ws, webSocketContext.wsSettings, x, y)
         }
         switch (settingsState.tool) {
@@ -378,7 +378,7 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
     }, [])
 
     useEffect(() => {
-        if ((metadataState.userType === UserType.player) && (webSocketContext.ws && webSocketContext.wsSettings)) {
+        if ((metadataState.userType === UserType.player) && (webSocketContext.ws)) {
             loadingContext.startLoadingTask(GAME_REQUEST_REFRESH)
             requestRefresh(webSocketContext.ws, webSocketContext.wsSettings)
         }

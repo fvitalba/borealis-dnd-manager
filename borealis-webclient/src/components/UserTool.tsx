@@ -37,15 +37,14 @@ const UserTool = ({ toggleOnUser, gameState, chatState, characterState, metadata
     const loadingContext = useLoading()
 
     if (!toggleOnUser)
-        return null
+        return <></>
 
     const updateUsername = (value: string) => {
         setUsername(value)
-        if (webSocketContext.setWsSettings && webSocketContext.wsSettings)
-            webSocketContext.setWsSettings({
-                ...webSocketContext.wsSettings,
-                username: value,
-            })
+        webSocketContext.setWsSettings({
+            ...webSocketContext.wsSettings,
+            userGuid: value,
+        })
     }
 
     const toggleShareMouse = () => {
@@ -67,7 +66,7 @@ const UserTool = ({ toggleOnUser, gameState, chatState, characterState, metadata
 
     const toggleFog = () => {
         setFogEnabled(!gameState.fogEnabled)
-        if (webSocketContext.ws && webSocketContext.wsSettings)
+        if (webSocketContext.ws)
             pushFogEnabled(webSocketContext.ws, webSocketContext.wsSettings, !gameState.fogEnabled)
         if ((settingsState.tool === ControlTool.Fog) || (settingsState.tool === ControlTool.EreaseFog))
             setToolSettings(ControlTool.Move)
@@ -115,7 +114,7 @@ const UserTool = ({ toggleOnUser, gameState, chatState, characterState, metadata
     const copyUrlToClipboard = () => {
         const host = window.location.host.replace(/:\d+$/, '')
         const protocol = /https/.test(window.location.protocol) ? 'https' : 'http'
-        const userUrl = DEBUG_MODE ? `${protocol}://${host}:${REACT_APP_PORT}/?room=${metadataState.room}` : `https://${host}/?room=${metadataState.room}`
+        const userUrl = DEBUG_MODE ? `${protocol}://${host}:${REACT_APP_PORT}/?roomId=${metadataState.roomGuid}` : `https://${host}/?roomId=${metadataState.roomGuid}`
         navigator.clipboard.writeText(userUrl)
     }
 

@@ -46,9 +46,9 @@ export interface WebSocketPayload {
 }
 
 export interface FormattedWebSocketPayload extends WebSocketPayload {
-    fromGuid: string,
-    fromUsername: string,
-    room: string,
+    fromSocketGuid: string,
+    fromUserGuid: string,
+    roomId: string,
 }
 
 const sendData = (webSocket: WebSocket, wsSettings: IWsSettings, data: WebSocketPayload) => {
@@ -61,9 +61,9 @@ const sendData = (webSocket: WebSocket, wsSettings: IWsSettings, data: WebSocket
 const formatPayload = (wsSettings: IWsSettings, data: WebSocketPayload): FormattedWebSocketPayload => {
     return {
         ...data,
-        fromGuid: wsSettings.guid,
-        fromUsername: wsSettings.username,
-        room: wsSettings.room,
+        fromSocketGuid: wsSettings.socketGuid,
+        fromUserGuid: wsSettings.userGuid,
+        roomId: wsSettings.roomId,
     }
 }
 
@@ -105,6 +105,7 @@ export const pushMapState = (webSocket: WebSocket, wsSettings: IWsSettings, maps
     sendData(webSocket, wsSettings, {
         type: 'pushMapState',
         maps: maps,
+        mapId: mapId,
     })
 }
 
@@ -196,7 +197,7 @@ export const pushDeleteCharacter = (webSocket: WebSocket, wsSettings: IWsSetting
     })
 }
 
-export const ping = (webSocket: WebSocket, wsSettings: IWsSettings, username: string) => {
+export const ping = (webSocket: WebSocket, wsSettings: IWsSettings) => {
     sendData(webSocket, wsSettings, {
         type: 'ping',
     })

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, createContext, ReactElement } from 'react'
+import UserType from '../enums/UserType'
 import { useLoading } from '../hooks/useLoading'
 import guid from '../utils/guid'
 import { WEBSOCKET_OPEN_CONNECTION } from '../utils/loadingTasks'
@@ -7,23 +8,23 @@ const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
 const SOCKET_RECONNECTION_TIMEOUT = 2500
 const SOCKET_SERVER_PORT = process.env.PORT || process.env.REACT_APP_PORT || 8000
 
-const generateWebSocketUrl = (room: string, guid: string, username: string, isHost?: boolean) => {
+const generateWebSocketUrl = (roomId: string, socketGuid: string, userGuid: string, userType?: UserType) => {
     const host = window.location.host.replace(/:\d+$/, '')
     const protocol = /https/.test(window.location.protocol) ? 'wss' : 'ws'
 
     const webSocketUrl = DEBUG_MODE
-        ? `${protocol}://${host}:${SOCKET_SERVER_PORT}/${room}?guid=${guid}`
-        : `${protocol}://${host}/${room}?guid=${guid}`
+        ? `${protocol}://${host}:${SOCKET_SERVER_PORT}/${roomId}?socketGuid=${socketGuid}`
+        : `${protocol}://${host}/${roomId}?socketGuid=${socketGuid}`
 
-    const userParam = username ? `&username=${username}` : ''
-    const hostParam = (isHost !== undefined) ? `&isHost=${isHost}` : ''
+    const userParam = userGuid ? `&userGuid=${userGuid}` : ''
+    const hostParam = (userType !== undefined) ? `&userType=${userType}` : ''
 
     return webSocketUrl + userParam + hostParam
 }
 
-export const createWebSocket = (room: string, guid: string, username?: string, isHost?: boolean) : WebSocket | null => {
-    if (room && username) {
-        const webSocketUrl = generateWebSocketUrl(room, guid, username, isHost)
+export const createWebSocket = (roomId: string, socketGuid: string, userGuid?: string, userType?: UserType) : WebSocket | null => {
+    if (roomId && userGuid) {
+        const webSocketUrl = generateWebSocketUrl(roomId, socketGuid, userGuid, userType)
         return new WebSocket(webSocketUrl)
     } else {
         return null
@@ -31,27 +32,37 @@ export const createWebSocket = (room: string, guid: string, username?: string, i
 }
 
 export interface IWsSettings {
-    guid: string,
-    username: string,
-    room: string,
-    isHost: boolean,
+    socketGuid: string,
+    userGuid: string,
+    roomId: string,
+    userType: UserType,
 }
 
 export interface IWebSocketContext {
     ws: WebSocket | null,
-    wsSettings?: IWsSettings,
-    setWs?: (arg0: WebSocket) => void,
-    setWsSettings?: (arg0: IWsSettings) => void,
+    wsSettings: IWsSettings,
+    setWs: (arg0: WebSocket) => void,
+    setWsSettings: (arg0: IWsSettings) => void,
 }
 
-export const WebSocketContext = createContext<IWebSocketContext>({ ws: null })
+export const WebSocketContext = createContext<IWebSocketContext>({
+    ws: null,
+    wsSettings: {
+        socketGuid: '',
+        userGuid: '',
+        roomId: '',
+        userType: UserType.player,
+    },
+    setWs: () => null,
+    setWsSettings: () => null,
+})
 
 const WebSocketProvider = ({ children } : { children: ReactElement }) => {
     const [wsSettings, setWsSettings] = useState<IWsSettings>({
-        guid: guid(),
-        username: '',
-        room: '',
-        isHost: false,
+        socketGuid: guid(),
+        userGuid: '',
+        roomId: '',
+        userType: UserType.player,
     })
     const [ws, setWs] = useState<WebSocket | null>(null)
     const loadingContext = useLoading()
@@ -61,7 +72,7 @@ const WebSocketProvider = ({ children } : { children: ReactElement }) => {
             setTimeout(() => {
                 loadingContext.startLoadingTask(WEBSOCKET_OPEN_CONNECTION)
                 console.debug('Socket Timeout, recreating WebSocket')
-                setWs(createWebSocket(wsSettings.room, wsSettings.guid, wsSettings.username, wsSettings.isHost))
+                setWs(createWebSocket(wsSettings.roomId, wsSettings.socketGuid, wsSettings.userGuid, wsSettings.userType))
             }, SOCKET_RECONNECTION_TIMEOUT)
         }
 

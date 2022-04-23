@@ -20,7 +20,7 @@ const MapTool = ({ toggleOnMaps, mapState, addMap }: MapToolProps) => {
         const newMap = new Map(0, newMapName, '', 0, 0, window.innerWidth, window.innerHeight)
         addMap(newMap)
         setNewMapName('')
-        if (webSocketContext.ws && webSocketContext.wsSettings)
+        if (webSocketContext.ws)
             pushCreateMap(webSocketContext.ws, webSocketContext.wsSettings, newMap)
     }
 

@@ -94,7 +94,7 @@ const ChatPanel = ({ chatState, settingsState, userState, characterState, metada
         const convertedMessage = convertChatMessage(settingsState.username, chatPanelState.currentMessage, currentCharacter, playerInfo)
         if ((convertedMessage.publicMessage.length > 0) || (convertedMessage.privateMessage.length > 0)) {
             addChatMessage(convertedMessage)
-            if (webSocketContext.ws && webSocketContext.wsSettings && (convertedMessage.type !== MessageType.Error ))
+            if (webSocketContext.ws && (convertedMessage.type !== MessageType.Error ))
                 sendChatMessage(webSocketContext.ws, webSocketContext.wsSettings, convertedMessage)
             setChatPanelState({
                 ...chatPanelState,
@@ -111,17 +111,16 @@ const ChatPanel = ({ chatState, settingsState, userState, characterState, metada
     }
 
     const loadUsers = useCallback(() => {
-        if (webSocketContext.wsSettings)
-            if (webSocketContext.wsSettings.room !== '') {
-                getUsersFromDatabase(webSocketContext.wsSettings)
-                    .then((result: any) => {
-                        const users: Array<User> = result
-                        setUsersFromAPI(users)
-                    })
-                    .catch((error) => {
-                        console.error(error)
-                    })
-            }
+        if (webSocketContext.wsSettings.roomId !== '') {
+            getUsersFromDatabase(webSocketContext.wsSettings)
+                .then((result: any) => {
+                    const users: Array<User> = result
+                    setUsersFromAPI(users)
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+        }
     }, [ webSocketContext, chatPanelState, setChatPanelState ])
 
     useEffect(() => {

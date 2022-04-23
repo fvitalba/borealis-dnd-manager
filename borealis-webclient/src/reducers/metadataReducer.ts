@@ -12,7 +12,8 @@ import Point from '../classes/Point'
 export interface MetadataState {
     userType: UserType,
     userGuid: string,
-    room: string,
+    roomName: string,
+    roomGuid: string,
     cursors: Array<Cursor>,
     lastPos: Point,
     downPos: Point,
@@ -22,7 +23,8 @@ export const initialMetadataState = (): MetadataState => {
     return {
         userType: UserType.player,
         userGuid: '',
-        room: '',
+        roomName: '',
+        roomGuid: '',
         cursors: [],
         lastPos: new Point(-1, -1),
         downPos: new Point(-1, -1),
@@ -33,7 +35,8 @@ interface MetadataAction {
     type: string,
     userType?: UserType,
     userGuid?: string,
-    room?: string,
+    roomName?: string,
+    roomGuid?: string,
     cursor?: Cursor,
     cursors?: Array<Cursor>,
     lastPos?: Point,
@@ -44,12 +47,13 @@ const metadataReducer = (state: MetadataState = initialMetadataState(), action: 
     let newCursors = state.cursors
     switch (action.type) {
     case SET_GAMESETTINGS:
-        if ((action.userType) && (action.room))
+        if ((action.userType) && (action.roomName) && (action.roomGuid))
             return {
                 ...state,
                 userType: action.userType,
-                room: action.room,
                 userGuid: action.userGuid ? action.userGuid : state.userGuid,
+                roomName: action.roomName,
+                roomGuid: action.roomGuid ? action.roomGuid : state.roomGuid,
             }
         else
             return state
@@ -83,12 +87,13 @@ const metadataReducer = (state: MetadataState = initialMetadataState(), action: 
 }
 
 //#region Action Creators
-export const setGameSettings = (newUserType: UserType, newUserGuid: string, newRoom: string): MetadataAction => {
+export const setGameSettings = (newUserType: UserType, newUserGuid: string, newRoomName: string, newRoomGuid: string): MetadataAction => {
     return {
         type: SET_GAMESETTINGS,
         userType: newUserType,
         userGuid: newUserGuid,
-        room: newRoom,
+        roomName: newRoomName,
+        roomGuid: newRoomGuid,
     }
 }
 

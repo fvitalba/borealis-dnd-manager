@@ -15,7 +15,7 @@ const ChatPanelWhisper = forwardRef(({ message, username, playerInfo }: ChatPane
         textToShow = `From ${message.username}: ` + message.privateMessage
 
     if (textToShow === '')
-        return null
+        return <></>
 
     return (
         <div className='chat-panel-message' ref={ ref }>

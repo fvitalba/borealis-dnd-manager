@@ -11,11 +11,12 @@ import StateInterface from '../interfaces/StateInterface'
 import { MetadataState, setGameSettings } from '../reducers/metadataReducer'
 import { SettingsState } from '../reducers/settingsReducer'
 import { WEBSOCKET_OPEN_CONNECTION } from '../utils/loadingTasks'
+import guid from '../utils/guid'
 
 interface GameStateHandlerProps {
     metadataState: MetadataState,
     settingsState: SettingsState,
-    setGameSettings: (arg0: UserType, arg1: string, arg2: string) => void,
+    setGameSettings: (userType: UserType, userGuid: string, roomName: string, roomGuid: string) => void,
 }
 
 const GameStateHandler = ({ metadataState, settingsState, setGameSettings }: GameStateHandlerProps) => {
@@ -24,36 +25,44 @@ const GameStateHandler = ({ metadataState, settingsState, setGameSettings }: Gam
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
-        if (webSocketContext.wsSettings)
-            setGameSettings(params.get('host') ? UserType.host : UserType.player, params.get('room') || '', webSocketContext.wsSettings.guid)
-        /*
-        setWsSettings({
-            ...wsSettings,
-            room: params.get('room'),
-            isHost: params.get('host') ? true : false,
-        })
-        */
+        const userTypeParam = params.get('userType')
+        let userType : UserType | null
+        switch (userTypeParam?.toUpperCase()) {
+        case 'HOST':
+            userType = UserType.host
+            break
+        case 'PLAYER':
+            userType = UserType.player
+            break
+        default:
+            userType = null
+        }
+
+        const roomId = params.get('roomId') || ''
+        setGameSettings(userType !== null ? userType : UserType.player, guid(), roomId, webSocketContext.wsSettings.socketGuid)
+        const newWsSettings = webSocketContext.wsSettings
+        newWsSettings.roomId = roomId
+        if (userType !== null)
+            newWsSettings.userType = userType
+        webSocketContext.setWsSettings(newWsSettings)
     }, [])
 
     useEffect(() => {
-        if (metadataState.room)
-            document.title = `Borealis D&D, Room: ${metadataState.room}`
+        if (metadataState.roomName)
+            document.title = `Borealis D&D, Room: ${metadataState.roomName}`
         else
             document.title = 'Borealis D&D'
 
-        if (!webSocketContext.setWsSettings || !webSocketContext.wsSettings || !webSocketContext.setWs)
-            return
-
-        if ((metadataState.room !== '') && (settingsState.username !== '')) {
+        if ((metadataState.roomGuid !== '') && (metadataState.userGuid !== '')) {
             webSocketContext.setWsSettings({
                 ...webSocketContext.wsSettings,
-                room: metadataState.room,
-                username: settingsState.username,
-                isHost: metadataState.userType === UserType.host,
+                roomId: metadataState.roomGuid,
+                userGuid: metadataState.userGuid,
+                userType: metadataState.userType,
             })
 
             loadingContext.startLoadingTask(WEBSOCKET_OPEN_CONNECTION)
-            const newWebSocket = createWebSocket(metadataState.room, metadataState.userGuid, settingsState.username, metadataState.userType === UserType.host)
+            const newWebSocket = createWebSocket(metadataState.roomGuid, guid(), metadataState.userGuid, metadataState.userType)
             if (newWebSocket) {
                 const stopLoading = () => {
                     loadingContext.stopLoadingTask(WEBSOCKET_OPEN_CONNECTION)
@@ -66,7 +75,7 @@ const GameStateHandler = ({ metadataState, settingsState, setGameSettings }: Gam
                 loadingContext.stopLoadingTask(WEBSOCKET_OPEN_CONNECTION)
             }
         }
-    }, [ metadataState.room, settingsState.username, metadataState.userType ])
+    }, [ metadataState.roomGuid, settingsState.username, metadataState.userType ])
 
     return(
         <>

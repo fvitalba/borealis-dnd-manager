@@ -54,13 +54,13 @@ const ToolControls = ({ gameState, settingsState, setToolSettings, setDrawToolSe
 
     const resetFogOnCurrentMap = () => {
         resetFog(gameState.currentMapId)
-        if (webSocketContext.ws && webSocketContext.wsSettings)
+        if (webSocketContext.ws)
             pushFogReset(webSocketContext.ws, webSocketContext.wsSettings)
     }
 
     const resetDrawOnCurrentMap = () => {
         resetDraw(gameState.currentMapId)
-        if (webSocketContext.ws && webSocketContext.wsSettings)
+        if (webSocketContext.ws)
             pushDrawReset(webSocketContext.ws, webSocketContext.wsSettings)
     }
 

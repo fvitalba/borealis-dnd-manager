@@ -1,7 +1,6 @@
 import React, { useEffect, useState, ChangeEvent } from 'react'
 import { connect } from 'react-redux'
 import Character, { ClassNumberProperty } from '../classes/Character'
-import CharacterClass from '../enums/CharacterClass'
 import UserType from '../enums/UserType'
 import { pushDeleteCharacter, pushUpdateCharacter, useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
@@ -64,24 +63,22 @@ const CharacterStats = ({ toggleOnCharacterStats, characterState, userState, met
     }
 
     const saveCurrCharacter = () => {
-        if (webSocketContext.wsSettings) {
-            loadingContext.startLoadingTask(CHARACTER_SAVE)
-            updateCharacter(selectedCharacter)
-            saveCharacterToDatabase(webSocketContext.wsSettings, JSON.stringify(selectedCharacter))
-                .then(() => {
-                    loadingContext.stopLoadingTask(CHARACTER_SAVE)
-                    if (webSocketContext.ws && webSocketContext.wsSettings)
-                        pushUpdateCharacter(webSocketContext.ws, webSocketContext.wsSettings, selectedCharacter)
-                })
-                .catch(() => loadingContext.stopLoadingTask(CHARACTER_SAVE))
-        }
+        loadingContext.startLoadingTask(CHARACTER_SAVE)
+        updateCharacter(selectedCharacter)
+        saveCharacterToDatabase(webSocketContext.wsSettings, JSON.stringify(selectedCharacter))
+            .then(() => {
+                loadingContext.stopLoadingTask(CHARACTER_SAVE)
+                if (webSocketContext.ws)
+                    pushUpdateCharacter(webSocketContext.ws, webSocketContext.wsSettings, selectedCharacter)
+            })
+            .catch(() => loadingContext.stopLoadingTask(CHARACTER_SAVE))
     }
 
     const deleteCurrCharacter = () => {
         if (!window.confirm('Are you sure you want to delete the character?'))
             return
         deleteCharacter(selectedCharacter.guid)
-        if (webSocketContext.ws && webSocketContext.wsSettings)
+        if (webSocketContext.ws)
             pushDeleteCharacter(webSocketContext.ws, webSocketContext.wsSettings, selectedCharacter.guid)
     }
 

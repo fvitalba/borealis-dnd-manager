@@ -61,7 +61,7 @@ const MapConfig = ({ map, gameState, mapState, loadMap, updateMaps, deleteMap }:
                 loadingContext.stopLoadingTask(GAME_LOAD_MAP)
                 updateMaps(updatedMaps)
                 loadMap(map.id)
-                if (webSocketContext.ws && webSocketContext.wsSettings)
+                if (webSocketContext.ws)
                     pushMapState(webSocketContext.ws, webSocketContext.wsSettings, updatedMaps, map.id)
             })
             .catch((error) => {

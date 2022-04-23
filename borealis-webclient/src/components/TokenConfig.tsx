@@ -38,7 +38,7 @@ const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, 
 
     const deleteCurrToken = () => {
         deleteToken(token.guid)
-        if (webSocketContext.ws && webSocketContext.wsSettings)
+        if (webSocketContext.ws)
             deleteSingleToken(webSocketContext.ws, webSocketContext.wsSettings, token.guid)
     }
 
@@ -52,7 +52,7 @@ const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, 
         newToken.type = newType
         const newTokens = tokenState.tokens.map((gtoken) => gtoken.guid === newToken.guid ? newToken : gtoken)
         updateTokens(newTokens)
-        if (webSocketContext.ws && webSocketContext.wsSettings)
+        if (webSocketContext.ws)
             pushSingleToken(webSocketContext.ws, webSocketContext.wsSettings, newToken)
     }
 
@@ -62,7 +62,7 @@ const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, 
         newToken.condition = newCondition
         const newTokens = tokenState.tokens.map((gtoken) => gtoken.guid === newToken.guid ? newToken : gtoken)
         updateTokens(newTokens)
-        if (webSocketContext.ws && webSocketContext.wsSettings)
+        if (webSocketContext.ws)
             pushSingleToken(webSocketContext.ws, webSocketContext.wsSettings, newToken)
     }
 
@@ -72,7 +72,7 @@ const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, 
         newToken.setTokenSize(newSize)
         const newTokens = tokenState.tokens.map((gtoken) => gtoken.guid === newToken.guid ? newToken : gtoken)
         updateTokens(newTokens)
-        if (webSocketContext.ws && webSocketContext.wsSettings)
+        if (webSocketContext.ws)
             pushSingleToken(webSocketContext.ws, webSocketContext.wsSettings, newToken)
     }
 
@@ -82,7 +82,7 @@ const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, 
             value = -1
 
         updateTokenNumberValue(token.guid, 'mapId', value)
-        if (webSocketContext.ws && webSocketContext.wsSettings) {
+        if (webSocketContext.ws) {
             const newToken = token.copy()
             newToken.mapId = value
             pushSingleToken(webSocketContext.ws, webSocketContext.wsSettings, newToken)
@@ -91,7 +91,7 @@ const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, 
 
     const onToggle = (attributeKey: TokenBooleanProperty /*, e: MouseEvent<HTMLButtonElement>*/) => {
         toggleTokenValue(token.guid, attributeKey)
-        if (webSocketContext.ws && webSocketContext.wsSettings) {
+        if (webSocketContext.ws) {
             const newToken = token.copy()
             newToken.toggleValue(attributeKey)
             pushSingleToken(webSocketContext.ws, webSocketContext.wsSettings, newToken)
@@ -100,7 +100,7 @@ const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, 
 
     const onTextChange = (attributeKey: TokenTextProperty, e: ChangeEvent<HTMLInputElement>) => {
         updateTokenTextValue(token.guid, attributeKey, e.target.value)
-        if (webSocketContext.ws && webSocketContext.wsSettings) {
+        if (webSocketContext.ws) {
             const newToken = token.copy()
             newToken.setTextValue(attributeKey, e.target.value)
             pushSingleToken(webSocketContext.ws, webSocketContext.wsSettings, newToken)

@@ -21,7 +21,7 @@ const TokenTool = ({ toggleOnTokens, gameState, tokenState, metadataState, addTo
     const [newTokenName, setNewTokenName] = useState('')
 
     if (metadataState.userType !== UserType.host)
-        return null
+        return <></>
 
     const createToken = () => {
         if (!newTokenName)

@@ -2,9 +2,12 @@ import axios from 'axios'
 import { IWsSettings } from '../contexts/WebSocketProvider'
 
 const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
+const CHARACTER_API_URL = 'characters'
 const ROOM_API_URL = 'rooms'
-const USER_API_URL = 'room-users'
-const CHARACTER_API_URL = 'room-characters'
+const USER_API_URL = 'users'
+const MAP_API_URL = 'maps'
+const TOKEN_API_URL = 'tokens'
+const CHAT_API_URL = 'chats'
 const SOCKET_SERVER_PORT = process.env.PORT || process.env.REACT_APP_PORT || 8000
 
 const getUrlSchema = (selectedApi: string) => {
@@ -16,28 +19,47 @@ const getUrlSchema = (selectedApi: string) => {
         : `${protocol}://${host}/api/${selectedApi}/`
 }
 
-const usersUrl = (roomName: string): string => {
-    return getUrlSchema(USER_API_URL) + `?roomName=${roomName}`
+const charactersUrl = (roomId: string): string => {
+    return getUrlSchema(CHARACTER_API_URL) + `?roomId=${roomId}`
 }
 
-const roomUrl = (roomName: string): string => {
-    return getUrlSchema(ROOM_API_URL) + `${roomName}`
+const roomsUrl = (roomId: string): string => {
+    return getUrlSchema(ROOM_API_URL) + `${roomId}`
 }
 
-const charactersUrl = (roomName: string): string => {
-    return getUrlSchema(CHARACTER_API_URL) + `?roomName=${roomName}`
+const usersUrl = (roomId: string): string => {
+    return getUrlSchema(USER_API_URL) + `?roomId=${roomId}`
+}
+
+const mapsUrl = (roomId: string): string => {
+    return getUrlSchema(MAP_API_URL) + `?roomId=${roomId}`
+}
+
+const tokensUrl = (roomId: string): string => {
+    return getUrlSchema(TOKEN_API_URL) + `?roomId=${roomId}`
+}
+
+const chatsUrl = (roomId: string): string => {
+    return getUrlSchema(CHAT_API_URL) + `?roomId=${roomId}`
+}
+
+interface APIRequestParams {
+    fromSocketGuid: string,
+    fromUserGuid: string,
+    roomId: string,
+    payload: any,
 }
 
 export const saveRoomToDatabase = (wsSettings: IWsSettings, payload: any) => {
     return new Promise((resolve, reject) => {
-        const params = {
-            from: wsSettings.guid,
-            username: wsSettings.username,
-            room: wsSettings.room,
+        const params: APIRequestParams = {
+            fromSocketGuid: wsSettings.socketGuid,
+            fromUserGuid: wsSettings.userGuid,
+            roomId: wsSettings.roomId,
             payload: payload,
         }
 
-        axios.post(roomUrl(''), params)
+        axios.post(roomsUrl(''), params)
             .then((result) => {
                 resolve(result.data)
             })
@@ -49,7 +71,7 @@ export const saveRoomToDatabase = (wsSettings: IWsSettings, payload: any) => {
 
 export const getRoomFromDatabase = (wsSettings: IWsSettings) => {
     return new Promise((resolve, reject) => {
-        axios.get(roomUrl(wsSettings.room))
+        axios.get(roomsUrl(wsSettings.roomId))
             .then((result) => {
                 resolve(result)
             })
@@ -61,7 +83,7 @@ export const getRoomFromDatabase = (wsSettings: IWsSettings) => {
 
 export const getUsersFromDatabase = (wsSettings: IWsSettings) => {
     return new Promise ((resolve, reject) => {
-        axios.get(usersUrl(wsSettings.room))
+        axios.get(usersUrl(wsSettings.roomId))
             .then((result) => {
                 resolve(result.data)
             })
@@ -73,14 +95,14 @@ export const getUsersFromDatabase = (wsSettings: IWsSettings) => {
 
 export const saveCharacterToDatabase = (wsSettings: IWsSettings, payload: any) => {
     return new Promise((resolve, reject) => {
-        const params = {
-            from: wsSettings.guid,
-            username: wsSettings.username,
-            room: wsSettings.room,
+        const params: APIRequestParams = {
+            fromSocketGuid: wsSettings.socketGuid,
+            fromUserGuid: wsSettings.userGuid,
+            roomId: wsSettings.roomId,
             payload: payload,
         }
 
-        axios.post(charactersUrl(wsSettings.room), params)
+        axios.post(charactersUrl(wsSettings.roomId), params)
             .then((result) => {
                 resolve(result.data)
             })
@@ -92,7 +114,7 @@ export const saveCharacterToDatabase = (wsSettings: IWsSettings, payload: any) =
 
 export const getCharactersFromDatabase = (wsSettings: IWsSettings) => {
     return new Promise ((resolve, reject) => {
-        axios.get(charactersUrl(wsSettings.room))
+        axios.get(charactersUrl(wsSettings.roomId))
             .then((result) => {
                 resolve(result.data)
             })
