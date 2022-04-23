@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ChangeEvent } from 'react'
 import { connect } from 'react-redux'
 import Character from '../classes/Character'
 import UserType from '../enums/UserType'
@@ -18,7 +18,7 @@ interface SelectCharacterProps {
 }
 
 const SelectCharacter = ({ characterState, metadataState, settingsState, assignCharacter, addCharacter }: SelectCharacterProps) => {
-    const onCharacterSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onCharacterSelect = (e: ChangeEvent<HTMLSelectElement>) => {
         assignCharacter(e.target.value)
     }
 

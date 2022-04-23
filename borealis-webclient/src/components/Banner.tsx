@@ -1,7 +1,12 @@
 import React, { useState } from 'react'
 import BannerView from '../views/BannerView'
 
-const Banner = ({ bannerContent, linkToAction }: { bannerContent: string, linkToAction: string }) => {
+interface BannerProps {
+    bannerContent: string,
+    linkToAction: string,
+}
+
+const Banner = ({ bannerContent, linkToAction }: BannerProps) => {
     const [bannerState, setBannerState] = useState({
         hidden: false,
         content: bannerContent,

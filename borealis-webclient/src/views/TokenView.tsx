@@ -1,7 +1,7 @@
 import React, { Ref, MouseEvent } from 'react'
 import Token from '../classes/Token'
 
-interface DivStyle {
+interface AbsolutePosition {
     left: number,
     top: number,
 }
@@ -12,13 +12,13 @@ interface ImageStyle {
 }
 
 interface TokenViewProps {
-    divStyle: DivStyle,
+    divStyle: AbsolutePosition,
     token: Token,
     isSelected: boolean,
     classes: Array<string>,
     imgStyle: ImageStyle,
     labelRef: Ref<HTMLLabelElement>,
-    labelPosition: DivStyle,
+    labelPosition: AbsolutePosition,
     onMouseDown: (arg0: MouseEvent<HTMLDivElement>) => void,
 }
 

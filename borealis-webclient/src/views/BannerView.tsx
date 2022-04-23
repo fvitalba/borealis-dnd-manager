@@ -3,7 +3,7 @@ import Button from './Button'
 import { XAltOutlineIcon } from './Icons'
 
 interface BannerViewProps {
-    bannerContent: JSX.Element,
+    bannerContent: string,
     linkToAction: string,
     hidden: boolean,
     toggleHidden: () => void,

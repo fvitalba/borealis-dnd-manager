@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ChangeEvent, Ref, KeyboardEvent } from 'react'
 import DiceRollButton from '../../components/DiceRollButton'
 import Button from './../Button'
 import { PlaySolidIcon, XCircleOutlineIcon, ChatOutlineIcon, HelpCircleSolidIcon } from './../Icons'
@@ -24,11 +24,11 @@ interface ChatPanelViewProps {
     noOfCurrentUsers: number,
     users: Array<User>,
     currentMessage: string,
-    changeCurrentMessage: (arg0: React.ChangeEvent<HTMLInputElement>) => void,
+    changeCurrentMessage: (arg0: ChangeEvent<HTMLInputElement>) => void,
     addMessage: () => void,
     chatMessages: Array<Message>,
-    inputOnKeyDown: (arg0: React.KeyboardEvent) => void,
-    endOfMessagesRef: React.Ref<HTMLDivElement>,
+    inputOnKeyDown: (arg0: KeyboardEvent) => void,
+    endOfMessagesRef: Ref<HTMLDivElement>,
 }
 
 const ChatPanelView = ({ username, chatPanelHidden, toggleHidden, showHelp, toggleHelp, chatCommands, showUserHover, toggleUserHover, noOfCurrentUsers, users, currentMessage, changeCurrentMessage, addMessage, chatMessages, inputOnKeyDown, endOfMessagesRef }: ChatPanelViewProps) => {

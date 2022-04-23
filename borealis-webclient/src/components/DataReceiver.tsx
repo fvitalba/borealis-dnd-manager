@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react'
+import { useEffect, useCallback } from 'react'
 import { connect } from 'react-redux'
 import Path from '../classes/Path'
 import Game from '../classes/Game'

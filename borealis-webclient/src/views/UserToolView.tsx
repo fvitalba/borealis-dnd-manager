@@ -1,7 +1,29 @@
+import React from 'react'
 import Button from './Button'
-import { GlobeSolidIcon, CloudOffSolidIcon, CloudUploadSolidIcon, CloudDownloadSolidIcon, CursorSolidIcon, CursorOutlineIcon, LinkOutlineIcon } from './Icons'
+import {
+    GlobeSolidIcon,
+    CloudOffSolidIcon,
+    CloudUploadSolidIcon,
+    CloudDownloadSolidIcon,
+    CursorSolidIcon,
+    CursorOutlineIcon,
+    LinkOutlineIcon
+} from './Icons'
 
-const UserToolView = ({ isHost, initAsDev, toggleFog, saveGameInServer, loadGameFromServer, username, updateUsername, mouseIsShared, toggleShareMouse, copyUrlToClipboard }) => {
+interface UserToolViewProps {
+    isHost: boolean,
+    initAsDev: () => void,
+    toggleFog: () => void,
+    saveGameInServer: () => void,
+    loadGameFromServer: () => void,
+    username: string,
+    updateUsername: (arg0: string) => void,
+    mouseIsShared: boolean,
+    toggleShareMouse: () => void,
+    copyUrlToClipboard: () => void,
+}
+
+const UserToolView = ({ isHost, initAsDev, toggleFog, saveGameInServer, loadGameFromServer, username, updateUsername, mouseIsShared, toggleShareMouse, copyUrlToClipboard }: UserToolViewProps) => {
     return (
         <div className='user-tool-view'>
             <input title='User name' placeholder='User name' value={ username } onChange={ (e) => updateUsername(e.target.value) } className='control-panel-input' />

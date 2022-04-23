@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { ControlPanelState } from './ControlPanel'
 import Button from '../views/Button'
 
@@ -7,7 +7,7 @@ import Button from '../views/Button'
 interface ToggleButtonProps {
     propertyName: string,
     title: string,
-    value: React.ReactElement,
+    value: ReactElement,
     controlPanelState: ControlPanelState,
     setControlPanelState: (arg0: ControlPanelState) => void,
 }

@@ -1,8 +1,36 @@
+import { ChangeEvent } from 'react'
+import Character from '../classes/Character'
+import User from '../classes/User'
 import SelectCharacter from '../components/SelectCharacter'
-import { XSquareOutlineIcon, FloppyOutlineIcon } from './Icons'
+import CharacterClass from '../enums/CharacterClass'
 import Button from './Button'
+import { XSquareOutlineIcon, FloppyOutlineIcon } from './Icons'
 
-const CharacterStatsView = ({ showCharacterStats, isHost, character, users, modifiers, characterName, setCharacterName, setCharacterClass, onStatChange, onSelectUser, saveCharacter, deleteCharacter }) => {
+interface Modifiers {
+    strength: string,
+    dexterity: string,
+    constitution: string,
+    intelligence: string,
+    wisdom: string,
+    charisma: string,
+}
+
+interface CharacterStatsViewProps {
+    showCharacterStats: boolean,
+    isHost: boolean,
+    character: Character,
+    users: Array<User>,
+    modifiers: Modifiers,
+    characterName: string,
+    setCharacterName: (arg0: string) => void,
+    setCharacterClass: (arg0: CharacterClass, arg1: number) => void,
+    onStatChange: (arg0: string, arg1: ChangeEvent<HTMLInputElement>) => void,
+    onSelectUser: (arg0: ChangeEvent<HTMLSelectElement>) => void,
+    saveCharacter: () => void,
+    deleteCharacter: () => void,
+}
+
+const CharacterStatsView = ({ showCharacterStats, isHost, character, users, modifiers, characterName, setCharacterName, setCharacterClass, onStatChange, onSelectUser, saveCharacter, deleteCharacter }: CharacterStatsViewProps) => {
     return (
         <div className='character-stats-view-container'>
             <div className='character-stats-view-row'>
@@ -17,7 +45,7 @@ const CharacterStatsView = ({ showCharacterStats, isHost, character, users, modi
                                 <select value={ character.username } onChange={ onSelectUser } title='Which user' className='character-stats-view-select'>
                                     <option key='' value=''>None</option>
                                     { users.map((user) => (
-                                        <option key={ user.username } value={ user.username } >{ user.username }</option>
+                                        <option key={ user.name } value={ user.name } >{ user.name }</option>
                                     ))}
                                 </select>
                             </div>

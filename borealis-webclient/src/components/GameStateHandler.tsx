@@ -80,8 +80,8 @@ const GameStateHandler = ({ metadataState, settingsState, setGameSettings }: Gam
 
 const mapStateToProps = (state: StateInterface) => {
     return {
-        metadata: state.metadata,
-        settings: state.settings,
+        metadataState: state.metadata,
+        settingsState: state.settings,
     }
 }
 

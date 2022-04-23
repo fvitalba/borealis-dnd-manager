@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, RefObject } from 'react'
 import ColorPickerView from '../views/ColorPickerView'
 
 interface ColorPickerProps {
     currentColor: string,
-    colorPreviewRef: React.RefObject<HTMLButtonElement>,
+    colorPreviewRef: RefObject<HTMLButtonElement>,
     setDrawColor: (arg0: string) => void,
 }
 

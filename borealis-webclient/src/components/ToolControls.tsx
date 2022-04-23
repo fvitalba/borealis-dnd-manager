@@ -3,31 +3,37 @@ import { connect } from 'react-redux'
 import Game from '../classes/Game'
 import { pushDrawReset, pushFogReset, useWebSocket } from '../hooks/useSocket'
 import StateInterface from '../interfaces/StateInterface'
-import { setDrawToolSettings, setFogToolSettings, SettingsState } from '../reducers/settingsReducer'
+import { setDrawToolSettings, setFogToolSettings, SettingsState, setToolSettings } from '../reducers/settingsReducer'
 import { resetFog, resetDraw } from '../reducers/mapReducer'
 import ToolControlsView from '../views/ToolControlsView'
+import ControlTool from '../enums/Tool'
 
 interface ToolControlsProps {
     gameState: Game,
     settingsState: SettingsState,
+    setToolSettings: (arg0: ControlTool) => void,
     setDrawToolSettings: (arg0: string, arg1: number) => void,
     setFogToolSettings: (arg0: number, arg1: number) => void,
     resetFog: (arg0: number) => void,
     resetDraw: (arg0: number) => void,
 }
 
-const ToolControls = ({ gameState, settingsState, setDrawToolSettings, setFogToolSettings, resetFog, resetDraw }: ToolControlsProps) => {
+const ToolControls = ({ gameState, settingsState, setToolSettings, setDrawToolSettings, setFogToolSettings, resetFog, resetDraw }: ToolControlsProps) => {
     const [toolControlState, setToolControlState] = useState({
         showColorPicker: false,
     })
     const webSocketContext = useWebSocket()
-    const drawColorRef = useRef(null)
+    const drawColorRef = useRef<HTMLButtonElement>(null)
 
     const toggleColorPicker = () => {
         setToolControlState({
             ...toolControlState,
             showColorPicker: !toolControlState.showColorPicker,
         })
+    }
+
+    const setTool = (newTool: ControlTool) => {
+        setToolSettings(newTool)
     }
 
     const setDrawColor = (value: string) => {
@@ -61,6 +67,7 @@ const ToolControls = ({ gameState, settingsState, setDrawToolSettings, setFogToo
     return (
         <ToolControlsView
             tool={ settingsState.tool }
+            setTool={ setTool }
             drawColor={ settingsState.drawColor }
             setDrawColor={ setDrawColor }
             drawColorRef={ drawColorRef }
@@ -83,6 +90,7 @@ const mapStateToProps = (state: StateInterface) => {
 }
 
 const mapDispatchToProps = {
+    setToolSettings,
     setDrawToolSettings,
     setFogToolSettings,
     resetFog,

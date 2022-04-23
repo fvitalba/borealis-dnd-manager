@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, ChangeEvent } from 'react'
 import { connect } from 'react-redux'
 import Character from '../classes/Character'
 import CharacterClass from '../enums/CharacterClass'
@@ -56,13 +56,13 @@ const CharacterStats = ({ toggleOnCharacterStats, characterState, userState, met
         setSelectedCharacter(updatedCharacter)
     }
 
-    const onStatChange = (attributeName: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    const onStatChange = (attributeName: string, e: ChangeEvent<HTMLInputElement>) => {
         const updatedCharacter = selectedCharacter
         updatedCharacter.SetNumberAttributeValue(attributeName, parseInt(e.target.value))
         setSelectedCharacter(updatedCharacter)
     }
 
-    const onSelectUser = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onSelectUser = (e: ChangeEvent<HTMLSelectElement>) => {
         const updatedCharacter = selectedCharacter
         updatedCharacter.username = e.target.value
         setSelectedCharacter(updatedCharacter)

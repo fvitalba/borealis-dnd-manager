@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { CSSProperties } from 'react'
 // These icons were copied from https://github.com/la-moore/scarlab-icons/tree/master/react
 // I had to copy them, because they are written as JSX.Elements, whereas I need React Function Components
 const defaultWidth = '33'
@@ -6,7 +6,8 @@ const defaultHeight = '33'
 
 interface IconProps {
     className?: string,
-    props?: any,
+    id?: string,
+    style?: CSSProperties,
 }
 
 export const PlusCircleOutlineIcon = (props: IconProps) => {

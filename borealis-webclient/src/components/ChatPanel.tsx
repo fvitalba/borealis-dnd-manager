@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react'
+import React, { useEffect, useState, useCallback, useRef, ChangeEvent, KeyboardEvent } from 'react'
 import { connect } from 'react-redux'
 import Character from '../classes/Character'
 import Message from '../classes/Message'
@@ -68,14 +68,14 @@ const ChatPanel = ({ chatState, settingsState, userState, characterState, metada
         setShowUserHover(!showUserHover)
     }
 
-    const changeCurrentMessage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const changeCurrentMessage = (e: ChangeEvent<HTMLInputElement>) => {
         setChatPanelState({
             ...chatPanelState,
             currentMessage: e.target.value,
         })
     }
 
-    const inputOnKeyDown = (e: React.KeyboardEvent) => {
+    const inputOnKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'Enter') {
             addMessage()
         }

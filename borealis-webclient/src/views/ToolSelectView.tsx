@@ -13,7 +13,7 @@ const ToolSelectView = ({ isHost, fogEnabled }: ToolSelectViewProps) => {
         <div className='tool-select-view'>
             <ToolButton title='move' controlTool={ ControlTool.Move } value={ <LocationSolidIcon /> } />
             <ToolButton title='draw' controlTool={ ControlTool.Draw } value={ <EditSolidIcon /> } />
-            { (fogEnabled && isHost) ? <ToolButton title='fog' controlTool={ ControlTool.Fog } value={ <CloudOffSolidIcon /> } /> : null }
+            { (fogEnabled && isHost) ? <ToolButton title='fog' controlTool={ ControlTool.EreaseFog } value={ <CloudOffSolidIcon /> } /> : null }
         </div>
     )
 }

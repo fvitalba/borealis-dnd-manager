@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, ChangeEvent } from 'react'
 import { connect } from 'react-redux'
 import Map from '../classes/Map'
 import Game from '../classes/Game'
@@ -42,7 +42,7 @@ const MapConfig = ({ map, gameState, mapState, loadMap, updateMaps, deleteMap }:
     const loadingContext = useLoading()
     const isSelected = gameState.currentMapId === map.id
 
-    const onTextChange = (key: string, evt: React.ChangeEvent<HTMLInputElement>) => {
+    const onTextChange = (key: string, evt: ChangeEvent<HTMLInputElement>) => {
         setMapConfigState({
             ...mapConfigState,
             [key]: evt.target.value,

@@ -1,9 +1,10 @@
-import React, { CSSProperties, ForwardedRef, forwardRef } from 'react'
+import React, { CSSProperties, ForwardedRef, forwardRef, MouseEvent, ReactElement } from 'react'
 
 interface ButtonProps {
     title: string,
-    value: JSX.Element,
-    onClick: (arg0: React.MouseEvent<HTMLButtonElement>) => void,
+    value: ReactElement,
+    onClick: (arg0: MouseEvent<HTMLButtonElement>) => void,
+    id?: string,
     isSelected?: boolean,
     style?: CSSProperties,
     disabled?: boolean,
@@ -11,12 +12,12 @@ interface ButtonProps {
     customSelectedClass?: string,
 }
 
-const Button = forwardRef(({ title, value, onClick, isSelected, style, disabled, customClass, customSelectedClass }: ButtonProps, ref: ForwardedRef<HTMLButtonElement>): JSX.Element => {
+const Button = forwardRef(({ title, value, onClick, id, isSelected, style, disabled, customClass, customSelectedClass }: ButtonProps, ref: ForwardedRef<HTMLButtonElement>): JSX.Element => {
     const className = customClass ? customClass : 'button'
     const selectedClassName = customSelectedClass ? customSelectedClass : 'selected-button'
 
     return (
-        <button title={ title } onClick={ onClick } className={ isSelected ? selectedClassName : className } style={ style } disabled={ disabled } ref={ ref }>
+        <button id={ id } title={ title } onClick={ onClick } className={ isSelected ? selectedClassName : className } style={ style } disabled={ disabled } ref={ ref }>
             <span role='img' aria-label={ title }>{ value }</span>
         </button>
     )

@@ -89,7 +89,7 @@ const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, 
         }
     }
 
-    const onToggle = (attributeKey: TokenBooleanProperty /*, e: React.MouseEvent<HTMLButtonElement>*/) => {
+    const onToggle = (attributeKey: TokenBooleanProperty /*, e: MouseEvent<HTMLButtonElement>*/) => {
         toggleTokenValue(token.guid, attributeKey)
         if (webSocketContext.ws && webSocketContext.wsSettings) {
             const newToken = token.copy()
