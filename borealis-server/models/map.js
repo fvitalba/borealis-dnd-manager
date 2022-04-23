@@ -22,7 +22,7 @@ const pathSchema = new mongoose.Schema({
 })
 
 const mapSchema = new mongoose.Schema({
-    roomName: String,
+    roomId: String,
     name: String,
     id: Number,
     backgroundUrl: String,

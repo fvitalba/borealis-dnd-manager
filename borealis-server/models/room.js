@@ -8,7 +8,7 @@ mongoose.connect(url)
     })
 
 const gameSchema = new mongoose.Schema({
-    roomName: String,
+    roomId: String,
     currentMapId: Number,
     version: Number,
     width: Number,

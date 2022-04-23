@@ -3,12 +3,12 @@ import User from '../models/user.js'
 
 const userRouter = new Router()
 
-userRouter.get('/:roomName?:userGuid?', (request, result) => {
-    const roomName = request.params.roomName ? request.params.roomName : request.query.roomName
+userRouter.get('/:roomId?:userGuid?', (request, result) => {
+    const roomId = request.params.roomId ? request.params.roomId : request.query.roomId
     const userGuid = request.params.userGuid ? request.params.userGuid : request.query.userGuid
 
-    if (roomName) {
-        const queryParameters = userGuid ? { 'roomName': roomName, 'guid': userGuid, } : { 'roomName': roomName, }
+    if (roomId !== undefined && roomId !== '') {
+        const queryParameters = userGuid ? { 'roomId': roomId, 'guid': userGuid, } : { 'roomId': roomId, }
         User.find({ ...queryParameters, 'active': true, })
             .then((users) => {
                 result.json(users)

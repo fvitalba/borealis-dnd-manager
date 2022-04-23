@@ -20,7 +20,7 @@ const chatMessageSchema = new mongoose.Schema({
 })
 
 const chatSchema = new mongoose.Schema({
-    roomName: String,
+    roomId: String,
     messages: [chatMessageSchema],
     timestamp: Number,
 })

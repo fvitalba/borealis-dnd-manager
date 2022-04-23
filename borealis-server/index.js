@@ -56,20 +56,20 @@ wss.on('connection', (websocketConnection, connectionRequest) => {
     const [path, params] = connectionRequest?.url?.split('?')
     const connectionParams = queryString.parse(params)
     
-    websocketConnection.room = path.substring(1)
-    websocketConnection.guid = connectionParams.guid
-    websocketConnection.username = connectionParams.username
-    websocketConnection.isHost = connectionParams.isHost
-    saveUpdateRoomUser(websocketConnection.room, websocketConnection.guid, websocketConnection.username, websocketConnection.isHost)
+    websocketConnection.roomId = path.substring(1)
+    websocketConnection.socketGuid = connectionParams.socketGuid
+    websocketConnection.userGuid = connectionParams.userGuid
+    websocketConnection.userType = connectionParams.userType
+    saveUpdateRoomUser(websocketConnection.roomId, websocketConnection.userGuid, websocketConnection.userType)
     websocketConnection.on('message', (message) => {
-        saveUpdateRoomUser(websocketConnection.room, websocketConnection.guid, websocketConnection.username, websocketConnection.isHost)
+        saveUpdateRoomUser(websocketConnection.roomId, websocketConnection.userGuid, websocketConnection.userType)
         handleIncomingMessage(websocketConnection, message)
             .then(({ outgoingMessage, sendBackToSender }) => {
                 if (outgoingMessage) {
                     // Forward message to all other clients (for this room)
                     wss.clients.forEach(client => {
                         if (client.readyState === client.OPEN) {
-                            if (client.room !== websocketConnection.room)
+                            if (client.roomId !== websocketConnection.roomId)
                                 return // Don't send to other rooms
                             if ((client === websocketConnection) && !sendBackToSender)
                                 return // Don't send back to sender

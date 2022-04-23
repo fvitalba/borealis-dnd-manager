@@ -1,11 +1,11 @@
 import Chat from '../models/chat.js'
 
-export const saveUpdateRoomChat = async (room, newChat) => {
-    if (!room || !newChat)
+export const saveUpdateRoomChat = async (roomId, newChat) => {
+    if (!roomId || !newChat)
         return undefined
 
     return Chat.findOneAndUpdate(
-        { roomName: room }, 
+        { roomId: roomId }, 
         { ...newChat, timestamp: new Date(), }, 
         { new: true, upsert: true, }
     ).then((updatedChat) => {

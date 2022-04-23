@@ -1,11 +1,11 @@
 import Character from '../models/character.js'
 
-export const saveUpdateRoomCharacter = async (room, newCharacter) => {
-    if (!room || !newCharacter)
+export const saveUpdateRoomCharacter = async (roomId, newCharacter) => {
+    if (!roomId || !newCharacter)
         return undefined
 
     return Character.findOneAndUpdate(
-        { roomName: room, guid: newCharacter.guid }, 
+        { roomId: roomId, guid: newCharacter.guid }, 
         { ...newCharacter, timestamp: new Date(), }, 
         { new: true, upsert: true, }
     ).then((updatedCharacter) => {

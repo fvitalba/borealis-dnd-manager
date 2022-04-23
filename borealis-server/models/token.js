@@ -8,7 +8,7 @@ mongoose.connect(url)
     })
 
 const tokenSchema = new mongoose.Schema({
-    roomName: String,
+    roomId: String,
     guid: String,
     name: String,
     imageUrl: String,

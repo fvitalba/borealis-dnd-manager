@@ -8,7 +8,7 @@ mongoose.connect(url)
     })
 
 const userSchema = new mongoose.Schema({
-    roomName: String,
+    roomId: String,
     guid: String,
     name: String,
     type: String,

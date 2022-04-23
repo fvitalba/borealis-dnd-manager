@@ -4,12 +4,12 @@ import { saveUpdateRoomToken } from '../utils/tokenHandler.js'
 
 const tokenRouter = new Router()
 
-tokenRouter.get('/:roomName?:tokenGuid?', (request, result) => {
-    const roomName = request.params.roomName ? request.params.roomName : request.query.roomName
+tokenRouter.get('/:roomId?:tokenGuid?', (request, result) => {
+    const roomId = request.params.roomId ? request.params.roomId : request.query.roomId
     const tokenGuid = request.params.tokenGuid ? request.params.tokenGuid : request.query.tokenGuid
 
-    if (roomName) {
-        const queryParameters = tokenGuid ? { 'roomName': roomName, 'guid': tokenGuid, } : { 'roomName': roomName, }
+    if (roomId !== undefined && roomId !== '') {
+        const queryParameters = tokenGuid ? { 'roomId': roomId, 'guid': tokenGuid, } : { 'roomId': roomId, }
         Token.find(queryParameters)
             .then((tokens) => {
                 result.json(tokens)
@@ -23,10 +23,10 @@ tokenRouter.post('/', (request, response) => {
     const body = request.body
     if (body.payload === undefined)
         return response.status(400).json({ error: 'Request Payload is missing.' })
-    if (body.room === undefined)
+    if (body.roomId === undefined || body.roomId === '')
         return response.status(400).json({ error: 'Room was not specified.' })
 
-    saveUpdateRoomToken(body.room, JSON.parse(body.payload))
+    saveUpdateRoomToken(body.roomId, JSON.parse(body.payload))
         .then((result) => response.json(result))
 })
 

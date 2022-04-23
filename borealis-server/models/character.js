@@ -19,7 +19,7 @@ const characterHitDiceSchema = new mongoose.Schema({
 })
 
 const characterSchema = new mongoose.Schema({
-    roomName: String,
+    roomId: String,
     guid: String,
     name: String,
     strength: Number,

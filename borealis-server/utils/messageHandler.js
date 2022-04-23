@@ -7,7 +7,7 @@ export const handleIncomingMessage = (websocketConnection, incMessage) => {
         let outgoingMessage = undefined
         switch (parsedMessage.type) {
             case 'pushAssignCharacter':
-                assignCharacter(websocketConnection.room, parsedMessage.username, parsedMessage.characterGuid)
+                assignCharacter(websocketConnection.roomId, parsedMessage.userGuid, parsedMessage.characterGuid)
                 resolve({ outgoingMessage, sendBackToSender: false })
                 break
             case 'ping':

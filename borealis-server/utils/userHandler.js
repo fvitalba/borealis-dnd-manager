@@ -1,27 +1,27 @@
 import User from '../models/user.js'
 
-export const saveUpdateRoomUser = async (room, guid, username, isHost) => {
-    if (!room || !username)
+export const saveUpdateRoomUser = async (roomId, userGuid, userType) => {
+    if (!roomId || !userGuid)
         return undefined
 
-    if (!isHost)
-        isHost = false
+    if (userType === undefined || userType === '')
+        userType = 'player'
 
     return User.findOneAndUpdate(
-        { roomName: room, userName: username, }, 
-        { guid: guid, lastOnline: new Date(), isHost: isHost, active: true, }, 
+        { roomId: roomId, guid: userGuid, }, 
+        { lastOnline: new Date(), type: userType, active: true, }, 
         { new: true, upsert: true, }
     ).then((newUser) => {
         return newUser
     })
 }
 
-export const assignCharacter = async (room, username, characterGuid) => {
-    if (!room || !username || !characterGuid)
+export const assignCharacter = async (roomId, userGuid, characterGuid) => {
+    if (!roomId || !userGuid || !characterGuid)
         return undefined
 
     return User.findOneAndUpdate(
-        { roomName: room, userName: username, }, 
+        { roomId: roomId, guid: userGuid, }, 
         { characterGuid: characterGuid, active: true, }, 
         { new: true, upsert: false, }
     ).then((newUser) => {

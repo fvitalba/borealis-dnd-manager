@@ -4,11 +4,11 @@ import { saveUpdateRoom } from '../utils/roomHandler.js'
 
 const roomRouter = new Router()
 
-roomRouter.get('/:roomName?', (request, result) => {
-    const roomName = request.params.roomName ? request.params.roomName : request.query.roomName
+roomRouter.get('/:roomId?', (request, result) => {
+    const roomId = request.params.roomId ? request.params.roomId : request.query.roomId
     let currentRoom = undefined
-    if (roomName) {
-        Room.find({ 'roomName': roomName })
+    if (roomId !== undefined && roomId !== '') {
+        Room.find({ 'roomId': roomId })
             .then((rooms) => {
                 rooms.forEach((room) => {
                     if ((!currentRoom) || (currentRoom.version < room.version)) {
@@ -26,14 +26,14 @@ roomRouter.post('/', (request, response) => {
     const body = request.body
     if (body.payload === undefined)
         return response.status(400).json({ error: 'Request Payload is missing.' })
-    if (body.room === undefined)
+    if (body.roomId === undefined || body.roomId === '')
         return response.status(400).json({ error: 'Room was not specified.' })
 
-    saveUpdateRoom(body.room, JSON.parse(body.payload))
+    saveUpdateRoom(body.roomId, JSON.parse(body.payload))
         .then((result) => response.json(result))
 })
 
-roomRouter.delete('/:roomName?', (request, result) => {
+roomRouter.delete('/:roomId?', (request, result) => {
     /*
     const id = Number(request.params.id)
     notes = notes.filter(note => note.id !== id)
