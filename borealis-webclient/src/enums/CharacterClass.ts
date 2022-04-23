@@ -15,4 +15,8 @@ enum CharacterClass {
     'Blood Hunter' = 13,
 }
 
+export const CharacterClassArray = [CharacterClass.Barbarian, CharacterClass.Bard, CharacterClass.Cleric, CharacterClass.Druid, CharacterClass.Fighter, CharacterClass.Monk,
+    CharacterClass.Paladin, CharacterClass.Ranger, CharacterClass.Rogue, CharacterClass.Sorcerer, CharacterClass.Warlock, CharacterClass.Wizard, CharacterClass.Artificer,
+    CharacterClass['Blood Hunter']]
+
 export default CharacterClass

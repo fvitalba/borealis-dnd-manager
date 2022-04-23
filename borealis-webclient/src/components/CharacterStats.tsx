@@ -1,6 +1,6 @@
 import React, { useEffect, useState, ChangeEvent } from 'react'
 import { connect } from 'react-redux'
-import Character from '../classes/Character'
+import Character, { ClassNumberProperty } from '../classes/Character'
 import CharacterClass from '../enums/CharacterClass'
 import UserType from '../enums/UserType'
 import { pushDeleteCharacter, pushUpdateCharacter, useWebSocket } from '../hooks/useSocket'
@@ -10,7 +10,7 @@ import { updateCharacter, deleteCharacter, CharacterState } from '../reducers/ch
 import { UserState } from '../reducers/userReducer'
 import { MetadataState } from '../reducers/metadataReducer'
 import { saveCharacterToDatabase } from '../utils/apiHandler'
-import CharacterStatsView from '../views/CharacterStatsView'
+import CharacterStatsView from '../views/CharacterStats/CharacterStatsView'
 
 interface CharacterStatsProps {
     toggleOnCharacterStats: boolean,
@@ -50,13 +50,7 @@ const CharacterStats = ({ toggleOnCharacterStats, characterState, userState, met
         setSelectedCharacter(updatedCharacter)
     }
 
-    const setCharacterClass = (newClass: CharacterClass, level: number) => {
-        const updatedCharacter = selectedCharacter
-        updatedCharacter.setClassLevel(newClass, level)
-        setSelectedCharacter(updatedCharacter)
-    }
-
-    const onStatChange = (attributeName: string, e: ChangeEvent<HTMLInputElement>) => {
+    const onStatChange = (attributeName: ClassNumberProperty, e: ChangeEvent<HTMLInputElement>) => {
         const updatedCharacter = selectedCharacter
         updatedCharacter.SetNumberAttributeValue(attributeName, parseInt(e.target.value))
         setSelectedCharacter(updatedCharacter)
@@ -99,11 +93,11 @@ const CharacterStats = ({ toggleOnCharacterStats, characterState, userState, met
             showCharacterStats={ characterState.currentCharacterGuid !== '' }
             isHost={ metadataState.userType === UserType.host }
             character={ selectedCharacter }
+            setSelectedCharacter={ setSelectedCharacter }
             users={ userState.users }
             modifiers={ modifiers }
             characterName={ selectedCharacter.name }
             setCharacterName={ setCharacterName }
-            setCharacterClass={ setCharacterClass }
             onStatChange={ onStatChange }
             onSelectUser={ onSelectUser }
             saveCharacter={ saveCurrCharacter }

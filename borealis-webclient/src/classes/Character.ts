@@ -1,6 +1,9 @@
-import DiceType from '../enums/DiceType'
-import CharacterClass from '../enums/CharacterClass'
 import CharacterAttribute from '../enums/CharacterAttribute'
+import CharacterClass, { CharacterClassArray } from '../enums/CharacterClass'
+import DiceType, { DiceTypeArray } from '../enums/DiceType'
+
+export type ClassTextProperty = 'guid' | 'name' | 'username'
+export type ClassNumberProperty = 'strength' | 'dexterity' | 'constitution' | 'intelligence' | 'wisdom' | 'charisma' | 'proficiency' | 'armorclass' | 'passivePerception' | 'maxHealth' | 'currHealth' | 'tempHealth'
 
 export class CharacterClassLevel {
     public level: number
@@ -12,14 +15,16 @@ export class CharacterClassLevel {
     }
 }
 
+export type CharacterHitDiceProperty = 'numberOfDice' | 'remainingNoOfDice'
+
 export class CharacterHitDice {
     public numberOfDice: number
     public remainingNoOfDice: number
     public hitDiceType: DiceType
 
-    public constructor(newNumberOfDice: number, newHitDiceType: DiceType) {
+    public constructor(newNumberOfDice: number, newHitDiceType: DiceType, remainingNoOfDice?: number) {
         this.numberOfDice = newNumberOfDice
-        this.remainingNoOfDice = this.numberOfDice
+        this.remainingNoOfDice = remainingNoOfDice ? remainingNoOfDice : this.numberOfDice
         this.hitDiceType = newHitDiceType
     }
 }
@@ -123,49 +128,15 @@ class Character {
         }
     }
 
-    //TODO: retrieve attribute by using a type instead of a string
-    public SetNumberAttributeValue(attributeName: string, newAttributeValue: number) {
-        switch(attributeName.toUpperCase()) {
-        case 'MAXHEALTH':
-            this.maxHealth = newAttributeValue
-            break
-        case 'CURRHEALTH':
-            this.currHealth = newAttributeValue
-            break
-        case 'STRENGTH':
-            this.strength = newAttributeValue
-            break
-        case 'DEXTERITY':
-            this.dexterity = newAttributeValue
-            break
-        case 'CONSTITUTION':
-            this.constitution = newAttributeValue
-            break
-        case 'INTELLIGENCE':
-            this.intelligence = newAttributeValue
-            break
-        case 'WISDOM':
-            this.wisdom = newAttributeValue
-            break
-        case 'CHARISMA':
-            this.charisma = newAttributeValue
-            break
-        case 'PROFICIENCY':
-            this.proficiency = newAttributeValue
-            break
-        case 'ARMORCLASS':
-            this.armorclass = newAttributeValue
-            break
-        case 'PASSIVEPERCEPTION':
-            this.passivePerception = newAttributeValue
-            break
-        case 'TEMPHEALTH':
-            this.tempHealth = newAttributeValue
-            break
-        }
+    public SetNumberAttributeValue(attributeName: ClassNumberProperty, newAttributeValue: number) {
+        this[attributeName] = newAttributeValue
     }
 
-    public setClassLevel(newClass: CharacterClass, newLevel: number) {
+    public copy(): Character {
+        return this
+    }
+
+    public setAnyClassLevel(newClass: CharacterClass, newLevel: number) {
         const currentClass = this.class.filter((currClass) => currClass.class === newClass)
         const newClassLevel = new CharacterClassLevel(newClass, newLevel)
         let updatedClass = this.class
@@ -174,6 +145,86 @@ class Character {
         else
             updatedClass = this.class.concat(newClassLevel)
         this.class = updatedClass
+    }
+
+    public setSpecificClassLevel(newClass: CharacterClass, newLevel: number, index: number) {
+        this.class = this.class.map((classLevel, i) => {
+            if (index === i) {
+                return new CharacterClassLevel(newLevel, newClass)
+            } else {
+                return classLevel
+            }
+        })
+    }
+
+    public canAddClass(): boolean {
+        const firstAvailableClass = CharacterClassArray.filter((characterClass) => {
+            const currCharacterClass = this.class.filter((currCharClass) => currCharClass.class !== characterClass)
+            if (currCharacterClass.length === 0)
+                return true
+            else
+                return false
+        })
+        if (firstAvailableClass.length > 0) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    public addNewClass() {
+        const firstAvailableClass = CharacterClassArray.filter((characterClass) => {
+            const currCharacterClass = this.class.filter((currCharClass) => currCharClass.class !== characterClass)
+            if (currCharacterClass.length === 0)
+                return true
+            else
+                return false
+        })
+        if (firstAvailableClass.length > 0) {
+            this.class.push(new CharacterClassLevel(1, firstAvailableClass[0]))
+        } else {
+            throw new Error('No more classes available for character. All possible classes were assigned.')
+        }
+    }
+
+    public setSpecificHitDice(noOfDice: number, diceType: DiceType, index: number, remainingNoOfDice?: number) {
+        this.hitDice = this.hitDice.map((hitDice, i) => {
+            if (index === i) {
+                return new CharacterHitDice(noOfDice, diceType, remainingNoOfDice)
+            } else {
+                return hitDice
+            }
+        })
+    }
+
+    public canAddHitDice(): boolean {
+        const firstAvailableDiceType = DiceTypeArray.filter((diceType) => {
+            const currCharacterDiceType = this.hitDice.filter((currCharDiceType) => currCharDiceType.hitDiceType !== diceType)
+            if (currCharacterDiceType.length === 0)
+                return true
+            else
+                return false
+        })
+        if (firstAvailableDiceType.length > 0) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    public addNewHitDice() {
+        const firstAvailableDiceType = DiceTypeArray.filter((diceType) => {
+            const currCharacterDiceType = this.hitDice.filter((currCharDiceType) => currCharDiceType.hitDiceType !== diceType)
+            if (currCharacterDiceType.length === 0)
+                return true
+            else
+                return false
+        })
+        if (firstAvailableDiceType.length > 0) {
+            this.hitDice.push(new CharacterHitDice(1, firstAvailableDiceType[0]))
+        } else {
+            throw new Error('No more dice types available for Character. All possible dice types were assigned.')
+        }
     }
 
     public useHitDice(noOfDiceToUse: number, diceTypeToUse?: DiceType): number {

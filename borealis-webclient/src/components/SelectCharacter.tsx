@@ -7,7 +7,7 @@ import { addCharacter, assignCharacter, CharacterState } from '../reducers/chara
 import { MetadataState } from '../reducers/metadataReducer'
 import { SettingsState } from '../reducers/settingsReducer'
 import guid from '../utils/guid'
-import SelectCharacterView from '../views/SelectCharacterView'
+import SelectCharacterView from '../views/CharacterStats/SelectCharacterView'
 
 interface SelectCharacterProps {
     characterState: CharacterState,

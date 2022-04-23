@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from 'react'
-import Character from '../classes/Character'
-import Button from './Button'
-import { PlusSquareSolidIcon } from './Icons'
+import Character from '../../classes/Character'
+import Button from '../Button'
+import { PlusSquareSolidIcon } from '../Icons'
 
 interface SelectCharacterViewProps {
     characters: Array<Character>,

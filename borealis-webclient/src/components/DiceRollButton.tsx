@@ -42,10 +42,9 @@ const DiceRollButton = ({ settingsState, characterState, metadataState, addChatM
         }
     }
 
-    const rollDice = (diceType: DiceTypeType) => {
-        const diceTypeEnum = DiceType[diceType]
+    const rollDice = (diceType: DiceType) => {
         const playerInfo = getPlayerInfo()
-        const convertedMessage = convertChatMessage(settingsState.username, `/roll 1d${diceTypeEnum}`, currentCharacter, playerInfo)
+        const convertedMessage = convertChatMessage(settingsState.username, `/roll 1${diceType}`, currentCharacter, playerInfo)
         if ((convertedMessage.publicMessage.length > 0) || (convertedMessage.privateMessage.length > 0)) {
             addChatMessage(convertedMessage)
             if (webSocketContext.ws && webSocketContext.wsSettings && (convertedMessage.type !== MessageType.Error ))

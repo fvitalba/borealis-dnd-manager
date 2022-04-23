@@ -1,10 +1,11 @@
-import { ChangeEvent } from 'react'
-import Character from '../classes/Character'
-import User from '../classes/User'
-import SelectCharacter from '../components/SelectCharacter'
-import CharacterClass from '../enums/CharacterClass'
-import Button from './Button'
-import { XSquareOutlineIcon, FloppyOutlineIcon } from './Icons'
+import React, { ChangeEvent } from 'react'
+import Character, { ClassNumberProperty } from '../../classes/Character'
+import User from '../../classes/User'
+import CharacterClassLevelInput from '../../components/CharacterClassLevelInput'
+import CharacterHitDiceInput from '../../components/CharacterHitDiceInput'
+import SelectCharacter from '../../components/SelectCharacter'
+import Button from '../Button'
+import { XSquareOutlineIcon, FloppyOutlineIcon } from '../Icons'
 
 interface Modifiers {
     strength: string,
@@ -19,18 +20,18 @@ interface CharacterStatsViewProps {
     showCharacterStats: boolean,
     isHost: boolean,
     character: Character,
+    setSelectedCharacter: (arg0: Character) => void,
     users: Array<User>,
     modifiers: Modifiers,
     characterName: string,
     setCharacterName: (arg0: string) => void,
-    setCharacterClass: (arg0: CharacterClass, arg1: number) => void,
-    onStatChange: (arg0: string, arg1: ChangeEvent<HTMLInputElement>) => void,
+    onStatChange: (arg0: ClassNumberProperty, arg1: ChangeEvent<HTMLInputElement>) => void,
     onSelectUser: (arg0: ChangeEvent<HTMLSelectElement>) => void,
     saveCharacter: () => void,
     deleteCharacter: () => void,
 }
 
-const CharacterStatsView = ({ showCharacterStats, isHost, character, users, modifiers, characterName, setCharacterName, setCharacterClass, onStatChange, onSelectUser, saveCharacter, deleteCharacter }: CharacterStatsViewProps) => {
+const CharacterStatsView = ({ showCharacterStats, isHost, character, setSelectedCharacter, users, modifiers, characterName, setCharacterName, onStatChange, onSelectUser, saveCharacter, deleteCharacter }: CharacterStatsViewProps) => {
     return (
         <div className='character-stats-view-container'>
             <div className='character-stats-view-row'>
@@ -59,15 +60,8 @@ const CharacterStatsView = ({ showCharacterStats, isHost, character, users, modi
                             <label className='character-stats-label'>Name</label>
                             <input title='Character name' placeholder='Character name' value={ characterName } onChange={ (e) => setCharacterName(e.target.value) } className='character-stats-input' />
                         </div>
-                        <div className='character-stat-input-container'>
-                            <label className='character-stats-label'>Level</label>
-                            <input value={ character.level } placeholder='Level' onChange={ (e) => onStatChange('level', e) } type='number' min='0' max='20' step='1' title='level' className='w-12 character-stats-input' />
-                        </div>
-                        <div className='character-stat-input-container'>
-                            <label className='character-stats-label'>Class</label>
-                            <input title='Class' placeholder='Class' value={ character.class } onChange={ (e) => setCharacterClass(e.target.value) } className='character-stats-input' />
-                        </div>
                     </div>
+                    <CharacterClassLevelInput character={ character } setSelectedCharacter={ setSelectedCharacter } />
                     <div className='character-stats-view-row'>
                         <div className='character-stat-input-container'>
                             <label className='character-stats-label'>STR</label>
@@ -130,20 +124,7 @@ const CharacterStatsView = ({ showCharacterStats, isHost, character, users, modi
                             </div>
                         </div>
                     </div>
-                    <div className='character-stats-view-row'>
-                        <div className='character-stat-input-container'>
-                            <label className='character-stats-label'>Remaining Hit Dice</label>
-                            <input value={ character.currNoOfHitDice } placeholder='Remaining Hit Dice' onChange={ (e) => onStatChange('currNoOfHitDice', e) } type='number' min='0' max='20' step='1' title='currNoOfHitDice' className='w-12 character-stats-input' />
-                        </div>
-                        <div className='character-stat-input-container'>
-                            <label className='character-stats-label'>Max. Hit Dice</label>
-                            <input value={ character.maxNoOfHitDice } placeholder='Maximum Hit Dice' onChange={ (e) => onStatChange('maxNoOfHitDice', e) } type='number' min='0' max='20' step='1' title='maxNoOfHitDice' className='w-12 character-stats-input' />
-                        </div>
-                        <div className='character-stat-input-container'>
-                            <label className='character-stats-label'>Hit Dice Type</label>
-                            <input value={ character.hitDiceType } placeholder='Hit Dice Type' onChange={ (e) => onStatChange('hitDiceType', e) } type='number' min='0' max='20' step='1' title='hitDiceType' className='w-12 character-stats-input' />
-                        </div>
-                    </div>
+                    <CharacterHitDiceInput character={ character } setSelectedCharacter={ setSelectedCharacter } />
                 </div>
                 : null
             }

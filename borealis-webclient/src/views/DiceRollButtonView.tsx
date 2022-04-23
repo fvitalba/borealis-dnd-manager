@@ -1,5 +1,5 @@
 import React, { Ref } from 'react'
-import { DiceTypeArray, DiceTypeType } from '../enums/DiceType'
+import DiceType, { DiceTypeArray } from '../enums/DiceType'
 import Button from './Button'
 
 interface SelectorPosition {
@@ -8,7 +8,7 @@ interface SelectorPosition {
 }
 
 interface DiceRollButtonViewProps {
-    rollDice: (arg0: DiceTypeType) => void,
+    rollDice: (arg0: DiceType) => void,
     selectorPosition: SelectorPosition,
     showSelector: boolean,
     toggleSelector: () => void,
@@ -23,7 +23,7 @@ const DiceRollButtonView = ({ rollDice, selectorPosition, showSelector, toggleSe
                 ? <div className='dice-roll-selector-container' style={ selectorPosition } ref={ selectorRef }>
                     {
                         DiceTypeArray.map((diceType) =>
-                            <Button key={ diceType } title={ diceType } value={ <b>{ diceType }</b> } onClick={ () => rollDice(diceType) } customClass='dice-roll-button'></Button>
+                            <Button key={ diceType } title={ DiceType[diceType] } value={ <b>{ diceType }</b> } onClick={ () => rollDice(diceType) } customClass='dice-roll-button'></Button>
                         )
                     }
                 </div>
