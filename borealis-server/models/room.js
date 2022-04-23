@@ -7,61 +7,15 @@ mongoose.connect(url)
         console.log('error connecting to MongoDB:', error.message)
     })
 
-const mapSchema = new mongoose.Schema({
-    name: String,
-    id: Number,
-    imageUrl: String,
-    x: Number,
-    y: Number,
-    width: Number,
-    height: Number,
-    drawPaths: [mongoose.Schema.Types.Mixed],
-    fogPaths: [mongoose.Schema.Types.Mixed],
-})
-
-const tokenSchema = new mongoose.Schema({
-    guid: String,
-    name: String,
-    url: String,
-    mapId: Number,
-    x: Number,
-    y: Number,
-    ko: Boolean,
-    pc: Boolean,
-    width: Number,
-    height: Number,
-    size: String,
-    selected: false,
-    hidden: Boolean,
-    showLabel: Boolean,
-    x0: Number,
-    y0: Number,
-})
-
 const gameSchema = new mongoose.Schema({
-    mapId: Number,
-    gen: Number,
+    roomName: String,
+    currentMapId: Number,
+    version: Number,
     width: Number,
     height: Number,
     fogEnabled: Boolean,
-    maps: [mapSchema],
-    tokens: [tokenSchema],
-})
-
-const metadataSchema = new mongoose.Schema({
-    isHost: String,
-    room: String,
-    cursors: [],
-    lastX: Number,
-    lastY: Number,
-    downX: Number,
-    downY: Number,
-})
-
-const roomSchema = new mongoose.Schema({
-    game: gameSchema,
-    metadata: metadataSchema,
+    tokenSelected: Boolean,
     timestamp: Number,
 })
 
-export default mongoose.model('Room', roomSchema, 'room')
+export default mongoose.model('Room', gameSchema, 'room')

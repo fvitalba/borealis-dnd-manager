@@ -1,16 +1,17 @@
 import { Router } from 'express'
 import Room from '../models/room.js'
+import { saveUpdateRoom } from '../utils/roomHandler.js'
 
 const roomRouter = new Router()
 
 roomRouter.get('/:roomName?', (request, result) => {
-    const roomName = request.params.roomName
+    const roomName = request.params.roomName ? request.params.roomName : request.query.roomName
     let currentRoom = undefined
     if (roomName) {
-        Room.find({ 'metadata.room': roomName })
+        Room.find({ 'roomName': roomName })
             .then((rooms) => {
                 rooms.forEach((room) => {
-                    if ((!currentRoom) || (currentRoom.game.gen < room.game.gen)) {
+                    if ((!currentRoom) || (currentRoom.version < room.version)) {
                         currentRoom = room
                     }
                 })
@@ -28,14 +29,8 @@ roomRouter.post('/', (request, response) => {
     if (body.room === undefined)
         return response.status(400).json({ error: 'Room was not specified.' })
 
-    const room = new Room({
-        ...body.payload,
-        timestamp: new Date(),
-    })
-    room.save()
-        .then((result) => {
-            response.json(result)
-        })
+    saveUpdateRoom(body.room, JSON.parse(body.payload))
+        .then((result) => response.json(result))
 })
 
 roomRouter.delete('/:roomName?', (request, result) => {
