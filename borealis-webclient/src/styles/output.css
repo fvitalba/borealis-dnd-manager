@@ -1270,6 +1270,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-left: auto;
   margin-right: auto;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-content: center;
   align-items: center;
@@ -1278,6 +1279,24 @@ Ensure the default browser behavior of the `hidden` attribute.
   z-index: 130;
   --tw-text-opacity: 1;
   color: rgb(209 213 219 / var(--tw-text-opacity));
+}
+
+.loading-task-list {
+  text-align: center;
+  align-content: center;
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity));
+  font-weight: 800;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.25rem;
+}
+
+.loading-task {
+  display: flex;
+  flex-direction: row;
 }
 
 .selected-button {

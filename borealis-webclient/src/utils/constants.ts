@@ -1,3 +1,5 @@
+import { CHARACTER_SAVE, GAME_LOAD_MAP, GAME_REQUEST_REFRESH, WEBSOCKET_OPEN_CONNECTION } from './loadingTasks'
+
 export interface ChatCommand {
     command: string,
     shortcut: string,
@@ -61,3 +63,22 @@ export const ColorSelections: Array<ColorSelection> = [{
     bg: 'bg-neutral-50',
     css: '#fafafa',
 }]
+
+export const LoadingTaskDescriptions = [
+    {
+        code: WEBSOCKET_OPEN_CONNECTION,
+        description: 'Connecting to server',
+    },
+    {
+        code: CHARACTER_SAVE,
+        description: 'Saving character',
+    },
+    {
+        code: GAME_REQUEST_REFRESH,
+        description: 'Requesting update from host',
+    },
+    {
+        code: GAME_LOAD_MAP,
+        description: 'Loading Map',
+    }
+]

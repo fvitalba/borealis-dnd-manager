@@ -18,6 +18,7 @@ import { MetadataState, updateCursor } from '../reducers/metadataReducer'
 import { SettingsState } from '../reducers/settingsReducer'
 import { assignCharacter, assignCharacterToUser, CharacterState, setCharacters, updateCharacter } from '../reducers/characterReducer'
 import { getMap } from '../utils/mapHandler'
+import { GAME_REQUEST_REFRESH } from '../utils/loadingTasks'
 
 interface DataReceiverProps {
     gameState: Game,
@@ -174,8 +175,7 @@ const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settings
                 if (assignedCharacter && (!assignedCharacter.isEmpty())) {
                     assignCharacter(assignedCharacter.guid)
                 }
-                if (loadingContext.setIsLoading)
-                    loadingContext.setIsLoading(false)
+                loadingContext.stopLoadingTask(GAME_REQUEST_REFRESH)
             }
             break
         case 'requestRefresh': // refresh request from player
@@ -191,8 +191,7 @@ const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settings
                 updateMaps(data.mapState.maps)
                 updateTokens(data.tokenState.tokens)
                 setCharacters(data.characterState.characters)
-                if (loadingContext.setIsLoading)
-                    loadingContext.setIsLoading(false)
+                loadingContext.stopLoadingTask(GAME_REQUEST_REFRESH)
             }
             break
         case 'sendChatMessage':

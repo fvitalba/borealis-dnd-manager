@@ -11,6 +11,7 @@ import { CharacterState } from '../reducers/characterReducer'
 import { TokenState } from '../reducers/tokenReducer'
 import { MapState } from '../reducers/mapReducer'
 import ControlPanelView from '../views/ControlPanelView'
+import { GAME_REQUEST_REFRESH } from '../utils/loadingTasks'
 
 export interface ControlPanelState {
     hidden: boolean,
@@ -58,8 +59,7 @@ const ControlPanel = ({ metadataState, gameState, mapState, tokenState, chatStat
 
     const socketRequestRefresh = () => {
         if (webSocketContext.ws && webSocketContext.wsSettings) {
-            if (loadingContext.setIsLoading)
-                loadingContext.setIsLoading(true)
+            loadingContext.startLoadingTask(GAME_REQUEST_REFRESH)
             requestRefresh(webSocketContext.ws, webSocketContext.wsSettings)
         }
     }

@@ -1,3 +1,9 @@
+const DefaultGameState = () => {
+    return null
+}
+
+export default DefaultGameState
+
 /*
 import Game from '../classes/Game'
 export const DefaultGameState = (): Game => {

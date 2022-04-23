@@ -1,6 +1,7 @@
-import React, { useEffect, useState, createContext } from 'react'
+import React, { useEffect, useState, createContext, ReactElement } from 'react'
 import { useLoading } from '../hooks/useLoading'
 import guid from '../utils/guid'
+import { WEBSOCKET_OPEN_CONNECTION } from '../utils/loadingTasks'
 
 const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
 const SOCKET_RECONNECTION_TIMEOUT = 2500
@@ -45,7 +46,7 @@ export interface IWebSocketContext {
 
 export const WebSocketContext = createContext<IWebSocketContext>({ ws: null })
 
-const WebSocketProvider = ({ children } : { children: JSX.Element }) => {
+const WebSocketProvider = ({ children } : { children: ReactElement }) => {
     const [wsSettings, setWsSettings] = useState<IWsSettings>({
         guid: guid(),
         username: '',
@@ -58,8 +59,7 @@ const WebSocketProvider = ({ children } : { children: JSX.Element }) => {
     useEffect(() => {
         const onClose = () => {
             setTimeout(() => {
-                if (loadingContext.setIsLoading)
-                    loadingContext.setIsLoading(true)
+                loadingContext.startLoadingTask(WEBSOCKET_OPEN_CONNECTION)
                 console.debug('Socket Timeout, recreating WebSocket')
                 setWs(createWebSocket(wsSettings.room, wsSettings.guid, wsSettings.username, wsSettings.isHost))
             }, SOCKET_RECONNECTION_TIMEOUT)
@@ -67,13 +67,11 @@ const WebSocketProvider = ({ children } : { children: JSX.Element }) => {
 
         const onOpen = () => {
             // When the WebSocket is open, close the loading screen
-            if (loadingContext.setIsLoading)
-                loadingContext.setIsLoading(false)
+            loadingContext.stopLoadingTask(WEBSOCKET_OPEN_CONNECTION)
         }
 
         const onError = (err: Event) => {
-            if (loadingContext.setIsLoading)
-                loadingContext.setIsLoading(false)
+            loadingContext.stopLoadingTask(WEBSOCKET_OPEN_CONNECTION)
             console.error('WebSocket could not be created. Error: ', err)
         }
 

@@ -14,6 +14,7 @@ import { MapState, updateMaps } from '../reducers/mapReducer'
 import { MetadataState } from '../reducers/metadataReducer'
 import { SettingsState } from '../reducers/settingsReducer'
 import { TokenState, updateTokens, toggleTokenValue } from '../reducers/tokenReducer'
+import { GAME_REQUEST_REFRESH } from '../utils/loadingTasks'
 import { getMap } from '../utils/mapHandler'
 import GameView from '../views/GameView'
 
@@ -378,11 +379,10 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
 
     useEffect(() => {
         if ((metadataState.userType === UserType.player) && (webSocketContext.ws && webSocketContext.wsSettings)) {
-            if (loadingContext.setIsLoading)
-                loadingContext.setIsLoading(true)
+            loadingContext.startLoadingTask(GAME_REQUEST_REFRESH)
             requestRefresh(webSocketContext.ws, webSocketContext.wsSettings)
         }
-    }, [ webSocketContext, loadingContext.setIsLoading, metadataState.userType ])
+    }, [ webSocketContext, loadingContext, metadataState.userType ])
 
     /****************************************************
      * Component Render                                 *

@@ -8,6 +8,7 @@ import StateInterface from '../interfaces/StateInterface'
 import { loadMap } from '../reducers/gameReducer'
 import { MapState, updateMaps, deleteMap } from '../reducers/mapReducer'
 import MapConfigView from '../views/MapConfigView'
+import { GAME_LOAD_MAP } from '../utils/loadingTasks'
 
 export interface MapConfigState {
     id: number,
@@ -50,16 +51,14 @@ const MapConfig = ({ map, gameState, mapState, loadMap, updateMaps, deleteMap }:
     }
 
     const load = () => {
-        if (loadingContext.setIsLoading)
-            loadingContext.setIsLoading(true)
+        loadingContext.startLoadingTask(GAME_LOAD_MAP)
         retrieveImageSize(mapConfigState.imageUrl)
             .then((dimensions) => {
                 const updatedMaps = mapState.maps.map((currMap) => {
                     const newMap = new Map(currMap.id, currMap.name, mapConfigState.imageUrl, currMap.x, currMap.y, dimensions.width, dimensions.height, currMap.drawPaths, currMap.fogPaths)
                     return map.id === currMap.id ? newMap : currMap
                 })
-                if (loadingContext.setIsLoading)
-                    loadingContext.setIsLoading(false)
+                loadingContext.stopLoadingTask(GAME_LOAD_MAP)
                 updateMaps(updatedMaps)
                 loadMap(map.id)
                 if (webSocketContext.ws && webSocketContext.wsSettings)
@@ -67,8 +66,7 @@ const MapConfig = ({ map, gameState, mapState, loadMap, updateMaps, deleteMap }:
             })
             .catch((error) => {
                 console.error(error)
-                if (loadingContext.setIsLoading)
-                    loadingContext.setIsLoading(false)
+                loadingContext.stopLoadingTask(GAME_LOAD_MAP)
             })
     }
 

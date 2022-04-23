@@ -6,6 +6,7 @@ import StateInterface from '../interfaces/StateInterface'
 import { MetadataState, setGameSettings } from '../reducers/metadataReducer'
 import { setUsername } from '../reducers/settingsReducer'
 import { getRoomFromDatabase } from '../utils/apiHandler'
+import guid from '../utils/guid'
 import GameSetupView from '../views/GameSetupView'
 
 interface GameSetupState {
@@ -70,6 +71,9 @@ const GameSetup = ({ metadataState, setGameSettings, setUsername }: GameSetupPro
     const onSubmitSetup = () => {
         // TODO: Handle loading from database
         // check gameLoadHandler.ts
+        if (gameSetupState.userType)
+            setGameSettings(gameSetupState.userType, guid(), gameSetupState.roomName)
+        setUsername(gameSetupState.userName)
         saveSettingsToLocalStorage()
     }
 
@@ -118,7 +122,7 @@ const GameSetup = ({ metadataState, setGameSettings, setUsername }: GameSetupPro
                     searchingRoom: true,
                 })
             getRoomFromDatabase(tempWsSettings)
-                .then((result) => {
+                .then((result: any) => {
                     if (result.data) {
                         setRoomLookupState({
                             roomFound: true,

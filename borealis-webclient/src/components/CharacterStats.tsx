@@ -11,6 +11,7 @@ import { UserState } from '../reducers/userReducer'
 import { MetadataState } from '../reducers/metadataReducer'
 import { saveCharacterToDatabase } from '../utils/apiHandler'
 import CharacterStatsView from '../views/CharacterStats/CharacterStatsView'
+import { CHARACTER_SAVE } from '../utils/loadingTasks'
 
 interface CharacterStatsProps {
     toggleOnCharacterStats: boolean,
@@ -63,20 +64,16 @@ const CharacterStats = ({ toggleOnCharacterStats, characterState, userState, met
     }
 
     const saveCurrCharacter = () => {
-        if (webSocketContext.wsSettings && loadingContext.setIsLoading) {
-            loadingContext.setIsLoading(true)
+        if (webSocketContext.wsSettings) {
+            loadingContext.startLoadingTask(CHARACTER_SAVE)
             updateCharacter(selectedCharacter)
             saveCharacterToDatabase(webSocketContext.wsSettings, JSON.stringify(selectedCharacter))
                 .then(() => {
-                    if (loadingContext.setIsLoading)
-                        loadingContext.setIsLoading(false)
+                    loadingContext.stopLoadingTask(CHARACTER_SAVE)
                     if (webSocketContext.ws && webSocketContext.wsSettings)
                         pushUpdateCharacter(webSocketContext.ws, webSocketContext.wsSettings, selectedCharacter)
                 })
-                .catch(() => {
-                    if (loadingContext.setIsLoading)
-                        loadingContext.setIsLoading(false)
-                })
+                .catch(() => loadingContext.stopLoadingTask(CHARACTER_SAVE))
         }
     }
 

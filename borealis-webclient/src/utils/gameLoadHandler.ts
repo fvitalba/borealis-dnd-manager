@@ -1,3 +1,9 @@
+const loadGame = () => {
+    return null
+}
+
+export default loadGame
+
 //TODO: Handle loading from Database, even for players
 /*
 const onSubmitSetup = () => {
