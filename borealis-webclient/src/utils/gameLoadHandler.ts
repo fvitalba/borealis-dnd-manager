@@ -161,22 +161,18 @@ const loadCharactersFromDatabase = async (webSocketContext: IWebSocketContext, l
     })
 }
 
-const loadUsersFromDatabase = async (webSocketContext: IWebSocketContext, loadingContext: ILoadingContext): Promise<UserState | null> => {
+export const loadUsersFromDatabase = async (webSocketContext: IWebSocketContext, loadingContext: ILoadingContext): Promise<UserState | null> => {
     return new Promise((resolve, reject) => {
         // loads the game from database
         loadingContext.startLoadingTask(API_LOAD_USERS)
         getUsersFromDatabase(webSocketContext.wsSettings)
             .then((result) => {
-                /*
                 const newUsers = result.map((dbUser) => User.fromDbSchema(dbUser))
                 const newUserState = {
                     users: newUsers,
                 }
                 loadingContext.stopLoadingTask(API_LOAD_USERS)
                 resolve(newUserState)
-                */
-                loadingContext.stopLoadingTask(API_LOAD_USERS)
-                return []
             })
             .catch(() => {
                 loadingContext.stopLoadingTask(API_LOAD_USERS)

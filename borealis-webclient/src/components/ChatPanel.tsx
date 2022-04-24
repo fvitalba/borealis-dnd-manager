@@ -13,9 +13,10 @@ import { SettingsState } from '../reducers/settingsReducer'
 import { CharacterState } from '../reducers/characterReducer'
 import { MetadataState } from '../reducers/metadataReducer'
 import { convertChatMessage } from '../utils/commandHandler'
-import { getUsersFromDatabase } from '../utils/apiHandler'
 import { ChatCommands } from '../utils/constants'
 import ChatPanelView from '../views/ChatPanel/ChatPanelView'
+import { loadUsersFromDatabase } from '../utils/gameLoadHandler'
+import { useLoading } from '../hooks/useLoading'
 
 interface ChatPanelState {
     hidden: boolean,
@@ -46,6 +47,8 @@ const ChatPanel = ({ chatState, settingsState, userState, characterState, metada
     const [showUserHover, setShowUserHover] = useState(false)
     const endOfMessagesRef = useRef<HTMLDivElement>(null)
     const webSocketContext = useWebSocket()
+    const loadingContext = useLoading()
+
     const currentCharacter = characterState.currentCharacterGuid
         ? characterState.characters.filter((currCharacter) => currCharacter.guid === characterState.currentCharacterGuid)[0]
         : new Character('', '', 0)
@@ -111,18 +114,11 @@ const ChatPanel = ({ chatState, settingsState, userState, characterState, metada
     }
 
     const loadUsers = useCallback(() => {
-        /*
-        if (webSocketContext.wsSettings.roomId !== '') {
-            getUsersFromDatabase(webSocketContext.wsSettings)
-                .then((result: any) => {
-                    const users: Array<User> = result
-                    setUsersFromAPI(users)
-                })
-                .catch((error) => {
-                    console.error(error)
-                })
-        }
-        */
+        loadUsersFromDatabase(webSocketContext, loadingContext)
+            .then((result) => {
+                if (result)
+                    setUsersFromAPI(result.users)
+            })
     }, [ webSocketContext, chatPanelState, setChatPanelState ])
 
     useEffect(() => {
@@ -130,7 +126,7 @@ const ChatPanel = ({ chatState, settingsState, userState, characterState, metada
     }, [ chatState.messages ])
 
     useEffect(() => {
-        const interval = setInterval(() => loadUsers(), 5000)
+        const interval = setInterval(() => loadUsers(), 30000)
         return () => {
             clearInterval(interval)
         }
