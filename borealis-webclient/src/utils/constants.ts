@@ -9,7 +9,13 @@ import {
     CHARACTER_SAVE,
     GAME_LOAD_MAP,
     GAME_REQUEST_REFRESH,
-    WEBSOCKET_OPEN_CONNECTION
+    WEBSOCKET_OPEN_CONNECTION,
+    API_SAVE_ROOM,
+    API_SAVE_MAPS,
+    API_SAVE_TOKENS,
+    API_SAVE_CHAT,
+    API_SAVE_CHARACTERS,
+    API_SAVE_USERS
 } from './loadingTasks'
 
 export interface ChatCommand {
@@ -120,5 +126,29 @@ export const LoadingTaskDescriptions = [
     {
         code: API_AUTHENTICATING_USER,
         description: 'Authenticating user',
+    },
+    {
+        code: API_SAVE_ROOM,
+        description: 'Saving Room to Database',
+    },
+    {
+        code: API_SAVE_MAPS,
+        description: 'Saving Maps to Database',
+    },
+    {
+        code: API_SAVE_TOKENS,
+        description: 'Saving Tokens to Database',
+    },
+    {
+        code: API_SAVE_CHAT,
+        description: 'Saving Chat to Database',
+    },
+    {
+        code: API_SAVE_CHARACTERS,
+        description: 'Saving Characters to Database',
+    },
+    {
+        code: API_SAVE_USERS,
+        description: 'Saving Users to Database',
     }
 ]

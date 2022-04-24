@@ -17,12 +17,13 @@ import { TokenState, updateTokens } from '../reducers/tokenReducer'
 import { saveRoomToDatabase } from '../utils/apiHandler'
 import UserToolView from '../views/UserToolView'
 import loadAllFromDatabase from '../utils/gameLoadHandler'
-import { setUsersFromAPI } from '../reducers/userReducer'
+import { setUsersFromAPI, UserState } from '../reducers/userReducer'
 import Token from '../classes/Token'
 import Message from '../classes/Message'
 import Map from '../classes/Map'
 import Character from '../classes/Character'
 import User from '../classes/User'
+import saveAllToDatabase from '../utils/gameSaveHandler'
 
 const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
 const REACT_APP_PORT = 3000
@@ -34,6 +35,7 @@ interface UserToolProps {
     tokenState: TokenState,
     chatState: ChatState,
     characterState: CharacterState,
+    userState: UserState,
     metadataState: MetadataState,
     settingsState: SettingsState,
     setFogEnabled: (arg0: boolean) => void,
@@ -50,7 +52,7 @@ interface UserToolProps {
     setUsersFromAPI: (arg0: Array<User>) => void,
 }
 
-const UserTool = ({ toggleOnUser, gameState, mapState, tokenState, chatState, characterState, metadataState, settingsState, setFogEnabled, incrementVersion, setUsername, toggleMousesharing, setToolSettings, overwriteGame, updateMaps, updateTokens, overwriteChat, setCharacters, assignCharacter, setUsersFromAPI }: UserToolProps) => {
+const UserTool = ({ toggleOnUser, gameState, mapState, tokenState, chatState, characterState, userState, metadataState, settingsState, setFogEnabled, incrementVersion, setUsername, toggleMousesharing, setToolSettings, overwriteGame, updateMaps, updateTokens, overwriteChat, setCharacters, assignCharacter, setUsersFromAPI }: UserToolProps) => {
     const webSocketContext = useWebSocket()
     const loadingContext = useLoading()
 
@@ -87,28 +89,29 @@ const UserTool = ({ toggleOnUser, gameState, mapState, tokenState, chatState, ch
     }
 
     const saveGameInServer = () => {
-        //TODO: Reenable saving of game
-        /*
-        setIsLoading(true)
-        incrementGen()
-        const json = toJson(game, metadata)
-        saveRoomToDatabase(wsSettings, json)
-            .then(() => {
-                // result here contains the saved room
-                setIsLoading(false)
+        const dbState = {
+            gameState: gameState,
+            mapState: mapState,
+            tokenState: tokenState,
+            chatState: chatState,
+            characterState: characterState,
+            userState: userState,
+        }
+        saveAllToDatabase(webSocketContext, loadingContext, dbState)
+            .then((result) => {
+                if (!result.roomSaved || !result.mapsSaved || !result.tokensSaved || !result.chatSaved || !result.charactersSaved || !result.usersSaved)
+                    throw new Error(`Attention! Not everything was saved. Look at this object to find out what failed: ${result}`)
+                incrementVersion()
             })
-            .catch((error) => {
-                setIsLoading(false)
-                console.error(error)
-            })
-        */
     }
 
     const loadGameFromServer = () => {
         loadAllFromDatabase(webSocketContext, loadingContext)
             .then((dbState) => {
-                if (dbState.gameState)
+                if (dbState.gameState) {
                     overwriteGame(dbState.gameState)
+                    incrementVersion()
+                }
                 if (dbState.mapState)
                     updateMaps(dbState.mapState.maps)
                 if (dbState.tokenState)
@@ -158,6 +161,7 @@ const mapStateToProps = (state: StateInterface) => {
         characterState: state.character,
         metadataState: state.metadata,
         settingsState: state.settings,
+        userState: state.user,
     }
 }
 

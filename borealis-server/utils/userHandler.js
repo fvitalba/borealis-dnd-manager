@@ -1,6 +1,7 @@
 import User from '../models/user.js'
+import RoomUser from '../models/roomUser.js'
 
-export const saveUpdateRoomUser = async (user) => {
+export const saveUpdateUser = async (user) => {
     if (!user)
         return undefined
 
@@ -14,4 +15,11 @@ export const saveUpdateRoomUser = async (user) => {
     ).then((newUser) => {
         return newUser
     })
+}
+
+export const saveUpdateRoomUsers = async (roomUsers) => {
+    if (!roomUsers)
+        return undefined
+
+    //TODO: boh, dunno
 }

@@ -8,7 +8,7 @@ import StateInterface from '../interfaces/StateInterface'
 import { updateCharacter, deleteCharacter, CharacterState } from '../reducers/characterReducer'
 import { UserState } from '../reducers/userReducer'
 import { MetadataState } from '../reducers/metadataReducer'
-import { saveCharacterToDatabase } from '../utils/apiHandler'
+import { saveCharactersToDatabase } from '../utils/apiHandler'
 import CharacterStatsView from '../views/CharacterStats/CharacterStatsView'
 import { CHARACTER_SAVE } from '../utils/loadingTasks'
 
@@ -65,7 +65,7 @@ const CharacterStats = ({ toggleOnCharacterStats, characterState, userState, met
     const saveCurrCharacter = () => {
         loadingContext.startLoadingTask(CHARACTER_SAVE)
         updateCharacter(selectedCharacter)
-        saveCharacterToDatabase(webSocketContext.wsSettings, [selectedCharacter])
+        saveCharactersToDatabase(webSocketContext.wsSettings, [selectedCharacter])
             .then(() => {
                 loadingContext.stopLoadingTask(CHARACTER_SAVE)
                 if (webSocketContext.ws)

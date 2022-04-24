@@ -47,8 +47,7 @@ const loadAllFromDatabase = async (webSocketContext: IWebSocketContext, loadingC
                 chatState: chatResult,
                 characterState: charactersResult,
                 usersState: usersResult,
-            }
-        })
+            }})
         .catch(() => {
             return {
                 gameState: null,
@@ -57,8 +56,7 @@ const loadAllFromDatabase = async (webSocketContext: IWebSocketContext, loadingC
                 chatState: null,
                 characterState: null,
                 usersState: null,
-            }
-        })
+            }})
 }
 
 const loadRoomFromDatabase = async (webSocketContext: IWebSocketContext, loadingContext: ILoadingContext): Promise<Game | null> => {

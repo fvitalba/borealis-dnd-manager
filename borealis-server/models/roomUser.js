@@ -7,7 +7,8 @@ mongoose.connect(url)
         console.log('error connecting to MongoDB:', error.message)
     })
 
-const userSchema = new mongoose.Schema({
+const roomUserSchema = new mongoose.Schema({
+    roomId: String,
     guid: String,
     name: String,
     type: Number,
@@ -17,4 +18,4 @@ const userSchema = new mongoose.Schema({
     active: Boolean,
 })
 
-export default mongoose.model('User', userSchema, 'user')
+export default mongoose.model('RoomUser', roomUserSchema, 'room-user')

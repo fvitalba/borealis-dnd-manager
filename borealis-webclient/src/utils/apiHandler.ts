@@ -57,6 +57,7 @@ interface APIRequestParams {
     fromSocketGuid: string,
     fromUserGuid: string,
     roomId: string,
+    hostUserGuid?: string,
     payload: string,
 }
 
@@ -66,6 +67,7 @@ export const saveRoomToDatabase = (wsSettings: IWsSettings, payload: Game) => {
             fromSocketGuid: wsSettings.socketGuid,
             fromUserGuid: wsSettings.userGuid,
             roomId: wsSettings.roomId,
+            hostUserGuid: wsSettings.userGuid,
             payload: JSON.stringify(payload),
         }
 
@@ -162,7 +164,7 @@ export const registerUserToDatabase = (wsSettings: IWsSettings, user: User): Pro
     })
 }
 
-export const saveCharacterToDatabase = (wsSettings: IWsSettings, payload: Array<Character>) => {
+export const saveCharactersToDatabase = (wsSettings: IWsSettings, payload: Array<Character>) => {
     return new Promise((resolve, reject) => {
         const params: APIRequestParams = {
             fromSocketGuid: wsSettings.socketGuid,
