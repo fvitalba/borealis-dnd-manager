@@ -1,4 +1,5 @@
-import React, { createContext, ReactElement, useState } from 'react'
+import React, { createContext, ReactElement, useReducer } from 'react'
+import loadingReducer, { startTask, stopTask } from '../reducers/loadingReducer'
 
 export interface ILoadingContext {
     loadingTasks: Array<string>,
@@ -13,23 +14,20 @@ export const LoadingContext = createContext<ILoadingContext>({
 })
 
 const LoadingProvider = ({ children } : { children: ReactElement }) => {
-    const [loadingState, setLoadingState] = useState(new Array<string>())
+    const [loadingState, dispatch] = useReducer(loadingReducer, { loadingTasks: [], })
 
     const startLoadingTask = (taskCode: string) => {
-        const existingTask = loadingState.map((task) => task === taskCode)
-        if (existingTask.length === 0) {
-            const newTasks = loadingState.concat(taskCode)
-            setLoadingState(newTasks)
-        }
+        console.log('starting', taskCode)
+        dispatch(startTask(taskCode))
     }
 
     const stopLoadingTask = (taskCode: string) => {
-        const newTasks = loadingState.filter((task) => task !== taskCode)
-        setLoadingState(newTasks)
+        console.log('stopping', taskCode)
+        dispatch(stopTask(taskCode))
     }
 
     const contextPayload = {
-        loadingTasks: loadingState,
+        loadingTasks: loadingState.loadingTasks,
         startLoadingTask: startLoadingTask,
         stopLoadingTask: stopLoadingTask,
     }

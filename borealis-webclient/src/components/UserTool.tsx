@@ -1,18 +1,28 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { overwriteGame, incrementVersion, setFogEnabled } from '../reducers/gameReducer'
-import { setUsername, setToolSettings, toggleMousesharing, SettingsState } from '../reducers/settingsReducer'
-import { pushGameRefresh, pushFogEnabled, useWebSocket } from '../hooks/useSocket'
-import { useLoading } from '../hooks/useLoading'
-import { saveRoomToDatabase, getRoomFromDatabase } from '../utils/apiHandler'
-import UserToolView from '../views/UserToolView'
-import StateInterface from '../interfaces/StateInterface'
 import Game from '../classes/Game'
-import { ChatState } from '../reducers/chatReducer'
-import { CharacterState } from '../reducers/characterReducer'
-import { MetadataState } from '../reducers/metadataReducer'
+import generateDefaultGameState from '../defaults/DefaultGameState'
 import ControlTool from '../enums/Tool'
 import UserType from '../enums/UserType'
+import { pushGameRefresh, pushFogEnabled, useWebSocket } from '../hooks/useSocket'
+import { useLoading } from '../hooks/useLoading'
+import StateInterface from '../interfaces/StateInterface'
+import { ChatState, overwriteChat } from '../reducers/chatReducer'
+import { assignCharacter, CharacterState, setCharacters } from '../reducers/characterReducer'
+import { MetadataState } from '../reducers/metadataReducer'
+import { overwriteGame, incrementVersion, setFogEnabled } from '../reducers/gameReducer'
+import { setUsername, setToolSettings, toggleMousesharing, SettingsState } from '../reducers/settingsReducer'
+import { MapState, updateMaps } from '../reducers/mapReducer'
+import { TokenState, updateTokens } from '../reducers/tokenReducer'
+import { saveRoomToDatabase } from '../utils/apiHandler'
+import UserToolView from '../views/UserToolView'
+import loadAllFromDatabase from '../utils/gameLoadHandler'
+import { setUsersFromAPI } from '../reducers/userReducer'
+import Token from '../classes/Token'
+import Message from '../classes/Message'
+import Map from '../classes/Map'
+import Character from '../classes/Character'
+import User from '../classes/User'
 
 const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
 const REACT_APP_PORT = 3000
@@ -20,19 +30,27 @@ const REACT_APP_PORT = 3000
 interface UserToolProps {
     toggleOnUser: boolean,
     gameState: Game,
+    mapState: MapState,
+    tokenState: TokenState,
     chatState: ChatState,
     characterState: CharacterState,
     metadataState: MetadataState,
     settingsState: SettingsState,
     setFogEnabled: (arg0: boolean) => void,
-    overwriteGame: (arg0: Game) => void,
     incrementVersion: () => void,
     setUsername: (arg0: string) => void,
     toggleMousesharing: () => void,
     setToolSettings: (arg0: ControlTool) => void,
+    overwriteGame: (arg0: Game) => void,
+    updateMaps: (arg0: Array<Map>) => void,
+    updateTokens: (arg0: Array<Token>) => void,
+    overwriteChat: (arg0: Array<Message>) => void,
+    setCharacters: (arg0: Array<Character>) => void,
+    assignCharacter: (arg0: string) => void,
+    setUsersFromAPI: (arg0: Array<User>) => void,
 }
 
-const UserTool = ({ toggleOnUser, gameState, chatState, characterState, metadataState, settingsState, setFogEnabled, overwriteGame, incrementVersion, setUsername, toggleMousesharing, setToolSettings }: UserToolProps) => {
+const UserTool = ({ toggleOnUser, gameState, mapState, tokenState, chatState, characterState, metadataState, settingsState, setFogEnabled, incrementVersion, setUsername, toggleMousesharing, setToolSettings, overwriteGame, updateMaps, updateTokens, overwriteChat, setCharacters, assignCharacter, setUsersFromAPI }: UserToolProps) => {
     const webSocketContext = useWebSocket()
     const loadingContext = useLoading()
 
@@ -52,16 +70,12 @@ const UserTool = ({ toggleOnUser, gameState, chatState, characterState, metadata
     }
 
     const initAsDev = () => {
-        //TODO: Reenable Demo
-        /*
-        const mapsExist = game.maps.length > 0
-        const tokensExist = game.tokens.length > 0
-        if ((mapsExist && tokensExist) && !window.confirm('Overwrite game with defaults?'))
-            return
-        loadDefaultBattleGame()
-        const defaultGame = defaultGameState
-        pushGameRefresh(webSocket, wsSettings, defaultGame, chat, character)
-        */
+        const defaultGameState = generateDefaultGameState()
+        overwriteGame(defaultGameState.gameState)
+        updateMaps(defaultGameState.mapState.maps)
+        updateTokens(defaultGameState.tokenState.tokens)
+        if (webSocketContext.ws)
+            pushGameRefresh(webSocketContext.ws, webSocketContext.wsSettings, defaultGameState.gameState, defaultGameState.mapState, defaultGameState.tokenState, chatState, characterState)
     }
 
     const toggleFog = () => {
@@ -91,24 +105,24 @@ const UserTool = ({ toggleOnUser, gameState, chatState, characterState, metadata
     }
 
     const loadGameFromServer = () => {
-        //TODO: reenable loading of game
-        /*
-        setIsLoading(true)
-        getRoomFromDatabase(wsSettings)
-            .then((result) => {
-                const loadedGame = {
-                    ...result.data.game,
-                    gen: result.data.game.gen + 1,
+        loadAllFromDatabase(webSocketContext, loadingContext)
+            .then((dbState) => {
+                if (dbState.gameState)
+                    overwriteGame(dbState.gameState)
+                if (dbState.mapState)
+                    updateMaps(dbState.mapState.maps)
+                if (dbState.tokenState)
+                    updateTokens(dbState.tokenState.tokens)
+                if (dbState.chatState)
+                    overwriteChat(dbState.chatState.messages)
+                if (dbState.characterState) {
+                    setCharacters(dbState.characterState.characters)
+                    if (dbState.characterState.currentCharacterGuid !== '')
+                        assignCharacter(dbState.characterState.currentCharacterGuid)
                 }
-                overwriteGame(loadedGame)
-                pushGameRefresh(webSocket, wsSettings, loadedGame, chat, character)
-                setIsLoading(false)
+                if (dbState.usersState)
+                    setUsersFromAPI(dbState.usersState.users)
             })
-            .catch((error) => {
-                setIsLoading(false)
-                console.error(error)
-            })
-        */
     }
 
     const copyUrlToClipboard = () => {
@@ -138,6 +152,8 @@ const UserTool = ({ toggleOnUser, gameState, chatState, characterState, metadata
 const mapStateToProps = (state: StateInterface) => {
     return {
         gameState: state.game,
+        mapState: state.map,
+        tokenState: state.token,
         chatState: state.chat,
         characterState: state.character,
         metadataState: state.metadata,
@@ -150,8 +166,14 @@ const mapDispatchToProps = {
     setFogEnabled,
     setToolSettings,
     incrementVersion,
-    overwriteGame,
     toggleMousesharing,
+    overwriteGame,
+    updateMaps,
+    updateTokens,
+    overwriteChat,
+    setCharacters,
+    assignCharacter,
+    setUsersFromAPI,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserTool)

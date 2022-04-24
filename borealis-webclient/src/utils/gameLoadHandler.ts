@@ -175,6 +175,7 @@ const loadUsersFromDatabase = async (webSocketContext: IWebSocketContext, loadin
                 loadingContext.stopLoadingTask(API_LOAD_USERS)
                 resolve(newUserState)
                 */
+                loadingContext.stopLoadingTask(API_LOAD_USERS)
                 return []
             })
             .catch(() => {
