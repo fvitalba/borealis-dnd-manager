@@ -53,6 +53,7 @@ const GameStateHandler = ({ metadataState, settingsState, setGameSettings }: Gam
         else
             document.title = 'Borealis D&D'
 
+        console.log('attempt to open new socket:', metadataState)
         if ((metadataState.roomGuid !== '') && (metadataState.userGuid !== '')) {
             webSocketContext.setWsSettings({
                 ...webSocketContext.wsSettings,
@@ -75,7 +76,7 @@ const GameStateHandler = ({ metadataState, settingsState, setGameSettings }: Gam
                 loadingContext.stopLoadingTask(WEBSOCKET_OPEN_CONNECTION)
             }
         }
-    }, [ metadataState.roomGuid, settingsState.username, metadataState.userType ])
+    }, [ metadataState.roomGuid, metadataState.userGuid, metadataState.userType ])
 
     return(
         <>

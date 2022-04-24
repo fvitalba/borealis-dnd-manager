@@ -13,9 +13,7 @@ import userRouter from './controllers/userRouter.js'
 import mapRouter from './controllers/mapRouter.js'
 import tokenRouter from './controllers/tokenRouter.js'
 import chatRouter from './controllers/chatRouter.js'
-import { deleteOfflineUsers } from './middleware/userMiddleware.js'
 import { handleIncomingMessage } from './utils/messageHandler.js'
-import { saveUpdateRoomUser } from './utils/userHandler.js'
 
 const app = express()
 const privateKeyFilename = 'privkey.pem'
@@ -26,7 +24,6 @@ app.use(cors())
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 
-app.use(deleteOfflineUsers)
 app.use(express.static('build'))
 app.use('/api/characters', characterRouter)
 app.use('/api/rooms', roomRouter)
@@ -56,13 +53,11 @@ wss.on('connection', (websocketConnection, connectionRequest) => {
     const [path, params] = connectionRequest?.url?.split('?')
     const connectionParams = queryString.parse(params)
     
-    websocketConnection.roomId = path.substring(1)
+    websocketConnection.roomId = connectionParams.roomId
     websocketConnection.socketGuid = connectionParams.socketGuid
     websocketConnection.userGuid = connectionParams.userGuid
     websocketConnection.userType = connectionParams.userType
-    saveUpdateRoomUser(websocketConnection.roomId, websocketConnection.userGuid, websocketConnection.userType)
     websocketConnection.on('message', (message) => {
-        saveUpdateRoomUser(websocketConnection.roomId, websocketConnection.userGuid, websocketConnection.userType)
         handleIncomingMessage(websocketConnection, message)
             .then(({ outgoingMessage, sendBackToSender }) => {
                 if (outgoingMessage) {

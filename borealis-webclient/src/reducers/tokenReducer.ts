@@ -36,7 +36,7 @@ interface TokenAction {
     yOrigin?: number,
 }
 
-const tokenReducer = (state: TokenState = initialTokenState(), action: TokenAction): TokenState => {
+const tokenReducer = (state = initialTokenState(), action: TokenAction): TokenState => {
     let newTokens = state.tokens
     let newToken: Token
 

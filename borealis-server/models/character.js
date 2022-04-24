@@ -9,13 +9,13 @@ mongoose.connect(url)
 
 const characterClassSchema = new mongoose.Schema({
     level: Number,
-    class: String,
+    class: Number,
 })
 
 const characterHitDiceSchema = new mongoose.Schema({
     numberOfDice: Number,
     remainingNoOfDice: Number,
-    hitDiceType: String,
+    hitDiceType: Number,
 })
 
 const characterSchema = new mongoose.Schema({

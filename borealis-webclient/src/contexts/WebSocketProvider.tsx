@@ -13,8 +13,8 @@ const generateWebSocketUrl = (roomId: string, socketGuid: string, userGuid: stri
     const protocol = /https/.test(window.location.protocol) ? 'wss' : 'ws'
 
     const webSocketUrl = DEBUG_MODE
-        ? `${protocol}://${host}:${SOCKET_SERVER_PORT}/${roomId}?socketGuid=${socketGuid}`
-        : `${protocol}://${host}/${roomId}?socketGuid=${socketGuid}`
+        ? `${protocol}://${host}:${SOCKET_SERVER_PORT}/?roomId=${roomId}&socketGuid=${socketGuid}`
+        : `${protocol}://${host}/?roomId=${roomId}&socketGuid=${socketGuid}`
 
     const userParam = userGuid ? `&userGuid=${userGuid}` : ''
     const hostParam = (userType !== undefined) ? `&userType=${userType}` : ''

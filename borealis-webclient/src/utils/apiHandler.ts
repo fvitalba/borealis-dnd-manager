@@ -34,8 +34,11 @@ const roomsUrl = (roomId: string): string => {
     return getUrlSchema(ROOM_API_URL) + `${roomId}`
 }
 
-const usersUrl = (roomId: string): string => {
-    return getUrlSchema(USER_API_URL) + `?roomId=${roomId}`
+const usersUrl = (roomId?: string): string => {
+    if (roomId)
+        return getUrlSchema(USER_API_URL) + `?roomId=${roomId}`
+    else
+        return getUrlSchema(USER_API_URL)
 }
 
 const mapsUrl = (roomId: string): string => {
@@ -110,6 +113,46 @@ export const saveUsersToDatabase = (wsSettings: IWsSettings, payload: Array<User
 export const getUsersFromDatabase = (wsSettings: IWsSettings): Promise<Array<UserSchema>> => {
     return new Promise ((resolve, reject) => {
         axios.get(usersUrl(wsSettings.roomId))
+            .then((result) => {
+                resolve(result.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
+export const getUserDetailsFromDatabase = (wsSettings: IWsSettings, userGuid?: string, userName?: string, email?: string): Promise<Array<UserSchema>> => {
+    return new Promise((resolve, reject) => {
+        const params = {
+            fromSocketGuid: wsSettings.socketGuid,
+            fromUserGuid: wsSettings.userGuid,
+            roomId: wsSettings.roomId,
+            userGuid: userGuid,
+            userName: userName,
+            email: email,
+        }
+
+        axios.post(usersUrl() + 'authenticate/', params)
+            .then((result) => {
+                resolve(result.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
+export const registerUserToDatabase = (wsSettings: IWsSettings, user: User): Promise<UserSchema> => {
+    return new Promise((resolve, reject) => {
+        const params = {
+            fromSocketGuid: wsSettings.socketGuid,
+            fromUserGuid: wsSettings.userGuid,
+            roomId: wsSettings.roomId,
+            user: JSON.stringify(user),
+        }
+
+        axios.post(usersUrl() + 'register/', params)
             .then((result) => {
                 resolve(result.data)
             })

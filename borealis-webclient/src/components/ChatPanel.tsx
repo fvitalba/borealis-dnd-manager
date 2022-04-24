@@ -111,6 +111,7 @@ const ChatPanel = ({ chatState, settingsState, userState, characterState, metada
     }
 
     const loadUsers = useCallback(() => {
+        /*
         if (webSocketContext.wsSettings.roomId !== '') {
             getUsersFromDatabase(webSocketContext.wsSettings)
                 .then((result: any) => {
@@ -121,6 +122,7 @@ const ChatPanel = ({ chatState, settingsState, userState, characterState, metada
                     console.error(error)
                 })
         }
+        */
     }, [ webSocketContext, chatPanelState, setChatPanelState ])
 
     useEffect(() => {

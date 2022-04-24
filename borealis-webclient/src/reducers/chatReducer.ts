@@ -24,7 +24,7 @@ interface ChatAction {
     messages?: Array<Message>,
 }
 
-const chatReducer = (state: ChatState = initialChatState(), action: ChatAction): ChatState => {
+const chatReducer = (state = initialChatState(), action: ChatAction): ChatState => {
     switch (action.type) {
     case ADD_CHAT_MESSAGE:
         return {

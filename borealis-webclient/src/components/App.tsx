@@ -1,5 +1,5 @@
 import React from 'react'
-import { createStore, combineReducers } from 'redux'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import GameStateHandler from './GameStateHandler'
 import WebSocketProvider from '../contexts/WebSocketProvider'
@@ -24,7 +24,15 @@ const App = () => {
         user: userReducer,
         character: characterReducer,
     })
-    const store = createStore(combinedReducer)
+
+    const logger = (store: any) => (next: any) => (action: any) => {
+        console.log('dispatching', action)
+        const result = next(action)
+        console.log('next state', store.getState())
+        return result
+    }
+
+    const store = createStore(combinedReducer, applyMiddleware(logger))
 
     return(
         <Provider store={ store } >

@@ -8,11 +8,11 @@ mongoose.connect(url)
     })
 
 const userSchema = new mongoose.Schema({
-    roomId: String,
     guid: String,
     name: String,
-    type: String,
+    type: Number,
     assignedCharacterGuid: String,
+    email: String,
     lastOnline: Number,
     active: Boolean,
 })

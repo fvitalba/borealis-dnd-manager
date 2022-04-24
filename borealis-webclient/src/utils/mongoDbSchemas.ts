@@ -92,6 +92,7 @@ export interface UserSchema {
     name: string,
     type: UserType,
     assignedCharacterGuid: string,
+    email: string,
     lastOnline: number,
     active: boolean,
 }

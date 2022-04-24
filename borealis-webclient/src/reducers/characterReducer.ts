@@ -28,7 +28,7 @@ interface CharacterAction {
     characters?: Array<Character>,
 }
 
-const characterReducer = (state: CharacterState = initialCharacterState(), action: CharacterAction): CharacterState => {
+const characterReducer = (state = initialCharacterState(), action: CharacterAction): CharacterState => {
     let newCharacters = state.characters
     switch (action.type) {
     case ADD_CHARACTER:

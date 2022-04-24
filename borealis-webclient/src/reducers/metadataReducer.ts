@@ -43,11 +43,11 @@ interface MetadataAction {
     downPos?: Point,
 }
 
-const metadataReducer = (state: MetadataState = initialMetadataState(), action: MetadataAction): MetadataState => {
+const metadataReducer = (state = initialMetadataState(), action: MetadataAction): MetadataState => {
     let newCursors = state.cursors
     switch (action.type) {
     case SET_GAMESETTINGS:
-        if ((action.userType) && (action.roomName) && (action.roomGuid))
+        if ((action.userType !== undefined) && (action.roomName) && (action.roomGuid))
             return {
                 ...state,
                 userType: action.userType,

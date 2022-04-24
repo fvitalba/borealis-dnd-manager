@@ -9,7 +9,7 @@ mongoose.connect(url)
 
 const chatMessageSchema = new mongoose.Schema({
     guid: String,
-    type: String,
+    type: Number,
     username: String,
     targetUsername: String,
     playerInfo: String,

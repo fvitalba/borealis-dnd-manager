@@ -1,5 +1,6 @@
 import React, { MouseEvent, ChangeEvent, useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
+import User from '../classes/User'
 import { IWsSettings } from '../contexts/WebSocketProvider'
 import UserType from '../enums/UserType'
 import { useLoading } from '../hooks/useLoading'
@@ -16,6 +17,8 @@ import { setUsersFromAPI } from '../reducers/userReducer'
 import { getRoomFromDatabase } from '../utils/apiHandler'
 import loadAllFromDatabase from '../utils/gameLoadHandler'
 import guid from '../utils/guid'
+import { API_AUTHENTICATING_USER } from '../utils/loadingTasks'
+import { authenticateOrRegisterUser } from '../utils/loginHandler'
 import GameSetupView from '../views/GameSetupView'
 
 interface GameSetupState {
@@ -85,29 +88,44 @@ const GameSetup = ({ metadataState, setGameSettings, setUsername }: GameSetupPro
         }
     }
 
-    const onSubmitSetup = () => {
-        if (gameSetupState.userType)
-            setGameSettings(gameSetupState.userType, gameSetupState.userGuid, gameSetupState.roomName, gameSetupState.roomId)
-        setUsername(gameSetupState.userName)
+    const onSubmitSetup = async () => {
+        if (gameSetupState.userType === undefined)
+            return
+        const currUser = new User(gameSetupState.userGuid, gameSetupState.userName, gameSetupState.userType)
+        loadingContext.startLoadingTask(API_AUTHENTICATING_USER)
+        const authenticatedUser = await authenticateOrRegisterUser(webSocketContext.wsSettings, currUser)
+        loadingContext.stopLoadingTask(API_AUTHENTICATING_USER)
+        if (!authenticatedUser)
+            throw new Error('User could not be authenticated!')
+
+        setGameSetupState({
+            ...gameSetupState,
+            userType: authenticatedUser.type,
+            userGuid: authenticatedUser.guid,
+            userName: authenticatedUser.name,
+        })
+        setGameSettings(authenticatedUser.type, authenticatedUser.guid, gameSetupState.roomName, gameSetupState.roomId)
+        console.log('metadataState',metadataState)
+        setUsername(authenticatedUser.name)
         saveSettingsToLocalStorage()
 
         loadAllFromDatabase(webSocketContext, loadingContext)
-            .then((result) => {
-                if (result.gameState)
-                    overwriteGame(result.gameState)
-                if (result.mapState)
-                    updateMaps(result.mapState.maps)
-                if (result.tokenState)
-                    updateTokens(result.tokenState.tokens)
-                if (result.chatState)
-                    overwriteChat(result.chatState.messages)
-                if (result.characterState) {
-                    setCharacters(result.characterState.characters)
-                    if (result.characterState.currentCharacterGuid !== '')
-                        assignCharacter(result.characterState.currentCharacterGuid)
+            .then((dbState) => {
+                if (dbState.gameState)
+                    overwriteGame(dbState.gameState)
+                if (dbState.mapState)
+                    updateMaps(dbState.mapState.maps)
+                if (dbState.tokenState)
+                    updateTokens(dbState.tokenState.tokens)
+                if (dbState.chatState)
+                    overwriteChat(dbState.chatState.messages)
+                if (dbState.characterState) {
+                    setCharacters(dbState.characterState.characters)
+                    if (dbState.characterState.currentCharacterGuid !== '')
+                        assignCharacter(dbState.characterState.currentCharacterGuid)
                 }
-                if (result.usersState)
-                    setUsersFromAPI(result.usersState.users)
+                if (dbState.usersState)
+                    setUsersFromAPI(dbState.usersState.users)
             })
     }
 
@@ -125,7 +143,7 @@ const GameSetup = ({ metadataState, setGameSettings, setUsername }: GameSetupPro
         const roomRoomName = roomRoomNameText ? roomRoomNameText : ''
 
         const userTypeText = localStorage.getItem(`borealis-${lastRoomId}-${roomUserGuid}`)
-        const userType = userTypeText?.toUpperCase() === 'HOST' ? UserType.host : UserType.player
+        const userType: UserType = userTypeText ? parseInt(userTypeText) : UserType.player
         return { lastRoomId, roomRoomName, roomUserGuid, roomUserName, userType }
     }
 

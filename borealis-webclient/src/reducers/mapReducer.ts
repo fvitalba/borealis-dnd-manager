@@ -25,7 +25,7 @@ interface MapAction {
     mapId?: number,
 }
 
-const mapReducer = (state: MapState = initialMapState(), action: MapAction): MapState => {
+const mapReducer = (state = initialMapState(), action: MapAction): MapState => {
     let newMapId = -1
     let newMaps = state.maps
     let newMap

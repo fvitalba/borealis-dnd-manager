@@ -67,11 +67,9 @@ const loadRoomFromDatabase = async (webSocketContext: IWebSocketContext, loading
         loadingContext.startLoadingTask(API_LOAD_ROOM)
         getRoomFromDatabase(webSocketContext.wsSettings)
             .then((result) => {
-                if (result.length > 0) {
-                    const newGame = Game.fromDbSchema(result[0])
-                    resolve(newGame)
-                }
+                const newGame = Game.fromDbSchema(result[0])
                 loadingContext.stopLoadingTask(API_LOAD_ROOM)
+                resolve(newGame)
             })
             .catch(() => {
                 loadingContext.stopLoadingTask(API_LOAD_ROOM)
@@ -86,14 +84,12 @@ const loadMapsFromDatabase = async (webSocketContext: IWebSocketContext, loading
         loadingContext.startLoadingTask(API_LOAD_MAPS)
         getMapsFromDatabase(webSocketContext.wsSettings)
             .then((result) => {
-                if (result.length > 0) {
-                    const newMaps = result.map((dbMap) => Map.fromDbSchema(dbMap))
-                    const newMapState = {
-                        maps: newMaps,
-                    }
-                    resolve(newMapState)
+                const newMaps = result.map((dbMap) => Map.fromDbSchema(dbMap))
+                const newMapState = {
+                    maps: newMaps,
                 }
                 loadingContext.stopLoadingTask(API_LOAD_MAPS)
+                resolve(newMapState)
             })
             .catch(() => {
                 loadingContext.stopLoadingTask(API_LOAD_MAPS)
@@ -108,14 +104,13 @@ const loadTokensFromDatabase = async (webSocketContext: IWebSocketContext, loadi
         loadingContext.startLoadingTask(API_LOAD_TOKENS)
         getTokensFromDatabase(webSocketContext.wsSettings)
             .then((result) => {
-                if (result.length > 0) {
-                    const newTokens = result.map((dbToken) => Token.fromDbSchema(dbToken))
-                    const newTokenState = {
-                        tokens: newTokens,
-                    }
-                    resolve(newTokenState)
+                const newTokens = result.map((dbToken) => Token.fromDbSchema(dbToken))
+                const newTokenState = {
+                    tokens: newTokens,
                 }
                 loadingContext.stopLoadingTask(API_LOAD_TOKENS)
+                resolve(newTokenState)
+
             })
             .catch(() => {
                 loadingContext.stopLoadingTask(API_LOAD_TOKENS)
@@ -130,15 +125,13 @@ const loadChatFromDatabase = async (webSocketContext: IWebSocketContext, loading
         loadingContext.startLoadingTask(API_LOAD_CHAT)
         getChatFromDatabase(webSocketContext.wsSettings)
             .then((result) => {
-                if (result.length > 0) {
-                    const newChatMessages = result.map((dbChatMessage) => Message.fromDbSchema(dbChatMessage))
-                    const newChatState = {
-                        username: '',
-                        messages: newChatMessages,
-                    }
-                    resolve(newChatState)
+                const newChatMessages = result.map((dbChatMessage) => Message.fromDbSchema(dbChatMessage))
+                const newChatState = {
+                    username: '',
+                    messages: newChatMessages,
                 }
                 loadingContext.stopLoadingTask(API_LOAD_CHAT)
+                resolve(newChatState)
             })
             .catch(() => {
                 loadingContext.stopLoadingTask(API_LOAD_CHAT)
@@ -153,15 +146,13 @@ const loadCharactersFromDatabase = async (webSocketContext: IWebSocketContext, l
         loadingContext.startLoadingTask(API_LOAD_CHARACTERS)
         getCharactersFromDatabase(webSocketContext.wsSettings)
             .then((result) => {
-                if (result.length > 0) {
-                    const newCharacters = result.map((dbCharacter) => Character.fromDbSchema(dbCharacter))
-                    const newCharacterState = {
-                        currentCharacterGuid: '',
-                        characters: newCharacters,
-                    }
-                    resolve(newCharacterState)
+                const newCharacters = result.map((dbCharacter) => Character.fromDbSchema(dbCharacter))
+                const newCharacterState = {
+                    currentCharacterGuid: '',
+                    characters: newCharacters,
                 }
                 loadingContext.stopLoadingTask(API_LOAD_CHARACTERS)
+                resolve(newCharacterState)
             })
             .catch(() => {
                 loadingContext.stopLoadingTask(API_LOAD_CHARACTERS)
@@ -176,14 +167,15 @@ const loadUsersFromDatabase = async (webSocketContext: IWebSocketContext, loadin
         loadingContext.startLoadingTask(API_LOAD_USERS)
         getUsersFromDatabase(webSocketContext.wsSettings)
             .then((result) => {
-                if (result.length > 0) {
-                    const newUsers = result.map((dbUser) => User.fromDbSchema(dbUser))
-                    const newUserState = {
-                        users: newUsers,
-                    }
-                    resolve(newUserState)
+                /*
+                const newUsers = result.map((dbUser) => User.fromDbSchema(dbUser))
+                const newUserState = {
+                    users: newUsers,
                 }
                 loadingContext.stopLoadingTask(API_LOAD_USERS)
+                resolve(newUserState)
+                */
+                return []
             })
             .catch(() => {
                 loadingContext.stopLoadingTask(API_LOAD_USERS)
