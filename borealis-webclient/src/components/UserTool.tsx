@@ -76,6 +76,8 @@ const UserTool = ({ toggleOnUser, gameState, mapState, tokenState, chatState, ch
         overwriteGame(defaultGameState.gameState)
         updateMaps(defaultGameState.mapState.maps)
         updateTokens(defaultGameState.tokenState.tokens)
+        setCharacters(defaultGameState.characterState.characters)
+        assignCharacter(defaultGameState.characterState.currentCharacterGuid)
         if (webSocketContext.ws)
             pushGameRefresh(webSocketContext.ws, webSocketContext.wsSettings, defaultGameState.gameState, defaultGameState.mapState, defaultGameState.tokenState, chatState, characterState)
     }

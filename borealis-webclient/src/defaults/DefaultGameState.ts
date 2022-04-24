@@ -1,9 +1,13 @@
+import Character, { CharacterClassLevel, CharacterHitDice } from '../classes/Character'
 import Game from '../classes/Game'
 import Map from '../classes/Map'
 import Token from '../classes/Token'
+import CharacterClass from '../enums/CharacterClass'
+import DiceType from '../enums/DiceType'
 import TokenCondition from '../enums/TokenCondition'
 import TokenSize from '../enums/TokenSize'
 import TokenType from '../enums/TokenType'
+import { CharacterState } from '../reducers/characterReducer'
 import { MapState } from '../reducers/mapReducer'
 import { TokenState } from '../reducers/tokenReducer'
 import guid from '../utils/guid'
@@ -12,6 +16,7 @@ interface DefaultGameState {
     gameState: Game,
     mapState: MapState,
     tokenState: TokenState,
+    characterState: CharacterState,
 }
 
 const generateDefaultGameState = (): DefaultGameState => {
@@ -27,11 +32,19 @@ const generateDefaultGameState = (): DefaultGameState => {
     const defaultTokenState: TokenState = {
         tokens: [defaultToken1, defaultToken2, defaultToken3],
     }
+    const defaultCharacter1 = new Character(guid(), 'Herbert the Paladin', 28)
+    defaultCharacter1.class = [new CharacterClassLevel(3, CharacterClass.Paladin)]
+    defaultCharacter1.hitDice = [new CharacterHitDice(3, DiceType.d10, 2)]
+    const defaultCharacterState: CharacterState = {
+        characters: [defaultCharacter1],
+        currentCharacterGuid: defaultCharacter1.guid,
+    }
 
     return {
         gameState: defaultGame,
         mapState: defaultMapState,
         tokenState: defaultTokenState,
+        characterState: defaultCharacterState,
     }
 }
 
