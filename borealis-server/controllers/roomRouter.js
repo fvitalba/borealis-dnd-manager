@@ -4,18 +4,20 @@ import { saveUpdateRoom } from '../utils/roomHandler.js'
 
 const roomRouter = new Router()
 
-roomRouter.get('/:roomId?', (request, result) => {
+roomRouter.get('/:roomId?:hostUserGuid?', (request, result) => {
     const roomId = request.params.roomId ? request.params.roomId : request.query.roomId
-    let currentRoom = undefined
-    if (roomId !== undefined && roomId !== '') {
-        Room.find({ 'roomId': roomId })
+    const hostUserGuid = request.params.hostUserGuid ? request.params.hostUserGuid : request.query.hostUserGuid
+
+    const queryParameters = {}
+    if (roomId !== undefined && roomId !== '')
+        queryParameters['roomId'] = roomId
+    if ((hostUserGuid !== undefined) && (hostUserGuid !== ''))
+        queryParameters['hostUserGuid'] = hostUserGuid
+
+    if (queryParameters.roomId || queryParameters.hostUserGuid) {
+        Room.find(queryParameters)
             .then((rooms) => {
-                rooms.forEach((room) => {
-                    if ((!currentRoom) || (currentRoom.version < room.version)) {
-                        currentRoom = room
-                    }
-                })
-                result.json(currentRoom)
+                result.json(rooms)
             })
     } else {
         result.json([])
@@ -28,8 +30,10 @@ roomRouter.post('/', (request, response) => {
         return response.status(400).json({ error: 'Request Payload is missing.' })
     if (body.roomId === undefined || body.roomId === '')
         return response.status(400).json({ error: 'Room was not specified.' })
+    if ((body.hostUserGuid === undefined) || (body.hostUserGuid === ''))
+        return response.status(400).json({ error: 'Host was not specified.' })
 
-    saveUpdateRoom(body.roomId, JSON.parse(body.payload))
+    saveUpdateRoom(body.roomId, body.hostUserGuid, JSON.parse(body.payload))
         .then((result) => response.json(result))
 })
 

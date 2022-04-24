@@ -15,6 +15,7 @@ const gameSchema = new mongoose.Schema({
     height: Number,
     fogEnabled: Boolean,
     tokenSelected: Boolean,
+    hostUserGuid: String,
     timestamp: Number,
 })
 
