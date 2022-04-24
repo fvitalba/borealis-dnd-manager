@@ -10,11 +10,11 @@ class Game {
     public tokenSelected: boolean
 
     public constructor(newCurrentMapId?: number, newVersion?: number, newWidth?: number, newHeight?: number, newFogEnabled?: boolean) {
-        this.currentMapId = newCurrentMapId ? newCurrentMapId : -1
-        this.version = newVersion ? newVersion : -1
-        this.width = newWidth ? newWidth : window.innerWidth
-        this.height = newHeight ? newHeight : window.innerHeight
-        this.fogEnabled = newFogEnabled ? newFogEnabled : false
+        this.currentMapId = newCurrentMapId !== undefined ? newCurrentMapId : -1
+        this.version = newVersion !== undefined ? newVersion : -1
+        this.width = newWidth !== undefined ? newWidth : window.innerWidth
+        this.height = newHeight !== undefined ? newHeight : window.innerHeight
+        this.fogEnabled = newFogEnabled !== undefined ? newFogEnabled : false
         //TODO: Enable this and disable this when selecting/unselecting tokens
         this.tokenSelected = false
     }

@@ -16,7 +16,7 @@ class Map {
     public constructor(newId: number, newName: string, newBackgroundUrl: string, newX: number, newY: number, newWidth: number, newHeight: number, newDrawPaths?: Array<Path>, newFogPaths?:Array<Path>) {
         this.id = newId
         this.name = newName
-        this.backgroundUrl = newBackgroundUrl
+        this.backgroundUrl = newBackgroundUrl.trim()
         this.x = newX
         this.y = newY
         this.width = newWidth

@@ -23,6 +23,10 @@ const gameReducer = (state = new Game(), action: GameAction): Game => {
         newGame.width = window.innerWidth
         newGame.height = window.innerHeight
         return newGame
+    case LOAD_MAP:
+        if (action.mapId !== undefined)
+            newGame.currentMapId = action.mapId
+        return newGame
     case INCREMENT_VERSION:
         newGame.version = state.version + 1
         return newGame

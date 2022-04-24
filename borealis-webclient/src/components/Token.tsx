@@ -55,12 +55,12 @@ const TokenComponent = ({ token, userType, gameState, tokenState, settingsState,
 
     const classes = scaledToken.generateTokenClasses(userType)
     const divStyle = {
-        left: scaledToken.x || 0,
-        top: scaledToken.y || 0,
+        left: scaledToken.x,
+        top: scaledToken.y,
     }
     const imgStyle = {
-        width: scaledToken.width || 0,
-        height: scaledToken.height || 0,
+        width: scaledToken.width,
+        height: scaledToken.height,
     }
     const showToken = ((scaledToken.mapId === -1) || (gameState.currentMapId === scaledToken.mapId))
 

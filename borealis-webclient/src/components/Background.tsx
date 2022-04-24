@@ -26,7 +26,7 @@ const Background = ({ gameState, mapState, settingsState, updateDeltaXY, updateS
     const draw = useCallback((ctx: CanvasRenderingContext2D) => {
         ctx.beginPath()
         ctx.clearRect(0, 0, gameState.width, gameState.height)
-        if (!currentMap.isEmpty() || !backgroundSettings.imageObject) {
+        if (currentMap.isEmpty() || !backgroundSettings.imageObject) {
             return
         }
         const imageSize = currentMap.getScaledAndOffsetSize(settingsState.deltaX, settingsState.deltaY, settingsState.scale)
@@ -43,7 +43,7 @@ const Background = ({ gameState, mapState, settingsState, updateDeltaXY, updateS
         }
         if (!currentMap.isEmpty())
             imgObject.src = currentMap.backgroundUrl
-    }, [ currentMap ])
+    }, [ currentMap, gameState.currentMapId, mapState.maps ])
 
     const onMouseDown = () => {
         setBackgroundSettings({

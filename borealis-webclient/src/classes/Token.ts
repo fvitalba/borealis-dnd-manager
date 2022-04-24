@@ -34,16 +34,16 @@ class Token {
         this.mapId = newMapId
         this.x = newX
         this.y = newY
-        this.condition = newCondition ? newCondition : TokenCondition.Alive
-        this.type = newType ? newType : TokenType.NPC
-        this.size = newSize ? newSize : TokenSize.medium
+        this.condition = newCondition !== undefined ? newCondition : TokenCondition.Alive
+        this.type = newType !== undefined ? newType : TokenType.NPC
+        this.size = newSize !== undefined ? newSize : TokenSize.medium
         this.width = this.size
         this.height = this.size
-        this.selected = newSelected ? newSelected : false
-        this.hidden = newHidden ? newHidden : false
-        this.showLabel = newShowLabel ? newShowLabel : false
-        this.x0 = newX0 ? newX0 : 0
-        this.y0 = newY0 ? newY0 : 0
+        this.selected = newSelected !== undefined ? newSelected : false
+        this.hidden = newHidden !== undefined ? newHidden : false
+        this.showLabel = newShowLabel !== undefined ? newShowLabel : false
+        this.x0 = newX0 !== undefined ? newX0 : 0
+        this.y0 = newY0 !== undefined ? newY0 : 0
     }
 
     static fromDbSchema(dbToken: TokenSchema): Token {
@@ -75,8 +75,8 @@ class Token {
 
     public scaleToken(offsetX: number, offsetY: number, scale: number): Token {
         const scaledToken = this.copy()
-        scaledToken.x = scaledToken.x * scale + offsetX
-        scaledToken.y = scaledToken.y * scale + offsetY
+        scaledToken.x = scaledToken.x + offsetX * scale
+        scaledToken.y = scaledToken.y + offsetY * scale
         scaledToken.width = scaledToken.width * scale
         scaledToken.height = scaledToken.height * scale
         return scaledToken
@@ -114,11 +114,15 @@ class Token {
     private generateAccessabilityClass(userType: UserType): string {
         if (this.isAllowedToMove(userType))
             return 'token-grabbable'
-        return ''
+        else
+            return ''
     }
 
     private generateVisibilityClass(userType: UserType): string {
-        return userType === UserType.host ? 'opacity-50' : 'invisible'
+        if (this.hidden)
+            return userType === UserType.host ? 'opacity-50' : 'invisible'
+        else
+            return ''
     }
 
     public generateTokenClasses(userType: UserType): Array<string> {
