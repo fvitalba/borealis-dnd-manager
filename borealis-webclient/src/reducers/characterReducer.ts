@@ -29,7 +29,7 @@ interface CharacterAction {
 }
 
 const characterReducer = (state = initialCharacterState(), action: CharacterAction): CharacterState => {
-    let newCharacters = state.characters
+    let newCharacters = state.characters.map((character) => character.copy())
     switch (action.type) {
     case ADD_CHARACTER:
         if (action.character)

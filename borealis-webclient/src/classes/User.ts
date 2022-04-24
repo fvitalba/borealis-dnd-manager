@@ -24,6 +24,14 @@ class User {
         return newUser
     }
 
+    public copy(): User {
+        const userCopy = new User(this.guid, this.name, this.type)
+        userCopy.assignedCharacterGuid = this.assignedCharacterGuid
+        userCopy.lastOnline = this.lastOnline
+        userCopy.email = this.email
+        return userCopy
+    }
+
     public isEmpty(): boolean {
         return (this.guid === '') && (this.name === '')
     }

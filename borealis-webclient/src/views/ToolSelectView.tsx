@@ -11,9 +11,9 @@ interface ToolSelectViewProps {
 const ToolSelectView = ({ isHost, fogEnabled }: ToolSelectViewProps) => {
     return (
         <div className='tool-select-view'>
-            <ToolButton title='move' controlTool={ ControlTool.Move } value={ <LocationSolidIcon /> } />
-            <ToolButton title='draw' controlTool={ ControlTool.Draw } value={ <EditSolidIcon /> } />
-            { (fogEnabled && isHost) ? <ToolButton title='fog' controlTool={ ControlTool.EreaseFog } value={ <CloudOffSolidIcon /> } /> : null }
+            <ToolButton title='move' controlTools={ [ControlTool.Move] } value={ <LocationSolidIcon /> } />
+            <ToolButton title='draw' controlTools={ [ControlTool.Draw, ControlTool.EreaseDraw] } value={ <EditSolidIcon /> } />
+            { (fogEnabled && isHost) ? <ToolButton title='fog' controlTools={ [ControlTool.Fog, ControlTool.EreaseFog] } value={ <CloudOffSolidIcon /> } /> : null }
         </div>
     )
 }

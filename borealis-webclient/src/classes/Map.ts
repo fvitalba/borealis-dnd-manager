@@ -30,6 +30,11 @@ class Map {
         return newMap
     }
 
+    public copy(): Map {
+        const mapCopy = new Map(this.id, this.name, this.backgroundUrl, this.x, this.y, this.width, this.height, JSON.parse(JSON.stringify(this.drawPaths)), JSON.parse(JSON.stringify(this.fogPaths)))
+        return mapCopy
+    }
+
     public isEmpty(): boolean {
         return this.id < 0
     }

@@ -8,15 +8,25 @@ import Button from '../views/Button'
 interface ToolButtonProps {
     title: string,
     value: JSX.Element,
-    controlTool: ControlTool,
+    controlTools: Array<ControlTool>,
     settingsState: SettingsState,
     setToolSettings: (arg0: ControlTool) => void,
 }
 
-const ToolButton = ({ title, value, controlTool, settingsState, setToolSettings }: ToolButtonProps) => {
-    const isSelected = controlTool === settingsState.tool
+const ToolButton = ({ title, value, controlTools, settingsState, setToolSettings }: ToolButtonProps) => {
+    const isSelected = controlTools.includes(settingsState.tool)
     const onClick = () => {
-        setToolSettings(controlTool)
+        switch(true) {
+        case controlTools.includes(ControlTool.Move):
+            setToolSettings(ControlTool.Move)
+            break
+        case controlTools.includes(ControlTool.Draw):
+            setToolSettings(ControlTool.Draw)
+            break
+        case controlTools.includes(ControlTool.EreaseFog):
+            setToolSettings(ControlTool.EreaseFog)
+            break
+        }
     }
 
     return (

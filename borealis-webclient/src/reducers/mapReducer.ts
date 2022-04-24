@@ -27,8 +27,8 @@ interface MapAction {
 
 const mapReducer = (state = initialMapState(), action: MapAction): MapState => {
     let newMapId = -1
-    let newMaps = state.maps
-    let newMap
+    let newMaps = state.maps.map((map) => map.copy())
+    let newMap: Map
 
     switch(action.type) {
     case ADD_MAP:

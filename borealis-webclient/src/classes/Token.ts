@@ -52,7 +52,8 @@ class Token {
     }
 
     public copy(): Token {
-        return this
+        const tokenCopy = new Token(this.name, this.imageUrl, this.mapId, this.x, this.y, this.condition, this.type, this.guid, this.size, this.selected, this.hidden, this.showLabel, this.x0, this.y0)
+        return tokenCopy
     }
 
     public toggleValue(attributeKey: TokenBooleanProperty) {
@@ -75,8 +76,8 @@ class Token {
 
     public scaleToken(offsetX: number, offsetY: number, scale: number): Token {
         const scaledToken = this.copy()
-        scaledToken.x = scaledToken.x + offsetX * scale
-        scaledToken.y = scaledToken.y + offsetY * scale
+        scaledToken.x = scaledToken.x * scale + offsetX
+        scaledToken.y = scaledToken.y * scale + offsetY
         scaledToken.width = scaledToken.width * scale
         scaledToken.height = scaledToken.height * scale
         return scaledToken

@@ -37,7 +37,7 @@ interface TokenAction {
 }
 
 const tokenReducer = (state = initialTokenState(), action: TokenAction): TokenState => {
-    let newTokens = state.tokens
+    let newTokens = state.tokens.map((token) => token.copy())
     let newToken: Token
 
     switch(action.type) {

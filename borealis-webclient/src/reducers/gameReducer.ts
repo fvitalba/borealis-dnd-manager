@@ -15,7 +15,7 @@ interface GameAction {
 }
 
 const gameReducer = (state = new Game(), action: GameAction): Game => {
-    let newGame = state
+    let newGame = state.copy()
     switch (action.type) {
     case OVERWRITE_GAME:
         if (action.game)

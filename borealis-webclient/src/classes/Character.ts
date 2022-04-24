@@ -85,6 +85,22 @@ class Character {
         return newCharacter
     }
 
+    public copy(): Character {
+        const characterCopy = new Character(this.guid, this.name, this.maxHealth, JSON.parse(JSON.stringify(this.class)), JSON.parse(JSON.stringify(this.hitDice)), this.username)
+        characterCopy.currHealth = this.maxHealth
+        characterCopy.strength = this.strength
+        characterCopy.dexterity = this.dexterity
+        characterCopy.constitution = this.constitution
+        characterCopy.intelligence = this.intelligence
+        characterCopy.wisdom = this.wisdom
+        characterCopy.charisma = this.charisma
+        characterCopy.proficiency = this.proficiency
+        characterCopy.armorclass = this.armorclass
+        characterCopy.passivePerception = this.passivePerception
+        characterCopy.tempHealth = this.tempHealth
+        return characterCopy
+    }
+
     public isEmpty(): boolean {
         return this.guid === ''
     }
@@ -147,10 +163,6 @@ class Character {
 
     public SetNumberAttributeValue(attributeName: ClassNumberProperty, newAttributeValue: number) {
         this[attributeName] = newAttributeValue
-    }
-
-    public copy(): Character {
-        return this
     }
 
     public setAnyClassLevel(newClass: CharacterClass, newLevel: number) {

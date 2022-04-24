@@ -17,7 +17,7 @@ interface UserAction {
 }
 
 const userReducer = (state = initialUserState(), action: UserAction): UserState => {
-    let newUsers = state.users
+    let newUsers = state.users.map((user) => user.copy())
     switch (action.type) {
     case SET_USERS_FROM_API:
         if (action.newUsers)

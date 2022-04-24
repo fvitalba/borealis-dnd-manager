@@ -24,6 +24,12 @@ class Game {
         return newGame
     }
 
+    public copy(): Game {
+        const gameCopy = new Game(this.currentMapId, this.version, this.width, this.height, this.fogEnabled)
+        gameCopy.tokenSelected = this.tokenSelected
+        return gameCopy
+    }
+
     public getCurrentMap(maps: Array<Map>): Map {
         const currentMap = maps.filter((map: Map) => map.id === this.currentMapId)
         if (currentMap.length > 0)
