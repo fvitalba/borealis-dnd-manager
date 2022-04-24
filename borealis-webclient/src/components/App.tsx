@@ -13,6 +13,8 @@ import chatReducer from '../reducers/chatReducer'
 import userReducer from '../reducers/userReducer'
 import characterReducer from '../reducers/characterReducer'
 
+const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
+
 const App = () => {
     const combinedReducer = combineReducers({
         settings: settingsReducer,
@@ -26,9 +28,11 @@ const App = () => {
     })
 
     const logger = (store: any) => (next: any) => (action: any) => {
-        console.log('dispatching', action)
+        if (DEBUG_MODE)
+            console.log('dispatching', action)
         const result = next(action)
-        console.log('next state', store.getState())
+        if (DEBUG_MODE)
+            console.log('next state', store.getState())
         return result
     }
 
