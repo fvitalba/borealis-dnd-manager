@@ -9,17 +9,15 @@ import { useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
 import StateInterface from '../interfaces/StateInterface'
 import { MetadataState, setGameSettings } from '../reducers/metadataReducer'
-import { SettingsState } from '../reducers/settingsReducer'
 import { WEBSOCKET_OPEN_CONNECTION } from '../utils/loadingTasks'
 import guid from '../utils/guid'
 
 interface GameStateHandlerProps {
     metadataState: MetadataState,
-    settingsState: SettingsState,
-    setGameSettings: (userType: UserType, userGuid: string, roomName: string, roomGuid: string) => void,
+    setGameSettings: (userType: UserType, userGuid: string, isGuest: boolean, roomName: string, roomGuid: string) => void,
 }
 
-const GameStateHandler = ({ metadataState, settingsState, setGameSettings }: GameStateHandlerProps) => {
+const GameStateHandler = ({ metadataState, setGameSettings }: GameStateHandlerProps) => {
     const webSocketContext = useWebSocket()
     const loadingContext = useLoading()
 
@@ -39,7 +37,7 @@ const GameStateHandler = ({ metadataState, settingsState, setGameSettings }: Gam
         }
 
         const roomId = params.get('roomId') || ''
-        setGameSettings(userType !== null ? userType : UserType.player, guid(), roomId, webSocketContext.wsSettings.socketGuid)
+        setGameSettings(userType !== null ? userType : UserType.player, guid(), true, roomId, webSocketContext.wsSettings.socketGuid)
         const newWsSettings = webSocketContext.wsSettings
         newWsSettings.roomId = roomId
         if (userType !== null)
@@ -92,7 +90,6 @@ const GameStateHandler = ({ metadataState, settingsState, setGameSettings }: Gam
 const mapStateToProps = (state: StateInterface) => {
     return {
         metadataState: state.metadata,
-        settingsState: state.settings,
     }
 }
 

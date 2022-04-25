@@ -13,7 +13,6 @@ const roomUserSchema = new mongoose.Schema({
     name: String,
     type: Number,
     assignedCharacterGuid: String,
-    email: String,
     lastOnline: Number,
     active: Boolean,
 })

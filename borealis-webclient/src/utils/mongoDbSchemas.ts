@@ -56,6 +56,7 @@ export interface MapSchema {
 
 export interface GameSchema {
     roomId: string,
+    roomName: string,
     currentMapId: number,
     version: number,
     width: number,
@@ -63,6 +64,11 @@ export interface GameSchema {
     fogEnabled: boolean,
     tokenSelected: boolean,
     timestamp: number,
+}
+
+export interface RoomSchema extends GameSchema {
+    roomName: string,
+    userRole: UserType,
 }
 
 export interface TokenSchema {
@@ -87,12 +93,20 @@ export interface TokenSchema {
 }
 
 export interface UserSchema {
+    guid: string,
+    name: string,
+    email: string,
+    guest: boolean,
+    lastOnline: number,
+    active: boolean,
+}
+
+export interface RoomUserSchema {
     roomId: string,
     guid: string,
     name: string,
     type: UserType,
     assignedCharacterGuid: string,
-    email: string,
     lastOnline: number,
     active: boolean,
 }

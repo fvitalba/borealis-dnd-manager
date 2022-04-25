@@ -1,5 +1,5 @@
 import UserType from '../enums/UserType'
-import { UserSchema } from '../utils/mongoDbSchemas'
+import { RoomUserSchema, UserSchema } from '../utils/mongoDbSchemas'
 
 class User {
     public guid: string
@@ -18,9 +18,8 @@ class User {
         this.email = ''
     }
 
-    static fromDbSchema(dbUser: UserSchema): User {
+    static fromDbSchema(dbUser: RoomUserSchema): User {
         const newUser = new User(dbUser.guid, dbUser.name, dbUser.type)
-        newUser.email = dbUser.email
         return newUser
     }
 

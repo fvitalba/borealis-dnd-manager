@@ -36,6 +36,7 @@ export interface IWsSettings {
     userGuid: string,
     roomId: string,
     userType: UserType,
+    sessionToken: string,
 }
 
 export interface IWebSocketContext {
@@ -48,10 +49,11 @@ export interface IWebSocketContext {
 export const WebSocketContext = createContext<IWebSocketContext>({
     ws: null,
     wsSettings: {
-        socketGuid: '',
+        socketGuid: guid(),
         userGuid: '',
         roomId: '',
         userType: UserType.player,
+        sessionToken: '',
     },
     setWs: () => null,
     setWsSettings: () => null,
@@ -63,6 +65,7 @@ const WebSocketProvider = ({ children } : { children: ReactElement }) => {
         userGuid: '',
         roomId: '',
         userType: UserType.player,
+        sessionToken: '',
     })
     const [ws, setWs] = useState<WebSocket | null>(null)
     const loadingContext = useLoading()

@@ -1,5 +1,6 @@
 import {
     SET_GAMESETTINGS,
+    SET_SESSION_TOKEN,
     SET_CURSORS,
     UPDATE_CURSOR,
     SET_LAST_COORDINATES,
@@ -14,6 +15,8 @@ export interface MetadataState {
     userGuid: string,
     roomName: string,
     roomGuid: string,
+    isGuest: boolean,
+    sessionGuid: string,
     cursors: Array<Cursor>,
     lastPos: Point,
     downPos: Point,
@@ -25,6 +28,8 @@ export const initialMetadataState = (): MetadataState => {
         userGuid: '',
         roomName: '',
         roomGuid: '',
+        isGuest: true,
+        sessionGuid: '',
         cursors: [],
         lastPos: new Point(-1, -1),
         downPos: new Point(-1, -1),
@@ -37,6 +42,8 @@ interface MetadataAction {
     userGuid?: string,
     roomName?: string,
     roomGuid?: string,
+    isGuest?: boolean,
+    sessionGuid?: string,
     cursor?: Cursor,
     cursors?: Array<Cursor>,
     lastPos?: Point,
@@ -51,12 +58,18 @@ const metadataReducer = (state = initialMetadataState(), action: MetadataAction)
             return {
                 ...state,
                 userType: action.userType,
-                userGuid: action.userGuid ? action.userGuid : state.userGuid,
+                userGuid: action.userGuid !== undefined ? action.userGuid : state.userGuid,
                 roomName: action.roomName,
-                roomGuid: action.roomGuid ? action.roomGuid : state.roomGuid,
+                roomGuid: action.roomGuid !== undefined ? action.roomGuid : state.roomGuid,
+                isGuest: action.isGuest !== undefined ? action.isGuest : state.isGuest,
             }
         else
             return state
+    case SET_SESSION_TOKEN:
+        return {
+            ...state,
+            sessionGuid: action.sessionGuid !== undefined ? action.sessionGuid : state.sessionGuid,
+        }
     case SET_CURSORS:
         return {
             ...state,
@@ -87,13 +100,21 @@ const metadataReducer = (state = initialMetadataState(), action: MetadataAction)
 }
 
 //#region Action Creators
-export const setGameSettings = (newUserType: UserType, newUserGuid: string, newRoomName: string, newRoomGuid: string): MetadataAction => {
+export const setGameSettings = (newUserType: UserType | undefined, newUserGuid: string, newIsGuest: boolean, newRoomName: string, newRoomGuid: string): MetadataAction => {
     return {
         type: SET_GAMESETTINGS,
         userType: newUserType,
         userGuid: newUserGuid,
         roomName: newRoomName,
         roomGuid: newRoomGuid,
+        isGuest: newIsGuest,
+    }
+}
+
+export const setSessionToken = (newSessionGuid: string): MetadataAction => {
+    return {
+        type: SET_SESSION_TOKEN,
+        sessionGuid: newSessionGuid,
     }
 }
 

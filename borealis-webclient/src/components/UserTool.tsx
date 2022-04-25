@@ -14,7 +14,6 @@ import { overwriteGame, incrementVersion, setFogEnabled } from '../reducers/game
 import { setUsername, setToolSettings, toggleMousesharing, SettingsState } from '../reducers/settingsReducer'
 import { MapState, updateMaps } from '../reducers/mapReducer'
 import { TokenState, updateTokens } from '../reducers/tokenReducer'
-import { saveRoomToDatabase } from '../utils/apiHandler'
 import UserToolView from '../views/UserToolView'
 import loadAllFromDatabase from '../utils/gameLoadHandler'
 import { setUsersFromAPI, UserState } from '../reducers/userReducer'
@@ -93,6 +92,7 @@ const UserTool = ({ toggleOnUser, gameState, mapState, tokenState, chatState, ch
     const saveGameInServer = () => {
         const dbState = {
             gameState: gameState,
+            metadataState: metadataState,
             mapState: mapState,
             tokenState: tokenState,
             chatState: chatState,

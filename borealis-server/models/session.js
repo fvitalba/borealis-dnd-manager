@@ -7,14 +7,14 @@ mongoose.connect(url)
         console.log('error connecting to MongoDB:', error.message)
     })
 
-const userSchema = new mongoose.Schema({
+const sessionSchema = new mongoose.Schema({
     guid: String,
-    name: String,
-    secret: String,
-    email: String,
-    guest: Boolean,
-    lastOnline: Number,
+    userGuid: String,
+    timestamp: Number,
+    createdFrom: String,
+    createdFromDevice: String,
+    validTo: Number,
     active: Boolean,
 })
 
-export default mongoose.model('User', userSchema, 'user')
+export default mongoose.model('Session', sessionSchema, 'session')

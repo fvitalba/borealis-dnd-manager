@@ -6,7 +6,7 @@ import Message from '../classes/Message'
 import Token from '../classes/Token'
 import User from '../classes/User'
 import { IWsSettings } from '../contexts/WebSocketProvider'
-import { CharacterSchema, ChatMessageSchema, GameSchema, MapSchema, TokenSchema, UserSchema } from './mongoDbSchemas'
+import { CharacterSchema, ChatMessageSchema, GameSchema, MapSchema, RoomSchema, RoomUserSchema, TokenSchema, UserSchema } from './mongoDbSchemas'
 
 const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
 const CHARACTER_API_URL = 'characters'
@@ -16,6 +16,23 @@ const MAP_API_URL = 'maps'
 const TOKEN_API_URL = 'tokens'
 const CHAT_API_URL = 'chats'
 const SOCKET_SERVER_PORT = process.env.PORT || process.env.REACT_APP_PORT || 8000
+
+interface APIRequestParams {
+    fromSocketGuid: string,
+    fromUserGuid: string,
+    roomId: string,
+    roomName?: string,
+    hostUserGuid?: string,
+    payload: string,
+}
+
+export interface RegisterParameters {
+    userGuid: string,
+    userName: string,
+    secret: string,
+    email: string,
+    isGuest: boolean,
+}
 
 const getUrlSchema = (selectedApi: string) => {
     const host = window.location.host.replace(/:\d+$/, '')
@@ -30,15 +47,20 @@ const charactersUrl = (roomId: string): string => {
     return getUrlSchema(CHARACTER_API_URL) + `?roomId=${roomId}`
 }
 
-const roomsUrl = (roomId: string): string => {
-    return getUrlSchema(ROOM_API_URL) + `${roomId}`
+const roomsUrl = (roomId: string, hostUserGuid: string): string => {
+    const urlArray = [getUrlSchema(ROOM_API_URL)]
+    if (roomId !== '')
+        urlArray.push(`roomId=${roomId}`)
+    if (hostUserGuid !== '')
+        urlArray.push(`hostUserGuid=${hostUserGuid}`)
+    return combineUrlArrayToUrl(urlArray)
 }
 
 const usersUrl = (roomId?: string): string => {
-    if (roomId)
-        return getUrlSchema(USER_API_URL) + `?roomId=${roomId}`
-    else
-        return getUrlSchema(USER_API_URL)
+    const urlArray = [getUrlSchema(USER_API_URL)]
+    if (roomId !== undefined && roomId !== '')
+        urlArray.push(`roomId=${roomId}`)
+    return combineUrlArrayToUrl(urlArray)
 }
 
 const mapsUrl = (roomId: string): string => {
@@ -53,25 +75,46 @@ const chatsUrl = (roomId: string): string => {
     return getUrlSchema(CHAT_API_URL) + `?roomId=${roomId}`
 }
 
-interface APIRequestParams {
-    fromSocketGuid: string,
-    fromUserGuid: string,
-    roomId: string,
-    hostUserGuid?: string,
-    payload: string,
+const combineUrlArrayToUrl = (urlArray: Array<string>): string => {
+    const formattedUrlArray = urlArray.map((urlPart, index) => {
+        switch(true) {
+        case index === 0:
+            return urlPart
+        case index === 1:
+            return `?${urlPart}`
+        case index > 1:
+            return `&${urlPart}`
+        default:
+            return ''
+        }
+    })
+    return formattedUrlArray.join('')
 }
 
-export const saveRoomToDatabase = (wsSettings: IWsSettings, payload: Game) => {
+export const saveRoomToDatabase = (wsSettings: IWsSettings, roomName: string, payload: Game) => {
     return new Promise((resolve, reject) => {
         const params: APIRequestParams = {
             fromSocketGuid: wsSettings.socketGuid,
             fromUserGuid: wsSettings.userGuid,
             roomId: wsSettings.roomId,
+            roomName: roomName,
             hostUserGuid: wsSettings.userGuid,
             payload: JSON.stringify(payload),
         }
 
-        axios.post(roomsUrl(''), params)
+        axios.post(roomsUrl('', ''), params)
+            .then((result) => {
+                resolve(result.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
+export const getUserRoomsFromDatabase = (hostUserGuid: string): Promise<Array<RoomSchema>> => {
+    return new Promise((resolve, reject) => {
+        axios.get(roomsUrl('',hostUserGuid))
             .then((result) => {
                 resolve(result.data)
             })
@@ -83,7 +126,7 @@ export const saveRoomToDatabase = (wsSettings: IWsSettings, payload: Game) => {
 
 export const getRoomFromDatabase = (wsSettings: IWsSettings): Promise<Array<GameSchema>> => {
     return new Promise((resolve, reject) => {
-        axios.get(roomsUrl(wsSettings.roomId))
+        axios.get(roomsUrl(wsSettings.roomId, ''))
             .then((result) => {
                 resolve(result.data)
             })
@@ -112,7 +155,7 @@ export const saveUsersToDatabase = (wsSettings: IWsSettings, payload: Array<User
     })
 }
 
-export const getUsersFromDatabase = (wsSettings: IWsSettings): Promise<Array<UserSchema>> => {
+export const getUsersFromDatabase = (wsSettings: IWsSettings): Promise<Array<RoomUserSchema>> => {
     return new Promise ((resolve, reject) => {
         axios.get(usersUrl(wsSettings.roomId))
             .then((result) => {
@@ -124,7 +167,7 @@ export const getUsersFromDatabase = (wsSettings: IWsSettings): Promise<Array<Use
     })
 }
 
-export const getUserDetailsFromDatabase = (wsSettings: IWsSettings, userGuid?: string, userName?: string, email?: string): Promise<Array<UserSchema>> => {
+export const getUserDetailsFromDatabase = (wsSettings: IWsSettings, userGuid?: string, userName?: string, email?: string, secret?: string, isGuest?: boolean): Promise<Array<UserSchema>> => {
     return new Promise((resolve, reject) => {
         const params = {
             fromSocketGuid: wsSettings.socketGuid,
@@ -133,6 +176,8 @@ export const getUserDetailsFromDatabase = (wsSettings: IWsSettings, userGuid?: s
             userGuid: userGuid,
             userName: userName,
             email: email,
+            secret: secret,
+            isGuest: isGuest,
         }
 
         axios.post(usersUrl() + 'authenticate/', params)
@@ -145,7 +190,29 @@ export const getUserDetailsFromDatabase = (wsSettings: IWsSettings, userGuid?: s
     })
 }
 
-export const registerUserToDatabase = (wsSettings: IWsSettings, user: User): Promise<UserSchema> => {
+export const checkOrStartSession = (wsSettings: IWsSettings, userGuid: string, currentSessionId?: string, secret?: string, isGuest?: boolean): Promise<Array<string>> => {
+    return new Promise((resolve, reject) => {
+        const params = {
+            fromSocketGuid: wsSettings.socketGuid,
+            fromUserGuid: wsSettings.userGuid,
+            roomId: wsSettings.roomId,
+            userGuid: userGuid,
+            sessionToken: currentSessionId,
+            secret: secret,
+            isGuest: isGuest,
+        }
+
+        axios.post(usersUrl() + 'session/', params)
+            .then((result) => {
+                resolve(result.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
+export const registerUserToDatabase = (wsSettings: IWsSettings, user: RegisterParameters): Promise<UserSchema> => {
     return new Promise((resolve, reject) => {
         const params = {
             fromSocketGuid: wsSettings.socketGuid,

@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import Room from '../models/room.js'
-import { saveUpdateRoom } from '../utils/roomHandler.js'
+import { exportRoomWithRole, saveUpdateRoom } from '../utils/roomHandler.js'
 
 const roomRouter = new Router()
 
@@ -15,9 +15,13 @@ roomRouter.get('/:roomId?:hostUserGuid?', (request, result) => {
         queryParameters['hostUserGuid'] = hostUserGuid
 
     if (queryParameters.roomId || queryParameters.hostUserGuid) {
+        // TOOD: include rooms where the provided ID is just participant
         Room.find(queryParameters)
             .then((rooms) => {
-                result.json(rooms)
+                if ((hostUserGuid !== undefined) && (hostUserGuid !== ''))
+                    result.json(rooms.map((room) => exportRoomWithRole(room, 0  /* Host */)))
+                else
+                    result.json(rooms)
             })
     } else {
         result.json([])
@@ -28,7 +32,7 @@ roomRouter.post('/', (request, response) => {
     const body = request.body
     if (body.payload === undefined)
         return response.status(400).json({ error: 'Request Payload is missing.' })
-    if (body.roomId === undefined || body.roomId === '')
+    if ((body.roomId === undefined || body.roomId === '') || ((body.roomName === undefined) || (body.roomName === '')))
         return response.status(400).json({ error: 'Room was not specified.' })
     if ((body.hostUserGuid === undefined) || (body.hostUserGuid === ''))
         return response.status(400).json({ error: 'Host was not specified.' })

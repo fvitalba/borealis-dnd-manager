@@ -4,6 +4,7 @@ import { IWebSocketContext } from '../contexts/WebSocketProvider'
 import { CharacterState } from '../reducers/characterReducer'
 import { ChatState } from '../reducers/chatReducer'
 import { MapState } from '../reducers/mapReducer'
+import { MetadataState } from '../reducers/metadataReducer'
 import { TokenState } from '../reducers/tokenReducer'
 import { UserState } from '../reducers/userReducer'
 import { saveRoomToDatabase, saveMapsToDatabase, saveTokensToDatabase, saveChatToDatabase, saveCharactersToDatabase, saveUsersToDatabase } from './apiHandler'
@@ -18,6 +19,7 @@ import {
 
 interface DatabaseState {
     gameState: Game,
+    metadataState: MetadataState,
     mapState: MapState,
     tokenState: TokenState,
     chatState: ChatState,
@@ -36,7 +38,7 @@ interface DatabaseSaveResult {
 
 const saveAllToDatabase = async (webSocketContext: IWebSocketContext, loadingContext: ILoadingContext, dbState: DatabaseState): Promise<DatabaseSaveResult> => {
     return Promise.all([
-        saveRoomStateToDatabase(webSocketContext, loadingContext, dbState.gameState),
+        saveRoomStateToDatabase(webSocketContext, loadingContext, dbState.metadataState.roomName, dbState.gameState),
         saveMapStateToDatabase(webSocketContext, loadingContext, dbState.mapState),
         saveTokenStateToDatabase(webSocketContext, loadingContext, dbState.tokenState),
         saveChatStateToDatabase(webSocketContext, loadingContext, dbState.chatState),
@@ -64,10 +66,10 @@ const saveAllToDatabase = async (webSocketContext: IWebSocketContext, loadingCon
             }})
 }
 
-const saveRoomStateToDatabase = async (webSocketContext: IWebSocketContext, loadingContext: ILoadingContext, gameState: Game): Promise<boolean> => {
+const saveRoomStateToDatabase = async (webSocketContext: IWebSocketContext, loadingContext: ILoadingContext, roomName: string, gameState: Game): Promise<boolean> => {
     return new Promise((resolve, reject) => {
         loadingContext.startLoadingTask(API_SAVE_ROOM)
-        saveRoomToDatabase(webSocketContext.wsSettings, gameState)
+        saveRoomToDatabase(webSocketContext.wsSettings, roomName, gameState)
             .then((result) => {
                 console.log(result)
                 loadingContext.stopLoadingTask(API_SAVE_ROOM)

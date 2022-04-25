@@ -9,6 +9,7 @@ mongoose.connect(url)
 
 const gameSchema = new mongoose.Schema({
     roomId: String,
+    roomName: String,
     currentMapId: Number,
     version: Number,
     width: Number,

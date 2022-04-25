@@ -6,6 +6,8 @@ import {
     API_LOAD_TOKENS,
     API_LOAD_USERS,
     API_AUTHENTICATING_USER,
+    API_REGISTERING_USER,
+    API_STARTING_SESSION,
     CHARACTER_SAVE,
     GAME_LOAD_MAP,
     GAME_REQUEST_REFRESH,
@@ -150,5 +152,13 @@ export const LoadingTaskDescriptions = [
     {
         code: API_SAVE_USERS,
         description: 'Saving Users to Database',
+    },
+    {
+        code: API_STARTING_SESSION,
+        description: 'Starting session'
+    },
+    {
+        code: API_REGISTERING_USER,
+        description: 'Registering new user',
     }
 ]
