@@ -1,5 +1,8 @@
 import React, { ChangeEvent, useState } from 'react'
 import { connect } from 'react-redux'
+import { SHA256 } from 'crypto-js'
+import hmacSHA512 from 'crypto-js/hmac-sha512'
+import Base64 from 'crypto-js/enc-base64'
 import UserType from '../enums/UserType'
 import { useLoading } from '../hooks/useLoading'
 import { useWebSocket } from '../hooks/useSocket'
@@ -9,6 +12,8 @@ import { setUsername } from '../reducers/settingsReducer'
 import { API_AUTHENTICATING_USER, API_REGISTERING_USER, API_STARTING_SESSION } from '../utils/loadingTasks'
 import { authenticateUser, registerUser, startSession } from '../utils/loginHandler'
 import GameSetupLoginView from '../views/GameSetup/GameSetupLoginView'
+
+const SERVER_KEY = process.env.REACT_APP_SERVER_KEY
 
 interface GameSetupLoginState {
     userName: string,
@@ -93,10 +98,12 @@ const GameSetupLogin = ({ metadataState, setGameSettings, setUsername, setSessio
     }
 
     const onSubmitSetup = async () => {
+        const hashedPassword = SHA256(gameSetupLoginState.password)
+        const hmacDigest = Base64.stringify(hmacSHA512(hashedPassword, SERVER_KEY === undefined ? '' : SERVER_KEY))
         const authenticationParameters = {
             userGuid: gameSetupLoginState.userGuid,
             userName: gameSetupLoginState.userName,
-            secret: gameSetupLoginState.password,   //TODO: hash password
+            secret: hmacDigest,
             email: gameSetupLoginState.email,
             isGuest: gameSetupLoginState.isGuest,
         }

@@ -56,6 +56,7 @@ userRouter.post('/authenticate/', (request, response) => {
         break
     case (body.userName !== undefined) && (body.userName !== ''):
         if (body.isGuest) {
+            //TODO: fix for guests, we actually just need to create a new user
             User.find({ 'name': body.userName, 'guest': true, })
                 .then((users) => {
                     response.json(users.map((user) => cleanUserBeforeSending(user)))
