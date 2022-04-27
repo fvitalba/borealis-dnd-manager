@@ -1,12 +1,16 @@
+import { randomUUID } from 'crypto'
+import argon2 from 'argon2'
 import User from '../models/user.js'
 import RoomUser from '../models/roomUser.js'
-import { randomUUID } from 'crypto'
 
 export const registerUser = async (user) => {
     if (!user)
         return undefined
 
-    const foundUser = await User.findOne({ 'guid': user.guid, 'secret': user.secret })
+    //TODO: implement salting
+    const userSecret = await argon2.hash(user.secret)
+
+    const foundUser = await User.findOne({ 'guid': user.guid, 'secret': userSecret })
     if (foundUser !== null)
         if ((foundUser.guid !== undefined) && (foundUser.guid !== ''))
             return foundUser
@@ -20,7 +24,7 @@ export const registerUser = async (user) => {
         const newUser = new User({
             guid: (user.userGuid !== undefined) && (user.userGuid !== '') ? user.userGuid : randomUUID(),
             name: user.userName,
-            secret: user.secret,
+            secret: userSecret,
             email: user.email,
             guest: user.isGuest,
             lastOnline: new Date(),

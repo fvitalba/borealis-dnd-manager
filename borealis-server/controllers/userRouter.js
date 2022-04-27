@@ -1,8 +1,9 @@
 import { Router } from 'express'
+import { randomUUID } from 'crypto'
+import argon2 from 'argon2'
 import User from '../models/user.js'
 import RoomUser from '../models/roomUser.js'
 import Session from '../models/session.js'
-import { randomUUID } from 'crypto'
 import { registerUser, saveUpdateRoomUsers, cleanUserBeforeSending } from '../utils/userHandler.js'
 
 const userRouter = new Router()
@@ -46,10 +47,13 @@ userRouter.post('/authenticate/', (request, response) => {
         return response.status(400).json({ error: 'Users must specify their secret to authenticate.' })
     if (!body.userName && body.isGuest)
         return response.status(400).json({ error: 'Guests must specify a username.' })
+
+    //TODO: Salt User Password and retrieve from server
+    const userSecret = await argon2.hash(body.secret)
     
     switch(true) {
     case (body.userGuid !== undefined) && (body.userGuid !== ''):
-        User.find({ 'guid': body.userGuid, 'secret': body.secret, 'guest': false, })
+        User.find({ 'guid': body.userGuid, 'secret': userSecret, 'guest': false, })
             .then((users) => {
                 response.json(users.map((user) => cleanUserBeforeSending(user)))
             })
@@ -62,14 +66,14 @@ userRouter.post('/authenticate/', (request, response) => {
                     response.json(users.map((user) => cleanUserBeforeSending(user)))
                 })
         } else {
-            User.find({ 'name': body.userName, 'secret': body.secret, 'guest': false, })
+            User.find({ 'name': body.userName, 'secret': userSecret, 'guest': false, })
                 .then((users) => {
                     response.json(users.map((user) => cleanUserBeforeSending(user)))
                 })
         }
         break
     case (body.email !== undefined) && (body.email !== ''):
-        User.find({ 'email': body.email, 'secret': body.secret, 'guest': false, })
+        User.find({ 'email': body.email, 'secret': userSecret, 'guest': false, })
             .then((users) => {
                 response.json(users.map((user) => cleanUserBeforeSending(user)))
             })
@@ -95,6 +99,9 @@ userRouter.post('/session/', (request, response) => {
         if (!body.userGuid && !user.secret && !user.isGuest)
             return response.status(400).json({ error: 'Request is badly specified. Please provide either authentication or an existing session token.' })
     }
+
+    //TODO: Salt User Password and retrieve from server
+    const userSecret = await argon2.hash(body.secret)
     
     //TODO: check for session validity
     switch(true) {
@@ -104,8 +111,8 @@ userRouter.post('/session/', (request, response) => {
                 if (sessions.length > 0)
                     response.json(sessions.map((session) => session.guid))
                 else {
-                    if (body.secret) {
-                        User.find({ 'guid': body.userGuid, 'secret': body.secret, 'guest': false, })
+                    if (userSecret) {
+                        User.find({ 'guid': body.userGuid, 'secret': userSecret, 'guest': false, })
                             .then((users) => {
                                 if (users.length > 0) {
                                     const newSession = new Session({
@@ -132,8 +139,8 @@ userRouter.post('/session/', (request, response) => {
                 }
             })
         break
-    case ((body.userGuid !== '' && body.userGuid !== undefined) && (body.secret !== '' && body.secret !== undefined)):
-        User.find({ 'guid': body.userGuid, 'secret': body.secret, 'guest': false, })
+    case ((body.userGuid !== '' && body.userGuid !== undefined) && (userSecret !== '' && userSecret !== undefined)):
+        User.find({ 'guid': body.userGuid, 'secret': userSecret, 'guest': false, })
             .then((users) => {
                 if (users.length > 0) {
                     const newSession = new Session({
