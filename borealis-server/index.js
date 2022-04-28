@@ -7,14 +7,13 @@ import { WebSocketServer } from 'ws'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import queryString from 'query-string'
-import Room from './models/room.js'
-import User from './models/user.js'
-import Character from './models/character.js'
-import Message from './models/chatMessage.js'
-import { handleIncomingMessage } from './controllers/messageHandler.js'
-import { saveUpdateRoomUser } from './controllers/userHandler.js'
-import { saveUpdateRoomCharacter } from './controllers/characterHandler.js'
-import { deleteOfflineUsers } from './middleware/userMiddleware.js'
+import characterRouter from './controllers/characterRouter.js'
+import roomRouter from './controllers/roomRouter.js'
+import userRouter from './controllers/userRouter.js'
+import mapRouter from './controllers/mapRouter.js'
+import tokenRouter from './controllers/tokenRouter.js'
+import chatRouter from './controllers/chatRouter.js'
+import { handleIncomingMessage } from './utils/messageHandler.js'
 
 const app = express()
 const privateKeyFilename = 'privkey.pem'
@@ -25,107 +24,13 @@ app.use(cors())
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 
-app.use(deleteOfflineUsers)
 app.use(express.static('build'))
-
-app.get('/api/rooms/:roomName?', (request, result) => {
-    const roomName = request.params.roomName
-    let currentRoom = undefined
-    if (roomName) {
-        Room.find({ 'metadata.room': roomName })
-            .then((rooms) => {
-                rooms.forEach((room) => {
-                    if ((!currentRoom) || (currentRoom.game.gen < room.game.gen)) {
-                        currentRoom = room
-                    }
-                })
-                result.json(currentRoom)
-            })
-    } else {
-        result.json([])
-    }
-})
-
-app.get('/api/room-users/:roomName?:userGuid?', (request, result) => {
-    const roomName = request.params.roomName ? request.params.roomName : request.query.roomName
-    const userGuid = request.params.userGuid ? request.params.userGuid : request.query.userGuid
-
-
-    if (roomName) {
-        const queryParameters = userGuid ? { 'roomName': roomName, 'guid': userGuid, } : { 'roomName': roomName, }
-        User.find({ ...queryParameters, 'active': true, })
-            .then((users) => {
-                result.json(users)
-            })
-    } else {
-        result.json([])
-    }
-})
-
-app.get('/api/room-characters/:roomName?:characterGuid?', (request, result) => {
-    const roomName = request.params.roomName ? request.params.roomName : request.query.roomName
-    const characterGuid = request.params.characterGuid ? request.params.characterGuid : request.query.characterGuid
-
-    if (roomName) {
-        const queryParameters = characterGuid ? { 'roomName': roomName, 'guid': characterGuid, } : { 'roomName': roomName, }
-        Character.find(queryParameters)
-            .then((characters) => {
-                result.json(characters)
-            })
-    } else {
-        result.json([])
-    }
-})
-
-app.post('/api/room-characters', (request, response) => {
-    const body = request.body
-    if (body.payload === undefined)
-        return response.status(400).json({ error: 'Request Payload is missing.' })
-    if (body.room === undefined)
-        return response.status(400).json({ error: 'Room was not specified.' })
-
-    saveUpdateRoomCharacter(body.room, JSON.parse(body.payload))
-        .then((result) => response.json(result))
-})
-
-app.get('/api/room-chat/:roomName?', (request, result) => {
-    /*
-    const roomName = request.params.roomName
-    if (roomName) {
-        User.find({ 'roomName': roomName }).then((users) => {
-            result.json(users)
-        })
-    } else {
-        result.json([])
-    }
-    */
-})
-
-app.post('/api/rooms', (request, response) => {
-    const body = request.body
-    if (body.payload === undefined)
-        return response.status(400).json({ error: 'Request Payload is missing.' })
-    if (body.room === undefined)
-        return response.status(400).json({ error: 'Room was not specified.' })
-
-    const room = new Room({
-        ...body.payload,
-        timestamp: new Date(),
-    })
-    room.save()
-        .then((result) => {
-            response.json(result)
-        })
-})
-
-app.delete('api/rooms/:roomName?', (request, result) => {
-    /*
-    const id = Number(request.params.id)
-    notes = notes.filter(note => note.id !== id)
-
-    response.status(204).end()
-    */
-})
+app.use('/api/characters', characterRouter)
+app.use('/api/rooms', roomRouter)
+app.use('/api/users', userRouter)
+app.use('/api/maps', mapRouter)
+app.use('/api/tokens', tokenRouter)
+app.use('/api/chats', chatRouter)
 
 const createServer = () => {
     // Check SSL files & create HTTPS server
@@ -148,20 +53,18 @@ wss.on('connection', (websocketConnection, connectionRequest) => {
     const [path, params] = connectionRequest?.url?.split('?')
     const connectionParams = queryString.parse(params)
     
-    websocketConnection.room = path.substring(1)
-    websocketConnection.guid = connectionParams.guid
-    websocketConnection.username = connectionParams.username
-    websocketConnection.isHost = connectionParams.isHost
-    saveUpdateRoomUser(websocketConnection.room, websocketConnection.guid, websocketConnection.username, websocketConnection.isHost)
+    websocketConnection.roomId = connectionParams.roomId
+    websocketConnection.socketGuid = connectionParams.socketGuid
+    websocketConnection.userGuid = connectionParams.userGuid
+    websocketConnection.userType = connectionParams.userType
     websocketConnection.on('message', (message) => {
-        saveUpdateRoomUser(websocketConnection.room, websocketConnection.guid, websocketConnection.username, websocketConnection.isHost)
         handleIncomingMessage(websocketConnection, message)
             .then(({ outgoingMessage, sendBackToSender }) => {
                 if (outgoingMessage) {
                     // Forward message to all other clients (for this room)
                     wss.clients.forEach(client => {
                         if (client.readyState === client.OPEN) {
-                            if (client.room !== websocketConnection.room)
+                            if (client.roomId !== websocketConnection.roomId)
                                 return // Don't send to other rooms
                             if ((client === websocketConnection) && !sendBackToSender)
                                 return // Don't send back to sender

@@ -1,14 +1,19 @@
 {
+    "root": true,
     "env": {
         "node": true,
         "browser": true,
-        "es2021": true
+        "es2016": true,
+        "jest": true
     },
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:tailwindcss/recommended"
+        "plugin:tailwindcss/recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
@@ -18,7 +23,8 @@
     },
     "plugins": [
         "react",
-        "tailwindcss"
+        "tailwindcss",
+        "@typescript-eslint"
     ],
     "rules": {
         "indent": [
@@ -38,7 +44,7 @@
             "never"
         ],
         "react/react-in-jsx-scope": "off",
-        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts"] }],
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
         "react/prop-types": "off",
         "eqeqeq": "error",
         "no-trailing-spaces": "error",
@@ -52,6 +58,7 @@
     },
     "settings": {
         "react": {
+            "pragma": "React",
             "version": "detect"
         },
         "tailwindcss": {

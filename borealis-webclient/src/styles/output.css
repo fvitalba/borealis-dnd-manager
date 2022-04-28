@@ -411,8 +411,44 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-backdrop-saturate:  ;
   --tw-backdrop-sepia:  ;
 }
+.container {
+  width: 100%;
+}
+@media (min-width: 640px) {
+
+  .container {
+    max-width: 640px;
+  }
+}
+@media (min-width: 768px) {
+
+  .container {
+    max-width: 768px;
+  }
+}
+@media (min-width: 1024px) {
+
+  .container {
+    max-width: 1024px;
+  }
+}
+@media (min-width: 1280px) {
+
+  .container {
+    max-width: 1280px;
+  }
+}
+@media (min-width: 1536px) {
+
+  .container {
+    max-width: 1536px;
+  }
+}
 .invisible {
   visibility: hidden;
+}
+.static {
+  position: static;
 }
 .block {
   display: block;
@@ -429,14 +465,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 .\!hidden {
   display: none !important;
 }
-.w-12 {
-  width: 3rem;
-}
 .w-48 {
   width: 12rem;
 }
 .w-96 {
   width: 24rem;
+}
+.w-12 {
+  width: 3rem;
 }
 @keyframes reverse-spin {
 
@@ -446,9 +482,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .animate-reverse-spin {
   animation: reverse-spin 1s linear infinite;
-}
-.resize {
-  resize: both;
 }
 .flex-row {
   flex-direction: row;
@@ -496,15 +529,22 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-text-opacity: 1;
   color: rgb(185 28 28 / var(--tw-text-opacity));
 }
-.text-red-300 {
-  --tw-text-opacity: 1;
-  color: rgb(252 165 165 / var(--tw-text-opacity));
-}
 .opacity-50 {
   opacity: 0.5;
 }
 .filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+h1 {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 800;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+  text-align: center;
+  --tw-text-opacity: 1;
+  color: rgb(2 132 199 / var(--tw-text-opacity));
 }
 
 .game-setup-container {
@@ -1244,6 +1284,7 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-left: auto;
   margin-right: auto;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-content: center;
   align-items: center;
@@ -1252,6 +1293,24 @@ Ensure the default browser behavior of the `hidden` attribute.
   z-index: 130;
   --tw-text-opacity: 1;
   color: rgb(209 213 219 / var(--tw-text-opacity));
+}
+
+.loading-task-list {
+  text-align: center;
+  align-content: center;
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity));
+  font-weight: 800;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.25rem;
+}
+
+.loading-task {
+  display: flex;
+  flex-direction: row;
 }
 
 .selected-button {

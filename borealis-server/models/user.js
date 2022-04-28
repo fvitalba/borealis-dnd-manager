@@ -9,12 +9,12 @@ mongoose.connect(url)
 
 const userSchema = new mongoose.Schema({
     guid: String,
-    userName: String,
-    roomName: String,
+    name: String,
+    secret: String,
+    email: String,
+    guest: Boolean,
     lastOnline: Number,
-    isHost: Boolean,
     active: Boolean,
-    characterGuid: String,
 })
 
-export default mongoose.model('User', userSchema, 'room-user')
+export default mongoose.model('User', userSchema, 'user')

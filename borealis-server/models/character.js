@@ -7,8 +7,19 @@ mongoose.connect(url)
         console.log('error connecting to MongoDB:', error.message)
     })
 
+const characterClassSchema = new mongoose.Schema({
+    level: Number,
+    class: Number,
+})
+
+const characterHitDiceSchema = new mongoose.Schema({
+    numberOfDice: Number,
+    remainingNoOfDice: Number,
+    hitDiceType: Number,
+})
+
 const characterSchema = new mongoose.Schema({
-    roomName: String,
+    roomId: String,
     guid: String,
     name: String,
     strength: Number,
@@ -23,13 +34,10 @@ const characterSchema = new mongoose.Schema({
     maxHealth: Number,
     currHealth: Number,
     tempHealth: Number,
-    level: Number,
-    class: String,
-    maxNoOfHitDice: Number,
-    currNoOfHitDice: Number,
-    hitDiceType: Number,
-    timestamp: Number,
+    class: [characterClassSchema],
+    hitDice: [characterHitDiceSchema],
     username: String,
+    timestamp: Number,
 })
 
 export default mongoose.model('Character', characterSchema, 'room-character')

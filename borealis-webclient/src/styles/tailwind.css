@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+h1 {
+    @apply text-3xl;
+    @apply font-extrabold;
+    @apply subpixel-antialiased;
+    @apply text-center;
+    @apply text-secondary-600;
+}
+
 .game-setup-container {
     @apply w-full;
     @apply container;
@@ -458,6 +466,7 @@
     @apply h-screen;
     @apply mx-auto;
     @apply flex;
+    @apply flex-col;
     @apply justify-center;
     @apply content-center;
     @apply items-center;
@@ -465,6 +474,22 @@
     @apply bg-primary-800/60;
     @apply z-loading;
     @apply text-primary-300;
+}
+
+.loading-task-list {
+    @apply text-center;
+    @apply content-center;
+    @apply text-primary-300;
+    @apply font-extrabold;
+    @apply text-sm;
+    @apply flex;
+    @apply flex-col;
+    @apply mt-5;
+}
+
+.loading-task {
+    @apply flex;
+    @apply flex-row;
 }
 
 .selected-button {
