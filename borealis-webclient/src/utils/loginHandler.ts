@@ -22,9 +22,9 @@ export const authenticateUser = async (wsSettings: IWsSettings, params: Authenti
         throw new Error('In order to authenticate, please provide either userGuid or userName.')
 
     return getUserDetailsFromDatabase(wsSettings, params.userGuid, params.userName, params.email, params.secret, params.isGuest)
-        .then((userDetails) => {
-            if (userDetails.length > 0)
-                return userDetails[0]
+        .then((dbUser) => {
+            if (dbUser)
+                return dbUser
             else
                 return null
         })

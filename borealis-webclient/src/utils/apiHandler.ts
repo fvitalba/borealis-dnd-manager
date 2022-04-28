@@ -167,7 +167,7 @@ export const getUsersFromDatabase = (wsSettings: IWsSettings): Promise<Array<Roo
     })
 }
 
-export const getUserDetailsFromDatabase = (wsSettings: IWsSettings, userGuid?: string, userName?: string, email?: string, secret?: string, isGuest?: boolean): Promise<Array<UserSchema>> => {
+export const getUserDetailsFromDatabase = (wsSettings: IWsSettings, userGuid?: string, userName?: string, email?: string, secret?: string, isGuest?: boolean): Promise<UserSchema> => {
     return new Promise((resolve, reject) => {
         const params = {
             fromSocketGuid: wsSettings.socketGuid,

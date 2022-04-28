@@ -48,40 +48,54 @@ userRouter.post('/authenticate/', (request, response) => {
     if (!body.userName && body.isGuest)
         return response.status(400).json({ error: 'Guests must specify a username.' })
 
-    //TODO: Salt User Password and retrieve from server
-    argon2.hash(body.secret)
-        .then((userSecret) => {
-            switch(true) {
-            case (body.userGuid !== undefined) && (body.userGuid !== ''):
-                User.find({ 'guid': body.userGuid, 'secret': userSecret, 'guest': false, })
+    switch(true) {
+        case (body.userGuid !== undefined) && (body.userGuid !== ''):
+            User.findOne({ 'guid': body.userGuid, 'guest': false, })
+                .then((existingUser) => {
+                    if ((existingUser !== null) && ((existingUser.guid !== undefined) && (existingUser.guid !== ''))) {
+                        argon2.verify(existingUser.secret, body.secret)
+                            .then((passwordsMatch) => {
+                                if (passwordsMatch)
+                                    response.json(cleanUserBeforeSending(existingUser))
+                            })
+                    }
+                })
+            break
+        case (body.userName !== undefined) && (body.userName !== ''):
+            if (body.isGuest) {
+                //TODO: fix for guests, we actually just need to create a new user
+                User.find({ 'name': body.userName, 'guest': true, })
                     .then((users) => {
                         response.json(users.map((user) => cleanUserBeforeSending(user)))
                     })
-                break
-            case (body.userName !== undefined) && (body.userName !== ''):
-                if (body.isGuest) {
-                    //TODO: fix for guests, we actually just need to create a new user
-                    User.find({ 'name': body.userName, 'guest': true, })
-                        .then((users) => {
-                            response.json(users.map((user) => cleanUserBeforeSending(user)))
-                        })
-                } else {
-                    User.find({ 'name': body.userName, 'secret': userSecret, 'guest': false, })
-                        .then((users) => {
-                            response.json(users.map((user) => cleanUserBeforeSending(user)))
-                        })
-                }
-                break
-            case (body.email !== undefined) && (body.email !== ''):
-                User.find({ 'email': body.email, 'secret': userSecret, 'guest': false, })
-                    .then((users) => {
-                        response.json(users.map((user) => cleanUserBeforeSending(user)))
+            } else {
+                User.findOne({ 'name': body.userName, 'guest': false, })
+                    .then((existingUser) => {
+                        if ((existingUser !== null) && ((existingUser.guid !== undefined) && (existingUser.guid !== ''))) {
+                            argon2.verify(existingUser.secret, body.secret)
+                                .then((passwordsMatch) => {
+                                    if (passwordsMatch)
+                                        response.json(cleanUserBeforeSending(existingUser))
+                                })
+                        }
                     })
-                break
-            default:
-                return response.status(400).json({ error: 'All provided parameters were empty. Please rephrase the request.' })
             }
-        })
+            break
+        case (body.email !== undefined) && (body.email !== ''):
+            User.findOne({ 'email': body.email, 'guest': false, })
+                .then((existingUser) => {
+                    if ((existingUser !== null) && ((existingUser.guid !== undefined) && (existingUser.guid !== ''))) {
+                        argon2.verify(existingUser.secret, body.secret)
+                            .then((passwordsMatch) => {
+                                if (passwordsMatch)
+                                    response.json(cleanUserBeforeSending(existingUser))
+                            })
+                    }
+                })
+            break
+        default:
+            return response.status(400).json({ error: 'All provided parameters were empty. Please rephrase the request.' })
+        }
 })
 
 userRouter.post('/register/', (request, response) => {
