@@ -26,7 +26,8 @@ class Map {
     }
 
     static fromDbSchema(dbMap: MapSchema): Map {
-        const newMap = new Map(dbMap.id, dbMap.name, dbMap.backgroundUrl, dbMap.x, dbMap.y, dbMap.width, dbMap.height, dbMap.drawPaths, dbMap.fogPaths)
+        const newMap = new Map(dbMap.id, dbMap.name, dbMap.backgroundUrl, dbMap.x, dbMap.y, dbMap.width, dbMap.height, dbMap.drawPaths.map((dbPath) => Path.fromDbSchema(dbPath)), dbMap.fogPaths.map((dbPath) => Path.fromDbSchema(dbPath)))
+        console.log('newMap',newMap,'schemaMap',dbMap)
         return newMap
     }
 

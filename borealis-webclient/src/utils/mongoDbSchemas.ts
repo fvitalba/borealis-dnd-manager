@@ -4,6 +4,7 @@ import MessageType from '../enums/MessageType'
 import TokenCondition from '../enums/TokenCondition'
 import TokenSize from '../enums/TokenSize'
 import TokenType from '../enums/TokenType'
+import ControlTool from '../enums/Tool'
 import UserType from '../enums/UserType'
 
 export interface CharacterSchema {
@@ -40,6 +41,20 @@ export interface ChatMessageSchema {
     read: boolean,
 }
 
+export interface PointSchema {
+    x: number,
+    y: number,
+}
+
+export interface PathSchema {
+    points: Array<PointSchema>,
+    r: number,
+    r2: number,
+    tool: ControlTool,
+    drawColor: string,
+    drawSize: number,
+}
+
 export interface MapSchema {
     roomId: string,
     name: string,
@@ -49,8 +64,8 @@ export interface MapSchema {
     y: number,
     width: number,
     height: number,
-    drawPaths: Array<Path>,
-    fogPaths: Array<Path>,
+    drawPaths: Array<PathSchema>,
+    fogPaths: Array<PathSchema>,
     timestamp: number,
 }
 

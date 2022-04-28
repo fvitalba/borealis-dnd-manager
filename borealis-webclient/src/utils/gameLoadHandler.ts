@@ -82,7 +82,9 @@ const loadMapsFromDatabase = async (webSocketContext: IWebSocketContext, loading
         loadingContext.startLoadingTask(API_LOAD_MAPS)
         getMapsFromDatabase(webSocketContext.wsSettings)
             .then((result) => {
+                console.log('db maps',result)
                 const newMaps = result.map((dbMap) => Map.fromDbSchema(dbMap))
+                console.log('new maps',newMaps)
                 const newMapState = {
                     maps: newMaps,
                 }
@@ -123,6 +125,7 @@ const loadChatFromDatabase = async (webSocketContext: IWebSocketContext, loading
         loadingContext.startLoadingTask(API_LOAD_CHAT)
         getChatFromDatabase(webSocketContext.wsSettings)
             .then((result) => {
+                console.log('messages',result)
                 const newChatMessages = result.map((dbChatMessage) => Message.fromDbSchema(dbChatMessage))
                 const newChatState = {
                     username: '',

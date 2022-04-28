@@ -1,5 +1,6 @@
 import Point from './Point'
 import ControlTool from '../enums/Tool'
+import { PathSchema } from '../utils/mongoDbSchemas'
 
 class Path {
     public points: Array<Point>
@@ -16,6 +17,11 @@ class Path {
         this.tool = newTool
         this.drawColor = newDrawColor
         this.drawSize = newDrawSize
+    }
+
+    static fromDbSchema(dbSchemaPath: PathSchema): Path {
+        const newPath = new Path(dbSchemaPath.points.map((dbPoint) => Point.fromDbSchema(dbPoint)), dbSchemaPath.r, dbSchemaPath.r2, dbSchemaPath.tool, dbSchemaPath.drawColor, dbSchemaPath.drawSize)
+        return newPath
     }
 }
 

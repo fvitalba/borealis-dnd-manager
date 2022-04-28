@@ -1,3 +1,5 @@
+import { PointSchema } from '../utils/mongoDbSchemas'
+
 class Point {
     public x: number
     public y: number
@@ -5,6 +7,10 @@ class Point {
     public constructor(newX: number, newY: number) {
         this.x = newX
         this.y = newY
+    }
+
+    static fromDbSchema(dbPoint: PointSchema): Point {
+        return new Point(dbPoint.x, dbPoint.y)
     }
 
     public translatePoint(offsetX: number, offsetY: number, scale: number): Point {

@@ -27,6 +27,7 @@ const Drawing = ({ gameState, mapState, settingsState }: DrawingProps) => {
 
         ctx.beginPath()
         ctx.clearRect(0, 0, gameState.width, gameState.height)
+        console.log('drawing paths',map.drawPaths)
         for(let pathId = 0; pathId < map.drawPaths.length; pathId++) {
             const currPath = map.drawPaths[pathId]
             const tool = currPath.points.length > 0 ? currPath.tool : ControlTool.Move

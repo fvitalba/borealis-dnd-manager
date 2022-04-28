@@ -16,7 +16,7 @@ const pathSchema = new mongoose.Schema({
     points: [pointSchema],
     r: Number,
     r2: Number,
-    tool: String,
+    tool: Number,
     drawColor: String,
     drawSize: Number,
 })
