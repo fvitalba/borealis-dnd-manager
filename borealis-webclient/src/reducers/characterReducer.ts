@@ -65,7 +65,6 @@ const characterReducer = (state = initialCharacterState(), action: CharacterActi
     case ASSIGN_CHARACTER_TO_USER:
         newCharacters = newCharacters.map((character: Character) => {
             if (character.guid === action.characterGuid) {
-                //TODO: Verify if this is actually OK with state management
                 if (action.username)
                     character.username = action.username
                 return character

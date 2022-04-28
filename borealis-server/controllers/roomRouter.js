@@ -14,7 +14,6 @@ roomRouter.get('/:roomId?:hostUserGuid?', (request, result) => {
     if ((hostUserGuid !== undefined) && (hostUserGuid !== ''))
         queryParameters['hostUserGuid'] = hostUserGuid
 
-    console.log('parameters',queryParameters)
     if (queryParameters.roomId || queryParameters.hostUserGuid) {
         // TOOD: include rooms where the provided ID is just participant
         Room.find(queryParameters)

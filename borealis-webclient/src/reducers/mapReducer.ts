@@ -60,7 +60,7 @@ const mapReducer = (state = initialMapState(), action: MapAction): MapState => {
     case RESET_FOG:
         if (action.mapId)
             newMaps = state.maps.map((map) => {
-                newMap = map
+                newMap = map.copy()
                 if (map.id === action.mapId)
                     newMap.fogPaths = new Array<Path>()
                 return newMap
@@ -72,7 +72,7 @@ const mapReducer = (state = initialMapState(), action: MapAction): MapState => {
     case RESET_DRAW:
         if (action.mapId)
             newMaps = state.maps.map((map) => {
-                newMap = map
+                newMap = map.copy()
                 if (map.id === action.mapId)
                     newMap.drawPaths = new Array<Path>()
                 return newMap

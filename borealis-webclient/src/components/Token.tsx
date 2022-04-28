@@ -33,7 +33,7 @@ const TokenComponent = ({ token, userType, gameState, tokenState, settingsState,
         if (!scaledToken.isAllowedToMove(userType))
             return
         const updatedTokensWithSelection = tokenState.tokens.map((currToken) => {
-            const newToken = currToken
+            const newToken = currToken.copy()
             newToken.selected = newToken.guid === scaledToken.guid
             return newToken
         })

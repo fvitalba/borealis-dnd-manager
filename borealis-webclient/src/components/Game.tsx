@@ -62,7 +62,7 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
         const selectedTokens = tokenState.tokens.filter((token) => token.selected)
         if (selectedTokens.length > 0) {
             const newTokens = tokenState.tokens.map((token) => {
-                const newToken = token
+                const newToken = token.copy()
                 newToken.x = token.x + (e.movementX / settingsState.scale)
                 newToken.y = token.y + (e.movementY / settingsState.scale)
                 return !token.selected ? token : newToken
@@ -285,7 +285,7 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
             }
             currentPath = new Path([], settingsState.drawSize, 0, settingsState.tool, settingsState.drawColor, settingsState.drawSize)
             const updatedMaps = mapState.maps.map((map) => {
-                const newMap = map
+                const newMap = map.copy()
                 newMap.fogPaths = fogPaths
                 newMap.drawPaths = drawPaths
                 return map.id === currMap.id ? newMap : map
