@@ -97,7 +97,6 @@ userRouter.post('/register/', (request, response) => {
 
 userRouter.post('/session/', (request, response) => {
     const body = request.body
-    console.log('body',body)
     if (!body.userGuid && !body.sessionToken) {
         if (!body.userGuid && !body.secret && !body.isGuest)
             return response.status(400).json({ error: 'Request is badly specified. Please provide either authentication or an existing session token.' })

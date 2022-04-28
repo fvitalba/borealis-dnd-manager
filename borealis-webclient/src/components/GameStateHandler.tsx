@@ -36,13 +36,16 @@ const GameStateHandler = ({ metadataState, setGameSettings }: GameStateHandlerPr
             userType = null
         }
 
+        //TODO: fix connection from url for guest users
         const roomId = params.get('roomId') || ''
-        setGameSettings(userType !== null ? userType : UserType.player, guid(), true, roomId, webSocketContext.wsSettings.socketGuid)
-        const newWsSettings = webSocketContext.wsSettings
-        newWsSettings.roomId = roomId
-        if (userType !== null)
-            newWsSettings.userType = userType
-        webSocketContext.setWsSettings(newWsSettings)
+        if (roomId !== '') {
+            setGameSettings(userType !== null ? userType : UserType.player, guid(), true, roomId, webSocketContext.wsSettings.socketGuid)
+            const newWsSettings = webSocketContext.wsSettings
+            newWsSettings.roomId = roomId
+            if (userType !== null)
+                newWsSettings.userType = userType
+            webSocketContext.setWsSettings(newWsSettings)
+        }
     }, [])
 
     useEffect(() => {
@@ -51,7 +54,6 @@ const GameStateHandler = ({ metadataState, setGameSettings }: GameStateHandlerPr
         else
             document.title = 'Borealis D&D'
 
-        console.log('attempt to open new socket:', metadataState)
         if ((metadataState.roomGuid !== '') && (metadataState.userGuid !== '')) {
             webSocketContext.setWsSettings({
                 ...webSocketContext.wsSettings,
@@ -74,12 +76,13 @@ const GameStateHandler = ({ metadataState, setGameSettings }: GameStateHandlerPr
                 loadingContext.stopLoadingTask(WEBSOCKET_OPEN_CONNECTION)
             }
         }
-    }, [ metadataState.roomGuid, metadataState.userGuid, metadataState.userType ])
+    }, [ metadataState.roomGuid, metadataState.userGuid, metadataState.roomName, metadataState.userType ])
 
+    const gameIsSetUp = (webSocketContext.ws && (webSocketContext.ws.readyState === 1)) && ((metadataState.roomGuid !== '') && (metadataState.userGuid !== ''))
     return(
         <>
             <DataReceiver />
-            { (webSocketContext.ws && (webSocketContext.ws.readyState === 1))
+            { gameIsSetUp
                 ? <Game />
                 : <GameSetup />
             }

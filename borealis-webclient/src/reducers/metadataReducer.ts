@@ -54,12 +54,12 @@ const metadataReducer = (state = initialMetadataState(), action: MetadataAction)
     let newCursors: Array<Cursor> = JSON.parse(JSON.stringify(state.cursors))
     switch (action.type) {
     case SET_GAMESETTINGS:
-        if ((action.userType !== undefined) && (action.roomName) && (action.roomGuid))
+        if ((action.roomGuid !== undefined) || (action.userGuid !== undefined))
             return {
                 ...state,
-                userType: action.userType,
+                userType: action.userType !== undefined ? action.userType : state.userType,
                 userGuid: action.userGuid !== undefined ? action.userGuid : state.userGuid,
-                roomName: action.roomName,
+                roomName: action.roomName !== undefined ? action.roomName : state.roomName,
                 roomGuid: action.roomGuid !== undefined ? action.roomGuid : state.roomGuid,
                 isGuest: action.isGuest !== undefined ? action.isGuest : state.isGuest,
             }

@@ -113,6 +113,7 @@ const GameSetupRoomSelection = ({ metadataState, settingsState, setGameSettings,
                 roomId: gameSetupRoomSelectionState.roomId,
                 userType: gameSetupRoomSelectionState.userType,
             })
+            //TODO: probably need to load metadata too
             loadAllFromDatabase(webSocketContext, loadingContext)
                 .then((dbState) => {
                     if (dbState.gameState)
@@ -151,7 +152,7 @@ const GameSetupRoomSelection = ({ metadataState, settingsState, setGameSettings,
             })
     },[ metadataState.userGuid ])
 
-    const isSubmitNewEnabled = ((gameSetupRoomSelectionState.roomId !== '') && (gameSetupRoomSelectionState.newRoomName !== ''))
+    const isSubmitNewEnabled = (gameSetupRoomSelectionState.newRoomName !== '')
     const isSubmitSelectionEnabled = ((gameSetupRoomSelectionState.roomId !== '') && (gameSetupRoomSelectionState.selectedRoomName !== ''))
 
     return (
