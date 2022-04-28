@@ -10,32 +10,48 @@ export const registerUser = async (user) => {
     //TODO: implement salting
     const userSecret = await argon2.hash(user.secret)
 
-    const foundUser = await User.findOne({ 'guid': user.guid, 'secret': userSecret })
-    if (foundUser !== null)
-        if ((foundUser.guid !== undefined) && (foundUser.guid !== ''))
-            return foundUser
-
     return User.findOne({ $or: [{ 'guid': user.guid, }, { 'name': user.userName }, { 'email': user.email }] })
         .then((existingUser) => {
-            if (existingUser !== null)
-                if ((existingUser.guid !== undefined) && (existingUser.guid !== ''))
-                    return undefined
-
-        const newUser = new User({
-            guid: (user.userGuid !== undefined) && (user.userGuid !== '') ? user.userGuid : randomUUID(),
-            name: user.userName,
-            secret: userSecret,
-            email: user.email,
-            guest: user.isGuest,
-            lastOnline: new Date(),
-            active: true,
-        })
-        return newUser.save((error, document) => {
-            if (!error)
-                return cleanUserBeforeSending(document)
-            else
-                return undefined
-        })
+            if ((existingUser !== null) && ((existingUser.guid !== undefined) && (existingUser.guid !== ''))) {
+                return argon2.verify(existingUser.secret, user.secret)
+                    .then((passwordsMatch) => {
+                        if (passwordsMatch)
+                            return cleanUserBeforeSending(existingUser)
+                        else {
+                            const newUser = new User({
+                                guid: (user.userGuid !== undefined) && (user.userGuid !== '') ? user.userGuid : randomUUID(),
+                                name: user.userName,
+                                secret: userSecret,
+                                email: user.email,
+                                guest: user.isGuest,
+                                lastOnline: new Date(),
+                                active: true,
+                            })
+                            return newUser.save((error, document) => {
+                                if (!error)
+                                    return cleanUserBeforeSending(document)
+                                else
+                                    return undefined
+                            })
+                        }
+                    })
+            } else {
+                const newUser = new User({
+                    guid: (user.userGuid !== undefined) && (user.userGuid !== '') ? user.userGuid : randomUUID(),
+                    name: user.userName,
+                    secret: userSecret,
+                    email: user.email,
+                    guest: user.isGuest,
+                    lastOnline: new Date(),
+                    active: true,
+                })
+                return newUser.save((error, document) => {
+                    if (!error)
+                        return cleanUserBeforeSending(document)
+                    else
+                        return undefined
+                })
+            }
     })    
 }
 

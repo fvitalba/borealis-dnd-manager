@@ -49,38 +49,39 @@ userRouter.post('/authenticate/', (request, response) => {
         return response.status(400).json({ error: 'Guests must specify a username.' })
 
     //TODO: Salt User Password and retrieve from server
-    const userSecret = await argon2.hash(body.secret)
-    
-    switch(true) {
-    case (body.userGuid !== undefined) && (body.userGuid !== ''):
-        User.find({ 'guid': body.userGuid, 'secret': userSecret, 'guest': false, })
-            .then((users) => {
-                response.json(users.map((user) => cleanUserBeforeSending(user)))
-            })
-        break
-    case (body.userName !== undefined) && (body.userName !== ''):
-        if (body.isGuest) {
-            //TODO: fix for guests, we actually just need to create a new user
-            User.find({ 'name': body.userName, 'guest': true, })
-                .then((users) => {
-                    response.json(users.map((user) => cleanUserBeforeSending(user)))
-                })
-        } else {
-            User.find({ 'name': body.userName, 'secret': userSecret, 'guest': false, })
-                .then((users) => {
-                    response.json(users.map((user) => cleanUserBeforeSending(user)))
-                })
-        }
-        break
-    case (body.email !== undefined) && (body.email !== ''):
-        User.find({ 'email': body.email, 'secret': userSecret, 'guest': false, })
-            .then((users) => {
-                response.json(users.map((user) => cleanUserBeforeSending(user)))
-            })
-        break
-    default:
-        return response.status(400).json({ error: 'All provided parameters were empty. Please rephrase the request.' })
-    }
+    argon2.hash(body.secret)
+        .then((userSecret) => {
+            switch(true) {
+            case (body.userGuid !== undefined) && (body.userGuid !== ''):
+                User.find({ 'guid': body.userGuid, 'secret': userSecret, 'guest': false, })
+                    .then((users) => {
+                        response.json(users.map((user) => cleanUserBeforeSending(user)))
+                    })
+                break
+            case (body.userName !== undefined) && (body.userName !== ''):
+                if (body.isGuest) {
+                    //TODO: fix for guests, we actually just need to create a new user
+                    User.find({ 'name': body.userName, 'guest': true, })
+                        .then((users) => {
+                            response.json(users.map((user) => cleanUserBeforeSending(user)))
+                        })
+                } else {
+                    User.find({ 'name': body.userName, 'secret': userSecret, 'guest': false, })
+                        .then((users) => {
+                            response.json(users.map((user) => cleanUserBeforeSending(user)))
+                        })
+                }
+                break
+            case (body.email !== undefined) && (body.email !== ''):
+                User.find({ 'email': body.email, 'secret': userSecret, 'guest': false, })
+                    .then((users) => {
+                        response.json(users.map((user) => cleanUserBeforeSending(user)))
+                    })
+                break
+            default:
+                return response.status(400).json({ error: 'All provided parameters were empty. Please rephrase the request.' })
+            }
+        })
 })
 
 userRouter.post('/register/', (request, response) => {
@@ -89,21 +90,22 @@ userRouter.post('/register/', (request, response) => {
         return response.status(400).json({ error: 'Request is badly specified. Please provide an user for registration.' })
     
     registerUser(JSON.parse(body.user))
-        .then((result) => response.json(result))
+        .then((result) => {
+            response.json(result)
+        })
 })
 
 userRouter.post('/session/', (request, response) => {
     const body = request.body
     console.log('body',body)
     if (!body.userGuid && !body.sessionToken) {
-        if (!body.userGuid && !user.secret && !user.isGuest)
+        if (!body.userGuid && !body.secret && !body.isGuest)
             return response.status(400).json({ error: 'Request is badly specified. Please provide either authentication or an existing session token.' })
     }
 
-    //TODO: Salt User Password and retrieve from server
-    const userSecret = await argon2.hash(body.secret)
-    
     //TODO: check for session validity
+    //TODO: Fix guest user session creation
+    //TODO: Refactor using seperate functions to clean up code
     switch(true) {
     case ((body.userGuid !== '' && body.userGuid !== undefined) && (body.sessionToken !== '' && body.sessionToken !== undefined)):
         Session.find({ 'userGuid': body.userGuid, 'guid': body.sessionToken, 'active': true, })
@@ -111,26 +113,32 @@ userRouter.post('/session/', (request, response) => {
                 if (sessions.length > 0)
                     response.json(sessions.map((session) => session.guid))
                 else {
-                    if (userSecret) {
-                        User.find({ 'guid': body.userGuid, 'secret': userSecret, 'guest': false, })
-                            .then((users) => {
-                                if (users.length > 0) {
-                                    const newSession = new Session({
-                                        guid: randomUUID(),
-                                        userGuid: users[0].guid,
-                                        timestamp: Date.now(),
-                                        createdFrom: '',
-                                        createdFromDevice: '',
-                                        validTo: Date.now() + 86400000, // Valid for 24h
-                                        active: true,
-                                    })
-                                    newSession.save((error, document) => {
-                                        if (!error) {
-                                            response.json([document.guid])
-                                        } else {
-                                            return response.status(500).json({ error: 'Session could not be opened.' })
-                                        }
-                                    })
+                    if (body.secret) {
+                        User.findOne({ 'guid': body.userGuid, 'guest': false, })
+                            .then((existingUser) => {
+                                if ((existingUser !== null) && ((existingUser.guid !== undefined) && (existingUser.guid !== ''))) {
+                                    argon2.verify(existingUser.secret, body.secret)
+                                        .then((passwordsMatch) => {
+                                            if (passwordsMatch) {
+                                                const newSession = new Session({
+                                                    guid: randomUUID(),
+                                                    userGuid: existingUser.guid,
+                                                    timestamp: Date.now(),
+                                                    createdFrom: '',
+                                                    createdFromDevice: '',
+                                                    validTo: Date.now() + 86400000, // Valid for 24h
+                                                    active: true,
+                                                })
+                                                newSession.save((error, document) => {
+                                                    if (!error) {
+                                                        response.json([document.guid])
+                                                    } else {
+                                                        return response.status(500).json({ error: 'Session could not be opened.' })
+                                                    }
+                                                })
+                                            } else
+                                                return response.status(403).json({ error: 'The provided credentials are not allowed to authenticate.' })
+                                        })
                                 } else
                                     return response.status(403).json({ error: 'The provided credentials are not allowed to authenticate.' })
                             })
@@ -139,25 +147,31 @@ userRouter.post('/session/', (request, response) => {
                 }
             })
         break
-    case ((body.userGuid !== '' && body.userGuid !== undefined) && (userSecret !== '' && userSecret !== undefined)):
-        User.find({ 'guid': body.userGuid, 'secret': userSecret, 'guest': false, })
-            .then((users) => {
-                if (users.length > 0) {
-                    const newSession = new Session({
-                        guid: randomUUID(),
-                        userGuid: users[0].guid,
-                        timestamp: Date.now(),
-                        createdFrom: '',
-                        createdFromDevice: '',
-                        validTo: Date.now() + 86400000, // Valid for 24h
-                        active: true,
-                    })
-                    newSession.save((error, document) => {
-                        if (!error) {
-                            response.json([document.guid])
-                        } else {
-                            return response.status(500).json({ error: 'Session could not be opened.' })
-                        }
+    case ((body.userGuid !== '' && body.userGuid !== undefined) && (body.secret !== '' && body.secret !== undefined)):
+        User.findOne({ 'guid': body.userGuid, 'guest': false, })
+            .then((existingUser) => {
+                if ((existingUser !== null) && ((existingUser.guid !== undefined) && (existingUser.guid !== ''))) {
+                    argon2.verify(existingUser.secret, body.secret)
+                    .then((passwordsMatch) => {
+                        if (passwordsMatch) {
+                            const newSession = new Session({
+                                guid: randomUUID(),
+                                userGuid: existingUser.guid,
+                                timestamp: Date.now(),
+                                createdFrom: '',
+                                createdFromDevice: '',
+                                validTo: Date.now() + 86400000, // Valid for 24h
+                                active: true,
+                            })
+                            newSession.save((error, document) => {
+                                if (!error) {
+                                    response.json([document.guid])
+                                } else {
+                                    return response.status(500).json({ error: 'Session could not be opened.' })
+                                }
+                            })
+                        } else
+                            return response.status(403).json({ error: 'The provided credentials are not allowed to authenticate.' })
                     })
                 } else
                     return response.status(403).json({ error: 'The provided credentials are not allowed to authenticate.' })
