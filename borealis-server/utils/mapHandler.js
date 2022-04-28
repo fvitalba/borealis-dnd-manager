@@ -1,14 +1,17 @@
 import Map from '../models/map.js'
 
-export const saveUpdateRoomMap = async (roomId, newMap) => {
-    if (!roomId || !newMap)
+export const saveUpdateRoomMap = async (roomId, newMaps) => {
+    if (!roomId || !newMaps)
         return undefined
 
-    return Map.findOneAndUpdate(
-        { roomId: roomId, id: newMap.id }, 
-        { ...newMap, timestamp: new Date(), }, 
-        { new: true, upsert: true, }
-    ).then((updatedMap) => {
-        return updatedMap
+    return newMaps.map(async (newMap) => {
+        return Map.findOneAndUpdate(
+            { roomId: roomId, id: newMap.id }, 
+            { ...newMap, roomId: roomId, timestamp: new Date(), }, 
+            { new: true, upsert: true, }
+        ).then((updatedMap) => {
+            return updatedMap
+        })
+        .catch(() => null)
     })
 }

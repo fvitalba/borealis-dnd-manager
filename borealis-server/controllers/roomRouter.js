@@ -14,6 +14,7 @@ roomRouter.get('/:roomId?:hostUserGuid?', (request, result) => {
     if ((hostUserGuid !== undefined) && (hostUserGuid !== ''))
         queryParameters['hostUserGuid'] = hostUserGuid
 
+    console.log('parameters',queryParameters)
     if (queryParameters.roomId || queryParameters.hostUserGuid) {
         // TOOD: include rooms where the provided ID is just participant
         Room.find(queryParameters)
@@ -37,7 +38,7 @@ roomRouter.post('/', (request, response) => {
     if ((body.hostUserGuid === undefined) || (body.hostUserGuid === ''))
         return response.status(400).json({ error: 'Host was not specified.' })
 
-    saveUpdateRoom(body.roomId, body.hostUserGuid, JSON.parse(body.payload))
+    saveUpdateRoom(body.roomId, body.roomName, body.hostUserGuid, JSON.parse(body.payload))
         .then((result) => response.json(result))
 })
 

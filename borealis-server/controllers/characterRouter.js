@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import Character from '../models/character.js'
-import { saveUpdateRoomCharacter } from '../utils/characterHandler.js'
+import { saveUpdateRoomCharacters } from '../utils/characterHandler.js'
 
 const characterRouter = new Router()
 
@@ -26,7 +26,7 @@ characterRouter.post('/', (request, response) => {
     if (body.roomId === undefined || body.roomId === '')
         return response.status(400).json({ error: 'Room was not specified.' })
 
-    saveUpdateRoomCharacter(body.roomId, JSON.parse(body.payload))
+    saveUpdateRoomCharacters(body.roomId, JSON.parse(body.payload))
         .then((result) => response.json(result))
 })
 

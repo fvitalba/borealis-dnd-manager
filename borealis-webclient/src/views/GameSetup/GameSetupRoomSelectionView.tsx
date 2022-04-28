@@ -35,6 +35,7 @@ const GameSetupRoomSelectionView = ({ userName, newRoomName, onNewRoomNameChange
             <div className='game-setup-user-input'>
                 <label className='character-stats-label'>Select existing: </label>
                 <select value={ selectedRoomName } onChange={ onRoomSelect } title='which room' className='game-setup-input'>
+                    <option key={ '' } value={ 'None' } >{ 'No room selected' }</option>
                     { availableRooms.map((room) => (
                         <option key={ room.id } value={ room.name } >{ `${room.name} (${room.userRole})` }</option>
                     ))}

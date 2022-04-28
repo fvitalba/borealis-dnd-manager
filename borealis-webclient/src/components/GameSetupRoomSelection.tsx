@@ -74,6 +74,9 @@ const GameSetupRoomSelection = ({ metadataState, settingsState, setGameSettings,
         setGameSetupRoomSelectionState({
             ...gameSetupRoomSelectionState,
             newRoomName: newRoomName,
+            roomId: '',
+            selectedRoomName: '',
+            userType: undefined,
         })
         setRoomLookupState({
             roomFound: false,
@@ -83,9 +86,15 @@ const GameSetupRoomSelection = ({ metadataState, settingsState, setGameSettings,
 
     const onRoomSelect = (e: ChangeEvent<HTMLSelectElement>) => {
         const selectedRoomName = e.target.value
+        const selectedRoom = gameSetupRoomSelectionState.availableRooms.filter((room) => room.name === selectedRoomName)[0]
+        const selectedRoomId = selectedRoom.id
+        const userType: UserType = selectedRoom.userRole
         setGameSetupRoomSelectionState({
             ...gameSetupRoomSelectionState,
             selectedRoomName: selectedRoomName,
+            roomId: selectedRoomId,
+            userType: userType,
+            newRoomName: '',
         })
     }
 
@@ -105,7 +114,7 @@ const GameSetupRoomSelection = ({ metadataState, settingsState, setGameSettings,
     }
 
     const onSubmitSelectedRoom = async () => {
-        if ((gameSetupRoomSelectionState.roomId === '') || (!gameSetupRoomSelectionState.userType))
+        if ((gameSetupRoomSelectionState.roomId === '') || (gameSetupRoomSelectionState.userType === undefined))
             throw new Error('No room was selected. Cannot load game.')
         else {
             webSocketContext.setWsSettings({
@@ -113,8 +122,16 @@ const GameSetupRoomSelection = ({ metadataState, settingsState, setGameSettings,
                 roomId: gameSetupRoomSelectionState.roomId,
                 userType: gameSetupRoomSelectionState.userType,
             })
-            //TODO: probably need to load metadata too
-            loadAllFromDatabase(webSocketContext, loadingContext)
+            setGameSettings(gameSetupRoomSelectionState.userType, metadataState.userGuid, metadataState.isGuest, gameSetupRoomSelectionState.selectedRoomName, gameSetupRoomSelectionState.roomId)
+            const webSocketContextCopy = {
+                ...webSocketContext,
+                wsSettings: {
+                    ...webSocketContext.wsSettings,
+                    roomId: gameSetupRoomSelectionState.roomId,
+                    userType: gameSetupRoomSelectionState.userType,
+                }
+            }
+            loadAllFromDatabase(webSocketContextCopy, loadingContext)
                 .then((dbState) => {
                     if (dbState.gameState)
                         overwriteGame(dbState.gameState)
