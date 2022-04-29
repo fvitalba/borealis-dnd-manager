@@ -294,7 +294,7 @@ class Character {
     }
 
     public getCharacterClassInfo(): string {
-        return this.class.map((classLevel: CharacterClassLevel) => `lvl. ${classLevel.level} ${classLevel.class}`).join(', ')
+        return this.class.map((classLevel: CharacterClassLevel) => `lvl. ${classLevel.level} ${CharacterClass[classLevel.class]}`).join(', ')
     }
 }
 

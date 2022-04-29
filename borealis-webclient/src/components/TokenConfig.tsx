@@ -2,9 +2,9 @@ import React, { ChangeEvent } from 'react'
 import { connect } from 'react-redux'
 import Token, { TokenBooleanProperty, TokenNumberProperty, TokenTextProperty } from '../classes/Token'
 import UserType from '../enums/UserType'
-import TokenSize, { TokenSizeArray } from '../enums/TokenSize'
-import TokenType, { TokenTypeArray } from '../enums/TokenType'
-import TokenCondition, { TokenConditionArray } from '../enums/TokenCondition'
+import { TokenSizeArray } from '../enums/TokenSize'
+import { TokenTypeArray } from '../enums/TokenType'
+import { TokenConditionArray } from '../enums/TokenCondition'
 import { pushSingleToken, deleteSingleToken, useWebSocket } from '../hooks/useSocket'
 import StateInterface from '../interfaces/StateInterface'
 import { TokenState } from '../reducers/tokenReducer'
@@ -47,9 +47,8 @@ const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, 
     }
 
     const onTypeSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-        const newType = TokenType[e.target.value as keyof typeof TokenType]
         const newToken = token.copy()
-        newToken.type = newType
+        newToken.type = parseInt(e.target.value)
         const newTokens = tokenState.tokens.map((gtoken) => gtoken.guid === newToken.guid ? newToken : gtoken)
         updateTokens(newTokens)
         if (webSocketContext.ws)
@@ -57,9 +56,8 @@ const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, 
     }
 
     const onConditionSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-        const newCondition = TokenCondition[e.target.value as keyof typeof TokenCondition]
         const newToken = token.copy()
-        newToken.condition = newCondition
+        newToken.condition = parseInt(e.target.value)
         const newTokens = tokenState.tokens.map((gtoken) => gtoken.guid === newToken.guid ? newToken : gtoken)
         updateTokens(newTokens)
         if (webSocketContext.ws)
@@ -67,9 +65,8 @@ const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, 
     }
 
     const onSizeSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-        const newSize = TokenSize[e.target.value as keyof typeof TokenSize]
         const newToken = token.copy()
-        newToken.setTokenSize(newSize)
+        newToken.setTokenSize(parseInt(e.target.value))
         const newTokens = tokenState.tokens.map((gtoken) => gtoken.guid === newToken.guid ? newToken : gtoken)
         updateTokens(newTokens)
         if (webSocketContext.ws)

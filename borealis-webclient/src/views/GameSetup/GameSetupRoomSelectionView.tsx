@@ -1,5 +1,6 @@
 import React, { ChangeEvent } from 'react'
 import { Room } from '../../components/GameSetupRoomSelection'
+import UserType from '../../enums/UserType'
 import Button from '../Button'
 import { CheckAltOutlineIcon, PlaySolidIcon, RepeatOutlineIcon, XAltOutlineIcon } from '../Icons'
 
@@ -37,7 +38,7 @@ const GameSetupRoomSelectionView = ({ userName, newRoomName, onNewRoomNameChange
                 <select value={ selectedRoomName } onChange={ onRoomSelect } title='which room' className='game-setup-input'>
                     <option key={ '' } value={ 'None' } >{ 'No room selected' }</option>
                     { availableRooms.map((room) => (
-                        <option key={ room.id } value={ room.name } >{ `${room.name} (${room.userRole})` }</option>
+                        <option key={ room.id } value={ room.name } >{ `${room.name} (${UserType[room.userRole]})` }</option>
                     ))}
                 </select>
                 <Button title='Load game' value={ <PlaySolidIcon /> } onClick={ onSubmitSelectRoom } disabled={ !isSubmitSelectionEnabled } />

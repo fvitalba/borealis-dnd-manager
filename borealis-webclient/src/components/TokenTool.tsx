@@ -31,7 +31,7 @@ const TokenTool = ({ toggleOnTokens, gameState, tokenState, metadataState, addTo
         setNewTokenName('')
     }
 
-    const currentTokens = tokenState.tokens.filter((token) => (token.mapId === undefined) || (token.mapId === gameState.currentMapId))
+    const currentTokens = tokenState.tokens.filter((token) => (token.mapId === -1) || (token.mapId === gameState.currentMapId))
 
     return (
         toggleOnTokens
