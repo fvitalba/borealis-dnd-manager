@@ -18,7 +18,7 @@ const gameReducer = (state = new Game(), action: GameAction): Game => {
     let newGame = state.copy()
     switch (action.type) {
     case OVERWRITE_GAME:
-        if (action.game)
+        if (action.game !== undefined)
             newGame = action.game
         newGame.width = window.innerWidth
         newGame.height = window.innerHeight

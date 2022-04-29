@@ -22,9 +22,8 @@ const Fog = ({ gameState, mapState, metadataState, settingsState }: FogProps) =>
     const map = getMap(mapState, gameState.currentMapId)
 
     const renderFogLayer = (ctx: CanvasRenderingContext2D) => {
-        if (!map) {
+        if (!map)
             return
-        }
         if (!ctx)
             return
 

@@ -46,7 +46,6 @@ const saveAllToDatabase = async (webSocketContext: IWebSocketContext, loadingCon
         saveUserStateToDatabase(webSocketContext, loadingContext, dbState.userState),
     ])
         .then(([ roomResult, mapsResult, tokensResult, chatResult, charactersResult, usersResult ]) => {
-            console.log(roomResult, mapsResult, tokensResult, chatResult, charactersResult, usersResult)
             return {
                 roomSaved: roomResult,
                 mapsSaved: mapsResult,
@@ -70,8 +69,7 @@ const saveRoomStateToDatabase = async (webSocketContext: IWebSocketContext, load
     return new Promise((resolve, reject) => {
         loadingContext.startLoadingTask(API_SAVE_ROOM)
         saveRoomToDatabase(webSocketContext.wsSettings, roomName, gameState)
-            .then((result) => {
-                console.log(result)
+            .then(() => {
                 loadingContext.stopLoadingTask(API_SAVE_ROOM)
                 resolve(true)
             })
@@ -83,8 +81,7 @@ const saveMapStateToDatabase = async (webSocketContext: IWebSocketContext, loadi
     return new Promise((resolve, reject) => {
         loadingContext.startLoadingTask(API_SAVE_MAPS)
         saveMapsToDatabase(webSocketContext.wsSettings, mapState.maps)
-            .then((result) => {
-                console.log(result)
+            .then(() => {
                 loadingContext.stopLoadingTask(API_SAVE_MAPS)
                 resolve(true)
             })
@@ -96,8 +93,7 @@ const saveTokenStateToDatabase = async (webSocketContext: IWebSocketContext, loa
     return new Promise((resolve, reject) => {
         loadingContext.startLoadingTask(API_SAVE_TOKENS)
         saveTokensToDatabase(webSocketContext.wsSettings, tokenState.tokens)
-            .then((result) => {
-                console.log(result)
+            .then(() => {
                 loadingContext.stopLoadingTask(API_SAVE_TOKENS)
                 resolve(true)
             })
@@ -109,8 +105,7 @@ const saveChatStateToDatabase = async (webSocketContext: IWebSocketContext, load
     return new Promise((resolve, reject) => {
         loadingContext.startLoadingTask(API_SAVE_CHAT)
         saveChatToDatabase(webSocketContext.wsSettings, chatState.messages)
-            .then((result) => {
-                console.log(result)
+            .then(() => {
                 loadingContext.stopLoadingTask(API_SAVE_CHAT)
                 resolve(true)
             })
@@ -122,8 +117,7 @@ const saveCharacterStateToDatabase = async (webSocketContext: IWebSocketContext,
     return new Promise((resolve, reject) => {
         loadingContext.startLoadingTask(API_SAVE_CHARACTERS)
         saveCharactersToDatabase(webSocketContext.wsSettings, characterState.characters)
-            .then((result) => {
-                console.log(result)
+            .then(() => {
                 loadingContext.stopLoadingTask(API_SAVE_CHARACTERS)
                 resolve(true)
             })
@@ -135,8 +129,7 @@ export const saveUserStateToDatabase = async (webSocketContext: IWebSocketContex
     return new Promise((resolve, reject) => {
         loadingContext.startLoadingTask(API_SAVE_USERS)
         saveUsersToDatabase(webSocketContext.wsSettings, userState.users)
-            .then((result) => {
-                console.log(result)
+            .then(() => {
                 loadingContext.stopLoadingTask(API_SAVE_USERS)
                 resolve(true)
             })

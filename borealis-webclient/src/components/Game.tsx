@@ -33,7 +33,14 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
     const overlayRef = useRef<HTMLCanvasElement>(null)
     const webSocketContext = useWebSocket()
     const loadingContext = useLoading()
-    let currentPath = new Path([], settingsState.drawSize, 0, settingsState.tool, settingsState.drawColor, settingsState.drawSize)
+
+    const getCurrentToolRadius = (): number => {
+        const radius = (settingsState.tool === ControlTool.Draw) || (settingsState.tool === ControlTool.EreaseDraw) ? settingsState.drawSize : settingsState.fogRadius
+        return radius
+    }
+
+    const radius = getCurrentToolRadius()
+    let currentPath = new Path([], radius, 0, settingsState.tool, settingsState.drawColor, radius)
 
     /****************************************************
      * Update Functions                                 *
@@ -283,7 +290,8 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
                 break
             default: break
             }
-            currentPath = new Path([], settingsState.drawSize, 0, settingsState.tool, settingsState.drawColor, settingsState.drawSize)
+            const radius = getCurrentToolRadius()
+            currentPath = new Path([], radius, 0, settingsState.tool, settingsState.drawColor, radius)
             const updatedMaps = mapState.maps.map((map) => {
                 const newMap = map.copy()
                 newMap.fogPaths = fogPaths
@@ -323,7 +331,8 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
                 return e
 
         if (e.buttons & 1) {
-            currentPath = new Path([], settingsState.drawSize, 0, settingsState.tool, settingsState.drawColor, settingsState.drawSize)
+            const radius = getCurrentToolRadius()
+            currentPath = new Path([], radius, 0, settingsState.tool, settingsState.drawColor, radius)
             currentPath.points.push(new Point(e.pageX, e.pageY))
         }
     }

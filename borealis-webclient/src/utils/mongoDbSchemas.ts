@@ -1,11 +1,20 @@
-import { CharacterClassLevel, CharacterHitDice } from '../classes/Character'
-import Path from '../classes/Path'
 import MessageType from '../enums/MessageType'
 import TokenCondition from '../enums/TokenCondition'
 import TokenSize from '../enums/TokenSize'
 import TokenType from '../enums/TokenType'
 import ControlTool from '../enums/Tool'
 import UserType from '../enums/UserType'
+
+export interface CharacterClassLevelSchema {
+    level: number,
+    class: number,
+}
+
+export interface CharacterHitDiceSchema {
+    numberOfDice: number,
+    remainingNoOfDice: number,
+    hitDiceType: number,
+}
 
 export interface CharacterSchema {
     roomId: string,
@@ -23,8 +32,8 @@ export interface CharacterSchema {
     maxHealth: number,
     currHealth: number,
     tempHealth: number,
-    class: Array<CharacterClassLevel>,
-    hitDice: Array<CharacterHitDice>,
+    class: Array<CharacterClassLevelSchema>,
+    hitDice: Array<CharacterHitDiceSchema>,
     username: string,
     timestamp: number,
 }

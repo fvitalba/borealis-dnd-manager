@@ -20,7 +20,7 @@ const userReducer = (state = initialUserState(), action: UserAction): UserState 
     let newUsers = state.users.map((user) => user.copy())
     switch (action.type) {
     case SET_USERS_FROM_API:
-        if (action.newUsers)
+        if (action.newUsers !== undefined)
             newUsers = action.newUsers.map((actionUser: User) => {
                 const currUser = state.users.filter((stateUser: User) => stateUser.guid === actionUser.guid)
                 if ((currUser.length > 0) && (currUser[0].guid)) {

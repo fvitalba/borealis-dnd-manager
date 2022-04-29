@@ -1,7 +1,6 @@
 import React from 'react'
 import GameSetupLogin from '../../components/GameSetupLogin'
 import GameSetupRoomSelection from '../../components/GameSetupRoomSelection'
-import LoadingOverlay from '../../components/LoadingOverlay'
 
 interface GameSetupViewProps {
     showLogin: boolean,
@@ -19,7 +18,6 @@ const GameSetupView = ({ showLogin, showRoomSelection }: GameSetupViewProps) => 
                 ? <GameSetupRoomSelection />
                 : null
             }
-            <LoadingOverlay />
         </div>
     )
 }

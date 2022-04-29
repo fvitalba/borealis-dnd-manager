@@ -4,7 +4,6 @@ import Drawing from '../components/Drawing'
 import Fog from '../components/Fog'
 import Overlay from '../components/Overlay'
 import TokenComponent from '../components/Token'
-import LoadingOverlay from '../components/LoadingOverlay'
 import ControlPanel from '../components/ControlPanel'
 import ChatPanel from '../components/ChatPanel'
 import Banner from '../components/Banner'
@@ -51,7 +50,6 @@ const GameView = ({ userType, overlayRef, cursors, tokens, onMouseMove, onMouseU
             <ControlPanel />
             <ChatPanel />
             <Banner bannerContent={'Liking the tool? Want to support me? Buy me a coffee ☕!'} linkToAction={ 'https://www.buymeacoffee.com/fabio.vitalba' } />
-            <LoadingOverlay />
         </div>
     )
 }

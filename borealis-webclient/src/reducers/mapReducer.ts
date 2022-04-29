@@ -32,7 +32,7 @@ const mapReducer = (state = initialMapState(), action: MapAction): MapState => {
 
     switch(action.type) {
     case ADD_MAP:
-        if (action.map) {
+        if (action.map !== undefined) {
             newMapId = state.maps.length
             newMap = action.map
             newMap.id = newMapId
@@ -43,7 +43,7 @@ const mapReducer = (state = initialMapState(), action: MapAction): MapState => {
             maps: newMaps,
         }
     case UPDATE_MAPS:
-        if (action.maps)
+        if (action.maps !== undefined)
             return {
                 ...state,
                 maps: action.maps,
@@ -51,18 +51,18 @@ const mapReducer = (state = initialMapState(), action: MapAction): MapState => {
         else
             return state
     case DELETE_MAP:
-        if (action.mapId)
+        if (action.mapId !== undefined)
             newMaps = newMaps.filter((map: Map) => map.id !== action.mapId)
         return {
             ...state,
             maps: newMaps,
         }
     case RESET_FOG:
-        if (action.mapId)
+        if (action.mapId !== undefined)
             newMaps = state.maps.map((map) => {
                 newMap = map.copy()
                 if (map.id === action.mapId)
-                    newMap.fogPaths = new Array<Path>()
+                    newMap.fogPaths = []
                 return newMap
             })
         return {
@@ -70,11 +70,11 @@ const mapReducer = (state = initialMapState(), action: MapAction): MapState => {
             maps: newMaps,
         }
     case RESET_DRAW:
-        if (action.mapId)
+        if (action.mapId !== undefined)
             newMaps = state.maps.map((map) => {
                 newMap = map.copy()
                 if (map.id === action.mapId)
-                    newMap.drawPaths = new Array<Path>()
+                    newMap.drawPaths = []
                 return newMap
             })
         return {

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import DataReceiver from './DataReceiver'
 import Game from './Game'
 import GameSetup from './GameSetup'
+import LoadingOverlay from './LoadingOverlay'
 import { createWebSocket } from '../contexts/WebSocketProvider'
 import UserType from '../enums/UserType'
 import { useWebSocket } from '../hooks/useSocket'
@@ -86,6 +87,7 @@ const GameStateHandler = ({ metadataState, setGameSettings }: GameStateHandlerPr
                 ? <Game />
                 : <GameSetup />
             }
+            <LoadingOverlay />
         </>
     )
 }
