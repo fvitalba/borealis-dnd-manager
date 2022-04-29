@@ -11,6 +11,7 @@ import { useLoading } from '../hooks/useLoading'
 import { pushCursor, pushDrawPath, pushFogPath, pushTokens, requestRefresh, useWebSocket } from '../hooks/useSocket'
 import StateInterface from '../interfaces/StateInterface'
 import { MapState, updateMaps } from '../reducers/mapReducer'
+import { setTokenSelected } from '../reducers/gameReducer'
 import { MetadataState } from '../reducers/metadataReducer'
 import { SettingsState } from '../reducers/settingsReducer'
 import { TokenState, updateTokens, toggleTokenValue } from '../reducers/tokenReducer'
@@ -27,9 +28,10 @@ interface GameProps {
     updateTokens: (arg0: Array<Token>) => void,
     toggleTokenValue: (arg0: string, arg1: TokenBooleanProperty) => void,
     updateMaps: (arg0: Array<Map>) => void,
+    setTokenSelected: (arg0: boolean) => void,
 }
 
-const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadataState, updateTokens, toggleTokenValue, updateMaps }: GameProps) => {
+const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadataState, updateTokens, toggleTokenValue, updateMaps, setTokenSelected }: GameProps) => {
     const overlayRef = useRef<HTMLCanvasElement>(null)
     const webSocketContext = useWebSocket()
     const loadingContext = useLoading()
@@ -321,8 +323,10 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
             for (const x of [document.activeElement, (e.target as HTMLElement)])
                 if (x?.className.toUpperCase() === 'BACKGROUND')
                     deselectTokens = true
-            if (deselectTokens)
+            if (deselectTokens) {
                 tokenState.tokens.map((token) => token.selected ? toggleTokenValue(token.guid,'selected') : null)
+                setTokenSelected(false)
+            }
         }
         for (const x of [document.activeElement, (e.target as HTMLElement)])
             //TODO: Verify if this is still ok
@@ -423,6 +427,7 @@ const mapDispatchToProps = {
     updateTokens,
     toggleTokenValue,
     updateMaps,
+    setTokenSelected,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameComponent)

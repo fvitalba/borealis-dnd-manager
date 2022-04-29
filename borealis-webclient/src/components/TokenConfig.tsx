@@ -7,10 +7,10 @@ import { TokenTypeArray } from '../enums/TokenType'
 import { TokenConditionArray } from '../enums/TokenCondition'
 import { pushSingleToken, deleteSingleToken, useWebSocket } from '../hooks/useSocket'
 import StateInterface from '../interfaces/StateInterface'
-import { TokenState } from '../reducers/tokenReducer'
 import { MetadataState } from '../reducers/metadataReducer'
-import { deleteToken, copyToken, updateTokenTextValue, updateTokenNumberValue, toggleTokenValue, updateTokens } from '../reducers/tokenReducer'
+import { TokenState, deleteToken, copyToken, updateTokenTextValue, updateTokenNumberValue, toggleTokenValue, updateTokens } from '../reducers/tokenReducer'
 import { MapState } from '../reducers/mapReducer'
+import { setTokenSelected } from '../reducers/gameReducer'
 import HostTokenConfig from '../views/HostTokenConfigView'
 import GuestTokenConfigView from '../views/GuestTokenConfigView'
 
@@ -25,15 +25,22 @@ interface TokenConfigProps {
     updateTokenNumberValue: (arg0: string, arg1: TokenNumberProperty, arg2: number) => void,
     toggleTokenValue: (arg0: string, arg1: TokenBooleanProperty) => void,
     updateTokens: (arg0: Array<Token>) => void,
+    setTokenSelected: (arg0: boolean) => void,
 }
 
-const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, copyToken, updateTokenTextValue, updateTokenNumberValue, toggleTokenValue, updateTokens }: TokenConfigProps) => {
+const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, copyToken, updateTokenTextValue, updateTokenNumberValue, toggleTokenValue, updateTokens, setTokenSelected }: TokenConfigProps) => {
     const webSocketContext = useWebSocket()
 
     const selectToken = () => {
         if (!token.isAllowedToMove(metadataState.userType))
             return
         toggleTokenValue(token.guid, 'selected')
+        setTokenSelected(tokenState.tokens.filter((gToken) => {
+            if (token.guid === gToken.guid)
+                return !gToken.selected
+            else
+                return gToken.selected
+        }).length > 0)
     }
 
     const deleteCurrToken = () => {
@@ -150,6 +157,7 @@ const mapDispatchToProps = {
     updateTokenNumberValue,
     toggleTokenValue,
     updateTokens,
+    setTokenSelected,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TokenConfig)

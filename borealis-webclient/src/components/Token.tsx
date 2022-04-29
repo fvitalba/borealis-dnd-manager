@@ -6,6 +6,7 @@ import ControlTool from '../enums/Tool'
 import UserType from '../enums/UserType'
 import StateInterface from '../interfaces/StateInterface'
 import { SettingsState } from '../reducers/settingsReducer'
+import { setTokenSelected } from '../reducers/gameReducer'
 import { TokenState, setTokenOrigin, updateTokens } from '../reducers/tokenReducer'
 import TokenView from '../views/TokenView'
 
@@ -17,9 +18,10 @@ interface TokenProps {
     settingsState: SettingsState,
     updateTokens: (arg0: Array<Token>) => void,
     setTokenOrigin: (arg0: string, arg1: number, arg2: number) => void,
+    setTokenSelected: (arg0: boolean) => void,
 }
 
-const TokenComponent = ({ token, userType, gameState, tokenState, settingsState, updateTokens, setTokenOrigin }: TokenProps) => {
+const TokenComponent = ({ token, userType, gameState, tokenState, settingsState, updateTokens, setTokenOrigin, setTokenSelected }: TokenProps) => {
     const scaledToken = token.scaleToken(settingsState.deltaX, settingsState.deltaY, settingsState.scale)
     const labelRef = useRef<HTMLLabelElement>(null)
     const [labelPosition, setLabelPosition] = useState({
@@ -39,6 +41,7 @@ const TokenComponent = ({ token, userType, gameState, tokenState, settingsState,
         })
         updateTokens(updatedTokensWithSelection)
         setTokenOrigin(scaledToken.guid, token.x, token.y)
+        setTokenSelected(updatedTokensWithSelection.filter((token) => token.selected).length > 0)
     }
 
     useEffect(() => {
@@ -91,6 +94,7 @@ const mapStateToProps = (state: StateInterface) => {
 const mapDispatchToProps = {
     updateTokens,
     setTokenOrigin,
+    setTokenSelected,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TokenComponent)

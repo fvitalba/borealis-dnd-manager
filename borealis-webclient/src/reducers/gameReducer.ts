@@ -3,6 +3,7 @@ import {
     LOAD_MAP,
     INCREMENT_VERSION,
     SET_FOG_ENABLED,
+    SET_TOKEN_SELECTED,
 } from '../redux/constants'
 import Game from '../classes/Game'
 
@@ -12,6 +13,7 @@ interface GameAction {
     mapId?: number,
     version?: number,
     fogEnabled?: boolean,
+    tokenSelected?: boolean,
 }
 
 const gameReducer = (state = new Game(), action: GameAction): Game => {
@@ -32,6 +34,9 @@ const gameReducer = (state = new Game(), action: GameAction): Game => {
         return newGame
     case SET_FOG_ENABLED:
         newGame.fogEnabled = action.fogEnabled !== undefined ? action.fogEnabled : state.fogEnabled
+        return newGame
+    case SET_TOKEN_SELECTED:
+        newGame.tokenSelected = action.tokenSelected !== undefined ? action.tokenSelected : state.tokenSelected
         return newGame
     default:
         return state
@@ -63,6 +68,13 @@ export const setFogEnabled = (newFogEnabled: boolean): GameAction => {
     return {
         type: SET_FOG_ENABLED,
         fogEnabled: newFogEnabled,
+    }
+}
+
+export const setTokenSelected = (newTokenSelected: boolean): GameAction => {
+    return {
+        type: SET_TOKEN_SELECTED,
+        tokenSelected: newTokenSelected,
     }
 }
 //#endregion Action Creators

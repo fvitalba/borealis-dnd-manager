@@ -159,17 +159,18 @@ const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settings
             updateTokens(updatedTokens)
             break
         case 'pushTokens':
-            if (data.tokens !== undefined)
-                updatedTokens = data.tokens.map((token) => {
-                    const tokenCopy = Token.fromDbSchema(token)
+            if (data.tokens !== undefined) {
+                updatedTokens = data.tokens.map((dToken) => {
+                    const newToken = Token.fromDbSchema(dToken)
                     let tokenSelected = false
-                    const currentToken = updatedTokens.filter((token2) => token2.guid === tokenCopy.guid)
+                    const currentToken = updatedTokens.filter((token2) => token2.guid === newToken.guid)
                     if (currentToken.length > 0)
                         tokenSelected = currentToken[0].selected
-                    tokenCopy.selected = tokenSelected
-                    return tokenCopy
+                    newToken.selected = tokenSelected
+                    return newToken
                 })
-            updateTokens(updatedTokens)
+                updateTokens(updatedTokens)
+            }
             break
         case 'pushMapId':
             if (data.mapId !== undefined)
