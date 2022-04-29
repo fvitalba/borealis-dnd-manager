@@ -60,29 +60,29 @@ const settingsReducer = (state = initialSettingsState(), action: SettingsAction)
     case CHANGE_CURSORSIZE:
         return {
             ...state,
-            cursorSize: action.cursorSize ? action.cursorSize : state.cursorSize,
+            cursorSize: action.cursorSize !== undefined ? action.cursorSize : state.cursorSize,
         }
     case CHANGE_FOG_SETTINGS:
         return {
             ...state,
-            fogOpacity: action.fogOpacity ? action.fogOpacity : state.fogOpacity,
-            fogRadius: action.fogRadius ? action.fogRadius : state.fogRadius,
+            fogOpacity: action.fogOpacity !== undefined ? action.fogOpacity : state.fogOpacity,
+            fogRadius: action.fogRadius !== undefined ? action.fogRadius : state.fogRadius,
         }
     case CHANGE_DRAW_SETTINGS:
         return {
             ...state,
-            drawColor: action.drawColor ? action.drawColor : state.drawColor,
-            drawSize: action.drawSize ? action.drawSize : state.drawSize,
+            drawColor: action.drawColor !== undefined ? action.drawColor : state.drawColor,
+            drawSize: action.drawSize !== undefined ? action.drawSize : state.drawSize,
         }
     case CHANGE_TOOL:
         return {
             ...state,
-            tool: action.tool ? action.tool : state.tool,
+            tool: action.tool !== undefined ? action.tool : state.tool,
         }
     case CHANGE_USERNAME:
         return {
             ...state,
-            username: action.username ? action.username : state.username,
+            username: action.username !== undefined ? action.username : state.username,
         }
     case TOGGLE_MOUSESHARING:
         return {
@@ -92,13 +92,13 @@ const settingsReducer = (state = initialSettingsState(), action: SettingsAction)
     case UPDATE_DELTAXY:
         return {
             ...state,
-            deltaX: action.deltaX ? action.deltaX : state.deltaX,
-            deltaY: action.deltaY ? action.deltaY : state.deltaY,
+            deltaX: action.deltaX !== undefined ? action.deltaX : state.deltaX,
+            deltaY: action.deltaY !== undefined ? action.deltaY : state.deltaY,
         }
     case UPDATE_SCALE:
         return {
             ...state,
-            scale: action.scale ? action.scale : state.scale,
+            scale: action.scale !== undefined ? action.scale : state.scale,
         }
     default:
         return state

@@ -1,7 +1,7 @@
 import CharacterAttribute from '../enums/CharacterAttribute'
 import CharacterClass, { CharacterClassArray } from '../enums/CharacterClass'
 import DiceType, { DiceTypeArray } from '../enums/DiceType'
-import { CharacterSchema } from '../utils/mongoDbSchemas'
+import { CharacterClassLevelSchema, CharacterHitDiceSchema, CharacterSchema } from '../utils/mongoDbSchemas'
 
 export type ClassTextProperty = 'guid' | 'name' | 'username'
 export type ClassNumberProperty = 'strength' | 'dexterity' | 'constitution' | 'intelligence' | 'wisdom' | 'charisma' | 'proficiency' | 'armorclass' | 'passivePerception' | 'maxHealth' | 'currHealth' | 'tempHealth'
@@ -13,6 +13,15 @@ export class CharacterClassLevel {
     public constructor(newLevel: number, newClass: CharacterClass) {
         this.level = newLevel
         this.class = newClass
+    }
+
+    static fromDbSchema(dbClassLevel: CharacterClassLevelSchema): CharacterClassLevel {
+        return new CharacterClassLevel(dbClassLevel.level, dbClassLevel.class)
+    }
+
+    public copy(): CharacterClassLevel {
+        const characterClassLevelCopy = new CharacterClassLevel(this.level, this.class)
+        return characterClassLevelCopy
     }
 }
 
@@ -27,6 +36,15 @@ export class CharacterHitDice {
         this.numberOfDice = newNumberOfDice
         this.remainingNoOfDice = remainingNoOfDice ? remainingNoOfDice : this.numberOfDice
         this.hitDiceType = newHitDiceType
+    }
+
+    static fromDbSchema(dbHitDice: CharacterHitDiceSchema): CharacterHitDice {
+        return new CharacterHitDice(dbHitDice.numberOfDice, dbHitDice.hitDiceType, dbHitDice.remainingNoOfDice)
+    }
+
+    public copy(): CharacterHitDice {
+        const characterHitDiceCopy = new CharacterHitDice(this.numberOfDice, this.hitDiceType, this.remainingNoOfDice)
+        return characterHitDiceCopy
     }
 }
 
@@ -70,7 +88,7 @@ class Character {
     }
 
     static fromDbSchema(dbCharacter: CharacterSchema): Character {
-        const newCharacter = new Character(dbCharacter.guid, dbCharacter.name, dbCharacter.maxHealth, dbCharacter.class, dbCharacter.hitDice, dbCharacter.username)
+        const newCharacter = new Character(dbCharacter.guid, dbCharacter.name, dbCharacter.maxHealth, dbCharacter.class.map((charClass) => CharacterClassLevel.fromDbSchema(charClass)), dbCharacter.hitDice.map((charHitDice) => CharacterHitDice.fromDbSchema(charHitDice)), dbCharacter.username)
         newCharacter.currHealth = dbCharacter.currHealth
         newCharacter.strength = dbCharacter.strength
         newCharacter.dexterity = dbCharacter.dexterity
@@ -86,7 +104,7 @@ class Character {
     }
 
     public copy(): Character {
-        const characterCopy = new Character(this.guid, this.name, this.maxHealth, JSON.parse(JSON.stringify(this.class)), JSON.parse(JSON.stringify(this.hitDice)), this.username)
+        const characterCopy = new Character(this.guid, this.name, this.maxHealth, this.class.map((charClass) => charClass.copy()), this.hitDice.map((charHitDice) => charHitDice.copy()), this.username)
         characterCopy.currHealth = this.maxHealth
         characterCopy.strength = this.strength
         characterCopy.dexterity = this.dexterity
@@ -266,10 +284,7 @@ class Character {
                         noOfUsedDice = currHitDice.remainingNoOfDice
                     else
                         noOfUsedDice = noOfDiceToUse
-                    return {
-                        ...currHitDice,
-                        remainingNoOfDice: currHitDice.remainingNoOfDice - noOfUsedDice
-                    }
+                    return new CharacterHitDice(currHitDice.numberOfDice, currHitDice.hitDiceType, currHitDice.remainingNoOfDice - noOfUsedDice)
                 } else {
                     return currHitDice
                 }
@@ -279,7 +294,7 @@ class Character {
     }
 
     public getCharacterClassInfo(): string {
-        return this.class.map((classLevel: CharacterClassLevel) => `lvl. ${classLevel.level} ${classLevel.class}`).join(', ')
+        return this.class.map((classLevel: CharacterClassLevel) => `lvl. ${classLevel.level} ${CharacterClass[classLevel.class]}`).join(', ')
     }
 }
 

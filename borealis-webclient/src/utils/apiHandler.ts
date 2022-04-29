@@ -352,7 +352,6 @@ export const getChatFromDatabase = (wsSettings: IWsSettings): Promise<Array<Chat
     return new Promise ((resolve, reject) => {
         axios.get(chatsUrl(wsSettings.roomId))
             .then((result) => {
-                console.log('received chat',result)
                 resolve(result.data[0].messages)
             })
             .catch((error) => {

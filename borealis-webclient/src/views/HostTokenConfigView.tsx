@@ -49,19 +49,19 @@ const HostTokenConfigView = ({ tokenTypes, tokenConditions, tokenSizes, maps, to
                 <Button value={ token.hidden ? <EyeOffOutlineIcon /> : <EyeOutlineIcon /> } onClick={ (e) => onToggle('hidden', e) } title={ token.hidden ? 'Hidden' : 'Shown' } />
                 <select value={ token.type } onChange={ onTypeSelect } title='which type' className={ controlPanelSelectClass }>
                     { tokenTypes.map((type) => (
-                        <option key={ type } value={ type } >{ type }</option>
+                        <option key={ type } value={ type } >{ TokenType[type] }</option>
                     ))}
                 </select>
                 <Button value={ token.selected ? <CheckSquareOutlineIcon /> : <SquareOutlineIcon /> } onClick={ (e) => selectToken(e) } title={ token.selected ? 'Selected' : 'Unselected' } />
                 <select value={ token.condition } onChange={ onConditionSelect } title='which condition' className={ controlPanelSelectClass }>
                     { tokenConditions.map((condition) => (
-                        <option key={ condition } value={ condition } >{ condition }</option>
+                        <option key={ condition } value={ condition } >{ TokenCondition[condition] }</option>
                     ))}
                 </select>
                 <Button value={ token.showLabel ? <FormattingOutlineIcon /> : <FormattingClearOutlineIcon /> } onClick={ (e) => onToggle('showLabel', e) } title={ token.showLabel ? 'Label shown' : 'Label hidden' } />
                 <select value={ token.size } onChange={ onSizeSelect } title='which size' className={ controlPanelSelectClass }>
                     { tokenSizes.map((size) => (
-                        <option key={ size } value={ size } >{ size }</option>
+                        <option key={ size } value={ size } >{ TokenSize[size] }</option>
                     ))}
                 </select>
                 <select value={ token.mapId } onChange={ onMapSelect } title='which map' className={ controlPanelSelectClass }>

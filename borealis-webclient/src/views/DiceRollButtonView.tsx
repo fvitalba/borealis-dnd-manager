@@ -23,7 +23,7 @@ const DiceRollButtonView = ({ rollDice, selectorPosition, showSelector, toggleSe
                 ? <div className='dice-roll-selector-container' style={ selectorPosition } ref={ selectorRef }>
                     {
                         DiceTypeArray.map((diceType) =>
-                            <Button key={ diceType } title={ DiceType[diceType] } value={ <b>{ diceType }</b> } onClick={ () => rollDice(diceType) } customClass='dice-roll-button'></Button>
+                            <Button key={ diceType } title={ DiceType[diceType] } value={ <b>{ DiceType[diceType] }</b> } onClick={ () => rollDice(diceType) } customClass='dice-roll-button'></Button>
                         )
                     }
                 </div>

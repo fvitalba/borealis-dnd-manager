@@ -7,6 +7,11 @@ class Cursor extends Point{
         super(newX, newY)
         this.username = newUsername
     }
+
+    public copy(): Cursor {
+        const cursorCopy = new Cursor(this.username, this.x, this.y)
+        return cursorCopy
+    }
 }
 
 export default Cursor

@@ -11,6 +11,7 @@ import { useLoading } from '../hooks/useLoading'
 import { pushCursor, pushDrawPath, pushFogPath, pushTokens, requestRefresh, useWebSocket } from '../hooks/useSocket'
 import StateInterface from '../interfaces/StateInterface'
 import { MapState, updateMaps } from '../reducers/mapReducer'
+import { setTokenSelected } from '../reducers/gameReducer'
 import { MetadataState } from '../reducers/metadataReducer'
 import { SettingsState } from '../reducers/settingsReducer'
 import { TokenState, updateTokens, toggleTokenValue } from '../reducers/tokenReducer'
@@ -27,13 +28,21 @@ interface GameProps {
     updateTokens: (arg0: Array<Token>) => void,
     toggleTokenValue: (arg0: string, arg1: TokenBooleanProperty) => void,
     updateMaps: (arg0: Array<Map>) => void,
+    setTokenSelected: (arg0: boolean) => void,
 }
 
-const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadataState, updateTokens, toggleTokenValue, updateMaps }: GameProps) => {
+const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadataState, updateTokens, toggleTokenValue, updateMaps, setTokenSelected }: GameProps) => {
     const overlayRef = useRef<HTMLCanvasElement>(null)
     const webSocketContext = useWebSocket()
     const loadingContext = useLoading()
-    let currentPath = new Path([], settingsState.drawSize, 0, settingsState.tool, settingsState.drawColor, settingsState.drawSize)
+
+    const getCurrentToolRadius = (): number => {
+        const radius = (settingsState.tool === ControlTool.Draw) || (settingsState.tool === ControlTool.EreaseDraw) ? settingsState.drawSize : settingsState.fogRadius
+        return radius
+    }
+
+    const radius = getCurrentToolRadius()
+    let currentPath = new Path([], radius, 0, settingsState.tool, settingsState.drawColor, radius)
 
     /****************************************************
      * Update Functions                                 *
@@ -283,7 +292,8 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
                 break
             default: break
             }
-            currentPath = new Path([], settingsState.drawSize, 0, settingsState.tool, settingsState.drawColor, settingsState.drawSize)
+            const radius = getCurrentToolRadius()
+            currentPath = new Path([], radius, 0, settingsState.tool, settingsState.drawColor, radius)
             const updatedMaps = mapState.maps.map((map) => {
                 const newMap = map.copy()
                 newMap.fogPaths = fogPaths
@@ -313,8 +323,10 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
             for (const x of [document.activeElement, (e.target as HTMLElement)])
                 if (x?.className.toUpperCase() === 'BACKGROUND')
                     deselectTokens = true
-            if (deselectTokens)
+            if (deselectTokens) {
                 tokenState.tokens.map((token) => token.selected ? toggleTokenValue(token.guid,'selected') : null)
+                setTokenSelected(false)
+            }
         }
         for (const x of [document.activeElement, (e.target as HTMLElement)])
             //TODO: Verify if this is still ok
@@ -323,7 +335,8 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
                 return e
 
         if (e.buttons & 1) {
-            currentPath = new Path([], settingsState.drawSize, 0, settingsState.tool, settingsState.drawColor, settingsState.drawSize)
+            const radius = getCurrentToolRadius()
+            currentPath = new Path([], radius, 0, settingsState.tool, settingsState.drawColor, radius)
             currentPath.points.push(new Point(e.pageX, e.pageY))
         }
     }
@@ -382,7 +395,7 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
             loadingContext.startLoadingTask(GAME_REQUEST_REFRESH)
             requestRefresh(webSocketContext.ws, webSocketContext.wsSettings)
         }
-    }, [ webSocketContext, loadingContext, metadataState.userType ])
+    }, [ metadataState.userType, metadataState.userGuid, metadataState.roomGuid ])
 
     /****************************************************
      * Component Render                                 *
@@ -414,6 +427,7 @@ const mapDispatchToProps = {
     updateTokens,
     toggleTokenValue,
     updateMaps,
+    setTokenSelected,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameComponent)

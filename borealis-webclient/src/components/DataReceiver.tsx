@@ -7,7 +7,7 @@ import Token from '../classes/Token'
 import Character from '../classes/Character'
 import Message from '../classes/Message'
 import UserType from '../enums/UserType'
-import { pushGameRefresh, useWebSocket, FormattedWebSocketPayload } from '../hooks/useSocket'
+import { pushGameRefresh, useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
 import StateInterface from '../interfaces/StateInterface'
 import { overwriteGame, loadMap, setFogEnabled } from '../reducers/gameReducer'
@@ -19,6 +19,36 @@ import { SettingsState } from '../reducers/settingsReducer'
 import { assignCharacter, assignCharacterToUser, CharacterState, setCharacters, updateCharacter } from '../reducers/characterReducer'
 import { getMap } from '../utils/mapHandler'
 import { GAME_REQUEST_REFRESH } from '../utils/loadingTasks'
+import { CharacterSchema, CharacterStateSchema, ChatMessageSchema, ChatStateSchema, GameSchema, MapSchema, MapStateSchema, PathSchema, TokenSchema, TokenStateSchema } from '../utils/mongoDbSchemas'
+
+interface IncomingWebSocketPayload {
+    type: string,
+    targetGuid?: string,
+    targetUsername?: string,
+    x?: number,
+    y?: number,
+    mapId?: number,
+    drawPath?: PathSchema,
+    fogPath?: PathSchema,
+    entityGuid?: string,
+    maps?: Array<MapSchema>,
+    map?: Map,
+    tokens?: Array<TokenSchema>,
+    token?: TokenSchema,
+    character?: CharacterSchema,
+    width?: number,
+    height?: number,
+    fogEnabled?: boolean,
+    message?: ChatMessageSchema,
+    game?: GameSchema,
+    mapState?: MapStateSchema,
+    tokenState?: TokenStateSchema,
+    chatState?: ChatStateSchema,
+    characterState?: CharacterStateSchema,
+    fromSocketGuid: string,
+    fromUserGuid: string,
+    roomId: string,
+}
 
 interface DataReceiverProps {
     gameState: Game,
@@ -51,7 +81,7 @@ const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settings
     const receiveData = useCallback((evt: MessageEvent<any>) => {
         if (!webSocketContext.ws)
             return  // Web Socket Connection is not active
-        const data: FormattedWebSocketPayload = JSON.parse(evt.data)
+        const data: IncomingWebSocketPayload = JSON.parse(evt.data)
         if (data.fromSocketGuid === webSocketContext.wsSettings.socketGuid) {
             return  // ignore messages sent by self
         }
@@ -68,11 +98,11 @@ const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settings
                 updateCursor(data.fromUserGuid, data.x, data.y)
             break
         case 'pushDrawPath':
-            if (currMap) {
-                pathToUpdate = currMap.drawPaths ? currMap.drawPaths : []
+            if (currMap !== undefined) {
+                pathToUpdate = currMap.drawPaths ? currMap.drawPaths.map((path) => path.copy()) : []
                 if (data.drawPath)
-                    pathToUpdate.push(data.drawPath)
-                const newMap = currMap
+                    pathToUpdate.push(Path.fromDbSchema(data.drawPath))
+                const newMap = currMap.copy()
                 newMap.drawPaths = pathToUpdate
                 updatedMaps = updatedMaps.map((map) => {
                     return map.id === currMap.id ? newMap : map
@@ -81,8 +111,8 @@ const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settings
             }
             break
         case 'pushDrawReset':
-            if (currMap) {
-                const newMap = currMap
+            if (currMap !== undefined) {
+                const newMap = currMap.copy()
                 newMap.drawPaths = new Array<Path>()
                 updatedMaps = updatedMaps.map((map) => {
                     return map.id === currMap.id ? newMap : map
@@ -91,11 +121,11 @@ const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settings
             }
             break
         case 'pushFogPath':
-            if (currMap) {
-                pathToUpdate = currMap.fogPaths ? currMap.fogPaths : []
+            if (currMap !== undefined) {
+                pathToUpdate = currMap.fogPaths ? currMap.fogPaths.map((path) => path.copy()) : []
                 if (data.fogPath)
-                    pathToUpdate.push(data.fogPath)
-                const newMap = currMap
+                    pathToUpdate.push(Path.fromDbSchema(data.fogPath))
+                const newMap = currMap.copy()
                 newMap.fogPaths = pathToUpdate
                 updatedMaps = updatedMaps.map((map) => {
                     return map.id === currMap.id ? newMap : map
@@ -104,8 +134,8 @@ const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settings
             }
             break
         case 'pushFogReset':
-            if (currMap) {
-                const newMap = currMap
+            if (currMap !== undefined) {
+                const newMap = currMap.copy()
                 newMap.fogPaths = new Array<Path>()
                 updatedMaps = updatedMaps.map((map) => {
                     return map.id === currMap.id ? newMap : map
@@ -114,83 +144,92 @@ const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settings
             }
             break
         case 'pushSingleToken':
-            updatedTokens = updatedTokens.map((token) => {
-                const newToken = data.token
-                if (newToken)
-                    newToken.selected = (token.type === newToken.type) ? token.selected : false
-                return (newToken && (token.guid === newToken.guid)) ? newToken : token
-            })
-            updateTokens(updatedTokens)
+            if (data.token !== undefined) {
+                const newToken = Token.fromDbSchema(data.token)
+                updatedTokens = updatedTokens.map((token) => {
+                    if (newToken)
+                        newToken.selected = (token.type === newToken.type) ? token.selected : false
+                    return (newToken && (token.guid === newToken.guid)) ? newToken : token
+                })
+                updateTokens(updatedTokens)
+            }
             break
         case 'deleteSingleToken':
             updatedTokens = updatedTokens.filter((token) => token.guid !== data.entityGuid)
             updateTokens(updatedTokens)
             break
         case 'pushTokens':
-            if (data.tokens)
-                updatedTokens = data.tokens.map((token) => {
+            if (data.tokens !== undefined) {
+                updatedTokens = data.tokens.map((dToken) => {
+                    const newToken = Token.fromDbSchema(dToken)
                     let tokenSelected = false
-                    const currentToken = updatedTokens.filter((token2) => token2.guid === token.guid)
+                    const currentToken = updatedTokens.filter((token2) => token2.guid === newToken.guid)
                     if (currentToken.length > 0)
                         tokenSelected = currentToken[0].selected
-                    token.selected = tokenSelected
-                    return token
+                    newToken.selected = tokenSelected
+                    return newToken
                 })
-            updateTokens(updatedTokens)
+                updateTokens(updatedTokens)
+            }
             break
         case 'pushMapId':
-            if (data.mapId)
+            if (data.mapId !== undefined)
                 loadMap(data.mapId)
             break
         case 'pushMapState':
-            if (data.maps && data.mapId) {
-                updateMaps(data.maps)
+            if ((data.maps !== undefined) && (data.mapId !== undefined)) {
+                updateMaps(data.maps.map((gMap) => Map.fromDbSchema(gMap)))
                 loadMap(data.mapId)
             }
             break
         case 'pushCreateMap':
-            if (data.map)
+            if (data.map !== undefined)
                 addMap(data.map)
             break
         case 'pushFogEnabled':
-            if (data.fogEnabled)
+            if (data.fogEnabled !== undefined)
                 setFogEnabled(data.fogEnabled)
             break
         case 'pushAssignCharacterToUser':
-            if (data.targetUsername && data.entityGuid)
+            if ((data.targetUsername !== undefined) && (data.entityGuid !== undefined))
                 assignCharacterToUser(data.targetUsername, data.entityGuid)
             break
         case 'pushUpdateCharacter':
-            if (data.character)
-                updateCharacter(data.character)
+            if (data.character !== undefined)
+                updateCharacter(Character.fromDbSchema(data.character))
             break
         case 'pushGameRefresh': // refresh from host
             if (data.game && data.chatState && data.characterState && data.mapState && data.tokenState) {
-                overwriteGame(data.game)
+                overwriteGame(Game.fromDbSchema(data.game))
                 overwriteChat(data.chatState.messages)
-                updateMaps(data.mapState.maps)
-                updateTokens(data.tokenState.tokens)
-                setCharacters(data.characterState.characters)
+                updateMaps(data.mapState.maps.map((gMap) => Map.fromDbSchema(gMap)))
+                updateTokens(data.tokenState.tokens.map((gToken) => Token.fromDbSchema(gToken)))
+                setCharacters(data.characterState.characters.map((gCharacter) => Character.fromDbSchema(gCharacter)))
                 const assignedCharacter = data.characterState.characters.filter((character) => character.username === settingsState.username)[0]
-                if (assignedCharacter && (!assignedCharacter.isEmpty())) {
+                if (assignedCharacter && (assignedCharacter.guid !== '')) {
                     assignCharacter(assignedCharacter.guid)
                 }
                 loadingContext.stopLoadingTask(GAME_REQUEST_REFRESH)
             }
             break
         case 'requestRefresh': // refresh request from player
-            if (webSocketContext.ws && webSocketContext.wsSettings)
+            if (webSocketContext.ws) {
                 if (metadataState.userType === UserType.host) {
                     pushGameRefresh(webSocketContext.ws, webSocketContext.wsSettings, gameState, mapState, tokenState, chatState, characterState)
                 }
+            }
             break
         case 'loadGame':
             if (data.game && data.chatState && data.characterState && data.mapState && data.tokenState) {
-                overwriteGame(data.game)
+                overwriteGame(Game.fromDbSchema(data.game))
                 overwriteChat(data.chatState.messages)
-                updateMaps(data.mapState.maps)
-                updateTokens(data.tokenState.tokens)
-                setCharacters(data.characterState.characters)
+                updateMaps(data.mapState.maps.map((gMap) => Map.fromDbSchema(gMap)))
+                updateTokens(data.tokenState.tokens.map((gToken) => Token.fromDbSchema(gToken)))
+                setCharacters(data.characterState.characters.map((gCharacter) => Character.fromDbSchema(gCharacter)))
+                const assignedCharacter = data.characterState.characters.filter((character) => character.username === settingsState.username)[0]
+                if (assignedCharacter && (assignedCharacter.guid !== '')) {
+                    assignCharacter(assignedCharacter.guid)
+                }
                 loadingContext.stopLoadingTask(GAME_REQUEST_REFRESH)
             }
             break

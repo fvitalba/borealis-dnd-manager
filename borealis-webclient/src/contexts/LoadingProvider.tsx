@@ -17,12 +17,10 @@ const LoadingProvider = ({ children } : { children: ReactElement }) => {
     const [loadingState, dispatch] = useReducer(loadingReducer, { loadingTasks: [], })
 
     const startLoadingTask = (taskCode: string) => {
-        console.log('starting', taskCode)
         dispatch(startTask(taskCode))
     }
 
     const stopLoadingTask = (taskCode: string) => {
-        console.log('stopping', taskCode)
         dispatch(stopTask(taskCode))
     }
 

@@ -51,7 +51,7 @@ interface MetadataAction {
 }
 
 const metadataReducer = (state = initialMetadataState(), action: MetadataAction): MetadataState => {
-    let newCursors: Array<Cursor> = JSON.parse(JSON.stringify(state.cursors))
+    let newCursors: Array<Cursor> = state.cursors.map((cursor) => cursor.copy())
     switch (action.type) {
     case SET_GAMESETTINGS:
         if ((action.roomGuid !== undefined) || (action.userGuid !== undefined))
@@ -73,10 +73,10 @@ const metadataReducer = (state = initialMetadataState(), action: MetadataAction)
     case SET_CURSORS:
         return {
             ...state,
-            cursors: action.cursors ? action.cursors : state.cursors,
+            cursors: action.cursors !== undefined ? action.cursors : state.cursors,
         }
     case UPDATE_CURSOR:
-        if (action.cursor) {
+        if (action.cursor !== undefined) {
             newCursors = state.cursors.filter((crs) => (crs.username !== action.cursor?.username))
             return {
                 ...state,
@@ -87,12 +87,12 @@ const metadataReducer = (state = initialMetadataState(), action: MetadataAction)
     case SET_LAST_COORDINATES:
         return {
             ...state,
-            lastPos: action.lastPos ? action.lastPos : state.lastPos,
+            lastPos: action.lastPos !== undefined ? action.lastPos : state.lastPos,
         }
     case SET_DOWN_COORDINATES:
         return {
             ...state,
-            downPos: action.downPos ? action.downPos : state.downPos
+            downPos: action.downPos !== undefined ? action.downPos : state.downPos
         }
     default:
         return state

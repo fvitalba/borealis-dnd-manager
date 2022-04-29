@@ -33,7 +33,7 @@ const CharacterClassLevelInputView = ({ characterClass, availableCharacterClasse
                             <label className='character-stats-label'>Class</label>
                             <select value={ classLevel.class } onChange={ (e) => onSelectCharacterClass(e, index) } title='which class' className='character-stats-input'>
                                 { availableCharacterClassesForLine.map((characterClass) => (
-                                    <option key={ characterClass } value={ characterClass } >{ characterClass }</option>
+                                    <option key={ characterClass } value={ characterClass } >{ CharacterClass[characterClass] }</option>
                                 ))}
                             </select>
                         </div>

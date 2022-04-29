@@ -2,15 +2,15 @@ import React, { ChangeEvent } from 'react'
 import { connect } from 'react-redux'
 import Token, { TokenBooleanProperty, TokenNumberProperty, TokenTextProperty } from '../classes/Token'
 import UserType from '../enums/UserType'
-import TokenSize, { TokenSizeArray } from '../enums/TokenSize'
-import TokenType, { TokenTypeArray } from '../enums/TokenType'
-import TokenCondition, { TokenConditionArray } from '../enums/TokenCondition'
+import { TokenSizeArray } from '../enums/TokenSize'
+import { TokenTypeArray } from '../enums/TokenType'
+import { TokenConditionArray } from '../enums/TokenCondition'
 import { pushSingleToken, deleteSingleToken, useWebSocket } from '../hooks/useSocket'
 import StateInterface from '../interfaces/StateInterface'
-import { TokenState } from '../reducers/tokenReducer'
 import { MetadataState } from '../reducers/metadataReducer'
-import { deleteToken, copyToken, updateTokenTextValue, updateTokenNumberValue, toggleTokenValue, updateTokens } from '../reducers/tokenReducer'
+import { TokenState, deleteToken, copyToken, updateTokenTextValue, updateTokenNumberValue, toggleTokenValue, updateTokens } from '../reducers/tokenReducer'
 import { MapState } from '../reducers/mapReducer'
+import { setTokenSelected } from '../reducers/gameReducer'
 import HostTokenConfig from '../views/HostTokenConfigView'
 import GuestTokenConfigView from '../views/GuestTokenConfigView'
 
@@ -25,15 +25,22 @@ interface TokenConfigProps {
     updateTokenNumberValue: (arg0: string, arg1: TokenNumberProperty, arg2: number) => void,
     toggleTokenValue: (arg0: string, arg1: TokenBooleanProperty) => void,
     updateTokens: (arg0: Array<Token>) => void,
+    setTokenSelected: (arg0: boolean) => void,
 }
 
-const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, copyToken, updateTokenTextValue, updateTokenNumberValue, toggleTokenValue, updateTokens }: TokenConfigProps) => {
+const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, copyToken, updateTokenTextValue, updateTokenNumberValue, toggleTokenValue, updateTokens, setTokenSelected }: TokenConfigProps) => {
     const webSocketContext = useWebSocket()
 
     const selectToken = () => {
         if (!token.isAllowedToMove(metadataState.userType))
             return
         toggleTokenValue(token.guid, 'selected')
+        setTokenSelected(tokenState.tokens.filter((gToken) => {
+            if (token.guid === gToken.guid)
+                return !gToken.selected
+            else
+                return gToken.selected
+        }).length > 0)
     }
 
     const deleteCurrToken = () => {
@@ -47,9 +54,8 @@ const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, 
     }
 
     const onTypeSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-        const newType = TokenType[e.target.value as keyof typeof TokenType]
         const newToken = token.copy()
-        newToken.type = newType
+        newToken.type = parseInt(e.target.value)
         const newTokens = tokenState.tokens.map((gtoken) => gtoken.guid === newToken.guid ? newToken : gtoken)
         updateTokens(newTokens)
         if (webSocketContext.ws)
@@ -57,9 +63,8 @@ const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, 
     }
 
     const onConditionSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-        const newCondition = TokenCondition[e.target.value as keyof typeof TokenCondition]
         const newToken = token.copy()
-        newToken.condition = newCondition
+        newToken.condition = parseInt(e.target.value)
         const newTokens = tokenState.tokens.map((gtoken) => gtoken.guid === newToken.guid ? newToken : gtoken)
         updateTokens(newTokens)
         if (webSocketContext.ws)
@@ -67,9 +72,8 @@ const TokenConfig = ({ token, mapState, tokenState, metadataState, deleteToken, 
     }
 
     const onSizeSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-        const newSize = TokenSize[e.target.value as keyof typeof TokenSize]
         const newToken = token.copy()
-        newToken.setTokenSize(newSize)
+        newToken.setTokenSize(parseInt(e.target.value))
         const newTokens = tokenState.tokens.map((gtoken) => gtoken.guid === newToken.guid ? newToken : gtoken)
         updateTokens(newTokens)
         if (webSocketContext.ws)
@@ -153,6 +157,7 @@ const mapDispatchToProps = {
     updateTokenNumberValue,
     toggleTokenValue,
     updateTokens,
+    setTokenSelected,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TokenConfig)

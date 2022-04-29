@@ -13,6 +13,11 @@ class Point {
         return new Point(dbPoint.x, dbPoint.y)
     }
 
+    public copy(): Point {
+        const pointCopy = new Point(this.x, this.y)
+        return pointCopy
+    }
+
     public translatePoint(offsetX: number, offsetY: number, scale: number): Point {
         return new Point(this.x * scale + offsetX, this.y * scale + offsetY)
     }

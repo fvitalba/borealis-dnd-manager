@@ -33,7 +33,7 @@ const CharacterHitDiceInputView = ({ characterHitDice, availableCharacterHitDice
                             <label className='character-stats-label'>Class</label>
                             <select value={ charHitDice.hitDiceType } onChange={ (e) => onSelectHitDiceType(e, index) } title='which hit dice type' className='character-stats-input'>
                                 { availableCharacterDiceTypesForLine.map((characterDiceType) => (
-                                    <option key={ characterDiceType } value={ characterDiceType } >{ characterDiceType }</option>
+                                    <option key={ characterDiceType } value={ characterDiceType } >{ DiceType[characterDiceType] }</option>
                                 ))}
                             </select>
                         </div>

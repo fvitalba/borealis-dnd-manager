@@ -23,6 +23,11 @@ class Path {
         const newPath = new Path(dbSchemaPath.points.map((dbPoint) => Point.fromDbSchema(dbPoint)), dbSchemaPath.r, dbSchemaPath.r2, dbSchemaPath.tool, dbSchemaPath.drawColor, dbSchemaPath.drawSize)
         return newPath
     }
+
+    public copy(): Path {
+        const pathCopy = new Path(this.points.map((point) => point.copy()), this.r, this.r2, this.tool, this.drawColor, this.drawSize)
+        return pathCopy
+    }
 }
 
 export default Path

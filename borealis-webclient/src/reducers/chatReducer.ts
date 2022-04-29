@@ -29,17 +29,17 @@ const chatReducer = (state = initialChatState(), action: ChatAction): ChatState 
     case ADD_CHAT_MESSAGE:
         return {
             ...state,
-            messages: action.message ? state.messages.concat(action.message): state.messages,
+            messages: action.message !== undefined ? state.messages.concat(action.message): state.messages,
         }
     case SET_CHAT_USERNAME:
         return {
             ...state,
-            username: action.username? action.username : state.username,
+            username: action.username !== undefined ? action.username : state.username,
         }
     case OVERWRITE_CHAT:
         return {
             ...state,
-            messages: action.messages ? action.messages : state.messages,
+            messages: action.messages !== undefined ? action.messages : state.messages,
         }
     default:
         return state

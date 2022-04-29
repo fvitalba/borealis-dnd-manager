@@ -27,12 +27,11 @@ class Map {
 
     static fromDbSchema(dbMap: MapSchema): Map {
         const newMap = new Map(dbMap.id, dbMap.name, dbMap.backgroundUrl, dbMap.x, dbMap.y, dbMap.width, dbMap.height, dbMap.drawPaths.map((dbPath) => Path.fromDbSchema(dbPath)), dbMap.fogPaths.map((dbPath) => Path.fromDbSchema(dbPath)))
-        console.log('newMap',newMap,'schemaMap',dbMap)
         return newMap
     }
 
     public copy(): Map {
-        const mapCopy = new Map(this.id, this.name, this.backgroundUrl, this.x, this.y, this.width, this.height, JSON.parse(JSON.stringify(this.drawPaths)), JSON.parse(JSON.stringify(this.fogPaths)))
+        const mapCopy = new Map(this.id, this.name, this.backgroundUrl, this.x, this.y, this.width, this.height, this.drawPaths.map((path) => path.copy()), this.fogPaths.map((path) => path.copy()))
         return mapCopy
     }
 

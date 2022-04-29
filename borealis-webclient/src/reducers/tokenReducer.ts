@@ -42,28 +42,28 @@ const tokenReducer = (state = initialTokenState(), action: TokenAction): TokenSt
 
     switch(action.type) {
     case ADD_TOKEN:
-        if (action.token)
+        if (action.token !== undefined)
             newTokens = newTokens.concat(action.token)
         return {
             ...state,
             tokens: newTokens,
         }
     case UPDATE_TOKENS:
-        if (action.tokens)
+        if (action.tokens !== undefined)
             newTokens = action.tokens
         return {
             ...state,
             tokens: newTokens,
         }
     case DELETE_TOKEN:
-        if (action.guid)
+        if (action.guid !== undefined)
             newTokens = newTokens.filter((token: Token) => token.guid !== action.guid)
         return {
             ...state,
             tokens: newTokens,
         }
     case COPY_TOKEN:
-        if (action.guid) {
+        if (action.guid !== undefined) {
             const tokenToCopy = newTokens.filter((token) => token.guid === action.guid)
             if (tokenToCopy.length > 0) {
                 newToken = new Token(tokenToCopy[0].name, tokenToCopy[0].imageUrl, tokenToCopy[0].mapId, tokenToCopy[0].x, tokenToCopy[0].y, tokenToCopy[0].condition, tokenToCopy[0].type, guid(), tokenToCopy[0].size, false, tokenToCopy[0].hidden, tokenToCopy[0].showLabel, 0, 0)
@@ -75,28 +75,28 @@ const tokenReducer = (state = initialTokenState(), action: TokenAction): TokenSt
             tokens: newTokens
         }
     case UPDATE_TOKEN_TEXT_VALUE:
-        if ((action.guid) && (action.textKey) && (action.textValue))
+        if ((action.guid !== undefined) && (action.textKey) && (action.textValue))
             newTokens = updateSingleTokenTextAttribute(state.tokens, action.guid, action.textKey, action.textValue)
         return {
             ...state,
             tokens: newTokens,
         }
     case UPDATE_TOKEN_NUMBER_VALUE:
-        if ((action.guid) && (action.numberKey) && (action.numberValue))
+        if ((action.guid !== undefined) && (action.numberKey) && (action.numberValue !== undefined))
             newTokens = updateSingleTokenNumberAttribute(state.tokens, action.guid, action.numberKey, action.numberValue)
         return {
             ...state,
             tokens: newTokens,
         }
     case TOGGLE_TOKEN_VALUE:
-        if ((action.guid) && (action.booleanKey))
+        if ((action.guid !== undefined) && (action.booleanKey !== undefined))
             newTokens = toggleSingleTokenAttribute(newTokens, action.guid, action.booleanKey)
         return {
             ...state,
             tokens: newTokens,
         }
     case SET_TOKEN_ORIGIN:
-        if ((action.guid) && (action.xOrigin) && (action.yOrigin))
+        if ((action.guid !== undefined) && (action.xOrigin !== undefined) && (action.yOrigin !== undefined))
             newTokens = updateSingleTokenOrigin(newTokens, action.guid, action.xOrigin, action.yOrigin)
         return {
             ...state,

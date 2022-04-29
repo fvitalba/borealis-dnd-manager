@@ -32,14 +32,14 @@ const characterReducer = (state = initialCharacterState(), action: CharacterActi
     let newCharacters = state.characters.map((character) => character.copy())
     switch (action.type) {
     case ADD_CHARACTER:
-        if (action.character)
+        if (action.character !== undefined)
             newCharacters = newCharacters.concat(action.character)
         return {
             ...state,
             characters: newCharacters,
         }
     case UPDATE_CHARACTER:
-        if (action.character)
+        if (action.character !== undefined)
             newCharacters = newCharacters.map((stateCharacter: Character) => {
                 if ((stateCharacter.guid === action.character?.guid)) {
                     return action.character
@@ -65,7 +65,7 @@ const characterReducer = (state = initialCharacterState(), action: CharacterActi
     case ASSIGN_CHARACTER_TO_USER:
         newCharacters = newCharacters.map((character: Character) => {
             if (character.guid === action.characterGuid) {
-                if (action.username)
+                if (action.username !== undefined)
                     character.username = action.username
                 return character
             } else {
@@ -77,7 +77,7 @@ const characterReducer = (state = initialCharacterState(), action: CharacterActi
             characters: newCharacters,
         }
     case SET_CHARACTERS:
-        if (action.characters)
+        if (action.characters !== undefined)
             return {
                 ...state,
                 characters: action.characters,

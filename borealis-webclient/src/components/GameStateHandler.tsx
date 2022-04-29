@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import DataReceiver from './DataReceiver'
 import Game from './Game'
 import GameSetup from './GameSetup'
+import LoadingOverlay from './LoadingOverlay'
 import { createWebSocket } from '../contexts/WebSocketProvider'
 import UserType from '../enums/UserType'
 import { useWebSocket } from '../hooks/useSocket'
@@ -38,8 +39,9 @@ const GameStateHandler = ({ metadataState, setGameSettings }: GameStateHandlerPr
 
         //TODO: fix connection from url for guest users
         const roomId = params.get('roomId') || ''
+        const roomName = params.get('roomName') || ''
         if (roomId !== '') {
-            setGameSettings(userType !== null ? userType : UserType.player, guid(), true, roomId, webSocketContext.wsSettings.socketGuid)
+            setGameSettings(userType !== null ? userType : UserType.player, guid(), true, roomName, roomId)
             const newWsSettings = webSocketContext.wsSettings
             newWsSettings.roomId = roomId
             if (userType !== null)
@@ -86,6 +88,7 @@ const GameStateHandler = ({ metadataState, setGameSettings }: GameStateHandlerPr
                 ? <Game />
                 : <GameSetup />
             }
+            <LoadingOverlay />
         </>
     )
 }
