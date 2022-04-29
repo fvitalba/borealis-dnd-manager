@@ -391,7 +391,7 @@ const GameComponent = ({ gameState, mapState, tokenState, settingsState, metadat
             loadingContext.startLoadingTask(GAME_REQUEST_REFRESH)
             requestRefresh(webSocketContext.ws, webSocketContext.wsSettings)
         }
-    }, [ webSocketContext, loadingContext, metadataState.userType ])
+    }, [ metadataState.userType, metadataState.userGuid, metadataState.roomGuid ])
 
     /****************************************************
      * Component Render                                 *

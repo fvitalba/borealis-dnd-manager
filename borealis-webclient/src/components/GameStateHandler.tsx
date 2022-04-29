@@ -39,8 +39,9 @@ const GameStateHandler = ({ metadataState, setGameSettings }: GameStateHandlerPr
 
         //TODO: fix connection from url for guest users
         const roomId = params.get('roomId') || ''
+        const roomName = params.get('roomName') || ''
         if (roomId !== '') {
-            setGameSettings(userType !== null ? userType : UserType.player, guid(), true, roomId, webSocketContext.wsSettings.socketGuid)
+            setGameSettings(userType !== null ? userType : UserType.player, guid(), true, roomName, roomId)
             const newWsSettings = webSocketContext.wsSettings
             newWsSettings.roomId = roomId
             if (userType !== null)

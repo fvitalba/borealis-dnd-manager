@@ -134,3 +134,21 @@ export interface RoomUserSchema {
     lastOnline: number,
     active: boolean,
 }
+
+export interface MapStateSchema {
+    maps: Array<MapSchema>,
+}
+
+export interface TokenStateSchema {
+    tokens: Array<TokenSchema>,
+}
+
+export interface ChatStateSchema {
+    username: string,
+    messages: Array<ChatMessageSchema>,
+}
+
+export interface CharacterStateSchema {
+    currentCharacterGuid: string,
+    characters: Array<CharacterSchema>,
+}

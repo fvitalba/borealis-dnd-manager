@@ -6,7 +6,6 @@ import {
     RESET_DRAW
 } from '../redux/constants'
 import Map from '../classes/Map'
-import Path from '../classes/Path'
 
 export interface MapState {
     maps: Array<Map>,

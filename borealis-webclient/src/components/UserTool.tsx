@@ -133,7 +133,7 @@ const UserTool = ({ toggleOnUser, gameState, mapState, tokenState, chatState, ch
     const copyUrlToClipboard = () => {
         const host = window.location.host.replace(/:\d+$/, '')
         const protocol = /https/.test(window.location.protocol) ? 'https' : 'http'
-        const userUrl = DEBUG_MODE ? `${protocol}://${host}:${REACT_APP_PORT}/?roomId=${metadataState.roomGuid}` : `https://${host}/?roomId=${metadataState.roomGuid}`
+        const userUrl = DEBUG_MODE ? `${protocol}://${host}:${REACT_APP_PORT}/?roomId=${metadataState.roomGuid}&roomName=${metadataState.roomName}` : `https://${host}/?roomId=${metadataState.roomGuid}&roomName=${metadataState.roomName}`
         navigator.clipboard.writeText(userUrl)
     }
 
