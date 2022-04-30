@@ -11,6 +11,7 @@ import { useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
 import StateInterface from '../interfaces/StateInterface'
 import { MetadataState, setGameSettings } from '../reducers/metadataReducer'
+import { setUsername } from '../reducers/settingsReducer'
 import { WEBSOCKET_OPEN_CONNECTION } from '../utils/loadingTasks'
 import guid from '../utils/guid'
 import DebugOverlay from './DebugOverlay'
@@ -18,9 +19,10 @@ import DebugOverlay from './DebugOverlay'
 interface GameStateHandlerProps {
     metadataState: MetadataState,
     setGameSettings: (userType: UserType, userGuid: string, isGuest: boolean, roomName: string, roomGuid: string) => void,
+    setUsername: (userName: string) => void,
 }
 
-const GameStateHandler = ({ metadataState, setGameSettings }: GameStateHandlerProps) => {
+const GameStateHandler = ({ metadataState, setGameSettings, setUsername }: GameStateHandlerProps) => {
     const webSocketContext = useWebSocket()
     const loadingContext = useLoading()
 
@@ -33,6 +35,7 @@ const GameStateHandler = ({ metadataState, setGameSettings }: GameStateHandlerPr
 
         if (roomId !== '') {
             setGameSettings(userType, '', true, roomName, roomId)
+            setUsername('Anonymous (Guest)')
             const newWsSettings = webSocketContext.wsSettings
             newWsSettings.roomId = roomId
             if (userType !== null)
@@ -94,6 +97,7 @@ const mapStateToProps = (state: StateInterface) => {
 
 const mapDispatchToProps = {
     setGameSettings,
+    setUsername,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameStateHandler)
