@@ -805,7 +805,7 @@ h1 {
     @apply flex-col;
     @apply text-primary-300;
     @apply text-xs;
-    @apply bottom-4;
+    @apply bottom-12;
     @apply left-4;
     @apply z-debug;
     @apply absolute;

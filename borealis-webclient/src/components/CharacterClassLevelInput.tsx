@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react'
 import Character from '../classes/Character'
-import CharacterClass, { CharacterClassArray } from '../enums/CharacterClass'
+import { CharacterClassArray } from '../enums/CharacterClass'
 import CharacterClassLevelInputView from '../views/CharacterStats/CharacterClassLevelInputView'
 
 interface CharacterClassLevelInputProps {
@@ -10,7 +10,7 @@ interface CharacterClassLevelInputProps {
 
 const CharacterClassLevelInput = ({ character, setSelectedCharacter }: CharacterClassLevelInputProps) => {
     const onSelectCharacterClass = (e: ChangeEvent<HTMLSelectElement>, index: number) => {
-        const newClass = CharacterClass[e.target.value as keyof typeof CharacterClass]
+        const newClass = parseInt(e.target.value)
         const newCharacter = character.copy()
         newCharacter.setSpecificClassLevel(newClass, newCharacter.class[index].level, index)
         setSelectedCharacter(newCharacter)
