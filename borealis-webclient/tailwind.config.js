@@ -30,6 +30,7 @@ module.exports = {
                 'chat-panel-roll': '120',
                 'banner': '120',
                 'loading': '130',
+                'debug': '140',
             },
             animation: {
                 'reverse-spin': 'reverse-spin 1s linear infinite',

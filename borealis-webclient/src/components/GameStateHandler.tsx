@@ -13,6 +13,7 @@ import StateInterface from '../interfaces/StateInterface'
 import { MetadataState, setGameSettings } from '../reducers/metadataReducer'
 import { WEBSOCKET_OPEN_CONNECTION } from '../utils/loadingTasks'
 import guid from '../utils/guid'
+import DebugOverlay from './DebugOverlay'
 
 interface GameStateHandlerProps {
     metadataState: MetadataState,
@@ -25,24 +26,13 @@ const GameStateHandler = ({ metadataState, setGameSettings }: GameStateHandlerPr
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
-        const userTypeParam = params.get('userType')
-        let userType : UserType | null
-        switch (userTypeParam?.toUpperCase()) {
-        case 'HOST':
-            userType = UserType.host
-            break
-        case 'PLAYER':
-            userType = UserType.player
-            break
-        default:
-            userType = null
-        }
-
-        //TODO: fix connection from url for guest users
+        const userTypeParam = params.get('userType') || '1'
+        const userType = parseInt(userTypeParam)
         const roomId = params.get('roomId') || ''
         const roomName = params.get('roomName') || ''
+
         if (roomId !== '') {
-            setGameSettings(userType !== null ? userType : UserType.player, guid(), true, roomName, roomId)
+            setGameSettings(userType, '', true, roomName, roomId)
             const newWsSettings = webSocketContext.wsSettings
             newWsSettings.roomId = roomId
             if (userType !== null)
@@ -91,6 +81,7 @@ const GameStateHandler = ({ metadataState, setGameSettings }: GameStateHandlerPr
                 : <GameSetup />
             }
             <LoadingOverlay />
+            <DebugOverlay />
         </>
     )
 }

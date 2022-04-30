@@ -1792,3 +1792,30 @@ h1 {
   appearance: none;
   height: 2rem;
 }
+
+.debug-overlay-container {
+  display: flex;
+  flex-direction: column;
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity));
+  font-size: 0.75rem;
+  line-height: 1rem;
+  bottom: 1rem;
+  left: 1rem;
+  z-index: 140;
+  position: absolute;
+}
+
+.debug-overlay-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.debug-overlay-label {
+  font-weight: 800;
+  text-decoration-line: underline;
+}
+
+.debug-overlay-value {
+  font-style: italic;
+}

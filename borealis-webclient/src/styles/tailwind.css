@@ -799,3 +799,28 @@ h1 {
 .select-character-select {
     @apply character-stats-input;
 }
+
+.debug-overlay-container {
+    @apply flex;
+    @apply flex-col;
+    @apply text-primary-300;
+    @apply text-xs;
+    @apply bottom-4;
+    @apply left-4;
+    @apply z-debug;
+    @apply absolute;
+}
+
+.debug-overlay-row {
+    @apply flex;
+    @apply flex-row;
+}
+
+.debug-overlay-label {
+    @apply font-extrabold;
+    @apply underline;
+}
+
+.debug-overlay-value {
+    @apply italic;
+}
