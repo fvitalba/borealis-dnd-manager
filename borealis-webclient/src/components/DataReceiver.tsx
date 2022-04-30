@@ -6,9 +6,8 @@ import Map from '../classes/Map'
 import Token from '../classes/Token'
 import Character from '../classes/Character'
 import Message from '../classes/Message'
-import User from '../classes/User'
 import UserType from '../enums/UserType'
-import { pushGameRefresh, sendUser, useWebSocket } from '../hooks/useSocket'
+import { pushGameRefresh, useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
 import StateInterface from '../interfaces/StateInterface'
 import { overwriteGame, loadMap, setFogEnabled } from '../reducers/gameReducer'
@@ -21,7 +20,6 @@ import { assignCharacter, assignCharacterToUser, CharacterState, setCharacters, 
 import { getMap } from '../utils/mapHandler'
 import { GAME_REQUEST_REFRESH } from '../utils/loadingTasks'
 import { CharacterSchema, CharacterStateSchema, ChatMessageSchema, ChatStateSchema, GameSchema, MapSchema, MapStateSchema, PathSchema, RoomUserSchema, TokenSchema, TokenStateSchema } from '../utils/mongoDbSchemas'
-import { addUserToDatabase } from '../utils/apiHandler'
 
 interface IncomingWebSocketPayload {
     type: string,
@@ -240,17 +238,6 @@ const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settings
         case 'sendChatMessage':
             if (data.message)
                 addChatMessage(data.message)
-            break
-        case 'requestAuthentication':
-            myUser = new User(metadataState.userGuid, settingsState.username, metadataState.userType)
-            myUser.assignedCharacterGuid = characterState.currentCharacterGuid
-            sendUser(webSocketContext.ws, webSocketContext.wsSettings, data.fromUserGuid, myUser)
-            break
-        case 'sendUser':
-            if (data.user) {
-                myUser = User.fromDbSchema(data.user)
-                addUserToDatabase(webSocketContext.wsSettings, myUser)
-            }
             break
         default:
             console.error(`Unrecognized websocket message type: ${data.type}`)

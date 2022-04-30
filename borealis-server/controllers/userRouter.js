@@ -12,22 +12,27 @@ userRouter.get('/:userGuid?:roomId?', (request, result) => {
     const userGuid = request.params.userGuid ? request.params.userGuid : request.query.userGuid
     const roomId = request.params.roomId ? request.params.roomId : request.query.roomId
 
-    if (userGuid !== undefined && userGuid !== '') {
-        User.find({ 'guid': userGuid, 'active': true, })
-            .then((users) => {
-                result.json(users)
-            })
-    } else if ((roomId !== undefined) && (roomId !== '')) {
-        const queryParameters = { 'roomId': roomId, 'active': true, }
-        if (userGuid !== undefined && userGuid !== '')
-            queryParameters['guid'] = userGuid
-        RoomUser.find(queryParameters)
-            .then((roomUsers) => {
-                result.json(roomUsers)
-            })
-    } else {
-        result.json([])
-    }
+    // check user activity
+    RoomUser.updateMany({ lastOnline: { $lt: (new Date() - 30000) } }, { active: false })
+        .then(() => {
+            if (userGuid !== undefined && userGuid !== '') {
+                User.find({ 'guid': userGuid, 'active': true, })
+                    .then((users) => {
+                        result.json(users)
+                    })
+            } else if ((roomId !== undefined) && (roomId !== '')) {
+                const queryParameters = { 'roomId': roomId, 'active': true, }
+                if (userGuid !== undefined && userGuid !== '')
+                    queryParameters['guid'] = userGuid
+                RoomUser.find(queryParameters)
+                    .then((roomUsers) => {
+                        result.json(roomUsers)
+                    })
+            } else {
+                result.json([])
+            }
+        })
+        .catch(() => result.json([]))
 })
 
 userRouter.post('/', (request, response) => {
@@ -35,8 +40,12 @@ userRouter.post('/', (request, response) => {
     if (!body.newUser)
         return response.status(400).json({ error: 'Request is badly specified. Please provide users to save.' })
 
-    saveUpdateRoomUser(body.roomId, JSON.parse(body.newUser))
-        .then((result) => response.json(result))
+    // check user activity
+    RoomUser.updateMany({ lastOnline: { $lt: (new Date() - 30000) } }, { active: false })
+        .then(() => {
+            saveUpdateRoomUser(body.roomId, JSON.parse(body.newUser))
+                .then((result) => response.json(result))
+        })
 })
 
 userRouter.post('/status/', (request, response) => {

@@ -82,7 +82,7 @@ export const saveUpdateRoomUser = async (roomId, newRoomUser) => {
 
     return RoomUser.findOneAndUpdate(
             { roomId: roomId, guid: newRoomUser.guid }, 
-            { ...newRoomUser, roomId: roomId, timestamp: new Date(), active: true, }, 
+            { ...newRoomUser, roomId: roomId, timestamp: new Date(), active: true, lastOnline: new Date(), }, 
             { new: true, upsert: true, }
         ).then((updatedRoomUser) => {
             return updatedRoomUser

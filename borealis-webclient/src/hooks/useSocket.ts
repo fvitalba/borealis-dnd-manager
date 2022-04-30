@@ -39,7 +39,6 @@ export interface WebSocketPayload {
     height?: number,
     fogEnabled?: boolean,
     message?: Message,
-    user?: User,
     game?: Game,
     mapState?: MapState,
     tokenState?: TokenState,
@@ -196,19 +195,5 @@ export const pushDeleteCharacter = (webSocket: WebSocket, wsSettings: IWsSetting
     sendData(webSocket, wsSettings, {
         type: 'pushDeleteCharacter',
         entityGuid: characterGuid,
-    })
-}
-
-export const sendUser = (webSocket: WebSocket, wsSettings: IWsSettings, targetUserGuid: string, user: User) => {
-    sendData(webSocket, wsSettings, {
-        type: 'sendUser',
-        targetGuid: targetUserGuid,
-        user: user,
-    })
-}
-
-export const requestAuthentication = (webSocket: WebSocket, wsSettings: IWsSettings) => {
-    sendData(webSocket, wsSettings, {
-        type: 'requestAuthentication',
     })
 }
