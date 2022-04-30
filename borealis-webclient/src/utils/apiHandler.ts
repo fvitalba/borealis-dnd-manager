@@ -150,7 +150,7 @@ export const saveUsersToDatabase = (wsSettings: IWsSettings, payload: Array<User
             payload: JSON.stringify(payload),
         }
 
-        axios.post(usersUrl(wsSettings.roomId), params)
+        axios.post(usersUrl(), params)
             .then((result) => {
                 resolve(result.data)
             })

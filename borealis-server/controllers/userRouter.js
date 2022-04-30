@@ -4,7 +4,7 @@ import argon2 from 'argon2'
 import User from '../models/user.js'
 import RoomUser from '../models/roomUser.js'
 import Session from '../models/session.js'
-import { registerUser, saveUpdateRoomUser, cleanUserBeforeSending, setAllRoomUserStatus } from '../utils/userHandler.js'
+import { registerUser, saveUpdateRoomUser, cleanUserBeforeSending, setAllRoomUserStatus, saveUpdateRoomUsers } from '../utils/userHandler.js'
 
 const userRouter = new Router()
 
@@ -37,14 +37,20 @@ userRouter.get('/:userGuid?:roomId?', (request, result) => {
 
 userRouter.post('/', (request, response) => {
     const body = request.body
-    if (!body.newUser)
+    if (!body.newUser && !body.payload)
         return response.status(400).json({ error: 'Request is badly specified. Please provide users to save.' })
 
     // check user activity
     RoomUser.updateMany({ lastOnline: { $lt: (new Date() - 30000) } }, { active: false })
         .then(() => {
-            saveUpdateRoomUser(body.roomId, JSON.parse(body.newUser))
-                .then((result) => response.json(result))
+            if (body.newUser !== undefined) {
+                saveUpdateRoomUser(body.roomId, JSON.parse(body.newUser))
+                    .then((result) => response.json(result))
+            }
+            if (body.payload !== undefined) {
+                saveUpdateRoomUsers(body.roomId, JSON.parse(body.payload))
+                    .then((result) => response.json(result))
+            }
         })
 })
 
