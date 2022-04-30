@@ -1,6 +1,11 @@
 import React, { ChangeEvent } from 'react'
-import Button from '../Button'
 import { PlaySolidIcon } from '../Icons'
+import TextInput from '../GenericViews/TextInput'
+import MaskedTextInput from '../GenericViews/MaskedTextInput'
+import CheckboxInput from '../GenericViews/CheckboxInput'
+import FormContainer from '../GenericViews/FormContainer'
+import FormRow from '../GenericViews/FormRow'
+import ActionButton from '../GenericViews/ActionButton'
 
 interface GameSetupLoginViewProps {
     userName: string,
@@ -21,34 +26,32 @@ interface GameSetupLoginViewProps {
 
 const GameSetupLoginView = ({ userName, onUserNameChange, password, onPasswordChange, email, onEmailChange, newUser, toggleNewUser, isGuest, toggleIsGuest, rememberUser, toggleRememberUser, onSubmitSetup, isSubmitEnabled }: GameSetupLoginViewProps) => {
     return (
-        <div className='game-setup-form'>
+        <FormContainer>
             <h1>Borealis D&D - Login</h1>
-            <div className='game-setup-user-input'>
-                <input title='User name' placeholder='User name' type={ 'text' } value={ userName } onChange={ onUserNameChange } className='game-setup-input' />
-            </div>
-            <div className='game-setup-user-input'>
-                <input title='Password' placeholder='Password' type={ 'password' } value={ password } onChange={ onPasswordChange } className='game-setup-input' disabled={ isGuest } />
-                <input title='Continue as guest' type={ 'checkbox' } checked={ isGuest } onChange={ toggleIsGuest } className='game-setup-input' />
-                <label className='character-stats-label'>Continue as guest</label>
-            </div>
+            <FormRow>
+                <TextInput title='User name' placeholder='User name' value={ userName } onChange={ onUserNameChange }/>
+            </FormRow>
+            <FormRow>
+                <MaskedTextInput title='Password' placeholder='Password' value={ password } onChange={ onPasswordChange } disabled={ isGuest } />
+                <CheckboxInput title='Continue as guest' value={ isGuest } onChange={ toggleIsGuest } label='Guest' />
+            </FormRow>
             { newUser
-                ? <div className='game-setup-user-input'>
-                    <input title='Email' placeholder='Email' type={ 'text' } value={ email } onChange={ onEmailChange } className='game-setup-input' />
-                </div>
+                ? <FormRow>
+                    <TextInput title='Email' placeholder='Email' value={ email } onChange={ onEmailChange }/>
+                </FormRow>
                 : null
             }
-            <div className='game-setup-user-input'>
-                <input title='Remember me' type={ 'checkbox' } checked={ rememberUser } onChange={ toggleRememberUser } className='game-setup-input' disabled={ isGuest } />
-                <label className='character-stats-label'>Remember me</label>
-                <Button title='Login' value={ <PlaySolidIcon /> } onClick={ onSubmitSetup } disabled={ !isSubmitEnabled } />
-            </div>
-            <div className='game-setup-user-input' >
+            <FormRow>
+                <CheckboxInput title='Remember me' value={ rememberUser } onChange={ toggleRememberUser } label='Remember me' disabled={ isGuest } />
+                <ActionButton title='Login' value={ <PlaySolidIcon className='w-10 h-10 text-primary-dark' /> } onClick={ onSubmitSetup } disabled={ !isSubmitEnabled } />
+            </FormRow>
+            <FormRow>
                 { newUser
-                    ? <p>{ 'Already have an account? ' }<a href='#' onClick={ toggleNewUser }>Log in!</a></p>
-                    : <p>{ 'Don\'t have an account? ' }<a href='#' onClick={ toggleNewUser }>Sign up!</a></p>
+                    ? <p className='borealis-tooltip'>{ 'Already have an account? ' }<a href='#' onClick={ toggleNewUser }>Log in!</a></p>
+                    : <p className='borealis-tooltip'>{ 'Don\'t have an account? ' }<a href='#' onClick={ toggleNewUser }>Sign up!</a></p>
                 }
-            </div>
-        </div>
+            </FormRow>
+        </FormContainer>
     )
 }
 

@@ -12,6 +12,16 @@ module.exports = {
                 primary: colors.gray,    // it's now possible to use bg-primary instead of colors   gray-300
                 secondary: colors.sky,
                 accent: colors.orange,
+                'primary-light': '#C7D2FE',     // indigo-200
+                'primary-medium': '#4F46E5',    // indigo-600
+                'primary-dark': '#3730A3',      // indigo-800
+                'primary-darker': '#312E81',    // indigo-900
+                'secondary-lighter': '#FEF3C7', // amber-100
+                'secondary-light': '#FDE68A',   // amber-200
+                'secondary-medium': '#FCD34D',  // amber-300
+                'secondary-dark': '#D97706',    // amber-600
+                'accent-light': '#FCA5A5',      // red-300
+                'accent-dark': '#DC2626',       // red-600
             },
             zIndex: {
                 'map': '1',
@@ -30,7 +40,8 @@ module.exports = {
                 'chat-panel-roll': '120',
                 'banner': '120',
                 'loading': '130',
-                'debug': '140',
+                'notification': '140',
+                'debug': '150',
             },
             animation: {
                 'reverse-spin': 'reverse-spin 1s linear infinite',
@@ -41,6 +52,9 @@ module.exports = {
                         transform: 'rotate(360deg)'
                     },
                 }
+            },
+            fontFamily: {
+                'heading': [],
             }
         },
     },

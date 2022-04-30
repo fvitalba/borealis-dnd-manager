@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createContext, ReactElement } from 'react'
+import React, { useEffect, useState, createContext, ReactNode } from 'react'
 import UserType from '../enums/UserType'
 import { useLoading } from '../hooks/useLoading'
 import guid from '../utils/guid'
@@ -59,7 +59,7 @@ export const WebSocketContext = createContext<IWebSocketContext>({
     setWsSettings: () => null,
 })
 
-const WebSocketProvider = ({ children } : { children: ReactElement }) => {
+const WebSocketProvider = ({ children } : { children: ReactNode }) => {
     const [wsSettings, setWsSettings] = useState<IWsSettings>({
         socketGuid: guid(),
         userGuid: '',

@@ -2,14 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-h1 {
-    @apply text-3xl;
-    @apply font-extrabold;
-    @apply subpixel-antialiased;
-    @apply text-center;
-    @apply text-secondary-600;
-}
-
 .game-setup-container {
     @apply w-full;
     @apply container;
@@ -823,4 +815,246 @@ h1 {
 
 .debug-overlay-value {
     @apply italic;
+}
+
+
+
+
+
+h1 {
+    @apply text-3xl;
+    @apply font-extrabold;
+    @apply subpixel-antialiased;
+    @apply text-center;
+    @apply text-secondary-light;
+    @apply tracking-wide;
+    @apply mb-6;
+}
+
+h2 {
+    @apply text-2xl;
+    @apply font-bold;
+    @apply subpixel-antialiased;
+    @apply text-center;
+    @apply text-secondary-light;
+    @apply tracking-wide;
+    @apply mb-4;
+}
+
+h3 {
+    @apply text-xl;
+    @apply font-semibold;
+    @apply subpixel-antialiased;
+    @apply text-center;
+    @apply text-secondary-light;
+    @apply mb-2;
+}
+
+.borealis-form-container {
+    @apply flex;
+    @apply flex-col;
+    @apply mx-auto;
+    @apply z-control-panel;
+    @apply bg-primary-dark;
+    @apply rounded-sm;
+    @apply shadow-md;
+    @apply p-8;
+    @apply w-1/4;
+    @apply min-w-fit;
+    @apply border-2;
+    @apply border-primary-medium;
+}
+
+.borealis-form-row {
+    @apply flex;
+    @apply flex-row;
+    @apply flex-auto;
+    @apply pt-2;
+    @apply pb-2;
+    @apply space-x-4;
+}
+
+.borealis-text-input-container {
+    @apply flex;
+    @apply flex-row;
+    @apply flex-auto;
+}
+
+.borealis-text-input {
+    @apply text-secondary-light;
+    @apply placeholder-secondary-light;
+    @apply rounded-sm;
+    @apply text-base;
+    @apply justify-center;
+    @apply bg-primary-darker;
+    @apply pl-1;
+    @apply pr-1;
+    @apply placeholder-primary-light;
+    @apply h-8;
+    @apply flex;
+    @apply mx-auto;
+    @apply grow;
+    @apply border-2;
+    @apply border-primary-medium;
+}
+
+.borealis-text-input:disabled {
+    @apply opacity-50;
+}
+
+.borealis-checkbox-input-container {
+    @apply flex;
+    @apply flex-row;
+    @apply flex-auto;
+    @apply items-center;
+}
+
+.borealis-checkbox-input-container-disabled {
+    @apply borealis-checkbox-input-container;
+    @apply opacity-50;
+}
+
+.borealis-checkbox-input {
+    @apply opacity-0;
+    @apply absolute;
+    @apply w-8;
+    @apply h-8;
+}
+
+.borealis-checkbox-input:checked {
+    @apply border-primary-light;
+    @apply block;
+}
+
+.borealis-checkbox-input-override {
+    @apply bg-primary-darker;
+    @apply border-2;
+    @apply rounded-sm;
+    @apply border-primary-medium;
+    @apply w-8;
+    @apply h-8;
+    @apply flex;
+    @apply flex-shrink-0;
+    @apply justify-center;
+    @apply items-center;
+    @apply focus-within:border-primary-light;
+}
+
+.borealis-checkbox-icon-inactive {
+    @apply hidden;
+}
+
+.borealis-checkbox-icon-active {
+    @apply text-secondary-light;
+}
+
+.borealis-input-label {
+    @apply text-secondary-light;
+    @apply justify-start;
+}
+
+.borealis-action-button {
+    @apply flex;
+    @apply flex-row;
+    @apply space-x-4;
+    @apply bg-secondary-light;
+    @apply rounded-full;
+    @apply h-12;
+    @apply w-12;
+    @apply border-2;
+    @apply border-secondary-light;
+}
+
+.borealis-action-button:disabled {
+    @apply opacity-50;
+}
+
+.borealis-action-button:hover {
+    @apply bg-secondary-lighter;
+    @apply border-secondary-lighter;
+}
+
+.borealis-action-button:active {
+    @apply bg-secondary-medium;
+    @apply border-secondary-medium;
+}
+
+.borealis-action-button-content {
+    @apply mx-auto;
+    @apply flex;
+    @apply flex-row;
+}
+
+.borealis-tooltip {
+    @apply text-secondary-light;
+    @apply text-sm;
+    @apply italic;
+}
+
+.borealis-tooltip a {
+    @apply underline;
+    @apply not-italic;
+    @apply font-extrabold;
+    @apply text-secondary-medium;
+}
+
+.borealis-tooltip a:hover {
+    @apply text-secondary-light;
+}
+
+.borealis-tooltip a:active {
+    @apply text-secondary-lighter;
+}
+
+.borealis-action-text-input-button {
+    @apply flex;
+    @apply flex-row;
+    @apply space-x-4;
+    @apply bg-transparent;
+    @apply rounded-none;
+    @apply h-8;
+    @apply w-8;
+    @apply -ml-9;
+    @apply text-secondary-light;
+}
+
+.borealis-action-text-input-button:disabled {
+    @apply opacity-50;
+}
+
+.borealis-action-text-input-button:hover {
+    @apply text-secondary-lighter;
+}
+
+.borealis-aciton-text-input-button:active {
+    @apply text-secondary-medium;
+}
+
+.borealis-action-text-input-button-content {
+    @apply mx-auto;
+    @apply flex;
+    @apply flex-row;
+}
+
+.borealis-select-container {
+    @apply flex;
+    @apply flex-row;
+    @apply flex-auto;
+    @apply items-center;
+}
+
+.borealis-select {
+    @apply text-secondary-light;
+    @apply rounded-sm;
+    @apply text-base;
+    @apply justify-center;
+    @apply bg-primary-darker;
+    @apply pl-1;
+    @apply pr-1;
+    @apply h-8;
+    @apply flex;
+    @apply mx-auto;
+    @apply grow;
+    @apply border-2;
+    @apply border-primary-medium;
 }
