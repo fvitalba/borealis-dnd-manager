@@ -1,5 +1,9 @@
 import React, { ChangeEvent, Ref, KeyboardEvent } from 'react'
+import User from '../../classes/User'
+import Message from '../../classes/Message'
 import DiceRollButton from '../../components/DiceRollButton'
+import MessageType from '../../enums/MessageType'
+import UserType from '../../enums/UserType'
 import Button from './../Button'
 import { PlaySolidIcon, XCircleOutlineIcon, ChatOutlineIcon, HelpCircleSolidIcon } from './../Icons'
 import ChatPanelCommandsHelp from './ChatPanelCommandsHelp'
@@ -8,9 +12,6 @@ import ChatPanelWhisper from './ChatPanelWhisper'
 import ChatPanelCommand from './ChatPanelCommand'
 import ChatPanelError from './ChatPanelError'
 import { ChatCommand } from '../../utils/constants'
-import User from '../../classes/User'
-import Message from '../../classes/Message'
-import MessageType from '../../enums/MessageType'
 
 interface ChatPanelViewProps {
     username: string,
@@ -58,7 +59,7 @@ const ChatPanelView = ({ username, chatPanelHidden, toggleHidden, showHelp, togg
                     { (showUserHover && (users.length > 0))
                         ? <div className='chat-panel-users'>
                             { users.map((user) =>
-                                <div className='chat-panel-user' key={ user.name }>{ user.name } ({ user.type })</div>
+                                <div className='chat-panel-user' key={ user.name }>{ user.name } ({ UserType[user.type] })</div>
                             )}
                         </div>
                         : null

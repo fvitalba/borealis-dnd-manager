@@ -6,8 +6,9 @@ import Map from '../classes/Map'
 import Token from '../classes/Token'
 import Character from '../classes/Character'
 import Message from '../classes/Message'
+import User from '../classes/User'
 import UserType from '../enums/UserType'
-import { pushGameRefresh, useWebSocket } from '../hooks/useSocket'
+import { pushGameRefresh, sendUser, useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
 import StateInterface from '../interfaces/StateInterface'
 import { overwriteGame, loadMap, setFogEnabled } from '../reducers/gameReducer'
@@ -19,7 +20,8 @@ import { SettingsState } from '../reducers/settingsReducer'
 import { assignCharacter, assignCharacterToUser, CharacterState, setCharacters, updateCharacter } from '../reducers/characterReducer'
 import { getMap } from '../utils/mapHandler'
 import { GAME_REQUEST_REFRESH } from '../utils/loadingTasks'
-import { CharacterSchema, CharacterStateSchema, ChatMessageSchema, ChatStateSchema, GameSchema, MapSchema, MapStateSchema, PathSchema, TokenSchema, TokenStateSchema } from '../utils/mongoDbSchemas'
+import { CharacterSchema, CharacterStateSchema, ChatMessageSchema, ChatStateSchema, GameSchema, MapSchema, MapStateSchema, PathSchema, RoomUserSchema, TokenSchema, TokenStateSchema } from '../utils/mongoDbSchemas'
+import { addUserToDatabase } from '../utils/apiHandler'
 
 interface IncomingWebSocketPayload {
     type: string,
@@ -40,6 +42,7 @@ interface IncomingWebSocketPayload {
     height?: number,
     fogEnabled?: boolean,
     message?: ChatMessageSchema,
+    user?: RoomUserSchema,
     game?: GameSchema,
     mapState?: MapStateSchema,
     tokenState?: TokenStateSchema,
@@ -85,13 +88,14 @@ const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settings
         if (data.fromSocketGuid === webSocketContext.wsSettings.socketGuid) {
             return  // ignore messages sent by self
         }
-        if (data.targetGuid && data.targetGuid !== webSocketContext.wsSettings.socketGuid) {
+        if (data.targetGuid && data.targetGuid !== webSocketContext.wsSettings.userGuid) {
             return  // ignore messages sent to different recipients
         }
 
         let pathToUpdate = new Array<Path>()
         let updatedMaps = mapState.maps.map((map) => map.copy())
         let updatedTokens = tokenState.tokens.map((token) => token.copy())
+        let myUser
         switch (data.type) {
         case 'pushCursor':
             if ((data.x && data.y) && (data.fromUserGuid !== metadataState.userGuid))
@@ -236,6 +240,17 @@ const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settings
         case 'sendChatMessage':
             if (data.message)
                 addChatMessage(data.message)
+            break
+        case 'requestAuthentication':
+            myUser = new User(metadataState.userGuid, settingsState.username, metadataState.userType)
+            myUser.assignedCharacterGuid = characterState.currentCharacterGuid
+            sendUser(webSocketContext.ws, webSocketContext.wsSettings, data.fromUserGuid, myUser)
+            break
+        case 'sendUser':
+            if (data.user) {
+                myUser = User.fromDbSchema(data.user)
+                addUserToDatabase(webSocketContext.wsSettings, myUser)
+            }
             break
         default:
             console.error(`Unrecognized websocket message type: ${data.type}`)

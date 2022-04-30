@@ -4,7 +4,7 @@ import argon2 from 'argon2'
 import User from '../models/user.js'
 import RoomUser from '../models/roomUser.js'
 import Session from '../models/session.js'
-import { registerUser, saveUpdateRoomUsers, cleanUserBeforeSending } from '../utils/userHandler.js'
+import { registerUser, saveUpdateRoomUser, cleanUserBeforeSending, setAllRoomUserStatus } from '../utils/userHandler.js'
 
 const userRouter = new Router()
 
@@ -32,10 +32,19 @@ userRouter.get('/:userGuid?:roomId?', (request, result) => {
 
 userRouter.post('/', (request, response) => {
     const body = request.body
-    if (!body.payload)
+    if (!body.newUser)
         return response.status(400).json({ error: 'Request is badly specified. Please provide users to save.' })
-    
-    saveUpdateRoomUsers(JSON.parse(body.payload))
+
+    saveUpdateRoomUser(body.roomId, JSON.parse(body.newUser))
+        .then((result) => response.json(result))
+})
+
+userRouter.post('/status/', (request, response) => {
+    const body = request.body
+    if (body.active === undefined)
+        return response.status(400).json({ error: 'Request is badly specified. Either RoomID or new Status was missing.' })
+
+    setAllRoomUserStatus(body.roomId, body.active)
         .then((result) => response.json(result))
 })
 

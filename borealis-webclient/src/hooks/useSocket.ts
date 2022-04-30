@@ -6,6 +6,7 @@ import Character from '../classes/Character'
 import Map from '../classes/Map'
 import Token from '../classes/Token'
 import Game from '../classes/Game'
+import User from '../classes/User'
 import { MapState } from '../reducers/mapReducer'
 import { TokenState } from '../reducers/tokenReducer'
 import { ChatState } from '../reducers/chatReducer'
@@ -38,6 +39,7 @@ export interface WebSocketPayload {
     height?: number,
     fogEnabled?: boolean,
     message?: Message,
+    user?: User,
     game?: Game,
     mapState?: MapState,
     tokenState?: TokenState,
@@ -197,8 +199,16 @@ export const pushDeleteCharacter = (webSocket: WebSocket, wsSettings: IWsSetting
     })
 }
 
-export const ping = (webSocket: WebSocket, wsSettings: IWsSettings) => {
+export const sendUser = (webSocket: WebSocket, wsSettings: IWsSettings, targetUserGuid: string, user: User) => {
     sendData(webSocket, wsSettings, {
-        type: 'ping',
+        type: 'sendUser',
+        targetGuid: targetUserGuid,
+        user: user,
+    })
+}
+
+export const requestAuthentication = (webSocket: WebSocket, wsSettings: IWsSettings) => {
+    sendData(webSocket, wsSettings, {
+        type: 'requestAuthentication',
     })
 }

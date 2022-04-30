@@ -172,6 +172,44 @@ export const getUsersFromDatabase = (wsSettings: IWsSettings): Promise<Array<Roo
     })
 }
 
+export const addUserToDatabase = (wsSettings: IWsSettings, newUser: User): Promise<Array<RoomUserSchema>> => {
+    return new Promise ((resolve, reject) => {
+        const params = {
+            fromSocketGuid: wsSettings.socketGuid,
+            fromUserGuid: wsSettings.userGuid,
+            roomId: wsSettings.roomId,
+            newUser: JSON.stringify(newUser),
+        }
+
+        axios.post(usersUrl(), params)
+            .then((result) => {
+                resolve(result.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
+export const setAllRoomUsersInactive =  (wsSettings: IWsSettings): Promise<Array<RoomUserSchema>> => {
+    return new Promise ((resolve, reject) => {
+        const params = {
+            fromSocketGuid: wsSettings.socketGuid,
+            fromUserGuid: wsSettings.userGuid,
+            roomId: wsSettings.roomId,
+            active: false,
+        }
+
+        axios.post(usersUrl() + 'status/', params)
+            .then((result) => {
+                resolve(result.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
 export const getUserDetailsFromDatabase = (wsSettings: IWsSettings, userGuid?: string, userName?: string, email?: string, secret?: string, isGuest?: boolean): Promise<UserSchema> => {
     return new Promise((resolve, reject) => {
         const params = {

@@ -55,11 +55,48 @@ export const registerUser = async (user) => {
     })    
 }
 
-export const saveUpdateRoomUsers = async (roomUsers) => {
-    if (!roomUsers)
+export const saveUpdateRoomUsers = async (roomId, newRoomUsers) => {
+    if (!roomId || !newRoomUsers)
         return undefined
 
-    //TODO: boh, dunno
+    // Set all users to inactive, then reactivate only the received users
+    return RoomUser.updateMany({ roomId: roomId, }, { active: false, })
+        .then(() => {
+            return newRoomUsers.map(async (newRoomUser) => {
+                return RoomUser.findOneAndUpdate(
+                    { roomId: roomId, guid: newRoomUser.guid }, 
+                    { ...newRoomUser, roomId: roomId, timestamp: new Date(), active: true, }, 
+                    { new: true, upsert: true, }
+                ).then((updatedRoomUser) => {
+                    return updatedRoomUser
+                })
+                .catch(() => null)
+            })
+        })
+        .catch(() => null)
+}
+
+export const saveUpdateRoomUser = async (roomId, newRoomUser) => {
+    if (!roomId || !newRoomUser)
+        return undefined
+
+    return RoomUser.findOneAndUpdate(
+            { roomId: roomId, guid: newRoomUser.guid }, 
+            { ...newRoomUser, roomId: roomId, timestamp: new Date(), active: true, }, 
+            { new: true, upsert: true, }
+        ).then((updatedRoomUser) => {
+            return updatedRoomUser
+        })
+        .catch(() => null)
+}
+
+export const setAllRoomUserStatus = async (roomId, newStatus) => {
+    if (!roomId || (newStatus === undefined))
+        return undefined
+    
+    return RoomUser.updateMany({ roomId: roomId, }, { active: newStatus })
+        .then((updatedRoomUsers) => updatedRoomUsers)
+        .catch(() => null)
 }
 
 export const cleanUserBeforeSending = (user) => {

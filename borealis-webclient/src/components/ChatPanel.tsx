@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useCallback, useRef, ChangeEvent, KeyboardEvent } from 'react'
+import React, { useEffect, useState, useRef, ChangeEvent, KeyboardEvent } from 'react'
 import { connect } from 'react-redux'
 import Character from '../classes/Character'
 import Message from '../classes/Message'
-import User from '../classes/User'
 import MessageType from '../enums/MessageType'
 import UserType from '../enums/UserType'
 import { sendChatMessage, useWebSocket } from '../hooks/useSocket'
@@ -15,8 +14,6 @@ import { MetadataState } from '../reducers/metadataReducer'
 import { convertChatMessage } from '../utils/commandHandler'
 import { ChatCommands } from '../utils/constants'
 import ChatPanelView from '../views/ChatPanel/ChatPanelView'
-import { loadUsersFromDatabase } from '../utils/gameLoadHandler'
-import { useLoading } from '../hooks/useLoading'
 
 interface ChatPanelState {
     hidden: boolean,
@@ -39,15 +36,13 @@ interface ChatPanelProps {
     characterState: CharacterState,
     metadataState: MetadataState,
     addChatMessage: (arg0: Message) => void,
-    setUsersFromAPI: (arg0: Array<User>) => void,
 }
 
-const ChatPanel = ({ chatState, settingsState, userState, characterState, metadataState, addChatMessage, setUsersFromAPI }: ChatPanelProps) => {
+const ChatPanel = ({ chatState, settingsState, userState, characterState, metadataState, addChatMessage }: ChatPanelProps) => {
     const [chatPanelState, setChatPanelState] = useState(initialChatPanelState())
     const [showUserHover, setShowUserHover] = useState(false)
     const endOfMessagesRef = useRef<HTMLDivElement>(null)
     const webSocketContext = useWebSocket()
-    const loadingContext = useLoading()
 
     const currentCharacter = characterState.currentCharacterGuid
         ? characterState.characters.filter((currCharacter) => currCharacter.guid === characterState.currentCharacterGuid)[0]
@@ -113,24 +108,9 @@ const ChatPanel = ({ chatState, settingsState, userState, characterState, metada
         })
     }
 
-    const loadUsers = useCallback(() => {
-        loadUsersFromDatabase(webSocketContext, loadingContext)
-            .then((result) => {
-                if (result)
-                    setUsersFromAPI(result.users)
-            })
-    }, [ webSocketContext, chatPanelState, setChatPanelState ])
-
     useEffect(() => {
         scrollToBottom()
     }, [ chatState.messages ])
-
-    useEffect(() => {
-        const interval = setInterval(() => loadUsers(), 30000)
-        return () => {
-            clearInterval(interval)
-        }
-    },[ loadUsers ])
 
     return (
         <ChatPanelView

@@ -4,6 +4,7 @@ import DataReceiver from './DataReceiver'
 import Game from './Game'
 import GameSetup from './GameSetup'
 import LoadingOverlay from './LoadingOverlay'
+import UserManager from './UserManager'
 import { createWebSocket } from '../contexts/WebSocketProvider'
 import UserType from '../enums/UserType'
 import { useWebSocket } from '../hooks/useSocket'
@@ -84,6 +85,7 @@ const GameStateHandler = ({ metadataState, setGameSettings }: GameStateHandlerPr
     return(
         <>
             <DataReceiver />
+            <UserManager />
             { gameIsSetUp
                 ? <Game />
                 : <GameSetup />

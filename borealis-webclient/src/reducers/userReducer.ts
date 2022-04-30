@@ -1,5 +1,9 @@
-import { SET_USERS_FROM_API } from '../redux/constants'
 import User from '../classes/User'
+import {
+    DELETE_ROOM_USERS,
+    ADD_ROOM_USER,
+    SET_USERS_FROM_API
+} from '../redux/constants'
 
 export interface UserState {
     users: Array<User>,
@@ -13,7 +17,8 @@ export const initialUserState = (): UserState => {
 
 interface UserAction {
     type: string,
-    newUsers: Array<User>,
+    newUsers?: Array<User>,
+    user?: User,
 }
 
 const userReducer = (state = initialUserState(), action: UserAction): UserState => {
@@ -36,6 +41,20 @@ const userReducer = (state = initialUserState(), action: UserAction): UserState 
             ...state,
             users: newUsers,
         }
+    case ADD_ROOM_USER:
+        if (action.user !== undefined) {
+            newUsers = newUsers.concat(action.user)
+            return {
+                ...state,
+                users: newUsers,
+            }
+        } else
+            return state
+    case DELETE_ROOM_USERS:
+        return {
+            ...state,
+            users: [],
+        }
     default:
         return state
     }
@@ -46,6 +65,19 @@ export const setUsersFromAPI = (newUsers: Array<User>): UserAction => {
     return {
         type: SET_USERS_FROM_API,
         newUsers: newUsers,
+    }
+}
+
+export const addRoomUser = (newUser: User): UserAction => {
+    return {
+        type: ADD_ROOM_USER,
+        user: newUser,
+    }
+}
+
+export const deleteRoomUsers = (): UserAction => {
+    return {
+        type: DELETE_ROOM_USERS,
     }
 }
 //#endregion Action Creators
