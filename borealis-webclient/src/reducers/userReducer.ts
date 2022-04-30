@@ -1,5 +1,7 @@
-import { SET_USERS_FROM_API } from '../redux/constants'
 import User from '../classes/User'
+import {
+    SET_USERS_FROM_API
+} from '../redux/constants'
 
 export interface UserState {
     users: Array<User>,
@@ -13,7 +15,8 @@ export const initialUserState = (): UserState => {
 
 interface UserAction {
     type: string,
-    newUsers: Array<User>,
+    newUsers?: Array<User>,
+    user?: User,
 }
 
 const userReducer = (state = initialUserState(), action: UserAction): UserState => {

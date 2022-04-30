@@ -4,44 +4,38 @@ import DataReceiver from './DataReceiver'
 import Game from './Game'
 import GameSetup from './GameSetup'
 import LoadingOverlay from './LoadingOverlay'
+import UserManager from './UserManager'
 import { createWebSocket } from '../contexts/WebSocketProvider'
 import UserType from '../enums/UserType'
 import { useWebSocket } from '../hooks/useSocket'
 import { useLoading } from '../hooks/useLoading'
 import StateInterface from '../interfaces/StateInterface'
 import { MetadataState, setGameSettings } from '../reducers/metadataReducer'
+import { setUsername } from '../reducers/settingsReducer'
 import { WEBSOCKET_OPEN_CONNECTION } from '../utils/loadingTasks'
 import guid from '../utils/guid'
+import DebugOverlay from './DebugOverlay'
 
 interface GameStateHandlerProps {
     metadataState: MetadataState,
     setGameSettings: (userType: UserType, userGuid: string, isGuest: boolean, roomName: string, roomGuid: string) => void,
+    setUsername: (userName: string) => void,
 }
 
-const GameStateHandler = ({ metadataState, setGameSettings }: GameStateHandlerProps) => {
+const GameStateHandler = ({ metadataState, setGameSettings, setUsername }: GameStateHandlerProps) => {
     const webSocketContext = useWebSocket()
     const loadingContext = useLoading()
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.href.replace(/.*\?/, ''))
-        const userTypeParam = params.get('userType')
-        let userType : UserType | null
-        switch (userTypeParam?.toUpperCase()) {
-        case 'HOST':
-            userType = UserType.host
-            break
-        case 'PLAYER':
-            userType = UserType.player
-            break
-        default:
-            userType = null
-        }
-
-        //TODO: fix connection from url for guest users
+        const userTypeParam = params.get('userType') || '1'
+        const userType = parseInt(userTypeParam)
         const roomId = params.get('roomId') || ''
         const roomName = params.get('roomName') || ''
+
         if (roomId !== '') {
-            setGameSettings(userType !== null ? userType : UserType.player, guid(), true, roomName, roomId)
+            setGameSettings(userType, '', true, roomName, roomId)
+            setUsername('Anonymous (Guest)')
             const newWsSettings = webSocketContext.wsSettings
             newWsSettings.roomId = roomId
             if (userType !== null)
@@ -84,11 +78,13 @@ const GameStateHandler = ({ metadataState, setGameSettings }: GameStateHandlerPr
     return(
         <>
             <DataReceiver />
+            <UserManager />
             { gameIsSetUp
                 ? <Game />
                 : <GameSetup />
             }
             <LoadingOverlay />
+            <DebugOverlay />
         </>
     )
 }
@@ -101,6 +97,7 @@ const mapStateToProps = (state: StateInterface) => {
 
 const mapDispatchToProps = {
     setGameSettings,
+    setUsername,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameStateHandler)

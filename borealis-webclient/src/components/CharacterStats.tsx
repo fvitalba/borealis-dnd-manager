@@ -32,7 +32,7 @@ const CharacterStats = ({ toggleOnCharacterStats, characterState, userState, met
     useEffect(() => {
         const currCharacter = characterState.characters.filter((stateCharacter: Character) => stateCharacter.guid === characterState.currentCharacterGuid)[0]
         if (currCharacter)
-            setSelectedCharacter(currCharacter)
+            setSelectedCharacter(currCharacter.copy())
     }, [ characterState.currentCharacterGuid ])
 
     const modifiers = {
@@ -45,19 +45,19 @@ const CharacterStats = ({ toggleOnCharacterStats, characterState, userState, met
     }
 
     const setCharacterName = (newName: string) => {
-        const updatedCharacter = selectedCharacter
+        const updatedCharacter = selectedCharacter.copy()
         updatedCharacter.name = newName
         setSelectedCharacter(updatedCharacter)
     }
 
     const onStatChange = (attributeName: ClassNumberProperty, e: ChangeEvent<HTMLInputElement>) => {
-        const updatedCharacter = selectedCharacter
+        const updatedCharacter = selectedCharacter.copy()
         updatedCharacter.SetNumberAttributeValue(attributeName, parseInt(e.target.value))
         setSelectedCharacter(updatedCharacter)
     }
 
     const onSelectUser = (e: ChangeEvent<HTMLSelectElement>) => {
-        const updatedCharacter = selectedCharacter
+        const updatedCharacter = selectedCharacter.copy()
         updatedCharacter.username = e.target.value
         setSelectedCharacter(updatedCharacter)
     }

@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import Room from '../models/room.js'
-import { exportRoomWithRole, saveUpdateRoom } from '../utils/roomHandler.js'
+import { exportRoomWithRole, getAllRoomsForUserIdWithRole, saveUpdateRoom } from '../utils/roomHandler.js'
 
 const roomRouter = new Router()
 
@@ -14,17 +14,22 @@ roomRouter.get('/:roomId?:hostUserGuid?', (request, result) => {
     if ((hostUserGuid !== undefined) && (hostUserGuid !== ''))
         queryParameters['hostUserGuid'] = hostUserGuid
 
-    if (queryParameters.roomId || queryParameters.hostUserGuid) {
-        // TOOD: include rooms where the provided ID is just participant
-        Room.find(queryParameters)
-            .then((rooms) => {
-                if ((hostUserGuid !== undefined) && (hostUserGuid !== ''))
-                    result.json(rooms.map((room) => exportRoomWithRole(room, 0  /* Host */)))
-                else
-                    result.json(rooms)
-            })
+    if (queryParameters.hostUserGuid !== undefined) {
+        getAllRoomsForUserIdWithRole(queryParameters.roomId, queryParameters.hostUserGuid)
+            .then((rooms) => result.json(rooms))
     } else {
-        result.json([])
+        if (queryParameters.roomId || queryParameters.hostUserGuid) {
+            // TOOD: include rooms where the provided ID is just participant
+            Room.find(queryParameters)
+                .then((rooms) => {
+                    if ((hostUserGuid !== undefined) && (hostUserGuid !== ''))
+                        result.json(rooms.map((room) => exportRoomWithRole(room, 0  /* Host */)))
+                    else
+                        result.json(rooms)
+                })
+        } else {
+            result.json([])
+        }
     }
 })
 

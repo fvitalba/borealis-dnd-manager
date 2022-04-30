@@ -60,7 +60,7 @@ const characterReducer = (state = initialCharacterState(), action: CharacterActi
     case ASSIGN_CHARACTER:
         return {
             ...state,
-            currentCharacterGuid: action.characterGuid ? action.characterGuid : state.currentCharacterGuid,
+            currentCharacterGuid: action.characterGuid !== undefined ? action.characterGuid : state.currentCharacterGuid,
         }
     case ASSIGN_CHARACTER_TO_USER:
         newCharacters = newCharacters.map((character: Character) => {

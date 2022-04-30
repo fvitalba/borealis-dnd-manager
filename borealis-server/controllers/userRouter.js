@@ -4,7 +4,7 @@ import argon2 from 'argon2'
 import User from '../models/user.js'
 import RoomUser from '../models/roomUser.js'
 import Session from '../models/session.js'
-import { registerUser, saveUpdateRoomUsers, cleanUserBeforeSending } from '../utils/userHandler.js'
+import { registerUser, saveUpdateRoomUser, cleanUserBeforeSending, setAllRoomUserStatus, saveUpdateRoomUsers } from '../utils/userHandler.js'
 
 const userRouter = new Router()
 
@@ -12,30 +12,54 @@ userRouter.get('/:userGuid?:roomId?', (request, result) => {
     const userGuid = request.params.userGuid ? request.params.userGuid : request.query.userGuid
     const roomId = request.params.roomId ? request.params.roomId : request.query.roomId
 
-    if (userGuid !== undefined && userGuid !== '') {
-        User.find({ 'guid': userGuid, 'active': true, })
-            .then((users) => {
-                result.json(users)
-            })
-    } else if ((roomId !== undefined) && (roomId !== '')) {
-        const queryParameters = { 'roomId': roomId, 'active': true, }
-        if (userGuid !== undefined && userGuid !== '')
-            queryParameters['guid'] = userGuid
-        RoomUser.find(queryParameters)
-            .then((roomUsers) => {
-                result.json(roomUsers)
-            })
-    } else {
-        result.json([])
-    }
+    // check user activity
+    RoomUser.updateMany({ lastOnline: { $lt: (new Date() - 30000) } }, { active: false })
+        .then(() => {
+            if (userGuid !== undefined && userGuid !== '') {
+                User.find({ 'guid': userGuid, 'active': true, })
+                    .then((users) => {
+                        result.json(users)
+                    })
+            } else if ((roomId !== undefined) && (roomId !== '')) {
+                const queryParameters = { 'roomId': roomId, 'active': true, }
+                if (userGuid !== undefined && userGuid !== '')
+                    queryParameters['guid'] = userGuid
+                RoomUser.find(queryParameters)
+                    .then((roomUsers) => {
+                        result.json(roomUsers)
+                    })
+            } else {
+                result.json([])
+            }
+        })
+        .catch(() => result.json([]))
 })
 
 userRouter.post('/', (request, response) => {
     const body = request.body
-    if (!body.payload)
+    if (!body.newUser && !body.payload)
         return response.status(400).json({ error: 'Request is badly specified. Please provide users to save.' })
-    
-    saveUpdateRoomUsers(JSON.parse(body.payload))
+
+    // check user activity
+    RoomUser.updateMany({ lastOnline: { $lt: (new Date() - 30000) } }, { active: false })
+        .then(() => {
+            if (body.newUser !== undefined) {
+                saveUpdateRoomUser(body.roomId, JSON.parse(body.newUser))
+                    .then((result) => response.json(result))
+            }
+            if (body.payload !== undefined) {
+                saveUpdateRoomUsers(body.roomId, JSON.parse(body.payload))
+                    .then((result) => response.json(result))
+            }
+        })
+})
+
+userRouter.post('/status/', (request, response) => {
+    const body = request.body
+    if (body.active === undefined)
+        return response.status(400).json({ error: 'Request is badly specified. Either RoomID or new Status was missing.' })
+
+    setAllRoomUserStatus(body.roomId, body.active)
         .then((result) => response.json(result))
 })
 
