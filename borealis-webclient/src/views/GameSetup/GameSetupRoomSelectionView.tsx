@@ -36,7 +36,7 @@ const GameSetupRoomSelectionView = ({ userName, newRoomName, onNewRoomNameChange
             </FormRow>
             <FormRow>
                 <OptionSelector title='Select Room' label='Select existing Room:' value={ selectedRoomName } onChange={ onRoomSelect } options={ rooomSelectorOptions } />
-                <ActionButton title='Load game' value={ <PlaySolidIcon /> } onClick={ onSubmitSelectRoom } disabled={ !isSubmitSelectionEnabled } />
+                <ActionButton title='Load game' value={ <PlaySolidIcon className='w-10 h-10 text-primary-dark' /> } onClick={ onSubmitSelectRoom } disabled={ !isSubmitSelectionEnabled } />
             </FormRow>
         </FormContainer>
     )

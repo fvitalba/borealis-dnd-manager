@@ -43,6 +43,8 @@ const GameSetupLoginView = ({ userName, onUserNameChange, password, onPasswordCh
             }
             <FormRow>
                 <CheckboxInput title='Remember me' value={ rememberUser } onChange={ toggleRememberUser } label='Remember me' disabled={ isGuest } />
+            </FormRow>
+            <FormRow reverseDirection={ true } >
                 <ActionButton title='Login' value={ <PlaySolidIcon className='w-10 h-10 text-primary-dark' /> } onClick={ onSubmitSetup } disabled={ !isSubmitEnabled } />
             </FormRow>
             <FormRow>

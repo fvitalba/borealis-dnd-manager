@@ -504,6 +504,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .flex-row {
   flex-direction: row;
 }
+.flex-row-reverse {
+  flex-direction: row-reverse;
+}
 .flex-nowrap {
   flex-wrap: nowrap;
 }
@@ -1873,7 +1876,7 @@ h3 {
   z-index: 100;
   --tw-bg-opacity: 1;
   background-color: rgb(55 48 163 / var(--tw-bg-opacity));
-  border-radius: 0.125rem;
+  border-radius: 0.25rem;
   --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
@@ -1888,7 +1891,6 @@ h3 {
 
 .borealis-form-row {
   display: flex;
-  flex-direction: row;
   flex: 1 1 auto;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -1917,7 +1919,7 @@ h3 {
 }
 
 .borealis-text-input {
-  border-radius: 0.125rem;
+  border-radius: 0.25rem;
   font-size: 1rem;
   line-height: 1.5rem;
   justify-content: center;
@@ -1979,7 +1981,7 @@ h3 {
   --tw-bg-opacity: 1;
   background-color: rgb(49 46 129 / var(--tw-bg-opacity));
   border-width: 2px;
-  border-radius: 0.125rem;
+  border-radius: 0.25rem;
   --tw-border-opacity: 1;
   border-color: rgb(79 70 229 / var(--tw-border-opacity));
   width: 2rem;
@@ -2024,7 +2026,7 @@ h3 {
 .borealis-action-button {
   --tw-bg-opacity: 1;
   background-color: rgb(253 230 138 / var(--tw-bg-opacity));
-  border-radius: 9999px;
+  border-radius: 0.25rem;
   height: 3rem;
   width: 3rem;
   border-width: 2px;
@@ -2033,7 +2035,7 @@ h3 {
 }
 
 .borealis-action-button:disabled {
-  opacity: 0.5;
+  opacity: 0.75;
 }
 
 .borealis-action-button:hover {
@@ -2105,7 +2107,7 @@ h3 {
 }
 
 .borealis-action-text-input-button:disabled {
-  opacity: 0.5;
+  opacity: 0.75;
 }
 
 .borealis-action-text-input-button:hover {
@@ -2135,7 +2137,7 @@ h3 {
 .borealis-select {
   --tw-text-opacity: 1;
   color: rgb(253 230 138 / var(--tw-text-opacity));
-  border-radius: 0.125rem;
+  border-radius: 0.25rem;
   font-size: 1rem;
   line-height: 1.5rem;
   justify-content: center;
