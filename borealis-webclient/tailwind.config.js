@@ -12,7 +12,8 @@ module.exports = {
                 primary: colors.gray,    // it's now possible to use bg-primary instead of colors   gray-300
                 secondary: colors.sky,
                 accent: colors.orange,
-                'primary-light': '#C7D2FE',     // indigo-200
+                'primary-lighter': '#C7D2FE',   // indigo-200
+                'primary-light': '#A5B4FC',     // indigo-300
                 'primary-medium': '#4F46E5',    // indigo-600
                 'primary-dark': '#3730A3',      // indigo-800
                 'primary-darker': '#312E81',    // indigo-900

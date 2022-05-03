@@ -471,11 +471,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 .\!hidden {
   display: none !important;
 }
-.h-10 {
-  height: 2.5rem;
-}
 .h-8 {
   height: 2rem;
+}
+.h-10 {
+  height: 2.5rem;
 }
 .w-48 {
   width: 12rem;
@@ -486,11 +486,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 .w-12 {
   width: 3rem;
 }
-.w-10 {
-  width: 2.5rem;
-}
 .w-8 {
   width: 2rem;
+}
+.w-10 {
+  width: 2.5rem;
 }
 @keyframes reverse-spin {
 
@@ -1902,6 +1902,44 @@ h3 {
   margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
+.borealis-control-panel-container {
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 100;
+  --tw-bg-opacity: 1;
+  background-color: rgb(55 48 163 / var(--tw-bg-opacity));
+  border-radius: 0.25rem;
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  padding: 0.25rem;
+  border-width: 2px;
+  --tw-border-opacity: 1;
+  border-color: rgb(79 70 229 / var(--tw-border-opacity));
+  flex-basis: 33.333333%;
+  top: 0.5rem;
+  left: 0.5rem;
+  position: absolute;
+  max-height: 100%;
+  overflow-y: auto;
+  opacity: 1;
+}
+
+.borealis-control-panel-row {
+  display: flex;
+  flex: 1 1 auto;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.borealis-control-panel-row > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
 .borealis-text-input-container {
   display: flex;
   flex-direction: row;
@@ -1931,7 +1969,7 @@ h3 {
 
 .borealis-text-input::placeholder {
   --tw-placeholder-opacity: 1;
-  color: rgb(199 210 254 / var(--tw-placeholder-opacity));
+  color: rgb(165 180 252 / var(--tw-placeholder-opacity));
 }
 
 .borealis-text-input {
@@ -1947,6 +1985,11 @@ h3 {
 
 .borealis-text-input:disabled {
   opacity: 0.5;
+}
+
+.borealis-text-input:focus:enabled {
+  --tw-border-opacity: 1;
+  border-color: rgb(253 230 138 / var(--tw-border-opacity));
 }
 
 .borealis-checkbox-input-container {
@@ -1973,7 +2016,7 @@ h3 {
 
 .borealis-checkbox-input:checked {
   --tw-border-opacity: 1;
-  border-color: rgb(199 210 254 / var(--tw-border-opacity));
+  border-color: rgb(165 180 252 / var(--tw-border-opacity));
   display: block;
 }
 
@@ -1994,7 +2037,32 @@ h3 {
 
 .borealis-checkbox-input-override:focus-within {
   --tw-border-opacity: 1;
-  border-color: rgb(199 210 254 / var(--tw-border-opacity));
+  border-color: rgb(165 180 252 / var(--tw-border-opacity));
+}
+
+.borealis-checkbox-input-override-focus {
+  --tw-bg-opacity: 1;
+  background-color: rgb(49 46 129 / var(--tw-bg-opacity));
+  border-width: 2px;
+  border-radius: 0.25rem;
+  --tw-border-opacity: 1;
+  border-color: rgb(79 70 229 / var(--tw-border-opacity));
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+}
+
+.borealis-checkbox-input-override-focus:focus-within {
+  --tw-border-opacity: 1;
+  border-color: rgb(165 180 252 / var(--tw-border-opacity));
+}
+
+.borealis-checkbox-input-override-focus {
+  --tw-border-opacity: 1;
+  border-color: rgb(253 230 138 / var(--tw-border-opacity));
 }
 
 .borealis-checkbox-icon-inactive {
@@ -2024,11 +2092,8 @@ h3 {
 }
 
 .borealis-action-button {
-  --tw-bg-opacity: 1;
-  background-color: rgb(253 230 138 / var(--tw-bg-opacity));
+  background-color: transparent;
   border-radius: 0.25rem;
-  height: 3rem;
-  width: 3rem;
   border-width: 2px;
   --tw-border-opacity: 1;
   border-color: rgb(253 230 138 / var(--tw-border-opacity));
@@ -2038,18 +2103,18 @@ h3 {
   opacity: 0.75;
 }
 
-.borealis-action-button:hover {
+.borealis-action-button:hover:enabled {
   --tw-bg-opacity: 1;
-  background-color: rgb(254 243 199 / var(--tw-bg-opacity));
+  background-color: rgb(79 70 229 / var(--tw-bg-opacity));
   --tw-border-opacity: 1;
-  border-color: rgb(254 243 199 / var(--tw-border-opacity));
+  border-color: rgb(253 230 138 / var(--tw-border-opacity));
 }
 
-.borealis-action-button:active {
+.borealis-action-button:active:enabled {
   --tw-bg-opacity: 1;
-  background-color: rgb(252 211 77 / var(--tw-bg-opacity));
+  background-color: rgb(79 70 229 / var(--tw-bg-opacity));
   --tw-border-opacity: 1;
-  border-color: rgb(252 211 77 / var(--tw-border-opacity));
+  border-color: rgb(254 243 199 / var(--tw-border-opacity));
 }
 
 .borealis-action-button-content {
@@ -2057,6 +2122,8 @@ h3 {
   margin-right: auto;
   display: flex;
   flex-direction: row;
+  --tw-text-opacity: 1;
+  color: rgb(253 230 138 / var(--tw-text-opacity));
 }
 
 .borealis-tooltip {

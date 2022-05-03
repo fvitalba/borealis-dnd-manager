@@ -29,7 +29,7 @@ const GameSetupLoginView = ({ userName, onUserNameChange, password, onPasswordCh
         <FormContainer>
             <h1>Borealis D&D - Login</h1>
             <FormRow>
-                <TextInput title='User name' placeholder='User name' value={ userName } onChange={ onUserNameChange }/>
+                <TextInput title='User name' placeholder='User name' value={ userName } onChange={ onUserNameChange } autofocus={ true } />
             </FormRow>
             <FormRow>
                 <MaskedTextInput title='Password' placeholder='Password' value={ password } onChange={ onPasswordChange } disabled={ isGuest } />
@@ -45,7 +45,7 @@ const GameSetupLoginView = ({ userName, onUserNameChange, password, onPasswordCh
                 <CheckboxInput title='Remember me' value={ rememberUser } onChange={ toggleRememberUser } label='Remember me' disabled={ isGuest } />
             </FormRow>
             <FormRow reverseDirection={ true } >
-                <ActionButton title='Login' value={ <PlaySolidIcon className='w-10 h-10 text-primary-dark' /> } onClick={ onSubmitSetup } disabled={ !isSubmitEnabled } />
+                <ActionButton title='Login' value={ <PlaySolidIcon /> } onClick={ onSubmitSetup } disabled={ !isSubmitEnabled } />
             </FormRow>
             <FormRow>
                 { newUser

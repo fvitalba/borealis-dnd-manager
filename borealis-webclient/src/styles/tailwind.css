@@ -873,6 +873,33 @@ h3 {
     @apply space-x-4;
 }
 
+.borealis-control-panel-container {
+    @apply flex;
+    @apply flex-col;
+    @apply mx-auto;
+    @apply z-control-panel;
+    @apply bg-primary-dark;
+    @apply rounded;
+    @apply shadow-md;
+    @apply p-1;
+    @apply border-2;
+    @apply border-primary-medium;
+    @apply basis-1/3;
+    @apply top-2 left-2;
+    @apply absolute;
+    @apply max-h-full;
+    @apply overflow-y-auto;
+    @apply opacity-100;
+}
+
+.borealis-control-panel-row {
+    @apply flex;
+    @apply flex-auto;
+    @apply pt-2;
+    @apply pb-2;
+    @apply space-x-4;
+}
+
 .borealis-text-input-container {
     @apply flex;
     @apply flex-row;
@@ -899,6 +926,10 @@ h3 {
 
 .borealis-text-input:disabled {
     @apply opacity-50;
+}
+
+.borealis-text-input:focus:enabled {
+    @apply border-secondary-light;
 }
 
 .borealis-checkbox-input-container {
@@ -939,6 +970,11 @@ h3 {
     @apply focus-within:border-primary-light;
 }
 
+.borealis-checkbox-input-override-focus {
+    @apply borealis-checkbox-input-override;
+    @apply border-secondary-light;
+}
+
 .borealis-checkbox-icon-inactive {
     @apply hidden;
 }
@@ -956,10 +992,8 @@ h3 {
     @apply flex;
     @apply flex-row;
     @apply space-x-4;
-    @apply bg-secondary-light;
+    @apply bg-transparent;
     @apply rounded;
-    @apply h-12;
-    @apply w-12;
     @apply border-2;
     @apply border-secondary-light;
 }
@@ -968,20 +1002,21 @@ h3 {
     @apply opacity-75;
 }
 
-.borealis-action-button:hover {
-    @apply bg-secondary-lighter;
-    @apply border-secondary-lighter;
+.borealis-action-button:hover:enabled {
+    @apply bg-primary-medium;
+    @apply border-secondary-light;
 }
 
-.borealis-action-button:active {
-    @apply bg-secondary-medium;
-    @apply border-secondary-medium;
+.borealis-action-button:active:enabled {
+    @apply bg-primary-medium;
+    @apply border-secondary-lighter;
 }
 
 .borealis-action-button-content {
     @apply mx-auto;
     @apply flex;
     @apply flex-row;
+    @apply text-secondary-light;
 }
 
 .borealis-tooltip {
