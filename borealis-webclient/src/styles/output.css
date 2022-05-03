@@ -474,9 +474,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .h-8 {
   height: 2rem;
 }
-.h-10 {
-  height: 2.5rem;
-}
 .w-48 {
   width: 12rem;
 }
@@ -488,9 +485,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .w-8 {
   width: 2rem;
-}
-.w-10 {
-  width: 2.5rem;
 }
 @keyframes reverse-spin {
 
@@ -541,10 +535,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .bg-neutral-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(250 250 250 / var(--tw-bg-opacity));
-}
-.text-primary-dark {
-  --tw-text-opacity: 1;
-  color: rgb(55 48 163 / var(--tw-text-opacity));
 }
 .opacity-50 {
   opacity: 0.5;
@@ -2221,4 +2211,82 @@ h3 {
   border-width: 2px;
   --tw-border-opacity: 1;
   border-color: rgb(79 70 229 / var(--tw-border-opacity));
+}
+
+.borealis-text-input-selector-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.borealis-text-input-options-container {
+  --tw-text-opacity: 1;
+  color: rgb(253 230 138 / var(--tw-text-opacity));
+  --tw-bg-opacity: 1;
+  background-color: rgb(49 46 129 / var(--tw-bg-opacity));
+  text-align: left;
+  border-radius: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+  position: absolute;
+  margin-top: 2rem;
+}
+
+.borealis-text-input-options-container > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+}
+
+.borealis-text-input-options-container {
+  width: 15rem;
+}
+
+.borealis-text-input-option {
+  border-width: 2px;
+  --tw-border-opacity: 1;
+  border-color: rgb(79 70 229 / var(--tw-border-opacity));
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  width: 15rem;
+}
+
+.borealis-text-input-option:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(79 70 229 / var(--tw-bg-opacity));
+}
+
+.borealis-text-input-option:active {
+  --tw-border-opacity: 1;
+  border-color: rgb(253 230 138 / var(--tw-border-opacity));
+}
+
+.borealis-text-input-option-selected {
+  border-width: 2px;
+  --tw-border-opacity: 1;
+  border-color: rgb(79 70 229 / var(--tw-border-opacity));
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  width: 15rem;
+}
+
+.borealis-text-input-option-selected:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(79 70 229 / var(--tw-bg-opacity));
+}
+
+.borealis-text-input-option-selected:active {
+  --tw-border-opacity: 1;
+  border-color: rgb(253 230 138 / var(--tw-border-opacity));
+}
+
+.borealis-text-input-option-selected {
+  --tw-text-opacity: 1;
+  color: rgb(220 38 38 / var(--tw-text-opacity));
+  --tw-border-opacity: 1;
+  border-color: rgb(253 230 138 / var(--tw-border-opacity));
 }

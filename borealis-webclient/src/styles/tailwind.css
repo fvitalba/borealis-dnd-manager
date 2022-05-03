@@ -1092,3 +1092,45 @@ h3 {
     @apply border-2;
     @apply border-primary-medium;
 }
+
+.borealis-text-input-selector-container {
+    @apply flex;
+    @apply flex-col;
+}
+
+.borealis-text-input-options-container {
+    @apply text-secondary-light;
+    @apply bg-primary-darker;
+    @apply text-left;
+    @apply rounded;
+    @apply flex;
+    @apply flex-col;
+    @apply overflow-scroll;
+    @apply absolute;
+    @apply mt-8;
+    @apply space-y-2;
+    @apply w-60;
+}
+
+.borealis-text-input-option {
+    @apply border-2;
+    @apply border-primary-medium;
+    @apply pl-1;
+    @apply pr-1;
+    @apply text-base;
+    @apply w-60;
+}
+
+.borealis-text-input-option:hover {
+    @apply bg-primary-medium;
+}
+
+.borealis-text-input-option:active {
+    @apply border-secondary-light;
+}
+
+.borealis-text-input-option-selected {
+    @apply borealis-text-input-option;
+    @apply text-accent-dark;
+    @apply border-secondary-light;
+}

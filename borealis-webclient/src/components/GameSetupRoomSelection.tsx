@@ -84,14 +84,13 @@ const GameSetupRoomSelection = ({ metadataState, settingsState, setGameSettings,
         })
     }
 
-    const onRoomSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-        const selectedRoomName = e.target.value
-        const selectedRoom = gameSetupRoomSelectionState.availableRooms.filter((room) => room.name === selectedRoomName)[0]
+    const onRoomSelect = (roomIndex: number) => {
+        const selectedRoom = gameSetupRoomSelectionState.availableRooms.filter((room, index) => index === roomIndex)[0]
         const selectedRoomId = selectedRoom.id
         const userType: UserType = selectedRoom.userRole
         setGameSetupRoomSelectionState({
             ...gameSetupRoomSelectionState,
-            selectedRoomName: selectedRoomName,
+            selectedRoomName: selectedRoom.name,
             roomId: selectedRoomId,
             userType: userType,
             newRoomName: '',
