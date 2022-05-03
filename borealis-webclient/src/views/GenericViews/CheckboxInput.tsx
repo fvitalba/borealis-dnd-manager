@@ -1,4 +1,4 @@
-import React, { ChangeEvent, CSSProperties, useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, useState } from 'react'
 import { CheckAltOutlineIcon } from '../Icons'
 
 interface CheckboxInputProps {
