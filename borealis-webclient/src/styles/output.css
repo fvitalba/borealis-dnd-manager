@@ -2097,10 +2097,13 @@ h3 {
   border-width: 2px;
   --tw-border-opacity: 1;
   border-color: rgb(253 230 138 / var(--tw-border-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(253 230 138 / var(--tw-text-opacity));
 }
 
 .borealis-action-button:disabled {
-  opacity: 0.75;
+  --tw-text-opacity: 1;
+  color: rgb(79 70 229 / var(--tw-text-opacity));
 }
 
 .borealis-action-button:hover:enabled {
@@ -2122,8 +2125,6 @@ h3 {
   margin-right: auto;
   display: flex;
   flex-direction: row;
-  --tw-text-opacity: 1;
-  color: rgb(253 230 138 / var(--tw-text-opacity));
 }
 
 .borealis-tooltip {

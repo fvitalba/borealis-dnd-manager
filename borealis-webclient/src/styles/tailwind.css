@@ -996,10 +996,11 @@ h3 {
     @apply rounded;
     @apply border-2;
     @apply border-secondary-light;
+    @apply text-secondary-light;
 }
 
 .borealis-action-button:disabled {
-    @apply opacity-75;
+    @apply text-primary-medium;
 }
 
 .borealis-action-button:hover:enabled {
@@ -1016,7 +1017,6 @@ h3 {
     @apply mx-auto;
     @apply flex;
     @apply flex-row;
-    @apply text-secondary-light;
 }
 
 .borealis-tooltip {
