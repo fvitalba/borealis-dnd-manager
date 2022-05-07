@@ -55,7 +55,7 @@ module.exports = {
                 }
             },
             fontFamily: {
-                'heading': [],
+                'barbaro': ['Barbaro', 'Serif'],
             }
         },
     },

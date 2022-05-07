@@ -821,6 +821,11 @@
 
 
 
+@font-face {
+    font-family: "Barbaro";
+    src: url("./barbaro.ttf");
+}
+
 h1 {
     @apply text-3xl;
     @apply font-extrabold;
@@ -829,6 +834,7 @@ h1 {
     @apply text-secondary-light;
     @apply tracking-wide;
     @apply mb-6;
+    @apply font-barbaro;
 }
 
 h2 {
@@ -839,6 +845,7 @@ h2 {
     @apply text-secondary-light;
     @apply tracking-wide;
     @apply mb-4;
+    @apply font-barbaro;
 }
 
 h3 {
@@ -848,6 +855,7 @@ h3 {
     @apply text-center;
     @apply text-secondary-light;
     @apply mb-2;
+    @apply font-barbaro;
 }
 
 .borealis-form-container {
