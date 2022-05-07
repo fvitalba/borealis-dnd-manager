@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import ControlTool from '../enums/Tool'
 import StateInterface from '../interfaces/StateInterface'
 import { SettingsState, setToolSettings } from '../reducers/settingsReducer'
-import Button from '../views/Button'
+import ToggleButton from '../views/GenericViews/ToggleButton'
 
 interface ToolButtonProps {
     title: string,
@@ -30,7 +30,7 @@ const ToolButton = ({ title, value, controlTools, settingsState, setToolSettings
     }
 
     return (
-        <Button title={ title } value={ value } onClick={ onClick } isSelected={ isSelected } />
+        <ToggleButton title={ title } value={ value } toggleValue={ onClick } isActive={ isSelected } />
     )
 }
 

@@ -5,7 +5,7 @@ import { pushDrawReset, pushFogReset, useWebSocket } from '../hooks/useSocket'
 import StateInterface from '../interfaces/StateInterface'
 import { setDrawToolSettings, setFogToolSettings, SettingsState, setToolSettings } from '../reducers/settingsReducer'
 import { resetFog, resetDraw } from '../reducers/mapReducer'
-import ToolControlsView from '../views/ToolControlsView'
+import ToolControlsView from '../views/Tools/ToolControlsView'
 import ControlTool from '../enums/Tool'
 
 interface ToolControlsProps {

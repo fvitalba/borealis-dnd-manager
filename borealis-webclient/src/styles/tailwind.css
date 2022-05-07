@@ -884,20 +884,22 @@ h3 {
 .borealis-control-panel-container {
     @apply flex;
     @apply flex-col;
-    @apply mx-auto;
     @apply z-control-panel;
     @apply bg-primary-dark;
     @apply rounded;
     @apply shadow-md;
-    @apply p-1;
     @apply border-2;
     @apply border-primary-medium;
     @apply basis-1/3;
-    @apply top-2 left-2;
-    @apply absolute;
+    @apply mt-2;
+    @apply ml-2;
+    @apply relative;
     @apply max-h-full;
+    @apply w-fit;
     @apply overflow-y-auto;
     @apply opacity-100;
+    @apply pl-1;
+    @apply pr-1;
 }
 
 .borealis-control-panel-row {
@@ -905,7 +907,14 @@ h3 {
     @apply flex-auto;
     @apply pt-2;
     @apply pb-2;
-    @apply space-x-4;
+    @apply space-x-2;
+}
+
+.borealis-control-panel-row-group {
+    @apply flex;
+    @apply flex-auto;
+    @apply flex-row;
+    @apply space-x-2;
 }
 
 .borealis-text-input-container {
@@ -1022,6 +1031,27 @@ h3 {
 }
 
 .borealis-action-button-content {
+    @apply mx-auto;
+    @apply flex;
+    @apply flex-row;
+}
+
+.borealis-toggle-button {
+    @apply flex;
+    @apply flex-row;
+    @apply space-x-4;
+    @apply bg-transparent;
+    @apply rounded;
+    @apply border-2;
+    @apply border-secondary-light;
+    @apply text-secondary-light;
+}
+
+.borealis-toggle-button-active {
+    @apply bg-accent-dark;
+}
+
+.borealis-toggle-button-content {
     @apply mx-auto;
     @apply flex;
     @apply flex-row;

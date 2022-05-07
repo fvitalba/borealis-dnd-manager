@@ -1,14 +1,14 @@
 import React, { RefObject } from 'react'
-import ColorPicker from '../components/ColorPicker'
-import ControlTool from '../enums/Tool'
-import Button from './Button'
+import ColorPicker from '../../components/ColorPicker'
+import ControlTool from '../../enums/Tool'
+import Button from '../Button'
 import {
     PencilAltSolidIcon,
     PencilAltOutlineIcon,
     CloudFogSolidIcon,
     SquareOutlineIcon,
     DropletSolidIcon
-} from './Icons'
+} from '../Icons'
 
 interface ToolControlsViewProps {
     tool: ControlTool,

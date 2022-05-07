@@ -1903,8 +1903,6 @@ h3 {
 .borealis-control-panel-container {
   display: flex;
   flex-direction: column;
-  margin-left: auto;
-  margin-right: auto;
   z-index: 100;
   --tw-bg-opacity: 1;
   background-color: rgb(55 48 163 / var(--tw-bg-opacity));
@@ -1912,17 +1910,20 @@ h3 {
   --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-  padding: 0.25rem;
   border-width: 2px;
   --tw-border-opacity: 1;
   border-color: rgb(79 70 229 / var(--tw-border-opacity));
   flex-basis: 33.333333%;
-  top: 0.5rem;
-  left: 0.5rem;
-  position: absolute;
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+  position: relative;
   max-height: 100%;
+  width: -moz-fit-content;
+  width: fit-content;
   overflow-y: auto;
   opacity: 1;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
 }
 
 .borealis-control-panel-row {
@@ -1934,8 +1935,20 @@ h3 {
 
 .borealis-control-panel-row > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
-  margin-right: calc(1rem * var(--tw-space-x-reverse));
-  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.borealis-control-panel-row-group {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: row;
+}
+
+.borealis-control-panel-row-group > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .borealis-text-input-container {
@@ -2119,6 +2132,39 @@ h3 {
 }
 
 .borealis-action-button-content {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: row;
+}
+
+.borealis-toggle-button {
+  display: flex;
+  flex-direction: row;
+}
+
+.borealis-toggle-button > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.borealis-toggle-button {
+  background-color: transparent;
+  border-radius: 0.25rem;
+  border-width: 2px;
+  --tw-border-opacity: 1;
+  border-color: rgb(253 230 138 / var(--tw-border-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(253 230 138 / var(--tw-text-opacity));
+}
+
+.borealis-toggle-button-active {
+  --tw-bg-opacity: 1;
+  background-color: rgb(220 38 38 / var(--tw-bg-opacity));
+}
+
+.borealis-toggle-button-content {
   margin-left: auto;
   margin-right: auto;
   display: flex;
