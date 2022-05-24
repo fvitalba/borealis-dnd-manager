@@ -10,7 +10,6 @@ import {
     UserCircleSolidIcon,
     MapSolidIcon,
     GhostSolidIcon,
-    RefreshOutlineIcon,
     ChartBarAltSquareSolidIcon,
     BookOpenSolidIcon,
     BoxSolidIcon
@@ -18,7 +17,6 @@ import {
 import ControlPanelContainer from './GenericViews/ControlPanelContainer'
 import ControlPanelRow from './GenericViews/ControlPanelRow'
 import ToggleButton from './GenericViews/ToggleButton'
-import ActionButton from './GenericViews/ActionButton'
 
 interface ControlPanelViewProps {
     controlPanelState: ControlPanelState,
@@ -57,10 +55,10 @@ const ControlPanelView = ({ controlPanelState, hidden, toggleControlPanelTab, su
                 <ToggleButton title='Character Stats' value={ <ChartBarAltSquareSolidIcon /> } toggleValue={ () => toggleControlPanelTab('toggleOnCharacterStats') } isActive={ controlPanelState.toggleOnCharacterStats } />
                 <ToggleButton title='Character Inventory' value={ <BoxSolidIcon /> } toggleValue={ () => toggleControlPanelTab('toggleOnCharacterInventory') } isActive={ controlPanelState.toggleOnCharacterInventory } />
                 <ToggleButton title='Character Spells' value={ <BookOpenSolidIcon /> } toggleValue={ () => toggleControlPanelTab('toggleOnCharacterSpells') } isActive={ controlPanelState.toggleOnCharacterSpells } />
-                { isHost
+                { /* isHost
                     ? <ActionButton title='Push refresh to players' value={ <RefreshOutlineIcon /> } onClick={ pushRefreshToPlayers } />
                     : <ActionButton title='Request gameboard refresh from host' onClick={ socketRequestRefresh } value={ <RefreshOutlineIcon /> } />
-                }
+                */ }
             </ControlPanelRow>
             { !submenuHidden
                 ? <ControlPanelRow>

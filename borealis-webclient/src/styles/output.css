@@ -1462,10 +1462,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .drawing {
   z-index: 2;
   position: absolute;
-  border-style: dashed;
-  border-width: 2px;
-  --tw-border-opacity: 1;
-  border-color: rgb(249 115 22 / var(--tw-border-opacity));
 }
 
 .fog {
@@ -2166,17 +2162,40 @@ a:hover {
 
 .borealis-toggle-button {
   background-color: transparent;
-  border-radius: 0.25rem;
-  border-width: 2px;
-  --tw-border-opacity: 1;
-  border-color: rgb(214 223 235 / var(--tw-border-opacity));
   --tw-text-opacity: 1;
   color: rgb(214 223 235 / var(--tw-text-opacity));
 }
 
+.borealis-toggle-button:hover {
+  --tw-text-opacity: 1;
+  color: rgb(90 216 191 / var(--tw-text-opacity));
+}
+
 .borealis-toggle-button-active {
-  --tw-bg-opacity: 1;
-  background-color: rgb(43 182 154 / var(--tw-bg-opacity));
+  display: flex;
+  flex-direction: row;
+}
+
+.borealis-toggle-button-active > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(1rem * var(--tw-space-x-reverse));
+  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.borealis-toggle-button-active {
+  background-color: transparent;
+  --tw-text-opacity: 1;
+  color: rgb(214 223 235 / var(--tw-text-opacity));
+}
+
+.borealis-toggle-button-active:hover {
+  --tw-text-opacity: 1;
+  color: rgb(90 216 191 / var(--tw-text-opacity));
+}
+
+.borealis-toggle-button-active {
+  --tw-text-opacity: 1;
+  color: rgb(43 182 154 / var(--tw-text-opacity));
 }
 
 .borealis-toggle-button-content {
