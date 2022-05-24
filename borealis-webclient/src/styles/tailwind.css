@@ -590,9 +590,6 @@
 .drawing {
     @apply z-drawing;
     @apply absolute;
-    @apply border-dashed;
-    @apply border-2;
-    @apply border-accent-500;
 }
 
 .fog {
@@ -826,12 +823,16 @@
     src: url("./barbaro.ttf");
 }
 
+body {
+    @apply bg-empty-dark;
+}
+
 h1 {
     @apply text-3xl;
     @apply font-extrabold;
     @apply subpixel-antialiased;
     @apply text-center;
-    @apply text-secondary-light;
+    @apply text-accent-medium;
     @apply tracking-wide;
     @apply mb-6;
     @apply font-barbaro;
@@ -842,7 +843,7 @@ h2 {
     @apply font-bold;
     @apply subpixel-antialiased;
     @apply text-center;
-    @apply text-secondary-light;
+    @apply text-secondary-medium;
     @apply tracking-wide;
     @apply mb-4;
     @apply font-barbaro;
@@ -853,9 +854,17 @@ h3 {
     @apply font-semibold;
     @apply subpixel-antialiased;
     @apply text-center;
-    @apply text-secondary-light;
+    @apply text-secondary-medium;
     @apply mb-2;
     @apply font-barbaro;
+}
+
+a {
+    @apply text-accent-medium;
+}
+
+a:hover {
+    @apply text-accent-light;
 }
 
 .borealis-form-container {

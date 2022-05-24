@@ -12,17 +12,19 @@ module.exports = {
                 primary: colors.gray,    // it's now possible to use bg-primary instead of colors   gray-300
                 secondary: colors.sky,
                 accent: colors.orange,
-                'primary-lighter': '#C7D2FE',   // indigo-200
-                'primary-light': '#A5B4FC',     // indigo-300
-                'primary-medium': '#4F46E5',    // indigo-600
-                'primary-dark': '#3730A3',      // indigo-800
-                'primary-darker': '#312E81',    // indigo-900
-                'secondary-lighter': '#FEF3C7', // amber-100
-                'secondary-light': '#FDE68A',   // amber-200
-                'secondary-medium': '#FCD34D',  // amber-300
-                'secondary-dark': '#D97706',    // amber-600
-                'accent-light': '#FCA5A5',      // red-300
-                'accent-dark': '#DC2626',       // red-600
+                'empty-dark': '#000505',
+                'primary-lighter': '#849CC2',
+                'primary-light': '#6986B5',
+                'primary-medium': '#5171A5',
+                'primary-dark': '#435E89',
+                'primary-darker': '#364B6D',
+                'secondary-lighter': '#E4EAF2',
+                'secondary-light': '#D6DFEB',
+                'secondary-medium': '#BFCDE0',
+                'secondary-dark': '#BACADE',
+                'accent-light': '#5AD8BF',
+                'accent-medium': '#39D0B2',
+                'accent-dark': '#2BB69A',
             },
             zIndex: {
                 'map': '1',
