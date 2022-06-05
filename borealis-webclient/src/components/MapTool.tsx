@@ -24,9 +24,13 @@ const MapTool = ({ toggleOnMaps, mapState, addMap }: MapToolProps) => {
             pushCreateMap(webSocketContext.ws, webSocketContext.wsSettings, newMap)
     }
 
+    const onMapNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setNewMapName(e.target.value)
+    }
+
     return (
         toggleOnMaps ?
-            <MapToolView maps={ mapState.maps } newMapName={ newMapName } setNewMapName={ setNewMapName } createMap={ createMap } />
+            <MapToolView maps={ mapState.maps } newMapName={ newMapName } setNewMapName={ onMapNameChange } createMap={ createMap } />
             : null
     )
 }
