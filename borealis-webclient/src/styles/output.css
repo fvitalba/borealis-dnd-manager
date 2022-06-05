@@ -450,6 +450,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .static {
   position: static;
 }
+.mb-0 {
+  margin-bottom: 0px;
+}
 .mr-2 {
   margin-right: 0.5rem;
 }
@@ -529,6 +532,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 .bg-neutral-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(250 250 250 / var(--tw-bg-opacity));
+}
+.text-text-active {
+  --tw-text-opacity: 1;
+  color: rgb(57 208 178 / var(--tw-text-opacity));
 }
 .opacity-50 {
   opacity: 0.5;
@@ -1931,6 +1938,12 @@ a:hover {
   padding-right: 0.25rem;
 }
 
+.borealis-control-panel-subcontainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 .borealis-control-panel-row {
   display: flex;
   flex: 1 1 auto;
@@ -1997,7 +2010,7 @@ a:hover {
 
 .borealis-text-input:focus:enabled {
   --tw-border-opacity: 1;
-  border-color: rgb(102 124 159 / var(--tw-border-opacity));
+  border-color: rgb(57 208 178 / var(--tw-border-opacity));
 }
 
 .borealis-checkbox-input-container {
@@ -2045,7 +2058,7 @@ a:hover {
 
 .borealis-checkbox-input-override:focus-within {
   --tw-border-opacity: 1;
-  border-color: rgb(78 79 83 / var(--tw-border-opacity));
+  border-color: rgb(57 208 178 / var(--tw-border-opacity));
 }
 
 .borealis-checkbox-input-override-focus {
@@ -2065,12 +2078,12 @@ a:hover {
 
 .borealis-checkbox-input-override-focus:focus-within {
   --tw-border-opacity: 1;
-  border-color: rgb(78 79 83 / var(--tw-border-opacity));
+  border-color: rgb(57 208 178 / var(--tw-border-opacity));
 }
 
 .borealis-checkbox-input-override-focus {
   --tw-border-opacity: 1;
-  border-color: rgb(102 124 159 / var(--tw-border-opacity));
+  border-color: rgb(57 208 178 / var(--tw-border-opacity));
 }
 
 .borealis-checkbox-icon-inactive {
@@ -2133,9 +2146,14 @@ a:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(52 53 58 / var(--tw-bg-opacity));
   --tw-border-opacity: 1;
-  border-color: rgb(117 118 121 / var(--tw-border-opacity));
+  border-color: rgb(140 157 183 / var(--tw-border-opacity));
   --tw-text-opacity: 1;
   color: rgb(156 232 217 / var(--tw-text-opacity));
+}
+
+.borealis-action-button:focus {
+  --tw-border-opacity: 1;
+  border-color: rgb(57 208 178 / var(--tw-border-opacity));
 }
 
 .borealis-action-button-content {
@@ -2340,7 +2358,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   overflow: scroll;
-  position: absolute;
+  position: fixed;
   margin-top: 2rem;
   width: 15rem;
 }

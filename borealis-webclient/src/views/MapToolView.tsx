@@ -1,36 +1,63 @@
-import React from 'react'
+import React, { ChangeEvent } from 'react'
 import Map from '../classes/Map'
 import MapConfig from '../components/MapConfig'
-import { PlusSquareSolidIcon } from './Icons'
-import ControlPanelContainer from './GenericViews/ControlPanelContainer'
+import {
+    BorealisAddNewMapIcon,
+    BorealisPlayIcon,
+} from './Icons'
+import ControlPanelSubcontainer from './GenericViews/ControlPanelSubcontainer'
 import ControlPanelRow from './GenericViews/ControlPanelRow'
 import TextInput from './GenericViews/TextInput'
+import TextInputSelector from './GenericViews/TextInputSelector'
 import ActionButton from './GenericViews/ActionButton'
 
 interface MapToolViewProps {
     maps: Array<Map>,
     newMapName: string,
-    setNewMapName: (arg0: React.ChangeEvent<HTMLInputElement>) => void,
+    setNewMapName: (newMapName: ChangeEvent<HTMLInputElement>) => void,
+    isCreateMapEnabled: boolean,
     createMap: () => void,
+    selectedMapName: string,
+    currSelectedMapName: string,
+    onMapSelect: (mapIndex: number) => void,
+    onSubmitSelectMap: () => void,
+    isSubmitSelectionEnabled: boolean,
+    showSelectedMap: boolean,
 }
 
-const MapToolView = ({ maps, newMapName, setNewMapName, createMap }: MapToolViewProps) => {
+const MapToolView = ({ maps, newMapName, setNewMapName, isCreateMapEnabled, createMap, selectedMapName, currSelectedMapName, onMapSelect, onSubmitSelectMap, isSubmitSelectionEnabled, showSelectedMap }: MapToolViewProps) => {
+    const mapOptions = maps.map((map, index) => {
+        return {
+            index: index,
+            caption: `${map.name}`,
+        }
+    }).filter((option) => option.caption !== undefined)
+
+    const onSelectElement = (elementIndex: number) => {
+        onMapSelect(elementIndex)
+    }
+
+    const selectedMap = showSelectedMap ? maps.filter((map) => map.name === currSelectedMapName) : []
+
     return (
-        <ControlPanelContainer>
+        <ControlPanelSubcontainer>
             <ControlPanelRow>
                 <TextInput title='New Map Name' placeholder='Map Name' value={ newMapName } onChange={ setNewMapName } autofocus={ true } />
-                <ActionButton title='Create new map' value={ <PlusSquareSolidIcon /> } onClick={ createMap } disabled={ newMapName === '' } />
+                <ActionButton title='Create new map' value={ <BorealisAddNewMapIcon /> } onClick={ createMap } disabled={ (newMapName === '') || (!isCreateMapEnabled) } />
             </ControlPanelRow>
-            {
-                maps.length > 0
-                    ? <ControlPanelRow>
-                        { maps.map((map) => (
-                            <MapConfig key={ `map${map.id}` } map={ map } />
-                        ))}
-                    </ControlPanelRow>
-                    : null
+            <ControlPanelRow>
+                <TextInputSelector title='Choose Map' placeholder='Choose Map' value={ selectedMapName } onSelectElement={ onSelectElement } label='Choose existing Map:' options={ mapOptions } />
+                <ActionButton title='Select map' value={ <BorealisPlayIcon /> } onClick={ onSubmitSelectMap } disabled={ !isSubmitSelectionEnabled } />
+            </ControlPanelRow>
+            { selectedMap.length > 0
+                ? <ControlPanelRow>
+                    { selectedMap.map((map) => (
+                        <MapConfig key={ `map${map.id}` } map={ map } />
+                    ))}
+                </ControlPanelRow>
+                : null
             }
-        </ControlPanelContainer>
+        </ControlPanelSubcontainer>
     )
 }
 

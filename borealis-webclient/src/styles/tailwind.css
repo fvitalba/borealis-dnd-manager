@@ -912,6 +912,12 @@ a:hover {
     @apply pr-1;
 }
 
+.borealis-control-panel-subcontainer {
+    @apply flex;
+    @apply flex-col;
+    @apply w-full;
+}
+
 .borealis-control-panel-row {
     @apply flex;
     @apply flex-auto;
@@ -955,7 +961,7 @@ a:hover {
 }
 
 .borealis-text-input:focus:enabled {
-    @apply border-secondary-light;
+    @apply border-accent-medium;
 }
 
 .borealis-checkbox-input-container {
@@ -993,12 +999,12 @@ a:hover {
     @apply flex-shrink-0;
     @apply justify-center;
     @apply items-center;
-    @apply focus-within:border-primary-light;
+    @apply focus-within:border-accent-medium;
 }
 
 .borealis-checkbox-input-override-focus {
     @apply borealis-checkbox-input-override;
-    @apply border-secondary-light;
+    @apply border-accent-medium;
 }
 
 .borealis-checkbox-icon-inactive {
@@ -1043,8 +1049,12 @@ a:hover {
 
 .borealis-action-button:active:enabled {
     @apply bg-primary-medium;
-    @apply border-primary-lighter;
+    @apply border-secondary-lighter;
     @apply text-text-clicked;
+}
+
+.borealis-action-button:focus {
+    @apply border-accent-medium;
 }
 
 .borealis-action-button-content {
@@ -1179,7 +1189,7 @@ a:hover {
     @apply flex;
     @apply flex-col;
     @apply overflow-scroll;
-    @apply absolute;
+    @apply fixed;
     @apply mt-8;
     @apply w-60;
     @apply divide-y;

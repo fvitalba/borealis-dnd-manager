@@ -20,6 +20,10 @@ import {
     IconHandFinger,
     IconWriting,
     IconWind,
+    IconPlus,
+    IconSquare,
+    IconSquareCheck,
+    IconTrash,
 } from '@tabler/icons'
 // These icons were copied from https://github.com/la-moore/scarlab-icons/tree/master/react
 // I had to copy them, because they are written as JSX.Elements, whereas I need React Function Components
@@ -492,6 +496,31 @@ export const BorealisSaveWorldIcon = (props: IconProps) => {
 
 export const BorealisLoadWorldIcon = (props: IconProps) => {
     return <IconWorldDownload
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+// Map Control Icons
+export const BorealisAddNewMapIcon = (props: IconProps) => {
+    return <IconPlus
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisSelectedMapIcon = (props: IconProps) => {
+    return <IconSquareCheck
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisUnselectedMapIcon = (props: IconProps) => {
+    return <IconSquare
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisDeleteMapIcon = (props: IconProps) => {
+    return <IconTrash
         size={ props.size ? props.size : defaultSize }
     />
 }
