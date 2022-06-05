@@ -459,9 +459,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .block {
   display: block;
 }
-.flex {
-  display: flex;
-}
 .table {
   display: table;
 }
@@ -500,9 +497,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .flex-row-reverse {
   flex-direction: row-reverse;
-}
-.flex-nowrap {
-  flex-wrap: nowrap;
 }
 .bg-violet-600 {
   --tw-bg-opacity: 1;
@@ -1823,7 +1817,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 body {
   --tw-bg-opacity: 1;
-  background-color: rgb(0 5 5 / var(--tw-bg-opacity));
+  background-color: rgb(17 18 19 / var(--tw-bg-opacity));
 }
 
 h1 {
@@ -1848,7 +1842,7 @@ h2 {
   -moz-osx-font-smoothing: auto;
   text-align: center;
   --tw-text-opacity: 1;
-  color: rgb(191 205 224 / var(--tw-text-opacity));
+  color: rgb(176 177 179 / var(--tw-text-opacity));
   letter-spacing: 0.025em;
   margin-bottom: 1rem;
   font-family: Barbaro, Serif;
@@ -1862,7 +1856,7 @@ h3 {
   -moz-osx-font-smoothing: auto;
   text-align: center;
   --tw-text-opacity: 1;
-  color: rgb(191 205 224 / var(--tw-text-opacity));
+  color: rgb(176 177 179 / var(--tw-text-opacity));
   margin-bottom: 0.5rem;
   font-family: Barbaro, Serif;
 }
@@ -1874,7 +1868,7 @@ a {
 
 a:hover {
   --tw-text-opacity: 1;
-  color: rgb(90 216 191 / var(--tw-text-opacity));
+  color: rgb(97 217 193 / var(--tw-text-opacity));
 }
 
 .borealis-form-container {
@@ -1884,7 +1878,7 @@ a:hover {
   margin-right: auto;
   z-index: 100;
   --tw-bg-opacity: 1;
-  background-color: rgb(67 94 137 / var(--tw-bg-opacity));
+  background-color: rgb(41 41 45 / var(--tw-bg-opacity));
   border-radius: 0.25rem;
   --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
@@ -1895,7 +1889,7 @@ a:hover {
   min-width: fit-content;
   border-width: 2px;
   --tw-border-opacity: 1;
-  border-color: rgb(81 113 165 / var(--tw-border-opacity));
+  border-color: rgb(52 53 58 / var(--tw-border-opacity));
 }
 
 .borealis-form-row {
@@ -1915,15 +1909,14 @@ a:hover {
   display: flex;
   flex-direction: column;
   z-index: 100;
-  --tw-bg-opacity: 1;
-  background-color: rgb(67 94 137 / var(--tw-bg-opacity));
+  background-color: rgb(41 41 45 / var(--tw-bg-opacity));
   border-radius: 0.25rem;
   --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   border-width: 2px;
   --tw-border-opacity: 1;
-  border-color: rgb(81 113 165 / var(--tw-border-opacity));
+  border-color: rgb(52 53 58 / var(--tw-border-opacity));
   flex-basis: 33.333333%;
   margin-top: 0.5rem;
   margin-left: 0.5rem;
@@ -1933,6 +1926,7 @@ a:hover {
   width: fit-content;
   overflow-y: auto;
   opacity: 1;
+  --tw-bg-opacity: 0.8;
   padding-left: 0.25rem;
   padding-right: 0.25rem;
 }
@@ -1970,12 +1964,12 @@ a:hover {
 
 .borealis-text-input {
   --tw-text-opacity: 1;
-  color: rgb(214 223 235 / var(--tw-text-opacity));
+  color: rgb(235 235 236 / var(--tw-text-opacity));
 }
 
 .borealis-text-input::placeholder {
   --tw-placeholder-opacity: 1;
-  color: rgb(214 223 235 / var(--tw-placeholder-opacity));
+  color: rgb(78 79 83 / var(--tw-placeholder-opacity));
 }
 
 .borealis-text-input {
@@ -1984,17 +1978,9 @@ a:hover {
   line-height: 1.5rem;
   justify-content: center;
   --tw-bg-opacity: 1;
-  background-color: rgb(54 75 109 / var(--tw-bg-opacity));
+  background-color: rgb(29 30 32 / var(--tw-bg-opacity));
   padding-left: 0.25rem;
   padding-right: 0.25rem;
-}
-
-.borealis-text-input::placeholder {
-  --tw-placeholder-opacity: 1;
-  color: rgb(105 134 181 / var(--tw-placeholder-opacity));
-}
-
-.borealis-text-input {
   height: 2rem;
   display: flex;
   margin-left: auto;
@@ -2002,7 +1988,7 @@ a:hover {
   flex-grow: 1;
   border-width: 2px;
   --tw-border-opacity: 1;
-  border-color: rgb(81 113 165 / var(--tw-border-opacity));
+  border-color: rgb(52 53 58 / var(--tw-border-opacity));
 }
 
 .borealis-text-input:disabled {
@@ -2011,7 +1997,7 @@ a:hover {
 
 .borealis-text-input:focus:enabled {
   --tw-border-opacity: 1;
-  border-color: rgb(214 223 235 / var(--tw-border-opacity));
+  border-color: rgb(102 124 159 / var(--tw-border-opacity));
 }
 
 .borealis-checkbox-input-container {
@@ -2038,17 +2024,17 @@ a:hover {
 
 .borealis-checkbox-input:checked {
   --tw-border-opacity: 1;
-  border-color: rgb(105 134 181 / var(--tw-border-opacity));
+  border-color: rgb(78 79 83 / var(--tw-border-opacity));
   display: block;
 }
 
 .borealis-checkbox-input-override {
   --tw-bg-opacity: 1;
-  background-color: rgb(54 75 109 / var(--tw-bg-opacity));
+  background-color: rgb(29 30 32 / var(--tw-bg-opacity));
   border-width: 2px;
   border-radius: 0.25rem;
   --tw-border-opacity: 1;
-  border-color: rgb(81 113 165 / var(--tw-border-opacity));
+  border-color: rgb(52 53 58 / var(--tw-border-opacity));
   width: 2rem;
   height: 2rem;
   display: flex;
@@ -2059,16 +2045,16 @@ a:hover {
 
 .borealis-checkbox-input-override:focus-within {
   --tw-border-opacity: 1;
-  border-color: rgb(105 134 181 / var(--tw-border-opacity));
+  border-color: rgb(78 79 83 / var(--tw-border-opacity));
 }
 
 .borealis-checkbox-input-override-focus {
   --tw-bg-opacity: 1;
-  background-color: rgb(54 75 109 / var(--tw-bg-opacity));
+  background-color: rgb(29 30 32 / var(--tw-bg-opacity));
   border-width: 2px;
   border-radius: 0.25rem;
   --tw-border-opacity: 1;
-  border-color: rgb(81 113 165 / var(--tw-border-opacity));
+  border-color: rgb(52 53 58 / var(--tw-border-opacity));
   width: 2rem;
   height: 2rem;
   display: flex;
@@ -2079,12 +2065,12 @@ a:hover {
 
 .borealis-checkbox-input-override-focus:focus-within {
   --tw-border-opacity: 1;
-  border-color: rgb(105 134 181 / var(--tw-border-opacity));
+  border-color: rgb(78 79 83 / var(--tw-border-opacity));
 }
 
 .borealis-checkbox-input-override-focus {
   --tw-border-opacity: 1;
-  border-color: rgb(214 223 235 / var(--tw-border-opacity));
+  border-color: rgb(102 124 159 / var(--tw-border-opacity));
 }
 
 .borealis-checkbox-icon-inactive {
@@ -2093,12 +2079,12 @@ a:hover {
 
 .borealis-checkbox-icon-active {
   --tw-text-opacity: 1;
-  color: rgb(214 223 235 / var(--tw-text-opacity));
+  color: rgb(235 235 236 / var(--tw-text-opacity));
 }
 
 .borealis-input-label {
   --tw-text-opacity: 1;
-  color: rgb(214 223 235 / var(--tw-text-opacity));
+  color: rgb(235 235 236 / var(--tw-text-opacity));
   justify-content: flex-start;
 }
 
@@ -2118,28 +2104,32 @@ a:hover {
   border-radius: 0.25rem;
   border-width: 2px;
   --tw-border-opacity: 1;
-  border-color: rgb(214 223 235 / var(--tw-border-opacity));
+  border-color: rgb(102 124 159 / var(--tw-border-opacity));
   --tw-text-opacity: 1;
-  color: rgb(214 223 235 / var(--tw-text-opacity));
+  color: rgb(102 124 159 / var(--tw-text-opacity));
 }
 
 .borealis-action-button:disabled {
   --tw-text-opacity: 1;
-  color: rgb(81 113 165 / var(--tw-text-opacity));
+  color: rgb(52 53 58 / var(--tw-text-opacity));
 }
 
 .borealis-action-button:hover:enabled {
   --tw-bg-opacity: 1;
-  background-color: rgb(81 113 165 / var(--tw-bg-opacity));
+  background-color: rgb(52 53 58 / var(--tw-bg-opacity));
   --tw-border-opacity: 1;
-  border-color: rgb(214 223 235 / var(--tw-border-opacity));
+  border-color: rgb(102 124 159 / var(--tw-border-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(97 217 193 / var(--tw-text-opacity));
 }
 
 .borealis-action-button:active:enabled {
   --tw-bg-opacity: 1;
-  background-color: rgb(81 113 165 / var(--tw-bg-opacity));
+  background-color: rgb(52 53 58 / var(--tw-bg-opacity));
   --tw-border-opacity: 1;
-  border-color: rgb(228 234 242 / var(--tw-border-opacity));
+  border-color: rgb(140 157 183 / var(--tw-border-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(40 146 125 / var(--tw-text-opacity));
 }
 
 .borealis-action-button-content {
@@ -2163,12 +2153,17 @@ a:hover {
 .borealis-toggle-button {
   background-color: transparent;
   --tw-text-opacity: 1;
-  color: rgb(214 223 235 / var(--tw-text-opacity));
+  color: rgb(102 124 159 / var(--tw-text-opacity));
 }
 
 .borealis-toggle-button:hover {
   --tw-text-opacity: 1;
-  color: rgb(90 216 191 / var(--tw-text-opacity));
+  color: rgb(97 217 193 / var(--tw-text-opacity));
+}
+
+.borealis-toggle-button:active {
+  --tw-text-opacity: 1;
+  color: rgb(40 146 125 / var(--tw-text-opacity));
 }
 
 .borealis-toggle-button-active {
@@ -2185,17 +2180,22 @@ a:hover {
 .borealis-toggle-button-active {
   background-color: transparent;
   --tw-text-opacity: 1;
-  color: rgb(214 223 235 / var(--tw-text-opacity));
+  color: rgb(102 124 159 / var(--tw-text-opacity));
 }
 
 .borealis-toggle-button-active:hover {
   --tw-text-opacity: 1;
-  color: rgb(90 216 191 / var(--tw-text-opacity));
+  color: rgb(97 217 193 / var(--tw-text-opacity));
+}
+
+.borealis-toggle-button-active:active {
+  --tw-text-opacity: 1;
+  color: rgb(40 146 125 / var(--tw-text-opacity));
 }
 
 .borealis-toggle-button-active {
   --tw-text-opacity: 1;
-  color: rgb(43 182 154 / var(--tw-text-opacity));
+  color: rgb(40 146 125 / var(--tw-text-opacity));
 }
 
 .borealis-toggle-button-content {
@@ -2207,7 +2207,7 @@ a:hover {
 
 .borealis-tooltip {
   --tw-text-opacity: 1;
-  color: rgb(214 223 235 / var(--tw-text-opacity));
+  color: rgb(235 235 236 / var(--tw-text-opacity));
   font-size: 0.875rem;
   line-height: 1.25rem;
   font-style: italic;
@@ -2218,17 +2218,17 @@ a:hover {
   font-style: normal;
   font-weight: 800;
   --tw-text-opacity: 1;
-  color: rgb(191 205 224 / var(--tw-text-opacity));
+  color: rgb(57 208 178 / var(--tw-text-opacity));
 }
 
 .borealis-tooltip a:hover {
   --tw-text-opacity: 1;
-  color: rgb(214 223 235 / var(--tw-text-opacity));
+  color: rgb(97 217 193 / var(--tw-text-opacity));
 }
 
 .borealis-tooltip a:active {
   --tw-text-opacity: 1;
-  color: rgb(228 234 242 / var(--tw-text-opacity));
+  color: rgb(156 232 217 / var(--tw-text-opacity));
 }
 
 .borealis-action-text-input-button {
@@ -2249,7 +2249,7 @@ a:hover {
   width: 2rem;
   margin-left: -2.25rem;
   --tw-text-opacity: 1;
-  color: rgb(214 223 235 / var(--tw-text-opacity));
+  color: rgb(102 124 159 / var(--tw-text-opacity));
 }
 
 .borealis-action-text-input-button:disabled {
@@ -2258,12 +2258,12 @@ a:hover {
 
 .borealis-action-text-input-button:hover {
   --tw-text-opacity: 1;
-  color: rgb(228 234 242 / var(--tw-text-opacity));
+  color: rgb(140 157 183 / var(--tw-text-opacity));
 }
 
 .borealis-aciton-text-input-button:active {
   --tw-text-opacity: 1;
-  color: rgb(191 205 224 / var(--tw-text-opacity));
+  color: rgb(64 91 135 / var(--tw-text-opacity));
 }
 
 .borealis-action-text-input-button-content {
@@ -2282,13 +2282,13 @@ a:hover {
 
 .borealis-select {
   --tw-text-opacity: 1;
-  color: rgb(214 223 235 / var(--tw-text-opacity));
+  color: rgb(235 235 236 / var(--tw-text-opacity));
   border-radius: 0.25rem;
   font-size: 1rem;
   line-height: 1.5rem;
   justify-content: center;
   --tw-bg-opacity: 1;
-  background-color: rgb(54 75 109 / var(--tw-bg-opacity));
+  background-color: rgb(29 30 32 / var(--tw-bg-opacity));
   padding-left: 0.25rem;
   padding-right: 0.25rem;
   height: 2rem;
@@ -2298,7 +2298,7 @@ a:hover {
   flex-grow: 1;
   border-width: 2px;
   --tw-border-opacity: 1;
-  border-color: rgb(81 113 165 / var(--tw-border-opacity));
+  border-color: rgb(52 53 58 / var(--tw-border-opacity));
 }
 
 .borealis-text-input-selector-container {
@@ -2308,9 +2308,9 @@ a:hover {
 
 .borealis-text-input-options-container {
   --tw-text-opacity: 1;
-  color: rgb(214 223 235 / var(--tw-text-opacity));
+  color: rgb(176 177 179 / var(--tw-text-opacity));
   --tw-bg-opacity: 1;
-  background-color: rgb(54 75 109 / var(--tw-bg-opacity));
+  background-color: rgb(29 30 32 / var(--tw-bg-opacity));
   text-align: left;
   border-radius: 0.25rem;
   display: flex;
@@ -2318,24 +2318,26 @@ a:hover {
   overflow: scroll;
   position: absolute;
   margin-top: 2rem;
-}
-
-.borealis-text-input-options-container > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
-}
-
-.borealis-text-input-options-container {
   width: 15rem;
 }
 
+.borealis-text-input-options-container > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-y-reverse: 0;
+  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
+  border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
+  --tw-divide-opacity: 1;
+  border-color: rgb(117 118 121 / var(--tw-divide-opacity));
+}
+
+.borealis-text-input-options-container {
+  max-height: 20rem;
+}
+
 .borealis-text-input-option {
-  border-width: 2px;
-  --tw-border-opacity: 1;
-  border-color: rgb(81 113 165 / var(--tw-border-opacity));
   padding-left: 0.25rem;
   padding-right: 0.25rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
   font-size: 1rem;
   line-height: 1.5rem;
   width: 15rem;
@@ -2343,20 +2345,19 @@ a:hover {
 
 .borealis-text-input-option:hover {
   --tw-bg-opacity: 1;
-  background-color: rgb(81 113 165 / var(--tw-bg-opacity));
+  background-color: rgb(52 53 58 / var(--tw-bg-opacity));
 }
 
 .borealis-text-input-option:active {
   --tw-border-opacity: 1;
-  border-color: rgb(214 223 235 / var(--tw-border-opacity));
+  border-color: rgb(102 124 159 / var(--tw-border-opacity));
 }
 
 .borealis-text-input-option-selected {
-  border-width: 2px;
-  --tw-border-opacity: 1;
-  border-color: rgb(81 113 165 / var(--tw-border-opacity));
   padding-left: 0.25rem;
   padding-right: 0.25rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
   font-size: 1rem;
   line-height: 1.5rem;
   width: 15rem;
@@ -2364,17 +2365,17 @@ a:hover {
 
 .borealis-text-input-option-selected:hover {
   --tw-bg-opacity: 1;
-  background-color: rgb(81 113 165 / var(--tw-bg-opacity));
+  background-color: rgb(52 53 58 / var(--tw-bg-opacity));
 }
 
 .borealis-text-input-option-selected:active {
   --tw-border-opacity: 1;
-  border-color: rgb(214 223 235 / var(--tw-border-opacity));
+  border-color: rgb(102 124 159 / var(--tw-border-opacity));
 }
 
 .borealis-text-input-option-selected {
   --tw-text-opacity: 1;
-  color: rgb(43 182 154 / var(--tw-text-opacity));
+  color: rgb(40 146 125 / var(--tw-text-opacity));
   --tw-border-opacity: 1;
-  border-color: rgb(214 223 235 / var(--tw-border-opacity));
+  border-color: rgb(102 124 159 / var(--tw-border-opacity));
 }
