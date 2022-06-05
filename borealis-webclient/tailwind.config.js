@@ -15,6 +15,8 @@ module.exports = {
                 'empty-dark': '#111213',
                 'text-primary': '#EBEBEC',
                 'text-secondary': '#B0B1B3',
+                'text-active': '#39D0B2',
+                'text-clicked': '#9CE8D9',
                 'text-action': '#39D0B2',
                 'text-whisper': '#405B87',
                 'text-comment': '',

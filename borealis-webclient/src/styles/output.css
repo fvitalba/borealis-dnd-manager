@@ -2106,12 +2106,18 @@ a:hover {
   --tw-border-opacity: 1;
   border-color: rgb(102 124 159 / var(--tw-border-opacity));
   --tw-text-opacity: 1;
-  color: rgb(102 124 159 / var(--tw-text-opacity));
+  color: rgb(235 235 236 / var(--tw-text-opacity));
+  min-width: 33px;
+  min-height: 33px;
+  align-content: center;
+  vertical-align: middle;
+  text-align: center;
+  align-items: center;
 }
 
 .borealis-action-button:disabled {
   --tw-text-opacity: 1;
-  color: rgb(52 53 58 / var(--tw-text-opacity));
+  color: rgb(176 177 179 / var(--tw-text-opacity));
 }
 
 .borealis-action-button:hover:enabled {
@@ -2120,7 +2126,7 @@ a:hover {
   --tw-border-opacity: 1;
   border-color: rgb(102 124 159 / var(--tw-border-opacity));
   --tw-text-opacity: 1;
-  color: rgb(97 217 193 / var(--tw-text-opacity));
+  color: rgb(57 208 178 / var(--tw-text-opacity));
 }
 
 .borealis-action-button:active:enabled {
@@ -2129,7 +2135,7 @@ a:hover {
   --tw-border-opacity: 1;
   border-color: rgb(140 157 183 / var(--tw-border-opacity));
   --tw-text-opacity: 1;
-  color: rgb(40 146 125 / var(--tw-text-opacity));
+  color: rgb(156 232 217 / var(--tw-text-opacity));
 }
 
 .borealis-action-button-content {
@@ -2153,17 +2159,23 @@ a:hover {
 .borealis-toggle-button {
   background-color: transparent;
   --tw-text-opacity: 1;
-  color: rgb(102 124 159 / var(--tw-text-opacity));
+  color: rgb(235 235 236 / var(--tw-text-opacity));
+  min-width: 33px;
+  min-height: 33px;
+  align-content: center;
+  vertical-align: middle;
+  text-align: center;
+  align-items: center;
 }
 
 .borealis-toggle-button:hover {
   --tw-text-opacity: 1;
-  color: rgb(97 217 193 / var(--tw-text-opacity));
+  color: rgb(57 208 178 / var(--tw-text-opacity));
 }
 
 .borealis-toggle-button:active {
   --tw-text-opacity: 1;
-  color: rgb(40 146 125 / var(--tw-text-opacity));
+  color: rgb(156 232 217 / var(--tw-text-opacity));
 }
 
 .borealis-toggle-button-active {
@@ -2180,17 +2192,23 @@ a:hover {
 .borealis-toggle-button-active {
   background-color: transparent;
   --tw-text-opacity: 1;
-  color: rgb(102 124 159 / var(--tw-text-opacity));
+  color: rgb(235 235 236 / var(--tw-text-opacity));
+  min-width: 33px;
+  min-height: 33px;
+  align-content: center;
+  vertical-align: middle;
+  text-align: center;
+  align-items: center;
 }
 
 .borealis-toggle-button-active:hover {
   --tw-text-opacity: 1;
-  color: rgb(97 217 193 / var(--tw-text-opacity));
+  color: rgb(57 208 178 / var(--tw-text-opacity));
 }
 
 .borealis-toggle-button-active:active {
   --tw-text-opacity: 1;
-  color: rgb(40 146 125 / var(--tw-text-opacity));
+  color: rgb(156 232 217 / var(--tw-text-opacity));
 }
 
 .borealis-toggle-button-active {
@@ -2249,7 +2267,13 @@ a:hover {
   width: 2rem;
   margin-left: -2.25rem;
   --tw-text-opacity: 1;
-  color: rgb(102 124 159 / var(--tw-text-opacity));
+  color: rgb(235 235 236 / var(--tw-text-opacity));
+  min-width: 33px;
+  min-height: 33px;
+  align-content: center;
+  vertical-align: middle;
+  text-align: center;
+  align-items: center;
 }
 
 .borealis-action-text-input-button:disabled {
@@ -2258,12 +2282,12 @@ a:hover {
 
 .borealis-action-text-input-button:hover {
   --tw-text-opacity: 1;
-  color: rgb(140 157 183 / var(--tw-text-opacity));
+  color: rgb(57 208 178 / var(--tw-text-opacity));
 }
 
 .borealis-aciton-text-input-button:active {
   --tw-text-opacity: 1;
-  color: rgb(64 91 135 / var(--tw-text-opacity));
+  color: rgb(156 232 217 / var(--tw-text-opacity));
 }
 
 .borealis-action-text-input-button-content {

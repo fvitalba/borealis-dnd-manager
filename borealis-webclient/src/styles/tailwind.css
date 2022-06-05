@@ -1022,23 +1022,29 @@ a:hover {
     @apply rounded;
     @apply border-2;
     @apply border-secondary-light;
-    @apply text-secondary-light;
+    @apply text-text-primary;
+    @apply min-w-[33px];
+    @apply min-h-[33px];
+    @apply content-center;
+    @apply align-middle;
+    @apply text-center;
+    @apply items-center;  
 }
 
 .borealis-action-button:disabled {
-    @apply text-primary-medium;
+    @apply text-text-secondary;
 }
 
 .borealis-action-button:hover:enabled {
     @apply bg-primary-medium;
     @apply border-secondary-light;
-    @apply text-accent-light;
+    @apply text-text-active;
 }
 
 .borealis-action-button:active:enabled {
     @apply bg-primary-medium;
     @apply border-secondary-lighter;
-    @apply text-accent-dark;
+    @apply text-text-clicked;
 }
 
 .borealis-action-button-content {
@@ -1052,15 +1058,21 @@ a:hover {
     @apply flex-row;
     @apply space-x-4;
     @apply bg-transparent;
-    @apply text-secondary-light;
+    @apply text-text-primary;
+    @apply min-w-[33px];
+    @apply min-h-[33px];
+    @apply content-center;
+    @apply align-middle;
+    @apply text-center;
+    @apply items-center;
 }
 
 .borealis-toggle-button:hover {
-    @apply text-accent-light;
+    @apply text-text-active;
 }
 
 .borealis-toggle-button:active {
-    @apply text-accent-dark;
+    @apply text-text-clicked;
 }
 
 .borealis-toggle-button-active {
@@ -1104,7 +1116,13 @@ a:hover {
     @apply h-8;
     @apply w-8;
     @apply -ml-9;
-    @apply text-secondary-light;
+    @apply text-text-primary;
+    @apply min-w-[33px];
+    @apply min-h-[33px];
+    @apply content-center;
+    @apply align-middle;
+    @apply text-center;
+    @apply items-center;
 }
 
 .borealis-action-text-input-button:disabled {
@@ -1112,11 +1130,11 @@ a:hover {
 }
 
 .borealis-action-text-input-button:hover {
-    @apply text-secondary-lighter;
+    @apply text-text-active;
 }
 
 .borealis-aciton-text-input-button:active {
-    @apply text-secondary-medium;
+    @apply text-text-clicked;
 }
 
 .borealis-action-text-input-button-content {
