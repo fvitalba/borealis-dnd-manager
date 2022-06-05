@@ -1021,7 +1021,7 @@ a:hover {
     @apply bg-transparent;
     @apply rounded;
     @apply border-2;
-    @apply border-secondary-light;
+    @apply border-primary-medium;
     @apply text-text-primary;
     @apply min-w-[33px];
     @apply min-h-[33px];
@@ -1037,13 +1037,13 @@ a:hover {
 
 .borealis-action-button:hover:enabled {
     @apply bg-primary-medium;
-    @apply border-secondary-light;
+    @apply border-primary-light;
     @apply text-text-active;
 }
 
 .borealis-action-button:active:enabled {
     @apply bg-primary-medium;
-    @apply border-secondary-lighter;
+    @apply border-primary-lighter;
     @apply text-text-clicked;
 }
 
@@ -1199,11 +1199,11 @@ a:hover {
 }
 
 .borealis-text-input-option:active {
-    @apply border-secondary-light;
+    @apply border-primary-light;
 }
 
 .borealis-text-input-option-selected {
     @apply borealis-text-input-option;
     @apply text-accent-dark;
-    @apply border-secondary-light;
+    @apply border-primary-light;
 }

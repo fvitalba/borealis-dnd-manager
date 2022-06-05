@@ -1,7 +1,7 @@
 import React from 'react'
 import {
-    PlusCircleOutlineIcon,
-    MinusCircleOutlineIcon,
+    BorealisCollapseIcon,
+    BorealisExpandIcon,
 } from '../Icons'
 import ControlPanelContainer from '../GenericViews/ControlPanelContainer'
 import ControlPanelRow from '../GenericViews/ControlPanelRow'
@@ -23,7 +23,7 @@ const ToolPanelView = ({ hidden, toggleToolPanelTab, submenuHidden, isHost, fogE
         return (
             <ControlPanelContainer>
                 <ControlPanelRow>
-                    <ToggleButton value={ <PlusCircleOutlineIcon /> } toggleValue={ () => toggleToolPanelTab('hidden') } title='show control panel' />
+                    <ToggleButton value={ <BorealisExpandIcon /> } toggleValue={ () => toggleToolPanelTab('hidden') } title='show control panel' />
                 </ControlPanelRow>
             </ControlPanelContainer>
         )
@@ -31,7 +31,7 @@ const ToolPanelView = ({ hidden, toggleToolPanelTab, submenuHidden, isHost, fogE
     return (
         <ControlPanelContainer>
             <ControlPanelRow>
-                <ToggleButton value={ <MinusCircleOutlineIcon /> } toggleValue={ () => toggleToolPanelTab('hidden') } title='hide control panel'/>
+                <ToggleButton value={ <BorealisCollapseIcon /> } toggleValue={ () => toggleToolPanelTab('hidden') } title='hide control panel'/>
                 <ToolSelectView fogEnabled={ fogEnabled } isHost={ isHost } />
             </ControlPanelRow>
             { !submenuHidden

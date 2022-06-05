@@ -1,5 +1,26 @@
 import React, { CSSProperties } from 'react'
-import { IconPlayerPlay } from '@tabler/icons'
+import {
+    IconPlayerPlay,
+    IconArrowBarLeft,
+    IconArrowBarRight,
+    IconSettings,
+    IconMap,
+    IconUsers,
+    IconChartBar,
+    IconBackpack,
+    IconBook,
+    IconMouse,
+    IconMouseOff,
+    IconLink,
+    IconLiveView,
+    IconWorldDownload,
+    IconWorldUpload,
+    IconCloud,
+    IconCloudOff,
+    IconHandFinger,
+    IconWriting,
+    IconWind,
+} from '@tabler/icons'
 // These icons were copied from https://github.com/la-moore/scarlab-icons/tree/master/react
 // I had to copy them, because they are written as JSX.Elements, whereas I need React Function Components
 const defaultWidth = '33'
@@ -366,9 +387,132 @@ export const LinkOutlineIcon = (props: IconProps) => {
     </svg>
 }
 
+
+
+
 // New Icons to use
+// Generic Icons
 export const BorealisPlayIcon = (props: IconProps) => {
     return <IconPlayerPlay
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+// Control Panel Icons
+export const BorealisCollapseIcon = (props: IconProps) => {
+    return <IconArrowBarLeft
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisExpandIcon = (props: IconProps) => {
+    return <IconArrowBarRight
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisUserSettingsIcon = (props: IconProps) => {
+    return <IconSettings
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisMapControlIcon = (props: IconProps) => {
+    return <IconMap
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisTokenControlIcon = (props: IconProps) => {
+    return <IconUsers
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisCharacterStatsControlIcon = (props: IconProps) => {
+    return <IconChartBar
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisCharacterInventoryControlIcon = (props: IconProps) => {
+    return <IconBackpack
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisCharacterSpellsControlIcon = (props: IconProps) => {
+    return <IconBook
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+// User Settings Icons
+export const BorealisShareMouseIcon = (props: IconProps) => {
+    return <IconMouse
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisStopShareMouseIcon = (props: IconProps) => {
+    return <IconMouseOff
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisShareLinkIcon = (props: IconProps) => {
+    return <IconLink
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisDefaultWorldIcon = (props: IconProps) => {
+    return <IconLiveView
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisShowFogIcon = (props: IconProps) => {
+    return <IconCloud
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisHideFogIcon = (props: IconProps) => {
+    return <IconCloudOff
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisSaveWorldIcon = (props: IconProps) => {
+    return <IconWorldUpload
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisLoadWorldIcon = (props: IconProps) => {
+    return <IconWorldDownload
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+
+
+// Control Tool Icons
+export const BorealisMoveToolIcon = (props: IconProps) => {
+    return <IconHandFinger
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisDrawToolIcon = (props: IconProps) => {
+    return <IconWriting
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisFogToolIcon = (props: IconProps) => {
+    return <IconWind
         size={ props.size ? props.size : defaultSize }
     />
 }

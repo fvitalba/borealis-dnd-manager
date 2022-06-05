@@ -1,12 +1,13 @@
 import React from 'react'
 import {
-    GlobeSolidIcon,
-    CloudOffSolidIcon,
-    CloudUploadSolidIcon,
-    CloudDownloadSolidIcon,
-    CursorSolidIcon,
-    CursorOutlineIcon,
-    LinkOutlineIcon
+    BorealisShareMouseIcon,
+    BorealisStopShareMouseIcon,
+    BorealisShareLinkIcon,
+    BorealisDefaultWorldIcon,
+    BorealisShowFogIcon,
+    BorealisHideFogIcon,
+    BorealisSaveWorldIcon,
+    BorealisLoadWorldIcon,
 } from './Icons'
 import ControlPanelRow from './GenericViews/ControlPanelRow'
 import TextInput from './GenericViews/TextInput'
@@ -16,6 +17,7 @@ import ActionButton from './GenericViews/ActionButton'
 interface UserToolViewProps {
     isHost: boolean,
     initAsDev: () => void,
+    fogEnabled: boolean,
     toggleFog: () => void,
     saveGameInServer: () => void,
     loadGameFromServer: () => void,
@@ -26,18 +28,18 @@ interface UserToolViewProps {
     copyUrlToClipboard: () => void,
 }
 
-const UserToolView = ({ isHost, initAsDev, toggleFog, saveGameInServer, loadGameFromServer, userName, updateUserName, mouseIsShared, toggleShareMouse, copyUrlToClipboard }: UserToolViewProps) => {
+const UserToolView = ({ isHost, initAsDev, fogEnabled, toggleFog, saveGameInServer, loadGameFromServer, userName, updateUserName, mouseIsShared, toggleShareMouse, copyUrlToClipboard }: UserToolViewProps) => {
     return (
         <ControlPanelRow>
             <TextInput title='User name' placeholder='User name' value={ userName } onChange={ updateUserName } autofocus={ true } />
-            <ToggleButton title={ mouseIsShared ? 'Cursor shared' : 'Cursor hidden' } value={ mouseIsShared ? <CursorSolidIcon /> : <CursorOutlineIcon /> } toggleValue={ toggleShareMouse } isActive={ mouseIsShared } />
+            <ToggleButton title={ mouseIsShared ? 'Cursor shared' : 'Cursor hidden' } value={ mouseIsShared ? <BorealisShareMouseIcon /> : <BorealisStopShareMouseIcon /> } toggleValue={ toggleShareMouse } isActive={ mouseIsShared } />
             { isHost
                 ? <>
-                    <ActionButton title='Share Link' value={ <LinkOutlineIcon /> } onClick={ copyUrlToClipboard } />
-                    <ActionButton title='Load example' value={ <GlobeSolidIcon /> } onClick={ initAsDev } />
-                    <ActionButton title='Toggle Fog' value={ <CloudOffSolidIcon /> } onClick={ toggleFog } />
-                    <ActionButton title='Save room' value={ <CloudUploadSolidIcon /> } onClick={ saveGameInServer } />
-                    <ActionButton title='Load room' value={ <CloudDownloadSolidIcon /> } onClick={ loadGameFromServer } />
+                    <ActionButton title='Share Link' value={ <BorealisShareLinkIcon /> } onClick={ copyUrlToClipboard } />
+                    <ActionButton title='Load example' value={ <BorealisDefaultWorldIcon /> } onClick={ initAsDev } />
+                    <ActionButton title='Toggle Fog' value={ fogEnabled ? <BorealisHideFogIcon /> : <BorealisShowFogIcon /> } onClick={ toggleFog } />
+                    <ActionButton title='Save room' value={ <BorealisSaveWorldIcon /> } onClick={ saveGameInServer } />
+                    <ActionButton title='Load room' value={ <BorealisLoadWorldIcon /> } onClick={ loadGameFromServer } />
                 </>
                 : null
             }

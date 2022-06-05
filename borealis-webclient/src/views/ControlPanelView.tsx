@@ -5,14 +5,14 @@ import UserTool from '../components/UserTool'
 import CharacterStats from '../components/CharacterStats'
 import { ControlPanelState, ControlPanelTabName } from '../components/ControlPanel'
 import {
-    PlusCircleOutlineIcon,
-    MinusCircleOutlineIcon,
-    UserCircleSolidIcon,
-    MapSolidIcon,
-    GhostSolidIcon,
-    ChartBarAltSquareSolidIcon,
-    BookOpenSolidIcon,
-    BoxSolidIcon
+    BorealisCollapseIcon,
+    BorealisExpandIcon,
+    BorealisUserSettingsIcon,
+    BorealisMapControlIcon,
+    BorealisTokenControlIcon,
+    BorealisCharacterStatsControlIcon,
+    BorealisCharacterInventoryControlIcon,
+    BorealisCharacterSpellsControlIcon,
 } from './Icons'
 import ControlPanelContainer from './GenericViews/ControlPanelContainer'
 import ControlPanelRow from './GenericViews/ControlPanelRow'
@@ -35,7 +35,7 @@ const ControlPanelView = ({ controlPanelState, hidden, toggleControlPanelTab, su
         return (
             <ControlPanelContainer>
                 <ControlPanelRow>
-                    <ToggleButton value={ <PlusCircleOutlineIcon /> } toggleValue={ () => toggleControlPanelTab('hidden') } title='show control panel' />
+                    <ToggleButton value={ <BorealisExpandIcon /> } toggleValue={ () => toggleControlPanelTab('hidden') } title='show control panel' />
                 </ControlPanelRow>
             </ControlPanelContainer>
         )
@@ -43,18 +43,18 @@ const ControlPanelView = ({ controlPanelState, hidden, toggleControlPanelTab, su
     return (
         <ControlPanelContainer>
             <ControlPanelRow>
-                <ToggleButton value={ <MinusCircleOutlineIcon /> } toggleValue={ () => toggleControlPanelTab('hidden') } title='hide control panel'/>
-                <ToggleButton title='User' value={ <UserCircleSolidIcon /> } toggleValue={ () => toggleControlPanelTab('toggleOnUser') } isActive={ controlPanelState.toggleOnUser } />
+                <ToggleButton value={ <BorealisCollapseIcon /> } toggleValue={ () => toggleControlPanelTab('hidden') } title='hide control panel'/>
+                <ToggleButton title='User' value={ <BorealisUserSettingsIcon /> } toggleValue={ () => toggleControlPanelTab('toggleOnUser') } isActive={ controlPanelState.toggleOnUser } />
                 { isHost
                     ? <>
-                        <ToggleButton title='Maps' value={ <MapSolidIcon />} toggleValue={ () => toggleControlPanelTab('toggleOnMaps') } isActive={ controlPanelState.toggleOnMaps } />
-                        <ToggleButton title='Tokens' value={ <GhostSolidIcon /> } toggleValue={ () => toggleControlPanelTab('toggleOnTokens') } isActive={ controlPanelState.toggleOnTokens } />
+                        <ToggleButton title='Maps' value={ <BorealisMapControlIcon />} toggleValue={ () => toggleControlPanelTab('toggleOnMaps') } isActive={ controlPanelState.toggleOnMaps } />
+                        <ToggleButton title='Tokens' value={ <BorealisTokenControlIcon /> } toggleValue={ () => toggleControlPanelTab('toggleOnTokens') } isActive={ controlPanelState.toggleOnTokens } />
                     </>
                     : null
                 }
-                <ToggleButton title='Character Stats' value={ <ChartBarAltSquareSolidIcon /> } toggleValue={ () => toggleControlPanelTab('toggleOnCharacterStats') } isActive={ controlPanelState.toggleOnCharacterStats } />
-                <ToggleButton title='Character Inventory' value={ <BoxSolidIcon /> } toggleValue={ () => toggleControlPanelTab('toggleOnCharacterInventory') } isActive={ controlPanelState.toggleOnCharacterInventory } />
-                <ToggleButton title='Character Spells' value={ <BookOpenSolidIcon /> } toggleValue={ () => toggleControlPanelTab('toggleOnCharacterSpells') } isActive={ controlPanelState.toggleOnCharacterSpells } />
+                <ToggleButton title='Character Stats' value={ <BorealisCharacterStatsControlIcon /> } toggleValue={ () => toggleControlPanelTab('toggleOnCharacterStats') } isActive={ controlPanelState.toggleOnCharacterStats } />
+                <ToggleButton title='Character Inventory' value={ <BorealisCharacterInventoryControlIcon /> } toggleValue={ () => toggleControlPanelTab('toggleOnCharacterInventory') } isActive={ controlPanelState.toggleOnCharacterInventory } />
+                <ToggleButton title='Character Spells' value={ <BorealisCharacterSpellsControlIcon /> } toggleValue={ () => toggleControlPanelTab('toggleOnCharacterSpells') } isActive={ controlPanelState.toggleOnCharacterSpells } />
                 { /* isHost
                     ? <ActionButton title='Push refresh to players' value={ <RefreshOutlineIcon /> } onClick={ pushRefreshToPlayers } />
                     : <ActionButton title='Request gameboard refresh from host' onClick={ socketRequestRefresh } value={ <RefreshOutlineIcon /> } />

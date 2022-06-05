@@ -142,6 +142,7 @@ const UserTool = ({ toggleOnUser, gameState, mapState, tokenState, chatState, ch
             <UserToolView
                 isHost={ metadataState.userType === UserType.host }
                 initAsDev={ initAsDev }
+                fogEnabled={ gameState.fogEnabled }
                 toggleFog={ toggleFog }
                 saveGameInServer={ saveGameInServer }
                 loadGameFromServer={ loadGameFromServer }
