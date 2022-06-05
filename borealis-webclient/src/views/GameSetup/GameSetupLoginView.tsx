@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react'
-import { PlaySolidIcon } from '../Icons'
+import { BorealisPlayIcon } from '../Icons'
 import TextInput from '../GenericViews/TextInput'
 import MaskedTextInput from '../GenericViews/MaskedTextInput'
 import CheckboxInput from '../GenericViews/CheckboxInput'
@@ -45,7 +45,7 @@ const GameSetupLoginView = ({ userName, onUserNameChange, password, onPasswordCh
                 <CheckboxInput title='Remember me' value={ rememberUser } onChange={ toggleRememberUser } label='Remember me' disabled={ isGuest } />
             </FormRow>
             <FormRow reverseDirection={ true } >
-                <ActionButton title='Login' value={ <PlaySolidIcon /> } onClick={ onSubmitSetup } disabled={ !isSubmitEnabled } />
+                <ActionButton title='Login' value={ <BorealisPlayIcon /> } onClick={ onSubmitSetup } disabled={ !isSubmitEnabled } />
             </FormRow>
             <FormRow>
                 { newUser

@@ -1,13 +1,16 @@
 import React, { CSSProperties } from 'react'
+import { IconPlayerPlay } from '@tabler/icons'
 // These icons were copied from https://github.com/la-moore/scarlab-icons/tree/master/react
 // I had to copy them, because they are written as JSX.Elements, whereas I need React Function Components
 const defaultWidth = '33'
 const defaultHeight = '33'
+const defaultSize = 24
 
 interface IconProps {
     className?: string,
     id?: string,
     style?: CSSProperties,
+    size?: number,
 }
 
 export const PlusCircleOutlineIcon = (props: IconProps) => {
@@ -361,4 +364,11 @@ export const LinkOutlineIcon = (props: IconProps) => {
         <path d='M15 16L17 16C18.8856 16 19.8284 16 20.4142 15.4142C21 14.8284 21 13.8856 21 12V12C21 10.1144 21 9.17157 20.4142 8.58578C19.8284 8 18.8856 8 17 8L15 8' />
         <path d='M8 12H16' />
     </svg>
+}
+
+// New Icons to use
+export const BorealisPlayIcon = (props: IconProps) => {
+    return <IconPlayerPlay
+        size={ props.size ? props.size : defaultSize }
+    />
 }
