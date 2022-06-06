@@ -35,9 +35,7 @@ const ToolPanelView = ({ hidden, toggleToolPanelTab, submenuHidden, isHost, fogE
                 <ToolSelectView fogEnabled={ fogEnabled } isHost={ isHost } />
             </ControlPanelRow>
             { !submenuHidden
-                ? <ControlPanelRow>
-                    <ToolControls />
-                </ControlPanelRow>
+                ? <ToolControls />
                 : null
             }
         </ControlPanelContainer>

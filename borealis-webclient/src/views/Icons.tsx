@@ -24,6 +24,11 @@ import {
     IconSquare,
     IconSquareCheck,
     IconTrash,
+    IconEraser,
+    IconPencil,
+    IconPencilOff,
+    IconColorSwatch,
+    IconCloudFog,
 } from '@tabler/icons'
 // These icons were copied from https://github.com/la-moore/scarlab-icons/tree/master/react
 // I had to copy them, because they are written as JSX.Elements, whereas I need React Function Components
@@ -542,6 +547,37 @@ export const BorealisDrawToolIcon = (props: IconProps) => {
 
 export const BorealisFogToolIcon = (props: IconProps) => {
     return <IconWind
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisFreeHandDrawIcon = (props: IconProps) => {
+    return <IconPencil
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisFreeHandEreaseIcon = (props: IconProps) => {
+    return <IconEraser
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisColorPickerIcon = (props: IconProps) => {
+    return <IconColorSwatch
+        size={ props.size ? props.size : defaultSize }
+        style={ props.style }
+    />
+}
+
+export const BorealisResetDrawingsIcon = (props: IconProps) => {
+    return <IconPencilOff
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisResetFogIcon = (props: IconProps) => {
+    return <IconCloudFog
         size={ props.size ? props.size : defaultSize }
     />
 }

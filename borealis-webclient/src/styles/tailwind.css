@@ -964,6 +964,29 @@ a:hover {
     @apply border-accent-medium;
 }
 
+.borealis-number-input-container {
+    @apply flex;
+    @apply flex-row;
+    @apply flex-auto;
+}
+
+.borealis-number-input {
+    @apply text-text-primary;
+    @apply placeholder-primary-light;
+    @apply rounded;
+    @apply text-base;
+    @apply justify-center;
+    @apply bg-primary-darker;
+    @apply pl-1;
+    @apply pr-1;
+    @apply h-8;
+    @apply flex;
+    @apply mx-auto;
+    @apply grow;
+    @apply border-2;
+    @apply border-primary-medium;
+}
+
 .borealis-checkbox-input-container {
     @apply flex;
     @apply flex-row;

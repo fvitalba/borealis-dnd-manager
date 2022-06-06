@@ -2013,6 +2013,41 @@ a:hover {
   border-color: rgb(57 208 178 / var(--tw-border-opacity));
 }
 
+.borealis-number-input-container {
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 auto;
+}
+
+.borealis-number-input {
+  --tw-text-opacity: 1;
+  color: rgb(235 235 236 / var(--tw-text-opacity));
+}
+
+.borealis-number-input::placeholder {
+  --tw-placeholder-opacity: 1;
+  color: rgb(78 79 83 / var(--tw-placeholder-opacity));
+}
+
+.borealis-number-input {
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  justify-content: center;
+  --tw-bg-opacity: 1;
+  background-color: rgb(29 30 32 / var(--tw-bg-opacity));
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  height: 2rem;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  flex-grow: 1;
+  border-width: 2px;
+  --tw-border-opacity: 1;
+  border-color: rgb(52 53 58 / var(--tw-border-opacity));
+}
+
 .borealis-checkbox-input-container {
   display: flex;
   flex-direction: row;
