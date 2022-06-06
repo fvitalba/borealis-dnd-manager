@@ -71,7 +71,7 @@ const MapTool = ({ toggleOnMaps, mapState, addMap }: MapToolProps) => {
         })
     }
 
-    const isCreateMapEnabled = () => {
+    const isCreateMapEnabled = (): boolean => {
         const existingMap = mapState.maps.filter((map) => map.name === mapToolState.newMapName)
         if (existingMap.length > 0)
             return false

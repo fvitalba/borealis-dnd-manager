@@ -987,6 +987,14 @@ a:hover {
     @apply border-primary-medium;
 }
 
+.borealis-number-input:disabled {
+    @apply opacity-50;
+}
+
+.borealis-number-input:focus:enabled {
+    @apply border-accent-medium;
+}
+
 .borealis-checkbox-input-container {
     @apply flex;
     @apply flex-row;

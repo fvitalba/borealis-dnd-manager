@@ -4,16 +4,20 @@ import Token, { TokenBooleanProperty, TokenTextProperty } from '../classes/Token
 import TokenCondition from '../enums/TokenCondition'
 import TokenSize from '../enums/TokenSize'
 import TokenType from '../enums/TokenType'
-import Button from './Button'
+import ActionButton from './GenericViews/ActionButton'
+import ControlPanelRow from './GenericViews/ControlPanelRow'
+import ControlPanelSubcontainer from './GenericViews/ControlPanelSubcontainer'
+import TextInput from './GenericViews/TextInput'
+import OptionSelector from './GenericViews/OptionSelector'
 import {
-    DuplicateOutlineIcon,
-    CheckSquareOutlineIcon,
-    SquareOutlineIcon,
-    XSquareOutlineIcon,
-    EyeOutlineIcon,
-    EyeOffOutlineIcon,
-    FormattingOutlineIcon,
-    FormattingClearOutlineIcon
+    BorealisDeleteTokenIcon,
+    BorealisDuplicateTokenIcon,
+    BorealisShowTokenIcon,
+    BorealisHideTokenIcon,
+    BorealisTokenSelectedIcon,
+    BorealisTokenDeselectedIcon,
+    BorealisShowTokenName,
+    BorealisHideTokenName,
 } from './Icons'
 
 interface HostTokenConfigViewProps {
@@ -34,44 +38,57 @@ interface HostTokenConfigViewProps {
 }
 
 const HostTokenConfigView = ({ tokenTypes, tokenConditions, tokenSizes, maps, token, copy, onToggle, onTextChange, selectToken, onTypeSelect, onConditionSelect, onSizeSelect, onMapSelect, deleteToken }: HostTokenConfigViewProps) => {
-    const controlPanelInputClass = token.selected ? 'control-panel-input-selected' : 'control-panel-input'
-    const controlPanelSelectClass = token.selected ? 'control-panel-select-selected' : 'control-panel-select'
+    const tokenTypeOptions = tokenTypes.map((tokenType) => {
+        return {
+            key: tokenType,
+            value: tokenType,
+            caption: TokenType[tokenType],
+        }
+    })
+    const tokenConditionOptions = tokenConditions.map((tokenCondition) => {
+        return {
+            key: tokenCondition,
+            value: tokenCondition,
+            caption: TokenCondition[tokenCondition],
+        }
+    })
+    const tokenSizeOptions = tokenSizes.map((tokenSize) => {
+        return {
+            key: tokenSize,
+            value: tokenSize,
+            caption: TokenSize[tokenSize],
+        }
+    })
+    const tokenMapOptions = [{
+        key: -1,
+        value: -1,
+        caption: 'All',
+    }].concat(maps.map((map) => {
+        return {
+            key: map.id,
+            value: map.id,
+            caption: map.name,
+        }
+    }))
 
     return (
-        <div className={ token.selected ? 'token-config-selected' : 'token-config' }>
-            <div className='token-config-header'>
-                <input value={ token.name } placeholder='Name' size={ 8 } onChange={ (e) => onTextChange('name', e) } className={ 'w-48 ' + controlPanelInputClass } />
-                <input value={ token.imageUrl } placeholder='Image Url' size={ 8 } onChange={ (e) => onTextChange('imageUrl', e) } className={ 'w-96 ' + controlPanelInputClass } />
-                <Button title='Delete token' value={ <XSquareOutlineIcon /> } onClick={ deleteToken } />
-            </div>
-            <div className='token-config-details'>
-                <Button value={ <DuplicateOutlineIcon /> } onClick={ copy } title='Duplicate token' />
-                <Button value={ token.hidden ? <EyeOffOutlineIcon /> : <EyeOutlineIcon /> } onClick={ (e) => onToggle('hidden', e) } title={ token.hidden ? 'Hidden' : 'Shown' } />
-                <select value={ token.type } onChange={ onTypeSelect } title='which type' className={ controlPanelSelectClass }>
-                    { tokenTypes.map((type) => (
-                        <option key={ type } value={ type } >{ TokenType[type] }</option>
-                    ))}
-                </select>
-                <Button value={ token.selected ? <CheckSquareOutlineIcon /> : <SquareOutlineIcon /> } onClick={ (e) => selectToken(e) } title={ token.selected ? 'Selected' : 'Unselected' } />
-                <select value={ token.condition } onChange={ onConditionSelect } title='which condition' className={ controlPanelSelectClass }>
-                    { tokenConditions.map((condition) => (
-                        <option key={ condition } value={ condition } >{ TokenCondition[condition] }</option>
-                    ))}
-                </select>
-                <Button value={ token.showLabel ? <FormattingOutlineIcon /> : <FormattingClearOutlineIcon /> } onClick={ (e) => onToggle('showLabel', e) } title={ token.showLabel ? 'Label shown' : 'Label hidden' } />
-                <select value={ token.size } onChange={ onSizeSelect } title='which size' className={ controlPanelSelectClass }>
-                    { tokenSizes.map((size) => (
-                        <option key={ size } value={ size } >{ TokenSize[size] }</option>
-                    ))}
-                </select>
-                <select value={ token.mapId } onChange={ onMapSelect } title='which map' className={ controlPanelSelectClass }>
-                    <option key={ -1 } value={ -1 } >All</option>
-                    { maps.map((map) => (
-                        <option key={ map.id } value={ map.id } >{ map.name }</option>
-                    ))}
-                </select>
-            </div>
-        </div>
+        <ControlPanelSubcontainer>
+            <ControlPanelRow>
+                <TextInput value={ token.name } placeholder='Name' onChange={ (e) => onTextChange('name', e) } />
+                <TextInput value={ token.imageUrl } placeholder='Image Url' onChange={ (e) => onTextChange('imageUrl', e) } />
+                <ActionButton title='Delete token' value={ <BorealisDeleteTokenIcon /> } onClick={ deleteToken } />
+            </ControlPanelRow>
+            <ControlPanelRow>
+                <ActionButton value={ <BorealisDuplicateTokenIcon /> } onClick={ copy } title='Duplicate token' />
+                <ActionButton value={ token.hidden ? <BorealisHideTokenIcon /> : <BorealisShowTokenIcon /> } onClick={ (e) => onToggle('hidden', e) } title={ token.hidden ? 'Hidden' : 'Shown' } />
+                <OptionSelector value={ token.type } onChange={ onTypeSelect } title='which type' options={ tokenTypeOptions } />
+                <ActionButton value={ token.selected ? <BorealisTokenSelectedIcon /> : <BorealisTokenDeselectedIcon /> } onClick={ (e) => selectToken(e) } title={ token.selected ? 'Selected' : 'Unselected' } />
+                <OptionSelector value={ token.condition } onChange={ onConditionSelect } title='which condition' options={ tokenConditionOptions } />
+                <ActionButton value={ token.showLabel ? <BorealisShowTokenName /> : <BorealisHideTokenName /> } onClick={ (e) => onToggle('showLabel', e) } title={ token.showLabel ? 'Label shown' : 'Label hidden' } />
+                <OptionSelector value={ token.size } onChange={ onSizeSelect } title='which size' options={ tokenSizeOptions } />
+                <OptionSelector value={ token.mapId } onChange={ onMapSelect } title='which map' options={ tokenMapOptions } />
+            </ControlPanelRow>
+        </ControlPanelSubcontainer>
     )
 }
 

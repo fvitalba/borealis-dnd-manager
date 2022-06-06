@@ -14,7 +14,7 @@ import ActionButton from './GenericViews/ActionButton'
 interface MapToolViewProps {
     maps: Array<Map>,
     newMapName: string,
-    setNewMapName: (newMapName: ChangeEvent<HTMLInputElement>) => void,
+    setNewMapName: (e: ChangeEvent<HTMLInputElement>) => void,
     isCreateMapEnabled: boolean,
     createMap: () => void,
     selectedMapName: string,

@@ -2048,6 +2048,15 @@ a:hover {
   border-color: rgb(52 53 58 / var(--tw-border-opacity));
 }
 
+.borealis-number-input:disabled {
+  opacity: 0.5;
+}
+
+.borealis-number-input:focus:enabled {
+  --tw-border-opacity: 1;
+  border-color: rgb(57 208 178 / var(--tw-border-opacity));
+}
+
 .borealis-checkbox-input-container {
   display: flex;
   flex-direction: row;

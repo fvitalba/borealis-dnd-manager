@@ -29,6 +29,13 @@ import {
     IconPencilOff,
     IconColorSwatch,
     IconCloudFog,
+    IconCopy,
+    IconEye,
+    IconEyeOff,
+    IconCircleDashed,
+    IconCircleCheck,
+    IconTag,
+    IconTagOff,
 } from '@tabler/icons'
 // These icons were copied from https://github.com/la-moore/scarlab-icons/tree/master/react
 // I had to copy them, because they are written as JSX.Elements, whereas I need React Function Components
@@ -505,6 +512,7 @@ export const BorealisLoadWorldIcon = (props: IconProps) => {
     />
 }
 
+
 // Map Control Icons
 export const BorealisAddNewMapIcon = (props: IconProps) => {
     return <IconPlus
@@ -530,6 +538,61 @@ export const BorealisDeleteMapIcon = (props: IconProps) => {
     />
 }
 
+
+// Token Control Icons
+export const BorealisAddNewTokenIcon = (props: IconProps) => {
+    return <IconPlus
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisDeleteTokenIcon = (props: IconProps) => {
+    return <IconTrash
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisDuplicateTokenIcon = (props: IconProps) => {
+    return <IconCopy
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisShowTokenIcon = (props: IconProps) => {
+    return <IconEye
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisHideTokenIcon = (props: IconProps) => {
+    return <IconEyeOff
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisTokenSelectedIcon = (props: IconProps) => {
+    return <IconCircleCheck
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisTokenDeselectedIcon = (props: IconProps) => {
+    return <IconCircleDashed
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisShowTokenName = (props: IconProps) => {
+    return <IconTag
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisHideTokenName = (props: IconProps) => {
+    return <IconTagOff
+        size={ props.size ? props.size : defaultSize }
+    />
+}
 
 
 // Control Tool Icons
