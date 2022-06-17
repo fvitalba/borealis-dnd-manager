@@ -40,6 +40,10 @@ import {
     IconDice,
     IconRotate,
     IconSquareX,
+    IconUserPlus,
+    IconDeviceFloppy,
+    IconUserOff,
+    IconHeartPlus,
 } from '@tabler/icons'
 // These icons were copied from https://github.com/la-moore/scarlab-icons/tree/master/react
 // I had to copy them, because they are written as JSX.Elements, whereas I need React Function Components
@@ -662,6 +666,7 @@ export const BorealisResetFogIcon = (props: IconProps) => {
     />
 }
 
+
 // Chat Panel Icons
 export const BorealisChatHelpIcon = (props: IconProps) => {
     return <IconQuestionMark
@@ -683,6 +688,37 @@ export const BorealisOpenChatIcon = (props: IconProps) => {
 
 export const BorealisRollDiceIcon = (props: IconProps) => {
     return <IconDice
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+// Character Panel Icons
+export const BorealisCreateCharacterIcon = (props: IconProps) => {
+    return <IconUserPlus
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisSaveCharacterIcon = (props: IconProps) => {
+    return <IconDeviceFloppy
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisDeleteCharacterIcon = (props: IconProps) => {
+    return <IconUserOff
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisAddCharacterClassIcon = (props: IconProps) => {
+    return <IconPlus
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisAddCharacterHitDiceIcon = (props: IconProps) => {
+    return <IconHeartPlus
         size={ props.size ? props.size : defaultSize }
     />
 }

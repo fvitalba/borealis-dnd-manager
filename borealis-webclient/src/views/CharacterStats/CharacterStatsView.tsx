@@ -4,8 +4,8 @@ import User from '../../classes/User'
 import CharacterClassLevelInput from '../../components/CharacterClassLevelInput'
 import CharacterHitDiceInput from '../../components/CharacterHitDiceInput'
 import SelectCharacter from '../../components/SelectCharacter'
-import Button from '../Button'
-import { XSquareOutlineIcon, FloppyOutlineIcon } from '../Icons'
+import ActionButton from '../GenericViews/ActionButton'
+import { BorealisSaveCharacterIcon, BorealisDeleteCharacterIcon } from '../Icons'
 
 interface Modifiers {
     strength: string,
@@ -52,8 +52,8 @@ const CharacterStatsView = ({ showCharacterStats, isHost, character, setSelected
                             </div>
                             : null
                         }
-                        <Button title='Save your character' value={ <FloppyOutlineIcon /> } onClick={ saveCharacter } />
-                        <Button title='Delete your character' value={ <XSquareOutlineIcon /> } onClick={ deleteCharacter } />
+                        <ActionButton title='Save your character' value={ <BorealisSaveCharacterIcon /> } onClick={ saveCharacter } />
+                        <ActionButton title='Delete your character' value={ <BorealisDeleteCharacterIcon /> } onClick={ deleteCharacter } />
                     </div>
                     <div className='character-stats-view-row'>
                         <div className='character-stat-input-container'>

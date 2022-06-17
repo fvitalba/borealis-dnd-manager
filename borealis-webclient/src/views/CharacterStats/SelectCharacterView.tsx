@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from 'react'
 import Character from '../../classes/Character'
-import Button from '../Button'
-import { PlusSquareSolidIcon } from '../Icons'
+import ActionButton from '../GenericViews/ActionButton'
+import { BorealisCreateCharacterIcon } from '../Icons'
 
 interface SelectCharacterViewProps {
     characters: Array<Character>,
@@ -27,7 +27,7 @@ const SelectCharacterView = ({ characters, isHost, selectedCharacterGuid, onChar
                 </select>
             </div>
             <div className='select-character-input-container'>
-                <Button title='Create new character' value={ <PlusSquareSolidIcon /> } onClick={ addNewCharacter } />
+                <ActionButton title='Create new character' value={ <BorealisCreateCharacterIcon /> } onClick={ addNewCharacter } />
             </div>
         </div>
     )

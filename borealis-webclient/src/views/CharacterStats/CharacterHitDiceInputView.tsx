@@ -1,8 +1,8 @@
 import React, { ChangeEvent } from 'react'
 import { CharacterHitDice, CharacterHitDiceProperty } from '../../classes/Character'
 import DiceType from '../../enums/DiceType'
-import Button from '../Button'
-import { PlusSquareSolidIcon } from '../Icons'
+import ActionButton from '../GenericViews/ActionButton'
+import { BorealisAddCharacterHitDiceIcon } from '../Icons'
 
 interface CharacterHitDiceInputViewProps {
     characterHitDice: Array<CharacterHitDice>,
@@ -49,7 +49,7 @@ const CharacterHitDiceInputView = ({ characterHitDice, availableCharacterHitDice
                 )
             })}
             <div className='select-character-input-container'>
-                <Button title='Add new Hit Dice' value={ <PlusSquareSolidIcon /> } onClick={ addHitDice } />
+                <ActionButton title='Add new Hit Dice' value={ <BorealisAddCharacterHitDiceIcon /> } onClick={ addHitDice } />
             </div>
         </div>
     )
