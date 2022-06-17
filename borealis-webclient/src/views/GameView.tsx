@@ -30,7 +30,7 @@ const GameView = ({ userType, overlayRef, cursors, tokens, onMouseMove, onMouseU
                 <Background />
                 <Drawing />
                 { tokens ?
-                    <div className='tokens-container'>
+                    <div className='borealis-token-layer'>
                         { tokens.map((token, index) => (
                             <TokenComponent key={ `Token${index}` } token={ token } userType={ userType } />
                         )) }
@@ -39,7 +39,7 @@ const GameView = ({ userType, overlayRef, cursors, tokens, onMouseMove, onMouseU
                 }
                 <Fog />
                 { cursors ?
-                    <div className='cursors'>
+                    <div className='borealis-cursor-layer'>
                         { cursors.map((cursor) => (
                             <CursorComponent key={ `cursor${cursor.username}` } cursor={ cursor } />
                         )) }
@@ -53,7 +53,7 @@ const GameView = ({ userType, overlayRef, cursors, tokens, onMouseMove, onMouseU
                 <ToolPanel />
             </>
             <ChatPanel />
-            <Banner bannerContent={'Liking the tool? Want to support me? Buy me a coffee ☕!'} linkToAction={ 'https://www.buymeacoffee.com/fabio.vitalba' } />
+            <Banner bannerContent={ 'Liking the tool? Want to support me? Buy me a coffee ☕!' } linkToAction={ 'https://www.buymeacoffee.com/fabio.vitalba' } />
         </div>
     )
 }

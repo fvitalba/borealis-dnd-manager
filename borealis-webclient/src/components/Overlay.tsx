@@ -13,7 +13,7 @@ const Overlay = ({ gameState, overlayRef }: OverlayProps) => {
 
     return (
         <canvas
-            className='overlay'
+            className='borealis-overlay'
             ref={ canvasRef }
             width={ gameState.width }
             height={ gameState.height } />

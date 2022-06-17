@@ -1905,6 +1905,88 @@ a:hover {
   color: rgb(97 217 193 / var(--tw-text-opacity));
 }
 
+.borealis-background {
+  z-index: 1;
+  position: absolute;
+}
+
+.borealis-overlay {
+  z-index: 30;
+  position: absolute;
+  pointer-events: none;
+}
+
+.borealis-drawing {
+  z-index: 2;
+  position: absolute;
+}
+
+.borealis-fog {
+  z-index: 20;
+  position: absolute;
+  opacity: 1;
+}
+
+.borealis-passthrough {
+  pointer-events: none;
+}
+
+.borealis-cursor-layer {
+  z-index: 40;
+  pointer-events: none;
+  position: absolute;
+  opacity: 0.75;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.borealis-token-layer {
+  position: relative;
+}
+
+.borealis-cursor {
+  display: block;
+  position: absolute;
+}
+
+.borealis-loading-overlay {
+  top: 0px;
+  bottom: 0px;
+  width: 100%;
+  height: 100vh;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  position: fixed;
+  background-color: rgb(41 41 45 / var(--tw-bg-opacity));
+  --tw-bg-opacity: 0.6;
+  z-index: 130;
+  --tw-text-opacity: 1;
+  color: rgb(235 235 236 / var(--tw-text-opacity));
+}
+
+.borealis-loading-task-list {
+  text-align: center;
+  align-content: center;
+  --tw-text-opacity: 1;
+  color: rgb(235 235 236 / var(--tw-text-opacity));
+  font-weight: 800;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.25rem;
+}
+
+.borealis-loading-task {
+  display: flex;
+  flex-direction: row;
+}
+
 .borealis-form-container {
   display: flex;
   flex-direction: column;
@@ -2201,8 +2283,8 @@ a:hover {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
   display: flex;
   flex-direction: column;
-  background-color: rgb(52 53 58 / var(--tw-bg-opacity));
-  --tw-bg-opacity: 0.5;
+  --tw-bg-opacity: 1;
+  background-color: rgb(41 41 45 / var(--tw-bg-opacity));
   --tw-text-opacity: 1;
   color: rgb(235 235 236 / var(--tw-text-opacity));
 }
@@ -2702,4 +2784,88 @@ a:hover {
   color: rgb(40 146 125 / var(--tw-text-opacity));
   --tw-border-opacity: 1;
   border-color: rgb(78 79 83 / var(--tw-border-opacity));
+}
+
+.borealis-token-image {
+  position: relative;
+  pointer-events: none;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.borealis-token-image-selected {
+  position: relative;
+  pointer-events: none;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-left: auto;
+  margin-right: auto;
+  border-style: dashed;
+  --tw-border-opacity: 1;
+  border-color: rgb(57 208 178 / var(--tw-border-opacity));
+  border-width: 2px;
+}
+
+.borealis-token-label {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  background-color: rgb(29 30 32 / var(--tw-bg-opacity));
+  --tw-bg-opacity: 0.8;
+  --tw-text-opacity: 1;
+  color: rgb(235 235 236 / var(--tw-text-opacity));
+  border-width: 2px;
+  --tw-border-opacity: 1;
+  border-color: rgb(41 41 45 / var(--tw-border-opacity));
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  position: fixed;
+}
+
+.borealis-bottom-banner-container {
+  z-index: 120;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  display: block;
+  display: flex;
+  flex-direction: row;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(253 224 71 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(64 91 135 / var(--tw-text-opacity));
+}
+
+.borealis-bottom-banner-content {
+  padding-left: 1rem;
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+  font-weight: 800;
+  text-decoration-line: underline;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.borealis-bottom-banner-content a {
+  --tw-text-opacity: 1;
+  color: rgb(64 91 135 / var(--tw-text-opacity));
+}
+
+.borealis-bottom-banner-content a:hover {
+  --tw-text-opacity: 1;
+  color: rgb(57 208 178 / var(--tw-text-opacity));
+}
+
+.borealis-bottom-banner-content a:active {
+  --tw-text-opacity: 1;
+  color: rgb(156 232 217 / var(--tw-text-opacity));
+}
+
+.borealis-bottom-banner-btn {
+  right: 1.5rem;
+  position: absolute;
+  height: 100%;
 }

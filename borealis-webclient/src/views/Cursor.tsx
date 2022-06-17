@@ -13,7 +13,7 @@ const CursorView = ({ cursor }: CursorProps) => {
     }
 
     return (
-        <div style={ divStyle } className='cursor' >
+        <div style={ divStyle } className='borealis-cursor' >
             <CursorAltOutlineIcon />
             { cursor.username }
         </div>

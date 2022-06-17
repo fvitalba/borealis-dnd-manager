@@ -1,6 +1,6 @@
 import React from 'react'
-import Button from './Button'
-import { XAltOutlineIcon } from './Icons'
+import ActionButton from './GenericViews/ActionButton'
+import { BorealisCloseBannerIcon } from './Icons'
 
 interface BannerViewProps {
     bannerContent: string,
@@ -12,9 +12,9 @@ interface BannerViewProps {
 const BannerView = ({ bannerContent, linkToAction, hidden, toggleHidden }: BannerViewProps) => {
     return (
         !hidden
-            ? <div className='bottom-banner-container'>
-                <div className='bottom-banner-content'><a href={ linkToAction } rel='noreferrer' target='_blank'>{ bannerContent }</a></div>
-                <Button value={ <XAltOutlineIcon className='bottom-banner-action-btn' /> } onClick={ toggleHidden } title='Close' customClass='bottom-banner-btn' />
+            ? <div className='borealis-bottom-banner-container'>
+                <div className='borealis-bottom-banner-content'><a href={ linkToAction } rel='noreferrer' target='_blank'>{ bannerContent }</a></div>
+                <ActionButton value={ <BorealisCloseBannerIcon /> } onClick={ toggleHidden } title='Close' className='borealis-bottom-banner-btn' />
             </div>
             : null
     )

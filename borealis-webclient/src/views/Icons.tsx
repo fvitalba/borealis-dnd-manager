@@ -38,6 +38,8 @@ import {
     IconTagOff,
     IconQuestionMark,
     IconDice,
+    IconRotate,
+    IconSquareX,
 } from '@tabler/icons'
 // These icons were copied from https://github.com/la-moore/scarlab-icons/tree/master/react
 // I had to copy them, because they are written as JSX.Elements, whereas I need React Function Components
@@ -412,6 +414,19 @@ export const LinkOutlineIcon = (props: IconProps) => {
 // Generic Icons
 export const BorealisPlayIcon = (props: IconProps) => {
     return <IconPlayerPlay
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisLoadingIcon = (props: IconProps) => {
+    return <IconRotate
+        size={ props.size ? props.size : defaultSize }
+        className={ props.className }
+    />
+}
+
+export const BorealisCloseBannerIcon = (props: IconProps) => {
+    return <IconSquareX
         size={ props.size ? props.size : defaultSize }
     />
 }

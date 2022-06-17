@@ -888,6 +888,83 @@ a:hover {
     @apply text-accent-light;
 }
 
+.borealis-background {
+    @apply z-map;
+    @apply absolute;
+}
+
+.borealis-overlay {
+    @apply z-overlay;
+    @apply absolute;
+    @apply pointer-events-none;
+}
+
+.borealis-drawing {
+    @apply z-drawing;
+    @apply absolute;
+}
+
+.borealis-fog {
+    @apply z-fog;
+    @apply absolute;
+    @apply opacity-100;
+}
+
+.borealis-passthrough {
+    @apply pointer-events-none;
+}
+
+.borealis-cursor-layer {
+    @apply z-cursors;
+    @apply pointer-events-none;
+    @apply absolute;
+    @apply opacity-75;
+    @apply text-sm;
+}
+
+.borealis-token-layer {
+    @apply relative;
+}
+
+.borealis-cursor {
+    @apply block;
+    @apply absolute;
+}
+
+.borealis-loading-overlay {
+    @apply top-0;
+    @apply bottom-0;
+    @apply w-full;
+    @apply h-screen;
+    @apply mx-auto;
+    @apply flex;
+    @apply flex-col;
+    @apply justify-center;
+    @apply content-center;
+    @apply items-center;
+    @apply fixed;
+    @apply bg-primary-dark;
+    @apply bg-opacity-60;
+    @apply z-loading;
+    @apply text-text-primary;
+}
+
+.borealis-loading-task-list {
+    @apply text-center;
+    @apply content-center;
+    @apply text-text-primary;
+    @apply font-extrabold;
+    @apply text-sm;
+    @apply flex;
+    @apply flex-col;
+    @apply mt-5;
+}
+
+.borealis-loading-task {
+    @apply flex;
+    @apply flex-row;
+}
+
 .borealis-form-container {
     @apply flex;
     @apply flex-col;
@@ -1430,4 +1507,72 @@ a:hover {
     @apply borealis-text-input-option;
     @apply text-accent-dark;
     @apply border-primary-light;
+}
+
+.borealis-token-image {
+    @apply relative;
+    @apply pointer-events-none;
+    @apply rounded-full;
+    @apply overflow-hidden;
+    @apply mx-auto;
+}
+
+.borealis-token-image-selected {
+    @apply borealis-token-image;
+    @apply border-dashed;
+    @apply border-accent-medium;
+    @apply border-2;
+}
+
+.borealis-token-label {
+    @apply text-xs;
+    @apply bg-primary-darker;
+    @apply bg-opacity-80;
+    @apply text-text-primary;
+    @apply border-2;
+    @apply border-primary-dark;
+    @apply p-1;
+    @apply rounded;
+    @apply fixed;
+}
+
+.borealis-bottom-banner-container {
+    @apply z-banner;
+    @apply absolute;
+    @apply bottom-0;
+    @apply w-full;
+    @apply block;
+    @apply flex;
+    @apply flex-row;
+    @apply text-xs;
+    @apply bg-yellow-300;
+    @apply text-text-whisper;
+}
+
+.borealis-bottom-banner-content {
+    @apply pl-4;
+    @apply pb-2;
+    @apply pt-2;
+    @apply font-extrabold;
+    @apply underline;
+    @apply align-middle;
+    @apply text-center;
+}
+
+.borealis-bottom-banner-content a {
+    @apply text-text-whisper;
+}
+
+.borealis-bottom-banner-content a:hover {
+    @apply text-text-active;
+}
+
+.borealis-bottom-banner-content a:active {
+    @apply text-text-clicked;
+}
+
+.borealis-bottom-banner-btn {
+    @apply right-6;
+    @apply absolute;
+    @apply h-full;
 }

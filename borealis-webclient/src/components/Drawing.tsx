@@ -78,7 +78,7 @@ const Drawing = ({ gameState, mapState, settingsState }: DrawingProps) => {
     return (
         <Canvas
             id='drawing'
-            className='drawing passthrough'
+            className='borealis-drawing borealis-passthrough'
             width={ gameState.width }
             height={ gameState.height }
             draw={ renderDrawingLayer } />
