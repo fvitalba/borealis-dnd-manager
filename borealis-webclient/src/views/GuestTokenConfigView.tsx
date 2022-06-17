@@ -1,5 +1,7 @@
 import React, { ChangeEvent } from 'react'
 import Token, { TokenTextProperty } from '../classes/Token'
+import ControlPanelSubcontainer from './GenericViews/ControlPanelSubcontainer'
+import TextInput from './GenericViews/TextInput'
 
 interface GuestTokenConfigViewProps {
     token: Token,
@@ -8,10 +10,10 @@ interface GuestTokenConfigViewProps {
 
 const GuestTokenConfigView = ({ token, onTextChange }: GuestTokenConfigViewProps) => {
     return (
-        <div className='token-config'>
-            <input value={ token.name } placeholder='Name' size={ 8 } onChange={ (e) => onTextChange('name', e) } className='w-48 control-panel-input' />
-            <input value={ token.imageUrl } placeholder='Image Url' size={ 8 } onChange={ (e) => onTextChange('imageUrl', e) } className='w-96 control-panel-input' />
-        </div>
+        <ControlPanelSubcontainer>
+            <TextInput value={ token.name } placeholder='Name' onChange={ (e) => onTextChange('name', e) } />
+            <TextInput value={ token.imageUrl } placeholder='Image Url' onChange={ (e) => onTextChange('imageUrl', e) } />
+        </ControlPanelSubcontainer>
     )
 }
 

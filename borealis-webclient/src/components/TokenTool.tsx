@@ -34,6 +34,7 @@ interface TokenToolProps {
 
 const TokenTool = ({ toggleOnTokens, gameState, tokenState, metadataState, addToken }: TokenToolProps) => {
     const [tokenToolState, setTokenToolState] = useState(initialTokenToolState())
+    const currentTokens = tokenState.tokens.filter((token) => (token.mapId === -1) || (token.mapId === gameState.currentMapId))
 
     if (metadataState.userType !== UserType.host)
         return <></>
@@ -60,15 +61,16 @@ const TokenTool = ({ toggleOnTokens, gameState, tokenState, metadataState, addTo
     }
 
     const onTokenSelect = (tokenIndex: number) => {
-        const selectedMap = tokenState.tokens.filter((token, index) => index === tokenIndex)[0]
+        const selectedToken = currentTokens.filter((token, index) => index === tokenIndex)[0]
         setTokenToolState({
             ...tokenToolState,
-            selectedTokenName: selectedMap.name,
+            selectedTokenName: selectedToken.name,
             newTokenName: '',
         })
     }
 
     const onSubmitSelectToken = () => {
+        console.log('selected token name',tokenToolState.selectedTokenName)
         setTokenToolState({
             ...tokenToolState,
             selectedTokenName: '',
@@ -77,7 +79,6 @@ const TokenTool = ({ toggleOnTokens, gameState, tokenState, metadataState, addTo
         })
     }
 
-    const currentTokens = tokenState.tokens.filter((token) => (token.mapId === -1) || (token.mapId === gameState.currentMapId))
     const isCreateTokenEnabled = (): boolean => {
         const existingToken = tokenState.tokens.filter((token) => token.name === tokenToolState.newTokenName)
         if (existingToken.length > 0)

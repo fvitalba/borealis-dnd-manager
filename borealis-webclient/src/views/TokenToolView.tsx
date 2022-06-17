@@ -30,7 +30,8 @@ const TokenToolView = ({ newTokenName, setNewTokenName, isCreateTokenEnabled, cr
     const tokenOptions = tokens.map((token, index) => {
         return {
             index: index,
-            caption: `${token.name} (${TokenType[token.type]})`,
+            //caption: `${token.name} (${TokenType[token.type]})`,
+            caption: `${token.name}`,
         }
     }).filter((option) => option.caption !== undefined)
 
@@ -47,17 +48,16 @@ const TokenToolView = ({ newTokenName, setNewTokenName, isCreateTokenEnabled, cr
                 <ActionButton title='Create new Token' value={ <BorealisAddNewTokenIcon /> } onClick={ createToken } disabled={ (newTokenName === '') || (!isCreateTokenEnabled) } />
             </ControlPanelRow>
             <ControlPanelRow>
-                <TextInputSelector title='Choose Token' placeholder='Choose Token' value={ selectedTokenName } onSelectElement={ onSelectElement } label='Choose existing Map:' options={ tokenOptions } />
-                <ActionButton title='Select map' value={ <BorealisPlayIcon /> } onClick={ onSubmitSelectToken } disabled={ !isSubmitSelectionEnabled } />
+                <TextInputSelector title='Choose Token' placeholder='Choose Token' value={ selectedTokenName } onSelectElement={ onSelectElement } label='Choose existing Token:' options={ tokenOptions } />
+                <ActionButton title='Select token' value={ <BorealisPlayIcon /> } onClick={ onSubmitSelectToken } disabled={ !isSubmitSelectionEnabled } />
             </ControlPanelRow>
-            {
-                tokens.length > 0
-                    ? <ControlPanelRow>
-                        { selectedToken.map((token, index) => (
-                            <TokenConfig key={ `token${index}` } token={ token } />
-                        ))}
-                    </ControlPanelRow>
-                    : null
+            { selectedToken.length > 0
+                ? <ControlPanelRow>
+                    { selectedToken.map((token, index) => (
+                        <TokenConfig key={ `token${index}` } token={ token } />
+                    ))}
+                </ControlPanelRow>
+                : null
             }
         </ControlPanelSubcontainer>
     )
