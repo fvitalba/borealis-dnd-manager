@@ -36,6 +36,8 @@ import {
     IconCircleCheck,
     IconTag,
     IconTagOff,
+    IconQuestionMark,
+    IconDice,
 } from '@tabler/icons'
 // These icons were copied from https://github.com/la-moore/scarlab-icons/tree/master/react
 // I had to copy them, because they are written as JSX.Elements, whereas I need React Function Components
@@ -641,6 +643,31 @@ export const BorealisResetDrawingsIcon = (props: IconProps) => {
 
 export const BorealisResetFogIcon = (props: IconProps) => {
     return <IconCloudFog
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+// Chat Panel Icons
+export const BorealisChatHelpIcon = (props: IconProps) => {
+    return <IconQuestionMark
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisCloseChatIcon = (props: IconProps) => {
+    return <IconArrowBarRight
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisOpenChatIcon = (props: IconProps) => {
+    return <IconArrowBarLeft
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisRollDiceIcon = (props: IconProps) => {
+    return <IconDice
         size={ props.size ? props.size : defaultSize }
     />
 }

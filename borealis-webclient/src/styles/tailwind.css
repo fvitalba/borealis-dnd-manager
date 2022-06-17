@@ -859,6 +859,27 @@ h3 {
     @apply font-barbaro;
 }
 
+h4 {
+    @apply text-2xl;
+    @apply font-bold;
+    @apply subpixel-antialiased;
+    @apply text-center;
+    @apply text-text-active;
+    @apply tracking-wide;
+    @apply mb-4;
+    @apply font-barbaro;
+}
+
+h5 {
+    @apply text-xl;
+    @apply font-semibold;
+    @apply subpixel-antialiased;
+    @apply text-center;
+    @apply text-text-active;
+    @apply mb-2;
+    @apply font-barbaro;
+}
+
 a {
     @apply text-accent-medium;
 }
@@ -931,6 +952,168 @@ a:hover {
     @apply flex-auto;
     @apply flex-row;
     @apply space-x-2;
+}
+
+.borealis-chat-panel-container {
+    @apply flex;
+    @apply flex-col;
+    @apply z-chat-panel;
+    @apply bg-primary-dark;
+    @apply rounded;
+    @apply shadow-md;
+    @apply border-2;
+    @apply border-primary-medium;
+    @apply w-96;
+    @apply overflow-hidden;
+    @apply h-screen;
+    @apply absolute;
+    @apply top-0 right-0;
+    @apply opacity-100;
+    @apply bg-opacity-80;
+}
+
+.borealis-chat-panel-header-container {
+    @apply ml-6;
+    @apply mr-6;
+    @apply mt-8;
+    @apply pb-2;
+    @apply border-b-2;
+    @apply border-accent-medium;
+}
+
+.borealis-chat-panel-action-container {
+    @apply z-chat-panel;
+    @apply absolute;
+    @apply top-2 right-2;
+    @apply bg-primary-dark;
+    @apply flex;
+    @apply flex-row-reverse;
+}
+
+.borealis-chat-panel-action-container-collapsed {
+    @apply borealis-chat-panel-action-container;
+}
+
+.borealis-chat-panel-content-container {
+    @apply mt-4;
+    @apply ml-6;
+    @apply mr-6;
+    @apply h-full;
+    @apply overflow-clip;
+    @apply overflow-y-scroll;
+    @apply space-y-1;
+}
+
+.borealis-chat-panel-input-container {
+    @apply relative;
+    @apply flex;
+    @apply flex-row;
+    @apply pt-3;
+    @apply px-3;
+}
+
+.borealis-chat-panel-player-text {
+    @apply text-sm;
+    @apply font-bold;
+    @apply text-text-secondary;
+}
+
+.borealis-chat-panel-player-list-container {
+    @apply absolute;
+    @apply text-left;
+    @apply font-extrabold;
+    @apply content-center;
+    @apply items-center;
+    @apply align-middle;
+    @apply p-2;
+    @apply bg-primary-light;
+    @apply border-2;
+    @apply border-primary-lighter;
+    @apply rounded;
+    @apply shadow-md;
+    @apply w-5/6;
+    @apply mx-auto;
+}
+
+.borealis-chat-panel-player-entry {
+    @apply text-text-primary;
+}
+
+.borealis-chat-panel-own-message-container {
+    @apply border-2;
+    @apply rounded;
+    @apply bg-primary-medium;
+    @apply bg-opacity-50;
+    @apply border-accent-medium;
+    @apply p-1;
+    @apply mr-3;
+}
+
+.borealis-chat-panel-other-message-container {
+    @apply borealis-chat-panel-own-message-container;
+    @apply border-secondary-medium;
+    @apply mr-0;
+    @apply ml-3;
+}
+
+.borealis-chat-panel-message-info {
+    @apply flex;
+    @apply flex-row;
+}
+
+.borealis-chat-panel-message-info-username-own {
+    @apply font-bold;
+    @apply text-text-active;
+}
+
+.borealis-chat-panel-message-info-username-other {
+    @apply font-bold;
+    @apply text-text-primary;
+}
+
+.borealis-chat-panel-message-player-info {
+    @apply text-text-secondary;
+    @apply font-bold;
+    @apply text-sm;
+    @apply pl-1;
+    @apply align-text-bottom;
+}
+
+.borealis-chat-panel-message-content {
+    @apply text-text-primary;
+    @apply font-normal;
+}
+
+.borealis-chat-panel-whisper-content {
+    @apply text-text-whisper;
+    @apply italic;
+}
+
+.borealis-chat-panel-command-content {
+    @apply text-text-action;
+    @apply italic;
+}
+
+.borealis-chat-panel-error-content {
+    @apply text-text-error;
+    @apply font-bold;
+}
+
+.borealis-dice-roll-button-container {
+    @apply w-10;
+}
+
+.borealis-dice-roll-selector-container {
+    @apply absolute;
+    @apply z-chat-panel-roll;
+    @apply border-2;
+    @apply border-accent-dark;
+    @apply rounded;
+    @apply shadow-md;
+    @apply flex;
+    @apply flex-col;
+    @apply bg-primary-dark;
+    @apply text-text-primary;
 }
 
 .borealis-text-input-container {

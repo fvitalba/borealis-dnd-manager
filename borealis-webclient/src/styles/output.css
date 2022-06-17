@@ -1868,6 +1868,33 @@ h3 {
   font-family: Barbaro, Serif;
 }
 
+h4 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+  text-align: center;
+  --tw-text-opacity: 1;
+  color: rgb(57 208 178 / var(--tw-text-opacity));
+  letter-spacing: 0.025em;
+  margin-bottom: 1rem;
+  font-family: Barbaro, Serif;
+}
+
+h5 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+  text-align: center;
+  --tw-text-opacity: 1;
+  color: rgb(57 208 178 / var(--tw-text-opacity));
+  margin-bottom: 0.5rem;
+  font-family: Barbaro, Serif;
+}
+
 a {
   --tw-text-opacity: 1;
   color: rgb(57 208 178 / var(--tw-text-opacity));
@@ -1967,6 +1994,217 @@ a:hover {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.5rem * var(--tw-space-x-reverse));
   margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.borealis-chat-panel-container {
+  display: flex;
+  flex-direction: column;
+  z-index: 110;
+  background-color: rgb(41 41 45 / var(--tw-bg-opacity));
+  border-radius: 0.25rem;
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  border-width: 2px;
+  --tw-border-opacity: 1;
+  border-color: rgb(52 53 58 / var(--tw-border-opacity));
+  width: 24rem;
+  overflow: hidden;
+  height: 100vh;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  opacity: 1;
+  --tw-bg-opacity: 0.8;
+}
+
+.borealis-chat-panel-header-container {
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+  margin-top: 2rem;
+  padding-bottom: 0.5rem;
+  border-bottom-width: 2px;
+  --tw-border-opacity: 1;
+  border-color: rgb(57 208 178 / var(--tw-border-opacity));
+}
+
+.borealis-chat-panel-action-container {
+  z-index: 110;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(41 41 45 / var(--tw-bg-opacity));
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.borealis-chat-panel-action-container-collapsed {
+  z-index: 110;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(41 41 45 / var(--tw-bg-opacity));
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.borealis-chat-panel-content-container {
+  margin-top: 1rem;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+  height: 100%;
+  overflow: clip;
+  overflow-y: scroll;
+}
+
+.borealis-chat-panel-content-container > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.25rem * var(--tw-space-y-reverse));
+}
+
+.borealis-chat-panel-input-container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  padding-top: 0.75rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.borealis-chat-panel-player-text {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 700;
+  --tw-text-opacity: 1;
+  color: rgb(176 177 179 / var(--tw-text-opacity));
+}
+
+.borealis-chat-panel-player-list-container {
+  position: absolute;
+  text-align: left;
+  font-weight: 800;
+  align-content: center;
+  align-items: center;
+  vertical-align: middle;
+  padding: 0.5rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(78 79 83 / var(--tw-bg-opacity));
+  border-width: 2px;
+  --tw-border-opacity: 1;
+  border-color: rgb(117 118 121 / var(--tw-border-opacity));
+  border-radius: 0.25rem;
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  width: 83.333333%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.borealis-chat-panel-player-entry {
+  --tw-text-opacity: 1;
+  color: rgb(235 235 236 / var(--tw-text-opacity));
+}
+
+.borealis-chat-panel-own-message-container {
+  border-width: 2px;
+  border-radius: 0.25rem;
+  background-color: rgb(52 53 58 / var(--tw-bg-opacity));
+  --tw-bg-opacity: 0.5;
+  --tw-border-opacity: 1;
+  border-color: rgb(57 208 178 / var(--tw-border-opacity));
+  padding: 0.25rem;
+  margin-right: 0.75rem;
+}
+
+.borealis-chat-panel-other-message-container {
+  border-width: 2px;
+  border-radius: 0.25rem;
+  background-color: rgb(52 53 58 / var(--tw-bg-opacity));
+  --tw-bg-opacity: 0.5;
+  border-color: rgb(57 208 178 / var(--tw-border-opacity));
+  padding: 0.25rem;
+  margin-right: 0.75rem;
+  --tw-border-opacity: 1;
+  border-color: rgb(64 91 135 / var(--tw-border-opacity));
+  margin-right: 0px;
+  margin-left: 0.75rem;
+}
+
+.borealis-chat-panel-message-info {
+  display: flex;
+  flex-direction: row;
+}
+
+.borealis-chat-panel-message-info-username-own {
+  font-weight: 700;
+  --tw-text-opacity: 1;
+  color: rgb(57 208 178 / var(--tw-text-opacity));
+}
+
+.borealis-chat-panel-message-info-username-other {
+  font-weight: 700;
+  --tw-text-opacity: 1;
+  color: rgb(235 235 236 / var(--tw-text-opacity));
+}
+
+.borealis-chat-panel-message-player-info {
+  --tw-text-opacity: 1;
+  color: rgb(176 177 179 / var(--tw-text-opacity));
+  font-weight: 700;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  padding-left: 0.25rem;
+  vertical-align: text-bottom;
+}
+
+.borealis-chat-panel-message-content {
+  --tw-text-opacity: 1;
+  color: rgb(235 235 236 / var(--tw-text-opacity));
+  font-weight: 400;
+}
+
+.borealis-chat-panel-whisper-content {
+  --tw-text-opacity: 1;
+  color: rgb(64 91 135 / var(--tw-text-opacity));
+  font-style: italic;
+}
+
+.borealis-chat-panel-command-content {
+  --tw-text-opacity: 1;
+  color: rgb(57 208 178 / var(--tw-text-opacity));
+  font-style: italic;
+}
+
+.borealis-chat-panel-error-content {
+  --tw-text-opacity: 1;
+  color: rgb(255 0 0 / var(--tw-text-opacity));
+  font-weight: 700;
+}
+
+.borealis-dice-roll-button-container {
+  width: 2.5rem;
+}
+
+.borealis-dice-roll-selector-container {
+  position: absolute;
+  z-index: 120;
+  border-width: 2px;
+  --tw-border-opacity: 1;
+  border-color: rgb(40 146 125 / var(--tw-border-opacity));
+  border-radius: 0.25rem;
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(52 53 58 / var(--tw-bg-opacity));
+  --tw-bg-opacity: 0.5;
+  --tw-text-opacity: 1;
+  color: rgb(235 235 236 / var(--tw-text-opacity));
 }
 
 .borealis-text-input-container {

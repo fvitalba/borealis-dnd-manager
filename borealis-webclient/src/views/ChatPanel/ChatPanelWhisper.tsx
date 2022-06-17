@@ -1,5 +1,9 @@
 import React, { forwardRef, ForwardedRef } from 'react'
 import Message from '../../classes/Message'
+import MessageType from '../../enums/MessageType'
+import ChatPanelMessageContainer from '../GenericViews/ChatPanelMessageContainer'
+import ChatPanelMessageContentContainer from '../GenericViews/ChatPanelMessageContentContainer'
+import ChatPanelMessageInfo from './ChatPanelMessageInfo'
 
 interface ChatPanelWhisperProps {
     message: Message,
@@ -18,13 +22,10 @@ const ChatPanelWhisper = forwardRef(({ message, username, playerInfo }: ChatPane
         return <></>
 
     return (
-        <div className='chat-panel-message' ref={ ref }>
-            <div className='chat-panel-message-info'>
-                <div className='chat-panel-message-username' >{ message.username }</div>
-                { playerInfo ? <div className='chat-panel-message-player-info'>| { playerInfo }</div> : null }
-            </div>
-            <div className='chat-panel-message-content'>{ textToShow }</div>
-        </div>
+        <ChatPanelMessageContainer ref={ ref } property={ username === message.username ? 'own' : 'other'}>
+            <ChatPanelMessageInfo message={ message } username={ username } playerInfo={ playerInfo } />
+            <ChatPanelMessageContentContainer messageType={ MessageType.Whisper }>{ textToShow }</ChatPanelMessageContentContainer>
+        </ChatPanelMessageContainer>
     )
 })
 ChatPanelWhisper.displayName = 'ChatPanelWhisper'
