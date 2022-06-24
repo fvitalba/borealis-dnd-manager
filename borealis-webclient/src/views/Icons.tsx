@@ -44,6 +44,8 @@ import {
     IconDeviceFloppy,
     IconUserOff,
     IconHeartPlus,
+    IconAlien,
+    IconUser,
 } from '@tabler/icons'
 // These icons were copied from https://github.com/la-moore/scarlab-icons/tree/master/react
 // I had to copy them, because they are written as JSX.Elements, whereas I need React Function Components
@@ -603,14 +605,26 @@ export const BorealisTokenDeselectedIcon = (props: IconProps) => {
     />
 }
 
-export const BorealisShowTokenName = (props: IconProps) => {
+export const BorealisShowTokenNameIcon = (props: IconProps) => {
     return <IconTag
         size={ props.size ? props.size : defaultSize }
     />
 }
 
-export const BorealisHideTokenName = (props: IconProps) => {
+export const BorealisHideTokenNameIcon = (props: IconProps) => {
     return <IconTagOff
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisTokenIsNpcIcon = (props: IconProps) => {
+    return <IconAlien
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisTokenIsPcIcon = (props: IconProps) => {
+    return <IconUser
         size={ props.size ? props.size : defaultSize }
     />
 }

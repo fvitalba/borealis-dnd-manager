@@ -16,8 +16,8 @@ import {
     BorealisHideTokenIcon,
     BorealisTokenSelectedIcon,
     BorealisTokenDeselectedIcon,
-    BorealisShowTokenName,
-    BorealisHideTokenName,
+    BorealisShowTokenNameIcon,
+    BorealisHideTokenNameIcon,
 } from './Icons'
 
 interface HostTokenConfigViewProps {
@@ -84,7 +84,7 @@ const HostTokenConfigView = ({ tokenTypes, tokenConditions, tokenSizes, maps, to
                 <OptionSelector value={ token.type } onChange={ onTypeSelect } title='which type' options={ tokenTypeOptions } />
                 <ActionButton value={ token.selected ? <BorealisTokenSelectedIcon /> : <BorealisTokenDeselectedIcon /> } onClick={ (e) => selectToken(e) } title={ token.selected ? 'Selected' : 'Unselected' } />
                 <OptionSelector value={ token.condition } onChange={ onConditionSelect } title='which condition' options={ tokenConditionOptions } />
-                <ActionButton value={ token.showLabel ? <BorealisShowTokenName /> : <BorealisHideTokenName /> } onClick={ (e) => onToggle('showLabel', e) } title={ token.showLabel ? 'Label shown' : 'Label hidden' } />
+                <ActionButton value={ token.showLabel ? <BorealisShowTokenNameIcon /> : <BorealisHideTokenNameIcon /> } onClick={ (e) => onToggle('showLabel', e) } title={ token.showLabel ? 'Label shown' : 'Label hidden' } />
                 <OptionSelector value={ token.size } onChange={ onSizeSelect } title='which size' options={ tokenSizeOptions } />
                 <OptionSelector value={ token.mapId } onChange={ onMapSelect } title='which map' options={ tokenMapOptions } />
             </ControlPanelRow>

@@ -474,12 +474,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .h-8 {
   height: 2rem;
 }
-.w-48 {
-  width: 12rem;
-}
-.w-96 {
-  width: 24rem;
-}
 .w-12 {
   width: 3rem;
 }
@@ -2747,6 +2741,8 @@ a:hover {
   font-size: 1rem;
   line-height: 1.5rem;
   width: 15rem;
+  display: flex;
+  flex-direction: row;
 }
 
 .borealis-text-input-option:hover {
@@ -2767,6 +2763,8 @@ a:hover {
   font-size: 1rem;
   line-height: 1.5rem;
   width: 15rem;
+  display: flex;
+  flex-direction: row;
 }
 
 .borealis-text-input-option-selected:hover {
@@ -2784,6 +2782,15 @@ a:hover {
   color: rgb(40 146 125 / var(--tw-text-opacity));
   --tw-border-opacity: 1;
   border-color: rgb(78 79 83 / var(--tw-border-opacity));
+}
+
+.borealis-text-input-option-icon {
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.borealis-text-input-option-caption {
+    
 }
 
 .borealis-token-image {

@@ -10,6 +10,8 @@ import ActionButton from './GenericViews/ActionButton'
 import {
     BorealisAddNewTokenIcon,
     BorealisPlayIcon,
+    BorealisTokenIsNpcIcon,
+    BorealisTokenIsPcIcon,
 } from './Icons'
 
 interface TokenToolViewProps {
@@ -32,6 +34,7 @@ const TokenToolView = ({ newTokenName, setNewTokenName, isCreateTokenEnabled, cr
             index: index,
             //caption: `${token.name} (${TokenType[token.type]})`,
             caption: `${token.name}`,
+            icon: token.type === TokenType.PC ? <BorealisTokenIsPcIcon /> : <BorealisTokenIsNpcIcon />,
         }
     }).filter((option) => option.caption !== undefined)
 

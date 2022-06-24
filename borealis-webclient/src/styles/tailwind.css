@@ -1493,6 +1493,8 @@ a:hover {
     @apply py-2;
     @apply text-base;
     @apply w-60;
+    @apply flex;
+    @apply flex-row;
 }
 
 .borealis-text-input-option:hover {
@@ -1507,6 +1509,14 @@ a:hover {
     @apply borealis-text-input-option;
     @apply text-accent-dark;
     @apply border-primary-light;
+}
+
+.borealis-text-input-option-icon {
+    @apply w-fit;
+}
+
+.borealis-text-input-option-caption {
+    
 }
 
 .borealis-token-image {

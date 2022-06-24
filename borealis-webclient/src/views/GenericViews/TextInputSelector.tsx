@@ -1,8 +1,9 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, ReactNode, useState } from 'react'
 
 interface TextInputOption {
     index: number,
     caption: string,
+    icon?: ReactNode,
 }
 
 interface TextInputSelectorProps {
@@ -56,7 +57,10 @@ const TextInputSelector = ({ title, placeholder, value, onSelectElement, label, 
                 <div className='borealis-text-input-options-container'>
                     { filteredOptions.map((opt) => {
                         const optionClass = opt.caption === value ? 'borealis-text-input-option-selected' : 'borealis-text-input-option'
-                        return (<div className={ optionClass } key={ opt.index } onClick={ () => onSelectOption(opt) }>{ opt.caption }</div>)
+                        return (<div className={ optionClass } key={ opt.index } onClick={ () => onSelectOption(opt) }>
+                            <div className='borealis-text-input-option-icon'>{ opt.icon }</div>
+                            <div className='borealis-text-input-option-caption'>{ opt.caption }</div>
+                        </div>)
                     })
                     }
                 </div>
