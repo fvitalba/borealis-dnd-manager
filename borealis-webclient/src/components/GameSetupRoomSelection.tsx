@@ -142,8 +142,13 @@ const GameSetupRoomSelection = ({ metadataState, settingsState, setGameSettings,
                         overwriteChat(dbState.chatState.messages)
                     if (dbState.characterState) {
                         setCharacters(dbState.characterState.characters)
-                        if (dbState.characterState.currentCharacterGuid !== '')
+                        if (dbState.characterState.currentCharacterGuid !== '') {
                             assignCharacter(dbState.characterState.currentCharacterGuid)
+                        } else {
+                            const firstAssignedCharacter = dbState.characterState.characters.filter((character) => character.username === settingsState.username)[0]
+                            if (firstAssignedCharacter.guid !== '')
+                                assignCharacter(firstAssignedCharacter.guid)
+                        }
                     }
                     if (dbState.usersState)
                         setUsersFromAPI(dbState.usersState.users)

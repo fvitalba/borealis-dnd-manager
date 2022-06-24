@@ -32,7 +32,6 @@ const TokenToolView = ({ newTokenName, setNewTokenName, isCreateTokenEnabled, cr
     const tokenOptions = tokens.map((token, index) => {
         return {
             index: index,
-            //caption: `${token.name} (${TokenType[token.type]})`,
             caption: `${token.name}`,
             icon: token.type === TokenType.PC ? <BorealisTokenIsPcIcon /> : <BorealisTokenIsNpcIcon />,
         }
