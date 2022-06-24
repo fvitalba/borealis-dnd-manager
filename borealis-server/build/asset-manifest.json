@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.ee5c074e.css",
+    "main.js": "/static/js/main.5ab90968.js",
+    "static/media/barbaro.ttf": "/static/media/barbaro.4a65b6e34caa5c7a63f6.ttf",
+    "index.html": "/index.html",
+    "main.ee5c074e.css.map": "/static/css/main.ee5c074e.css.map",
+    "main.5ab90968.js.map": "/static/js/main.5ab90968.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ee5c074e.css",
+    "static/js/main.5ab90968.js"
+  ]
+}
