@@ -561,6 +561,18 @@ export const BorealisDeleteMapIcon = (props: IconProps) => {
     />
 }
 
+export const BorealisMapSelectedIcon = (props: IconProps) => {
+    return <IconSquareCheck
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisMapUnselectedIcon = (props: IconProps) => {
+    return <IconSquare
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
 
 // Token Control Icons
 export const BorealisAddNewTokenIcon = (props: IconProps) => {

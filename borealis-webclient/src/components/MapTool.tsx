@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
+import Game from '../classes/Game'
 import Map from '../classes/Map'
 import { pushCreateMap, useWebSocket } from '../hooks/useSocket'
 import StateInterface from '../interfaces/StateInterface'
@@ -25,10 +26,11 @@ const initialMapToolState = (): MapToolState => {
 interface MapToolProps {
     toggleOnMaps: boolean,
     mapState: MapState,
+    gameState: Game,
     addMap: (arg0: Map) => void,
 }
 
-const MapTool = ({ toggleOnMaps, mapState, addMap }: MapToolProps) => {
+const MapTool = ({ toggleOnMaps, mapState, gameState, addMap }: MapToolProps) => {
     const [mapToolState, setMapToolState] = useState(initialMapToolState())
     const webSocketContext = useWebSocket()
 
@@ -84,6 +86,7 @@ const MapTool = ({ toggleOnMaps, mapState, addMap }: MapToolProps) => {
         toggleOnMaps ?
             <MapToolView
                 maps={ mapState.maps }
+                activeMapId={ gameState.currentMapId }
                 newMapName={ mapToolState.newMapName }
                 setNewMapName={ onMapNameChange }
                 isCreateMapEnabled={ isCreateMapEnabled() }
@@ -102,6 +105,7 @@ const MapTool = ({ toggleOnMaps, mapState, addMap }: MapToolProps) => {
 const mapStateToProps = (state: StateInterface) => {
     return {
         mapState: state.map,
+        gameState: state.game,
     }
 }
 

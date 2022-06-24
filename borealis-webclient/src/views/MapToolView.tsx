@@ -3,6 +3,8 @@ import Map from '../classes/Map'
 import MapConfig from '../components/MapConfig'
 import {
     BorealisAddNewMapIcon,
+    BorealisMapSelectedIcon,
+    BorealisMapUnselectedIcon,
     BorealisPlayIcon,
 } from './Icons'
 import ControlPanelSubcontainer from './GenericViews/ControlPanelSubcontainer'
@@ -13,6 +15,7 @@ import ActionButton from './GenericViews/ActionButton'
 
 interface MapToolViewProps {
     maps: Array<Map>,
+    activeMapId: number,
     newMapName: string,
     setNewMapName: (e: ChangeEvent<HTMLInputElement>) => void,
     isCreateMapEnabled: boolean,
@@ -25,11 +28,12 @@ interface MapToolViewProps {
     showSelectedMap: boolean,
 }
 
-const MapToolView = ({ maps, newMapName, setNewMapName, isCreateMapEnabled, createMap, selectedMapName, currSelectedMapName, onMapSelect, onSubmitSelectMap, isSubmitSelectionEnabled, showSelectedMap }: MapToolViewProps) => {
+const MapToolView = ({ maps, activeMapId, newMapName, setNewMapName, isCreateMapEnabled, createMap, selectedMapName, currSelectedMapName, onMapSelect, onSubmitSelectMap, isSubmitSelectionEnabled, showSelectedMap }: MapToolViewProps) => {
     const mapOptions = maps.map((map, index) => {
         return {
             index: index,
             caption: `${map.name}`,
+            icon: map.id === activeMapId ? <BorealisMapSelectedIcon /> : <BorealisMapUnselectedIcon />
         }
     }).filter((option) => option.caption !== undefined)
 
