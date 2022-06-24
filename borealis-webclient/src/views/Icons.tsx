@@ -1,13 +1,63 @@
 import React, { CSSProperties } from 'react'
+import {
+    IconPlayerPlay,
+    IconArrowBarLeft,
+    IconArrowBarRight,
+    IconSettings,
+    IconMap,
+    IconUsers,
+    IconChartBar,
+    IconBackpack,
+    IconBook,
+    IconMouse,
+    IconMouseOff,
+    IconLink,
+    IconLiveView,
+    IconWorldDownload,
+    IconWorldUpload,
+    IconCloud,
+    IconCloudOff,
+    IconHandFinger,
+    IconWriting,
+    IconWind,
+    IconPlus,
+    IconSquare,
+    IconSquareCheck,
+    IconTrash,
+    IconEraser,
+    IconPencil,
+    IconPencilOff,
+    IconColorSwatch,
+    IconCloudFog,
+    IconCopy,
+    IconEye,
+    IconEyeOff,
+    IconCircleDashed,
+    IconCircleCheck,
+    IconTag,
+    IconTagOff,
+    IconQuestionMark,
+    IconDice,
+    IconRotate,
+    IconSquareX,
+    IconUserPlus,
+    IconDeviceFloppy,
+    IconUserOff,
+    IconHeartPlus,
+    IconAlien,
+    IconUser,
+} from '@tabler/icons'
 // These icons were copied from https://github.com/la-moore/scarlab-icons/tree/master/react
 // I had to copy them, because they are written as JSX.Elements, whereas I need React Function Components
 const defaultWidth = '33'
 const defaultHeight = '33'
+const defaultSize = 24
 
 interface IconProps {
     className?: string,
     id?: string,
     style?: CSSProperties,
+    size?: number,
 }
 
 export const PlusCircleOutlineIcon = (props: IconProps) => {
@@ -361,4 +411,340 @@ export const LinkOutlineIcon = (props: IconProps) => {
         <path d='M15 16L17 16C18.8856 16 19.8284 16 20.4142 15.4142C21 14.8284 21 13.8856 21 12V12C21 10.1144 21 9.17157 20.4142 8.58578C19.8284 8 18.8856 8 17 8L15 8' />
         <path d='M8 12H16' />
     </svg>
+}
+
+
+
+
+// New Icons to use
+// Generic Icons
+export const BorealisPlayIcon = (props: IconProps) => {
+    return <IconPlayerPlay
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisLoadingIcon = (props: IconProps) => {
+    return <IconRotate
+        size={ props.size ? props.size : defaultSize }
+        className={ props.className }
+    />
+}
+
+export const BorealisCloseBannerIcon = (props: IconProps) => {
+    return <IconSquareX
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+// Control Panel Icons
+export const BorealisCollapseIcon = (props: IconProps) => {
+    return <IconArrowBarLeft
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisExpandIcon = (props: IconProps) => {
+    return <IconArrowBarRight
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisUserSettingsIcon = (props: IconProps) => {
+    return <IconSettings
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisMapControlIcon = (props: IconProps) => {
+    return <IconMap
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisTokenControlIcon = (props: IconProps) => {
+    return <IconUsers
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisCharacterStatsControlIcon = (props: IconProps) => {
+    return <IconChartBar
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisCharacterInventoryControlIcon = (props: IconProps) => {
+    return <IconBackpack
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisCharacterSpellsControlIcon = (props: IconProps) => {
+    return <IconBook
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+// User Settings Icons
+export const BorealisShareMouseIcon = (props: IconProps) => {
+    return <IconMouse
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisStopShareMouseIcon = (props: IconProps) => {
+    return <IconMouseOff
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisShareLinkIcon = (props: IconProps) => {
+    return <IconLink
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisDefaultWorldIcon = (props: IconProps) => {
+    return <IconLiveView
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisShowFogIcon = (props: IconProps) => {
+    return <IconCloud
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisHideFogIcon = (props: IconProps) => {
+    return <IconCloudOff
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisSaveWorldIcon = (props: IconProps) => {
+    return <IconWorldUpload
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisLoadWorldIcon = (props: IconProps) => {
+    return <IconWorldDownload
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+
+// Map Control Icons
+export const BorealisAddNewMapIcon = (props: IconProps) => {
+    return <IconPlus
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisSelectedMapIcon = (props: IconProps) => {
+    return <IconSquareCheck
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisUnselectedMapIcon = (props: IconProps) => {
+    return <IconSquare
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisDeleteMapIcon = (props: IconProps) => {
+    return <IconTrash
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisMapSelectedIcon = (props: IconProps) => {
+    return <IconSquareCheck
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisMapUnselectedIcon = (props: IconProps) => {
+    return <IconSquare
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+
+// Token Control Icons
+export const BorealisAddNewTokenIcon = (props: IconProps) => {
+    return <IconPlus
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisDeleteTokenIcon = (props: IconProps) => {
+    return <IconTrash
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisDuplicateTokenIcon = (props: IconProps) => {
+    return <IconCopy
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisShowTokenIcon = (props: IconProps) => {
+    return <IconEye
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisHideTokenIcon = (props: IconProps) => {
+    return <IconEyeOff
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisTokenSelectedIcon = (props: IconProps) => {
+    return <IconCircleCheck
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisTokenDeselectedIcon = (props: IconProps) => {
+    return <IconCircleDashed
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisShowTokenNameIcon = (props: IconProps) => {
+    return <IconTag
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisHideTokenNameIcon = (props: IconProps) => {
+    return <IconTagOff
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisTokenIsNpcIcon = (props: IconProps) => {
+    return <IconAlien
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisTokenIsPcIcon = (props: IconProps) => {
+    return <IconUser
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+
+// Control Tool Icons
+export const BorealisMoveToolIcon = (props: IconProps) => {
+    return <IconHandFinger
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisDrawToolIcon = (props: IconProps) => {
+    return <IconWriting
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisFogToolIcon = (props: IconProps) => {
+    return <IconWind
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisFreeHandDrawIcon = (props: IconProps) => {
+    return <IconPencil
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisFreeHandEreaseIcon = (props: IconProps) => {
+    return <IconEraser
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisColorPickerIcon = (props: IconProps) => {
+    return <IconColorSwatch
+        size={ props.size ? props.size : defaultSize }
+        style={ props.style }
+    />
+}
+
+export const BorealisResetDrawingsIcon = (props: IconProps) => {
+    return <IconPencilOff
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisResetFogIcon = (props: IconProps) => {
+    return <IconCloudFog
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+
+// Chat Panel Icons
+export const BorealisChatHelpIcon = (props: IconProps) => {
+    return <IconQuestionMark
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisCloseChatIcon = (props: IconProps) => {
+    return <IconArrowBarRight
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisOpenChatIcon = (props: IconProps) => {
+    return <IconArrowBarLeft
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisRollDiceIcon = (props: IconProps) => {
+    return <IconDice
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+// Character Panel Icons
+export const BorealisCreateCharacterIcon = (props: IconProps) => {
+    return <IconUserPlus
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisSaveCharacterIcon = (props: IconProps) => {
+    return <IconDeviceFloppy
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisDeleteCharacterIcon = (props: IconProps) => {
+    return <IconUserOff
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisAddCharacterClassIcon = (props: IconProps) => {
+    return <IconPlus
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisAddCharacterHitDiceIcon = (props: IconProps) => {
+    return <IconHeartPlus
+        size={ props.size ? props.size : defaultSize }
+    />
 }

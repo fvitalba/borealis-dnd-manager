@@ -21,6 +21,7 @@ const ToggleButton = ({ propertyName, title, value, controlPanelState, setContro
         // and then only allowing propertyName to be a string within that collection of allowed strings
         //TODO: check where the ToggleButton is used and verify that it's only used in conjunction with the control panel state
         // if this is not the case, verify how we can selectively update the control panel state
+        /*
         setControlPanelState({
             ...controlPanelState,
             toggleOnUser: false,
@@ -31,8 +32,9 @@ const ToggleButton = ({ propertyName, title, value, controlPanelState, setContro
             toggleOnCharacterSpells: false,
             [toggleKey]: !controlPanelState[toggleKey],
         })
+        */
     }
-    const isSelected = controlPanelState[toggleKey]
+    const isSelected = false //controlPanelState[toggleKey]
     return (
         <Button title={ title } value={ value } onClick={ onClick } isSelected={ isSelected } />
     )

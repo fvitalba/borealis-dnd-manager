@@ -84,14 +84,13 @@ const GameSetupRoomSelection = ({ metadataState, settingsState, setGameSettings,
         })
     }
 
-    const onRoomSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-        const selectedRoomName = e.target.value
-        const selectedRoom = gameSetupRoomSelectionState.availableRooms.filter((room) => room.name === selectedRoomName)[0]
+    const onRoomSelect = (roomIndex: number) => {
+        const selectedRoom = gameSetupRoomSelectionState.availableRooms.filter((room, index) => index === roomIndex)[0]
         const selectedRoomId = selectedRoom.id
         const userType: UserType = selectedRoom.userRole
         setGameSetupRoomSelectionState({
             ...gameSetupRoomSelectionState,
-            selectedRoomName: selectedRoomName,
+            selectedRoomName: selectedRoom.name,
             roomId: selectedRoomId,
             userType: userType,
             newRoomName: '',
@@ -143,8 +142,13 @@ const GameSetupRoomSelection = ({ metadataState, settingsState, setGameSettings,
                         overwriteChat(dbState.chatState.messages)
                     if (dbState.characterState) {
                         setCharacters(dbState.characterState.characters)
-                        if (dbState.characterState.currentCharacterGuid !== '')
+                        if (dbState.characterState.currentCharacterGuid !== '') {
                             assignCharacter(dbState.characterState.currentCharacterGuid)
+                        } else {
+                            const firstAssignedCharacter = dbState.characterState.characters.filter((character) => character.username === settingsState.username)[0]
+                            if (firstAssignedCharacter.guid !== '')
+                                assignCharacter(firstAssignedCharacter.guid)
+                        }
                     }
                     if (dbState.usersState)
                         setUsersFromAPI(dbState.usersState.users)

@@ -1,8 +1,8 @@
 import React, { ChangeEvent } from 'react'
 import { CharacterClassLevel } from '../../classes/Character'
 import CharacterClass from '../../enums/CharacterClass'
-import Button from '../Button'
-import { PlusSquareSolidIcon } from '../Icons'
+import ActionButton from '../GenericViews/ActionButton'
+import { BorealisAddCharacterClassIcon } from '../Icons'
 
 interface CharacterClassLevelInputViewProps {
     characterClass: Array<CharacterClassLevel>,
@@ -46,7 +46,7 @@ const CharacterClassLevelInputView = ({ characterClass, availableCharacterClasse
             })}
             { showAddCharacterClass
                 ? <div className='select-character-input-container'>
-                    <Button title='Add new Class' value={ <PlusSquareSolidIcon /> } onClick={ addCharacterClass } />
+                    <ActionButton title='Add new Class' value={ <BorealisAddCharacterClassIcon /> } onClick={ addCharacterClass } />
                 </div>
                 : null
             }

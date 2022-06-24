@@ -2,14 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-h1 {
-    @apply text-3xl;
-    @apply font-extrabold;
-    @apply subpixel-antialiased;
-    @apply text-center;
-    @apply text-secondary-600;
-}
-
 .game-setup-container {
     @apply w-full;
     @apply container;
@@ -598,9 +590,6 @@ h1 {
 .drawing {
     @apply z-drawing;
     @apply absolute;
-    @apply border-dashed;
-    @apply border-2;
-    @apply border-accent-500;
 }
 
 .fog {
@@ -823,4 +812,778 @@ h1 {
 
 .debug-overlay-value {
     @apply italic;
+}
+
+
+
+
+
+@font-face {
+    font-family: "Barbaro";
+    src: url("./barbaro.ttf");
+}
+
+body {
+    @apply bg-empty-dark;
+}
+
+h1 {
+    @apply text-3xl;
+    @apply font-extrabold;
+    @apply subpixel-antialiased;
+    @apply text-center;
+    @apply text-accent-medium;
+    @apply tracking-wide;
+    @apply mb-6;
+    @apply font-barbaro;
+}
+
+h2 {
+    @apply text-2xl;
+    @apply font-bold;
+    @apply subpixel-antialiased;
+    @apply text-center;
+    @apply text-text-secondary;
+    @apply tracking-wide;
+    @apply mb-4;
+    @apply font-barbaro;
+}
+
+h3 {
+    @apply text-xl;
+    @apply font-semibold;
+    @apply subpixel-antialiased;
+    @apply text-center;
+    @apply text-text-secondary;
+    @apply mb-2;
+    @apply font-barbaro;
+}
+
+h4 {
+    @apply text-2xl;
+    @apply font-bold;
+    @apply subpixel-antialiased;
+    @apply text-center;
+    @apply text-text-active;
+    @apply tracking-wide;
+    @apply mb-4;
+    @apply font-barbaro;
+}
+
+h5 {
+    @apply text-xl;
+    @apply font-semibold;
+    @apply subpixel-antialiased;
+    @apply text-center;
+    @apply text-text-active;
+    @apply mb-2;
+    @apply font-barbaro;
+}
+
+a {
+    @apply text-accent-medium;
+}
+
+a:hover {
+    @apply text-accent-light;
+}
+
+.borealis-background {
+    @apply z-map;
+    @apply absolute;
+}
+
+.borealis-overlay {
+    @apply z-overlay;
+    @apply absolute;
+    @apply pointer-events-none;
+}
+
+.borealis-drawing {
+    @apply z-drawing;
+    @apply absolute;
+}
+
+.borealis-fog {
+    @apply z-fog;
+    @apply absolute;
+    @apply opacity-100;
+}
+
+.borealis-passthrough {
+    @apply pointer-events-none;
+}
+
+.borealis-cursor-layer {
+    @apply z-cursors;
+    @apply pointer-events-none;
+    @apply absolute;
+    @apply opacity-75;
+    @apply text-sm;
+}
+
+.borealis-token-layer {
+    @apply relative;
+}
+
+.borealis-cursor {
+    @apply block;
+    @apply absolute;
+}
+
+.borealis-loading-overlay {
+    @apply top-0;
+    @apply bottom-0;
+    @apply w-full;
+    @apply h-screen;
+    @apply mx-auto;
+    @apply flex;
+    @apply flex-col;
+    @apply justify-center;
+    @apply content-center;
+    @apply items-center;
+    @apply fixed;
+    @apply bg-primary-dark;
+    @apply bg-opacity-60;
+    @apply z-loading;
+    @apply text-text-primary;
+}
+
+.borealis-loading-task-list {
+    @apply text-center;
+    @apply content-center;
+    @apply text-text-primary;
+    @apply font-extrabold;
+    @apply text-sm;
+    @apply flex;
+    @apply flex-col;
+    @apply mt-5;
+}
+
+.borealis-loading-task {
+    @apply flex;
+    @apply flex-row;
+}
+
+.borealis-form-container {
+    @apply flex;
+    @apply flex-col;
+    @apply mx-auto;
+    @apply z-control-panel;
+    @apply bg-primary-dark;
+    @apply rounded;
+    @apply shadow-md;
+    @apply p-8;
+    @apply w-1/4;
+    @apply min-w-fit;
+    @apply border-2;
+    @apply border-primary-medium;
+}
+
+.borealis-form-row {
+    @apply flex;
+    @apply flex-auto;
+    @apply pt-2;
+    @apply pb-2;
+    @apply space-x-4;
+}
+
+.borealis-control-panel-container {
+    @apply flex;
+    @apply flex-col;
+    @apply z-control-panel;
+    @apply bg-primary-dark;
+    @apply rounded;
+    @apply shadow-md;
+    @apply border-2;
+    @apply border-primary-medium;
+    @apply basis-1/3;
+    @apply mt-2;
+    @apply ml-2;
+    @apply relative;
+    @apply max-h-full;
+    @apply w-fit;
+    @apply overflow-y-auto;
+    @apply opacity-100;
+    @apply bg-opacity-80;
+    @apply pl-1;
+    @apply pr-1;
+}
+
+.borealis-control-panel-subcontainer {
+    @apply flex;
+    @apply flex-col;
+    @apply w-full;
+}
+
+.borealis-control-panel-row {
+    @apply flex;
+    @apply flex-auto;
+    @apply pt-2;
+    @apply pb-2;
+    @apply space-x-2;
+}
+
+.borealis-control-panel-row-group {
+    @apply flex;
+    @apply flex-auto;
+    @apply flex-row;
+    @apply space-x-2;
+}
+
+.borealis-chat-panel-container {
+    @apply flex;
+    @apply flex-col;
+    @apply z-chat-panel;
+    @apply bg-primary-dark;
+    @apply rounded;
+    @apply shadow-md;
+    @apply border-2;
+    @apply border-primary-medium;
+    @apply w-96;
+    @apply overflow-hidden;
+    @apply h-screen;
+    @apply absolute;
+    @apply top-0 right-0;
+    @apply opacity-100;
+    @apply bg-opacity-80;
+}
+
+.borealis-chat-panel-header-container {
+    @apply ml-6;
+    @apply mr-6;
+    @apply mt-8;
+    @apply pb-2;
+    @apply border-b-2;
+    @apply border-accent-medium;
+}
+
+.borealis-chat-panel-action-container {
+    @apply z-chat-panel;
+    @apply absolute;
+    @apply top-2 right-2;
+    @apply bg-primary-dark;
+    @apply flex;
+    @apply flex-row-reverse;
+}
+
+.borealis-chat-panel-action-container-collapsed {
+    @apply borealis-chat-panel-action-container;
+}
+
+.borealis-chat-panel-content-container {
+    @apply mt-4;
+    @apply ml-6;
+    @apply mr-6;
+    @apply h-full;
+    @apply overflow-clip;
+    @apply overflow-y-scroll;
+    @apply space-y-1;
+}
+
+.borealis-chat-panel-input-container {
+    @apply relative;
+    @apply flex;
+    @apply flex-row;
+    @apply pt-3;
+    @apply px-3;
+}
+
+.borealis-chat-panel-player-text {
+    @apply text-sm;
+    @apply font-bold;
+    @apply text-text-secondary;
+}
+
+.borealis-chat-panel-player-list-container {
+    @apply absolute;
+    @apply text-left;
+    @apply font-extrabold;
+    @apply content-center;
+    @apply items-center;
+    @apply align-middle;
+    @apply p-2;
+    @apply bg-primary-light;
+    @apply border-2;
+    @apply border-primary-lighter;
+    @apply rounded;
+    @apply shadow-md;
+    @apply w-5/6;
+    @apply mx-auto;
+}
+
+.borealis-chat-panel-player-entry {
+    @apply text-text-primary;
+}
+
+.borealis-chat-panel-own-message-container {
+    @apply border-2;
+    @apply rounded;
+    @apply bg-primary-medium;
+    @apply bg-opacity-50;
+    @apply border-accent-dark;
+    @apply p-1;
+    @apply ml-3;
+}
+
+.borealis-chat-panel-other-message-container {
+    @apply borealis-chat-panel-own-message-container;
+    @apply border-secondary-dark;
+    @apply ml-0;
+    @apply mr-3;
+}
+
+.borealis-chat-panel-message-info {
+    @apply flex;
+    @apply flex-row;
+}
+
+.borealis-chat-panel-message-info-username-own {
+    @apply font-bold;
+    @apply text-text-active;
+}
+
+.borealis-chat-panel-message-info-username-other {
+    @apply font-bold;
+    @apply text-text-primary;
+}
+
+.borealis-chat-panel-message-player-info {
+    @apply text-text-secondary;
+    @apply font-bold;
+    @apply text-sm;
+    @apply pl-1;
+    @apply align-text-bottom;
+}
+
+.borealis-chat-panel-message-content {
+    @apply text-text-primary;
+    @apply font-normal;
+}
+
+.borealis-chat-panel-whisper-content {
+    @apply text-text-whisper;
+    @apply italic;
+}
+
+.borealis-chat-panel-command-content {
+    @apply text-text-action;
+    @apply italic;
+}
+
+.borealis-chat-panel-error-content {
+    @apply text-text-error;
+    @apply font-bold;
+}
+
+.borealis-dice-roll-button-container {
+    @apply w-10;
+}
+
+.borealis-dice-roll-selector-container {
+    @apply absolute;
+    @apply z-chat-panel-roll;
+    @apply border-2;
+    @apply border-accent-dark;
+    @apply rounded;
+    @apply shadow-md;
+    @apply flex;
+    @apply flex-col;
+    @apply bg-primary-dark;
+    @apply text-text-primary;
+}
+
+.borealis-text-input-container {
+    @apply flex;
+    @apply flex-row;
+    @apply flex-auto;
+}
+
+.borealis-text-input {
+    @apply text-text-primary;
+    @apply placeholder-primary-light;
+    @apply rounded;
+    @apply text-base;
+    @apply justify-center;
+    @apply bg-primary-darker;
+    @apply pl-1;
+    @apply pr-1;
+    @apply h-8;
+    @apply flex;
+    @apply mx-auto;
+    @apply grow;
+    @apply border-2;
+    @apply border-primary-medium;
+}
+
+.borealis-text-input:disabled {
+    @apply opacity-50;
+}
+
+.borealis-text-input:focus:enabled {
+    @apply border-accent-medium;
+}
+
+.borealis-number-input-container {
+    @apply flex;
+    @apply flex-row;
+    @apply flex-auto;
+}
+
+.borealis-number-input {
+    @apply text-text-primary;
+    @apply placeholder-primary-light;
+    @apply rounded;
+    @apply text-base;
+    @apply justify-center;
+    @apply bg-primary-darker;
+    @apply pl-1;
+    @apply pr-1;
+    @apply h-8;
+    @apply flex;
+    @apply mx-auto;
+    @apply grow;
+    @apply border-2;
+    @apply border-primary-medium;
+}
+
+.borealis-number-input:disabled {
+    @apply opacity-50;
+}
+
+.borealis-number-input:focus:enabled {
+    @apply border-accent-medium;
+}
+
+.borealis-checkbox-input-container {
+    @apply flex;
+    @apply flex-row;
+    @apply flex-auto;
+    @apply items-center;
+}
+
+.borealis-checkbox-input-container-disabled {
+    @apply borealis-checkbox-input-container;
+    @apply opacity-50;
+}
+
+.borealis-checkbox-input {
+    @apply opacity-0;
+    @apply absolute;
+    @apply w-8;
+    @apply h-8;
+}
+
+.borealis-checkbox-input:checked {
+    @apply border-primary-light;
+    @apply block;
+}
+
+.borealis-checkbox-input-override {
+    @apply bg-primary-darker;
+    @apply border-2;
+    @apply rounded;
+    @apply border-primary-medium;
+    @apply w-8;
+    @apply h-8;
+    @apply flex;
+    @apply flex-shrink-0;
+    @apply justify-center;
+    @apply items-center;
+    @apply focus-within:border-accent-medium;
+}
+
+.borealis-checkbox-input-override-focus {
+    @apply borealis-checkbox-input-override;
+    @apply border-accent-medium;
+}
+
+.borealis-checkbox-icon-inactive {
+    @apply hidden;
+}
+
+.borealis-checkbox-icon-active {
+    @apply text-text-primary;
+}
+
+.borealis-input-label {
+    @apply text-text-primary;
+    @apply justify-start;
+}
+
+.borealis-action-button {
+    @apply flex;
+    @apply flex-row;
+    @apply space-x-4;
+    @apply bg-transparent;
+    @apply rounded;
+    @apply border-2;
+    @apply border-primary-medium;
+    @apply text-text-primary;
+    @apply min-w-[33px];
+    @apply min-h-[33px];
+    @apply content-center;
+    @apply align-middle;
+    @apply text-center;
+    @apply items-center;  
+}
+
+.borealis-action-button:disabled {
+    @apply text-text-secondary;
+}
+
+.borealis-action-button:hover:enabled {
+    @apply bg-primary-medium;
+    @apply border-primary-light;
+    @apply text-text-active;
+}
+
+.borealis-action-button:active:enabled {
+    @apply bg-primary-medium;
+    @apply border-secondary-lighter;
+    @apply text-text-clicked;
+}
+
+.borealis-action-button:focus {
+    @apply border-accent-medium;
+}
+
+.borealis-action-button-content {
+    @apply mx-auto;
+    @apply flex;
+    @apply flex-row;
+}
+
+.borealis-toggle-button {
+    @apply flex;
+    @apply flex-row;
+    @apply space-x-4;
+    @apply bg-transparent;
+    @apply text-text-primary;
+    @apply min-w-[33px];
+    @apply min-h-[33px];
+    @apply content-center;
+    @apply align-middle;
+    @apply text-center;
+    @apply items-center;
+}
+
+.borealis-toggle-button:hover {
+    @apply text-text-active;
+}
+
+.borealis-toggle-button:active {
+    @apply text-text-clicked;
+}
+
+.borealis-toggle-button-active {
+    @apply borealis-toggle-button;
+    @apply text-accent-dark;
+}
+
+.borealis-toggle-button-content {
+    @apply mx-auto;
+    @apply flex;
+    @apply flex-row;
+}
+
+.borealis-tooltip {
+    @apply text-text-primary;
+    @apply text-sm;
+    @apply italic;
+}
+
+.borealis-tooltip a {
+    @apply underline;
+    @apply not-italic;
+    @apply font-extrabold;
+    @apply text-accent-medium;
+}
+
+.borealis-tooltip a:hover {
+    @apply text-accent-light;
+}
+
+.borealis-tooltip a:active {
+    @apply text-accent-lighter;
+}
+
+.borealis-action-text-input-button {
+    @apply flex;
+    @apply flex-row;
+    @apply space-x-4;
+    @apply bg-transparent;
+    @apply rounded-none;
+    @apply h-8;
+    @apply w-8;
+    @apply -ml-9;
+    @apply text-text-primary;
+    @apply min-w-[33px];
+    @apply min-h-[33px];
+    @apply content-center;
+    @apply align-middle;
+    @apply text-center;
+    @apply items-center;
+}
+
+.borealis-action-text-input-button:disabled {
+    @apply opacity-75;
+}
+
+.borealis-action-text-input-button:hover {
+    @apply text-text-active;
+}
+
+.borealis-aciton-text-input-button:active {
+    @apply text-text-clicked;
+}
+
+.borealis-action-text-input-button-content {
+    @apply mx-auto;
+    @apply flex;
+    @apply flex-row;
+}
+
+.borealis-select-container {
+    @apply flex;
+    @apply flex-row;
+    @apply flex-auto;
+    @apply items-center;
+}
+
+.borealis-select {
+    @apply text-text-primary;
+    @apply rounded;
+    @apply text-base;
+    @apply justify-center;
+    @apply bg-primary-darker;
+    @apply pl-1;
+    @apply pr-1;
+    @apply h-8;
+    @apply flex;
+    @apply mx-auto;
+    @apply grow;
+    @apply border-2;
+    @apply border-primary-medium;
+}
+
+.borealis-text-input-selector-container {
+    @apply flex;
+    @apply flex-col;
+}
+
+.borealis-text-input-options-container {
+    @apply text-text-secondary;
+    @apply bg-primary-darker;
+    @apply text-left;
+    @apply rounded;
+    @apply flex;
+    @apply flex-col;
+    @apply overflow-scroll;
+    @apply fixed;
+    @apply mt-8;
+    @apply w-60;
+    @apply divide-y;
+    @apply divide-primary-lighter;
+    @apply max-h-80;
+}
+
+.borealis-text-input-option {
+    @apply px-1;
+    @apply py-2;
+    @apply text-base;
+    @apply w-60;
+    @apply flex;
+    @apply flex-row;
+    @apply space-x-2;
+}
+
+.borealis-text-input-option:hover {
+    @apply bg-primary-medium;
+}
+
+.borealis-text-input-option:active {
+    @apply border-primary-light;
+}
+
+.borealis-text-input-option-selected {
+    @apply borealis-text-input-option;
+    @apply text-accent-dark;
+    @apply border-primary-light;
+}
+
+.borealis-text-input-option-icon {
+    @apply w-fit;
+}
+
+.borealis-text-input-option-caption {
+    
+}
+
+.borealis-token-image {
+    @apply relative;
+    @apply pointer-events-none;
+    @apply rounded-full;
+    @apply overflow-hidden;
+    @apply mx-auto;
+}
+
+.borealis-token-image-selected {
+    @apply borealis-token-image;
+    @apply border-dashed;
+    @apply border-accent-medium;
+    @apply border-2;
+}
+
+.borealis-token-label {
+    @apply text-xs;
+    @apply bg-primary-darker;
+    @apply bg-opacity-80;
+    @apply text-text-primary;
+    @apply border-2;
+    @apply border-primary-dark;
+    @apply p-1;
+    @apply rounded;
+    @apply fixed;
+}
+
+.borealis-bottom-banner-container {
+    @apply z-banner;
+    @apply absolute;
+    @apply bottom-0;
+    @apply w-full;
+    @apply block;
+    @apply flex;
+    @apply flex-row;
+    @apply text-xs;
+    @apply bg-yellow-300;
+    @apply text-text-whisper;
+}
+
+.borealis-bottom-banner-content {
+    @apply pl-4;
+    @apply pb-2;
+    @apply pt-2;
+    @apply font-extrabold;
+    @apply underline;
+    @apply align-middle;
+    @apply text-center;
+}
+
+.borealis-bottom-banner-content a {
+    @apply text-text-whisper;
+}
+
+.borealis-bottom-banner-content a:hover {
+    @apply text-text-active;
+}
+
+.borealis-bottom-banner-content a:active {
+    @apply text-text-clicked;
+}
+
+.borealis-bottom-banner-btn {
+    @apply right-6;
+    @apply absolute;
+    @apply h-full;
 }

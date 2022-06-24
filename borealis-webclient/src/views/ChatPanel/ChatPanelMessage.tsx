@@ -1,20 +1,22 @@
 import React, { forwardRef, ForwardedRef } from 'react'
 import Message from '../../classes/Message'
+import MessageType from '../../enums/MessageType'
+import ChatPanelMessageContainer from '../GenericViews/ChatPanelMessageContainer'
+import ChatPanelMessageContentContainer from '../GenericViews/ChatPanelMessageContentContainer'
+import ChatPanelMessageInfo from './ChatPanelMessageInfo'
 
 interface ChatPanelMessageProps {
     message: Message,
+    username: string,
     playerInfo: string,
 }
 
-const ChatPanelMessage = forwardRef(({ message, playerInfo }: ChatPanelMessageProps, ref: ForwardedRef<HTMLDivElement>) => {
+const ChatPanelMessage = forwardRef(({ message, username, playerInfo }: ChatPanelMessageProps, ref: ForwardedRef<HTMLDivElement>) => {
     return (
-        <div className='chat-panel-message' ref={ ref }>
-            <div className='chat-panel-message-info'>
-                <div className='chat-panel-message-username' >{ message.username }</div>
-                { playerInfo ? <div className='chat-panel-message-player-info'>| { playerInfo }</div> : null }
-            </div>
-            <div className='chat-panel-message-content'>{ message.publicMessage }</div>
-        </div>
+        <ChatPanelMessageContainer ref={ ref } property={ username === message.username ? 'own' : 'other'}>
+            <ChatPanelMessageInfo message={ message } username={ username } playerInfo={ playerInfo } />
+            <ChatPanelMessageContentContainer messageType={ MessageType.Message }>{ message.publicMessage }</ChatPanelMessageContentContainer>
+        </ChatPanelMessageContainer>
     )
 })
 ChatPanelMessage.displayName = 'ChatPanelMessage'

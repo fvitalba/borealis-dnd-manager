@@ -58,11 +58,11 @@ const UserTool = ({ toggleOnUser, gameState, mapState, tokenState, chatState, ch
     if (!toggleOnUser)
         return <></>
 
-    const updateUsername = (value: string) => {
-        setUsername(value)
+    const updateUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setUsername(e.target.value)
         webSocketContext.setWsSettings({
             ...webSocketContext.wsSettings,
-            userGuid: value,
+            userGuid: e.target.value,
         })
     }
 
@@ -142,11 +142,12 @@ const UserTool = ({ toggleOnUser, gameState, mapState, tokenState, chatState, ch
             <UserToolView
                 isHost={ metadataState.userType === UserType.host }
                 initAsDev={ initAsDev }
+                fogEnabled={ gameState.fogEnabled }
                 toggleFog={ toggleFog }
                 saveGameInServer={ saveGameInServer }
                 loadGameFromServer={ loadGameFromServer }
-                username={ settingsState.username }
-                updateUsername={ updateUsername }
+                userName={ settingsState.username }
+                updateUserName={ updateUsername }
                 mouseIsShared={ settingsState.shareMouse }
                 toggleShareMouse={ toggleShareMouse }
                 copyUrlToClipboard={ copyUrlToClipboard } />

@@ -21,8 +21,9 @@ export interface ControlPanelState {
     toggleOnCharacterStats: boolean,
     toggleOnCharacterInventory: boolean,
     toggleOnCharacterSpells: boolean,
-   [key: string]: boolean,
 }
+
+export type ControlPanelTabName = 'hidden' | 'toggleOnMaps' | 'toggleOnUser' | 'toggleOnTokens' | 'toggleOnCharacterStats' | 'toggleOnCharacterInventory' | 'toggleOnCharacterSpells'
 
 const initialControlPanelState = (): ControlPanelState => {
     return {
@@ -50,13 +51,6 @@ const ControlPanel = ({ metadataState, gameState, mapState, tokenState, chatStat
     const webSocketContext = useWebSocket()
     const loadingContext = useLoading()
 
-    const toggleHidden = () => {
-        setControlPanelState({
-            ...controlPanelState,
-            hidden: !controlPanelState.hidden,
-        })
-    }
-
     const socketRequestRefresh = () => {
         if (webSocketContext.ws) {
             loadingContext.startLoadingTask(GAME_REQUEST_REFRESH)
@@ -69,14 +63,27 @@ const ControlPanel = ({ metadataState, gameState, mapState, tokenState, chatStat
             pushGameRefresh(webSocketContext.ws, webSocketContext.wsSettings, gameState, mapState, tokenState, chatState, characterState)
     }
 
+    const toggleControlPanelTab = (tabName: ControlPanelTabName) => {
+        setControlPanelState({
+            ...controlPanelState,
+            toggleOnUser: false,
+            toggleOnMaps: false,
+            toggleOnTokens: false,
+            hidden: false,
+            toggleOnCharacterStats: false,
+            toggleOnCharacterInventory: false,
+            toggleOnCharacterSpells: false,
+            [tabName]: !controlPanelState[tabName],
+        })
+    }
+
     const submenuHidden = (controlPanelState.hidden || (!controlPanelState.toggleOnMaps && !controlPanelState.toggleOnTokens && !controlPanelState.toggleOnUser && !controlPanelState.toggleOnCharacterStats && !controlPanelState.toggleOnCharacterInventory && !controlPanelState.toggleOnCharacterSpells))
 
     return (
         <ControlPanelView
             controlPanelState={ controlPanelState }
-            setControlPanelState={ setControlPanelState }
             hidden={ controlPanelState.hidden }
-            toggleHidden={ toggleHidden }
+            toggleControlPanelTab={ toggleControlPanelTab }
             submenuHidden={ submenuHidden }
             fogEnabled={ gameState.fogEnabled }
             isHost={ metadataState.userType === UserType.host }

@@ -12,6 +12,30 @@ module.exports = {
                 primary: colors.gray,    // it's now possible to use bg-primary instead of colors   gray-300
                 secondary: colors.sky,
                 accent: colors.orange,
+                'empty-dark': '#111213',
+                'text-primary': '#EBEBEC',
+                'text-secondary': '#B0B1B3',
+                'text-active': '#39D0B2',
+                'text-clicked': '#9CE8D9',
+                'text-action': '#39D0B2',
+                'text-whisper': '#405B87',
+                'text-comment': '',
+                'text-error': '#FF0000',
+                'primary-lighter': '#757679',
+                'primary-light': '#4E4F53',
+                'primary-medium': '#34353A',
+                'primary-dark': '#29292D',
+                'primary-darker': '#1D1E20',
+                'secondary-lighter': '#8C9DB7',
+                'secondary-light': '#667C9F',
+                'secondary-medium': '#405B87',
+                'secondary-dark': '#2D405F',
+                'secondary-darker': '#1A2436',
+                'accent-lighter': '#9CE8D9',
+                'accent-light': '#61D9C1',
+                'accent-medium': '#39D0B2',
+                'accent-dark': '#28927D',
+                'accent-darker': '#175347',
             },
             zIndex: {
                 'map': '1',
@@ -30,7 +54,8 @@ module.exports = {
                 'chat-panel-roll': '120',
                 'banner': '120',
                 'loading': '130',
-                'debug': '140',
+                'notification': '140',
+                'debug': '150',
             },
             animation: {
                 'reverse-spin': 'reverse-spin 1s linear infinite',
@@ -41,6 +66,9 @@ module.exports = {
                         transform: 'rotate(360deg)'
                     },
                 }
+            },
+            fontFamily: {
+                'barbaro': ['Barbaro', 'Serif'],
             }
         },
     },

@@ -1,6 +1,7 @@
 import React, { Ref } from 'react'
 import DiceType, { DiceTypeArray } from '../enums/DiceType'
-import Button from './Button'
+import ActionButton from './GenericViews/ActionButton'
+import { BorealisRollDiceIcon } from './Icons'
 
 interface SelectorPosition {
     top: number,
@@ -18,18 +19,18 @@ interface DiceRollButtonViewProps {
 
 const DiceRollButtonView = ({ rollDice, selectorPosition, showSelector, toggleSelector, selectorRef, rollDiceButtonRef }: DiceRollButtonViewProps) => {
     return (
-        <div className='dice-roll-button-container'>
+        <div className='borealis-dice-roll-button-container'>
             { showSelector
-                ? <div className='dice-roll-selector-container' style={ selectorPosition } ref={ selectorRef }>
+                ? <div className='borealis-dice-roll-selector-container' style={ selectorPosition } ref={ selectorRef }>
                     {
                         DiceTypeArray.map((diceType) =>
-                            <Button key={ diceType } title={ DiceType[diceType] } value={ <b>{ DiceType[diceType] }</b> } onClick={ () => rollDice(diceType) } customClass='dice-roll-button'></Button>
+                            <ActionButton key={ diceType } title={ DiceType[diceType] } value={ <b>{ DiceType[diceType] }</b> } onClick={ () => rollDice(diceType) } />
                         )
                     }
                 </div>
                 : null
             }
-            <Button title='Roll dice' value={ <b>/D</b> } onClick={ toggleSelector } ref={ rollDiceButtonRef } />
+            <ActionButton title='Roll dice' value={ <BorealisRollDiceIcon /> } onClick={ toggleSelector } ref={ rollDiceButtonRef } />
         </div>
     )
 }

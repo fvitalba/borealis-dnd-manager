@@ -1,30 +1,27 @@
 import React from 'react'
-import ToggleButton from '../components/ToggleButton'
-import ToolControls from '../components/ToolControls'
 import MapTool from '../components/MapTool'
 import TokenTool from '../components/TokenTool'
 import UserTool from '../components/UserTool'
 import CharacterStats from '../components/CharacterStats'
-import { ControlPanelState } from '../components/ControlPanel'
-import ToolSelectView from './ToolSelectView'
-import Button from './Button'
+import { ControlPanelState, ControlPanelTabName } from '../components/ControlPanel'
 import {
-    PlusCircleOutlineIcon,
-    MinusCircleOutlineIcon,
-    UserCircleSolidIcon,
-    MapSolidIcon,
-    GhostSolidIcon,
-    RefreshOutlineIcon,
-    ChartBarAltSquareSolidIcon,
-    BookOpenSolidIcon,
-    BoxSolidIcon
+    BorealisCollapseIcon,
+    BorealisExpandIcon,
+    BorealisUserSettingsIcon,
+    BorealisMapControlIcon,
+    BorealisTokenControlIcon,
+    BorealisCharacterStatsControlIcon,
+    BorealisCharacterInventoryControlIcon,
+    BorealisCharacterSpellsControlIcon,
 } from './Icons'
+import ControlPanelContainer from './GenericViews/ControlPanelContainer'
+import ControlPanelRow from './GenericViews/ControlPanelRow'
+import ToggleButton from './GenericViews/ToggleButton'
 
 interface ControlPanelViewProps {
     controlPanelState: ControlPanelState,
-    setControlPanelState: (arg0: ControlPanelState) => void,
     hidden: boolean,
-    toggleHidden: () => void,
+    toggleControlPanelTab: (tabName: ControlPanelTabName) => void,
     submenuHidden: boolean,
     fogEnabled: boolean,
     isHost: boolean,
@@ -33,65 +30,47 @@ interface ControlPanelViewProps {
 }
 
 
-const ControlPanelView = ({ controlPanelState, setControlPanelState, hidden, toggleHidden, submenuHidden, fogEnabled, isHost, socketRequestRefresh, pushRefreshToPlayers }: ControlPanelViewProps) => {
-    //TODO: move submenuhidden from prop to part of sub-components
+const ControlPanelView = ({ controlPanelState, hidden, toggleControlPanelTab, submenuHidden, isHost, socketRequestRefresh, pushRefreshToPlayers }: ControlPanelViewProps) => {
     if (hidden)
         return (
-            <div className='control-panel-container'>
-                <div className='control-panel-tools'>
-                    <Button value={ <PlusCircleOutlineIcon /> } onClick={ toggleHidden } title='show/hide control panel' />
-                </div>
-            </div>
+            <ControlPanelContainer>
+                <ControlPanelRow>
+                    <ToggleButton value={ <BorealisExpandIcon /> } toggleValue={ () => toggleControlPanelTab('hidden') } title='show control panel' />
+                </ControlPanelRow>
+            </ControlPanelContainer>
         )
 
-    if (isHost)
-        return (
-            <div className='control-panel-container'>
-                <div className='control-panel-tools'>
-                    <Button value={ <MinusCircleOutlineIcon /> } onClick={ toggleHidden } title='show/hide control panel'/>
-                    <ToggleButton title='User' propertyName='User' value={ <UserCircleSolidIcon /> } controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
-                    <ToggleButton title='Maps' propertyName='Maps' value={ <MapSolidIcon />} controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
-                    <ToggleButton title='Tokens' propertyName='Tokens' value={ <GhostSolidIcon /> } controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
-                    <ToggleButton title='Character Stats' propertyName='CharacterStats' value={ <ChartBarAltSquareSolidIcon /> } controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
-                    <Button title='Push refresh to players' value={ <RefreshOutlineIcon /> } onClick={ pushRefreshToPlayers } />
-                    <ToolSelectView isHost={ isHost } fogEnabled={ fogEnabled } />
-                    <ToolControls />
-                </div>
-                {
-                    !submenuHidden
-                        ? <div className='control-panel-submenu'>
-                            <MapTool toggleOnMaps={ controlPanelState.toggleOnMaps } />
-                            <TokenTool toggleOnTokens={ controlPanelState.toggleOnTokens } />
-                            <UserTool toggleOnUser={ controlPanelState.toggleOnUser } />
-                            <CharacterStats toggleOnCharacterStats={ controlPanelState.toggleOnCharacterStats } />
-                        </div>
-                        : null
+    return (
+        <ControlPanelContainer>
+            <ControlPanelRow>
+                <ToggleButton value={ <BorealisCollapseIcon /> } toggleValue={ () => toggleControlPanelTab('hidden') } title='hide control panel'/>
+                <ToggleButton title='User' value={ <BorealisUserSettingsIcon /> } toggleValue={ () => toggleControlPanelTab('toggleOnUser') } isActive={ controlPanelState.toggleOnUser } />
+                { isHost
+                    ? <>
+                        <ToggleButton title='Maps' value={ <BorealisMapControlIcon />} toggleValue={ () => toggleControlPanelTab('toggleOnMaps') } isActive={ controlPanelState.toggleOnMaps } />
+                        <ToggleButton title='Tokens' value={ <BorealisTokenControlIcon /> } toggleValue={ () => toggleControlPanelTab('toggleOnTokens') } isActive={ controlPanelState.toggleOnTokens } />
+                    </>
+                    : null
                 }
-            </div>
-        )
-    else
-        return (
-            <div className='control-panel-container'>
-                <div className='control-panel-tools'>
-                    <Button value={ <MinusCircleOutlineIcon /> } onClick={ toggleHidden } title='show/hide control panel' />
-                    <ToggleButton title='User' propertyName='User' value={ <UserCircleSolidIcon /> } controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
-                    <ToggleButton title='Character Stats' propertyName='CharacterStats' value={ <ChartBarAltSquareSolidIcon /> } controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
-                    <ToggleButton title='Character Inventory' propertyName='CharacterInventory' value={ <BoxSolidIcon /> } controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
-                    <ToggleButton title='Character Spells' propertyName='CharacterSpells' value={ <BookOpenSolidIcon /> } controlPanelState={ controlPanelState } setControlPanelState={ setControlPanelState } />
-                    <Button title='Request gameboard refresh from host' onClick={ socketRequestRefresh } value={ <RefreshOutlineIcon /> } />
-                    <ToolSelectView isHost={ isHost } fogEnabled={ fogEnabled } />
-                    <ToolControls />
-                </div>
-                {
-                    !submenuHidden
-                        ? <div className='control-panel-submenu'>
-                            <UserTool toggleOnUser={ controlPanelState.toggleOnUser } />
-                            <CharacterStats toggleOnCharacterStats={ controlPanelState.toggleOnCharacterStats } />
-                        </div>
-                        : null
-                }
-            </div>
-        )
+                <ToggleButton title='Character Stats' value={ <BorealisCharacterStatsControlIcon /> } toggleValue={ () => toggleControlPanelTab('toggleOnCharacterStats') } isActive={ controlPanelState.toggleOnCharacterStats } />
+                <ToggleButton title='Character Inventory' value={ <BorealisCharacterInventoryControlIcon /> } toggleValue={ () => toggleControlPanelTab('toggleOnCharacterInventory') } isActive={ controlPanelState.toggleOnCharacterInventory } />
+                <ToggleButton title='Character Spells' value={ <BorealisCharacterSpellsControlIcon /> } toggleValue={ () => toggleControlPanelTab('toggleOnCharacterSpells') } isActive={ controlPanelState.toggleOnCharacterSpells } />
+                { /* isHost
+                    ? <ActionButton title='Push refresh to players' value={ <RefreshOutlineIcon /> } onClick={ pushRefreshToPlayers } />
+                    : <ActionButton title='Request gameboard refresh from host' onClick={ socketRequestRefresh } value={ <RefreshOutlineIcon /> } />
+                */ }
+            </ControlPanelRow>
+            { !submenuHidden
+                ? <ControlPanelRow>
+                    <MapTool toggleOnMaps={ controlPanelState.toggleOnMaps } />
+                    <TokenTool toggleOnTokens={ controlPanelState.toggleOnTokens } />
+                    <UserTool toggleOnUser={ controlPanelState.toggleOnUser } />
+                    <CharacterStats toggleOnCharacterStats={ controlPanelState.toggleOnCharacterStats } />
+                </ControlPanelRow>
+                : null
+            }
+        </ControlPanelContainer>
+    )
 }
 
 export default ControlPanelView

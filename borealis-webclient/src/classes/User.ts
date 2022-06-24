@@ -1,5 +1,5 @@
 import UserType from '../enums/UserType'
-import { RoomUserSchema, UserSchema } from '../utils/mongoDbSchemas'
+import { RoomUserSchema } from '../utils/mongoDbSchemas'
 
 class User {
     public guid: string

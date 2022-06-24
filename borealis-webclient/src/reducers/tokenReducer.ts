@@ -66,7 +66,8 @@ const tokenReducer = (state = initialTokenState(), action: TokenAction): TokenSt
         if (action.guid !== undefined) {
             const tokenToCopy = newTokens.filter((token) => token.guid === action.guid)
             if (tokenToCopy.length > 0) {
-                newToken = new Token(tokenToCopy[0].name, tokenToCopy[0].imageUrl, tokenToCopy[0].mapId, tokenToCopy[0].x, tokenToCopy[0].y, tokenToCopy[0].condition, tokenToCopy[0].type, guid(), tokenToCopy[0].size, false, tokenToCopy[0].hidden, tokenToCopy[0].showLabel, 0, 0)
+                const newGuid = guid()
+                newToken = new Token(`${tokenToCopy[0].name} (${newGuid})`, tokenToCopy[0].imageUrl, tokenToCopy[0].mapId, tokenToCopy[0].x, tokenToCopy[0].y, tokenToCopy[0].condition, tokenToCopy[0].type, newGuid, tokenToCopy[0].size, false, tokenToCopy[0].hidden, tokenToCopy[0].showLabel, 0, 0)
                 newTokens = newTokens.concat(newToken)
             }
         }

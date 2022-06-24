@@ -74,7 +74,7 @@ const Background = ({ gameState, mapState, settingsState, updateDeltaXY, updateS
     return (
         <Canvas
             id='background'
-            className='background'
+            className='borealis-background'
             width={ gameState.width }
             height={ gameState.height }
             draw={ draw }

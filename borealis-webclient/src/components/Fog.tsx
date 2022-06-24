@@ -59,7 +59,7 @@ const Fog = ({ gameState, mapState, metadataState, settingsState }: FogProps) =>
         gameState.fogEnabled ?
             <Canvas
                 id='fog'
-                className='fog passthrough'
+                className='borealis-fog borealis-passthrough'
                 style={{ opacity: fogOpacity }}
                 width={ gameState.width }
                 height={ gameState.height }

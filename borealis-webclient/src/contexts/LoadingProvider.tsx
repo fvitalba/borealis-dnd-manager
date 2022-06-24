@@ -1,4 +1,4 @@
-import React, { createContext, ReactElement, useReducer } from 'react'
+import React, { createContext, ReactNode, useReducer } from 'react'
 import loadingReducer, { startTask, stopTask } from '../reducers/loadingReducer'
 
 export interface ILoadingContext {
@@ -13,7 +13,7 @@ export const LoadingContext = createContext<ILoadingContext>({
     stopLoadingTask: () => null,
 })
 
-const LoadingProvider = ({ children } : { children: ReactElement }) => {
+const LoadingProvider = ({ children } : { children: ReactNode }) => {
     const [loadingState, dispatch] = useReducer(loadingReducer, { loadingTasks: [], })
 
     const startLoadingTask = (taskCode: string) => {
