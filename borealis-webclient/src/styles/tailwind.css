@@ -1121,16 +1121,16 @@ a:hover {
     @apply rounded;
     @apply bg-primary-medium;
     @apply bg-opacity-50;
-    @apply border-accent-medium;
+    @apply border-accent-dark;
     @apply p-1;
-    @apply mr-3;
+    @apply ml-3;
 }
 
 .borealis-chat-panel-other-message-container {
     @apply borealis-chat-panel-own-message-container;
-    @apply border-secondary-medium;
-    @apply mr-0;
-    @apply ml-3;
+    @apply border-secondary-dark;
+    @apply ml-0;
+    @apply mr-3;
 }
 
 .borealis-chat-panel-message-info {
@@ -1495,6 +1495,7 @@ a:hover {
     @apply w-60;
     @apply flex;
     @apply flex-row;
+    @apply space-x-2;
 }
 
 .borealis-text-input-option:hover {

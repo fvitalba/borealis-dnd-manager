@@ -2191,9 +2191,9 @@ a:hover {
   background-color: rgb(52 53 58 / var(--tw-bg-opacity));
   --tw-bg-opacity: 0.5;
   --tw-border-opacity: 1;
-  border-color: rgb(57 208 178 / var(--tw-border-opacity));
+  border-color: rgb(40 146 125 / var(--tw-border-opacity));
   padding: 0.25rem;
-  margin-right: 0.75rem;
+  margin-left: 0.75rem;
 }
 
 .borealis-chat-panel-other-message-container {
@@ -2201,13 +2201,13 @@ a:hover {
   border-radius: 0.25rem;
   background-color: rgb(52 53 58 / var(--tw-bg-opacity));
   --tw-bg-opacity: 0.5;
-  border-color: rgb(57 208 178 / var(--tw-border-opacity));
+  border-color: rgb(40 146 125 / var(--tw-border-opacity));
   padding: 0.25rem;
-  margin-right: 0.75rem;
-  --tw-border-opacity: 1;
-  border-color: rgb(64 91 135 / var(--tw-border-opacity));
-  margin-right: 0px;
   margin-left: 0.75rem;
+  --tw-border-opacity: 1;
+  border-color: rgb(45 64 95 / var(--tw-border-opacity));
+  margin-left: 0px;
+  margin-right: 0.75rem;
 }
 
 .borealis-chat-panel-message-info {
@@ -2745,6 +2745,12 @@ a:hover {
   flex-direction: row;
 }
 
+.borealis-text-input-option > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
 .borealis-text-input-option:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(52 53 58 / var(--tw-bg-opacity));
@@ -2765,6 +2771,12 @@ a:hover {
   width: 15rem;
   display: flex;
   flex-direction: row;
+}
+
+.borealis-text-input-option-selected > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .borealis-text-input-option-selected:hover {
