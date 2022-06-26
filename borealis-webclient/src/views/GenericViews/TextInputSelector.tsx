@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ReactNode, useState } from 'react'
+import React, { ChangeEvent, ReactNode, useState, useEffect, MouseEvent } from 'react'
 
 interface TextInputOption {
     index: number,
@@ -31,11 +31,33 @@ const TextInputSelector = ({ title, placeholder, value, onSelectElement, label, 
         }
     }
 
-    const onSelectOption = (opt: TextInputOption) => {
+    const onSelectOption = (e: MouseEvent, opt: TextInputOption) => {
+        e.stopPropagation()
         setFilterValue(opt.caption)
         onSelectElement(opt.index)
         setShowOptions(false)
     }
+
+    const closeDropDown = (e: globalThis.MouseEvent) => {
+        setShowOptions(true)
+        if (e.target) {
+            const targetNode = e.target as HTMLElement
+            if (targetNode.parentElement?.className === 'borealis-text-input-selector-container')
+                return
+        }
+        setShowOptions(false)
+    }
+
+    useEffect(() => {
+        setTimeout(() => {
+            window.addEventListener('click', closeDropDown)
+
+            // On Unmount
+            return () => {
+                window.removeEventListener('click', closeDropDown)
+            }
+        }, 0)
+    }, [])
 
     const filteredOptions = options
         ? options.filter((opt) => {
@@ -57,7 +79,7 @@ const TextInputSelector = ({ title, placeholder, value, onSelectElement, label, 
                 <div className='borealis-text-input-options-container'>
                     { filteredOptions.map((opt) => {
                         const optionClass = opt.caption === value ? 'borealis-text-input-option-selected' : 'borealis-text-input-option'
-                        return (<div className={ optionClass } key={ opt.index } onClick={ () => onSelectOption(opt) }>
+                        return (<div className={ optionClass } key={ opt.index } onClick={ (e) => onSelectOption(e, opt) }>
                             <div className='borealis-text-input-option-icon'>{ opt.icon }</div>
                             <div className='borealis-text-input-option-caption'>{ opt.caption }</div>
                         </div>)
