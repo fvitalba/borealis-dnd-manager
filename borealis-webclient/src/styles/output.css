@@ -1981,6 +1981,136 @@ a:hover {
   flex-direction: row;
 }
 
+.borealis-notification-overlay {
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  width: -moz-fit-content;
+  width: fit-content;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-content: flex-end;
+  align-items: flex-end;
+  position: fixed;
+  z-index: 140;
+}
+
+.borealis-notifications-list {
+  align-content: flex-end;
+  display: flex;
+  flex-direction: column;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.borealis-notifications-list > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+}
+
+.borealis-message-notification-container {
+  --tw-bg-opacity: 1;
+  background-color: rgb(41 41 45 / var(--tw-bg-opacity));
+  opacity: 0.75;
+  border-width: 2px;
+  border-radius: 0.25rem;
+  --tw-border-opacity: 1;
+  border-color: rgb(52 53 58 / var(--tw-border-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(176 177 179 / var(--tw-text-opacity));
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.borealis-message-notification-container:hover {
+  opacity: 1;
+}
+
+.borealis-warning-notification-container {
+  --tw-bg-opacity: 1;
+  background-color: rgb(41 41 45 / var(--tw-bg-opacity));
+  opacity: 0.75;
+  border-width: 2px;
+  border-radius: 0.25rem;
+  --tw-border-opacity: 1;
+  border-color: rgb(52 53 58 / var(--tw-border-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(176 177 179 / var(--tw-text-opacity));
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.borealis-warning-notification-container:hover {
+  opacity: 1;
+}
+
+.borealis-warning-notification-container {
+  --tw-bg-opacity: 1;
+  background-color: rgb(45 64 95 / var(--tw-bg-opacity));
+  --tw-border-opacity: 1;
+  border-color: rgb(64 91 135 / var(--tw-border-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(57 208 178 / var(--tw-text-opacity));
+}
+
+.borealis-error-notification-container {
+  --tw-bg-opacity: 1;
+  background-color: rgb(41 41 45 / var(--tw-bg-opacity));
+  opacity: 0.75;
+  border-width: 2px;
+  border-radius: 0.25rem;
+  --tw-border-opacity: 1;
+  border-color: rgb(52 53 58 / var(--tw-border-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(176 177 179 / var(--tw-text-opacity));
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.borealis-error-notification-container:hover {
+  opacity: 1;
+}
+
+.borealis-error-notification-container {
+  --tw-bg-opacity: 1;
+  background-color: rgb(127 29 29 / var(--tw-bg-opacity));
+  --tw-border-opacity: 1;
+  border-color: rgb(153 27 27 / var(--tw-border-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(255 0 0 / var(--tw-text-opacity));
+}
+
+.borealis-notification-title-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.borealis-notification-title {
+  display: flex;
+  flex-direction: row;
+}
+
+.borealis-notification-title > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.borealis-notification-title-text {
+  font-weight: 800;
+}
+
+.borealis-notification-content {
+
+}
+
 .borealis-form-container {
   display: flex;
   flex-direction: column;

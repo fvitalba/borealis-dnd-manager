@@ -36,6 +36,8 @@ module.exports = {
                 'accent-medium': '#39D0B2',
                 'accent-dark': '#28927D',
                 'accent-darker': '#175347',
+                'error-dark': '#991B1B',
+                'error-darker': '#7F1D1D',
             },
             zIndex: {
                 'map': '1',

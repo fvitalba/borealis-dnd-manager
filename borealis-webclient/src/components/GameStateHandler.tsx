@@ -3,7 +3,9 @@ import { connect } from 'react-redux'
 import DataReceiver from './DataReceiver'
 import Game from './Game'
 import GameSetup from './GameSetup'
+import DebugOverlay from './DebugOverlay'
 import LoadingOverlay from './LoadingOverlay'
+import NotificationOverlay from './NotificationOverlay'
 import UserManager from './UserManager'
 import { createWebSocket } from '../contexts/WebSocketProvider'
 import UserType from '../enums/UserType'
@@ -14,7 +16,6 @@ import { MetadataState, setGameSettings } from '../reducers/metadataReducer'
 import { setUsername } from '../reducers/settingsReducer'
 import { WEBSOCKET_OPEN_CONNECTION } from '../utils/loadingTasks'
 import guid from '../utils/guid'
-import DebugOverlay from './DebugOverlay'
 
 interface GameStateHandlerProps {
     metadataState: MetadataState,
@@ -84,7 +85,8 @@ const GameStateHandler = ({ metadataState, setGameSettings, setUsername }: GameS
                 : <GameSetup />
             }
             <LoadingOverlay />
-            <DebugOverlay />
+            <NotificationOverlay />
+            { false && <DebugOverlay /> }
         </>
     )
 }
