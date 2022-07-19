@@ -46,6 +46,10 @@ import {
     IconHeartPlus,
     IconAlien,
     IconUser,
+    IconInfoCircle,
+    IconAlertTriangle,
+    IconAlertOctagon,
+    IconCircleX,
 } from '@tabler/icons'
 // These icons were copied from https://github.com/la-moore/scarlab-icons/tree/master/react
 // I had to copy them, because they are written as JSX.Elements, whereas I need React Function Components
@@ -433,6 +437,31 @@ export const BorealisLoadingIcon = (props: IconProps) => {
 
 export const BorealisCloseBannerIcon = (props: IconProps) => {
     return <IconSquareX
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+// Notification Icons
+export const BorealisMessageNotificationIcon = (props: IconProps) => {
+    return <IconInfoCircle
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisWarningNotificationIcon = (props: IconProps) => {
+    return <IconAlertTriangle
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisErrorNotificationIcon = (props: IconProps) => {
+    return <IconAlertOctagon
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisCloseNotificationIcon = (props: IconProps) => {
+    return <IconCircleX
         size={ props.size ? props.size : defaultSize }
     />
 }

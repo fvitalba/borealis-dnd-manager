@@ -965,6 +965,79 @@ a:hover {
     @apply flex-row;
 }
 
+.borealis-notification-overlay {
+    @apply top-0;
+    @apply bottom-0;
+    @apply right-0;
+    @apply w-fit;
+    @apply h-screen;
+    @apply flex;
+    @apply flex-col;
+    @apply justify-end;
+    @apply content-end;
+    @apply items-end;
+    @apply fixed;
+    @apply z-notification;
+}
+
+.borealis-notifications-list {
+    @apply content-end;
+    @apply flex;
+    @apply flex-col;
+    @apply mr-2;
+    @apply mb-2;
+    @apply space-y-2;
+}
+
+.borealis-message-notification-container {
+    @apply bg-primary-dark;
+    @apply opacity-75;
+    @apply border-2;
+    @apply rounded;
+    @apply border-primary-medium;
+    @apply text-text-secondary;
+    @apply p-2;
+    @apply text-sm;
+}
+
+.borealis-message-notification-container:hover {
+    @apply opacity-100;
+}
+
+.borealis-warning-notification-container {
+    @apply borealis-message-notification-container;
+    @apply bg-secondary-dark;
+    @apply border-secondary-medium;
+    @apply text-text-active;
+}
+
+.borealis-error-notification-container {
+    @apply borealis-message-notification-container;
+    @apply bg-error-darker;
+    @apply border-error-dark;
+    @apply text-text-error;
+}
+
+.borealis-notification-title-container {
+    @apply flex;
+    @apply flex-row;
+    @apply justify-between;
+}
+
+.borealis-notification-title {
+    @apply flex;
+    @apply flex-row;
+    @apply space-x-2;
+}
+
+.borealis-notification-title-text {
+    @apply font-extrabold;
+}
+
+.borealis-notification-content {
+
+}
+
 .borealis-form-container {
     @apply flex;
     @apply flex-col;

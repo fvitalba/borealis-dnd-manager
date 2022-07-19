@@ -6,7 +6,7 @@ interface LoadingOverlayViewProps {
     tasks: Array<string>,
 }
 
-export const LoadingOverlayView = ({ tasks }: LoadingOverlayViewProps) => {
+const LoadingOverlayView = ({ tasks }: LoadingOverlayViewProps) => {
     return (
         <div className='borealis-loading-overlay'>
             <BorealisLoadingIcon className='animate-reverse-spin' />
@@ -24,3 +24,5 @@ export const LoadingOverlayView = ({ tasks }: LoadingOverlayViewProps) => {
         </div>
     )
 }
+
+export default LoadingOverlayView

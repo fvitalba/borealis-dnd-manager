@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import GameStateHandler from './GameStateHandler'
 import WebSocketProvider from '../contexts/WebSocketProvider'
 import LoadingProvider from '../contexts/LoadingProvider'
+import NotificationProvider from '../contexts/NotificationProvider'
 import settingsReducer from '../reducers/settingsReducer'
 import metadataReducer from '../reducers/metadataReducer'
 import gameReducer from '../reducers/gameReducer'
@@ -41,9 +42,11 @@ const App = () => {
     return(
         <Provider store={ store } >
             <LoadingProvider>
-                <WebSocketProvider>
-                    <GameStateHandler />
-                </WebSocketProvider>
+                <NotificationProvider>
+                    <WebSocketProvider>
+                        <GameStateHandler />
+                    </WebSocketProvider>
+                </NotificationProvider>
             </LoadingProvider>
         </Provider>
     )
