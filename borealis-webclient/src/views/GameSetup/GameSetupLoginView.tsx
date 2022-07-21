@@ -33,7 +33,7 @@ const GameSetupLoginView = ({ userName, onUserNameChange, password, onPasswordCh
             </FormRow>
             <FormRow>
                 <MaskedTextInput title='Password' placeholder='Password' value={ password } onChange={ onPasswordChange } disabled={ isGuest } />
-                <CheckboxInput title='Continue as guest' value={ isGuest } onChange={ toggleIsGuest } label='Guest' />
+                { !newUser && <CheckboxInput title='Continue as guest' value={ isGuest } onChange={ toggleIsGuest } label='Guest' /> }
             </FormRow>
             { newUser
                 ? <FormRow>

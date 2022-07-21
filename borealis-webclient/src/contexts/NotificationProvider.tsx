@@ -5,7 +5,7 @@ import notificationReducer, { addNotification, removeNotification } from '../red
 
 export interface INotificationContext {
     notifications: Array<Notification>,
-    addNotification: (arg0: string, arg1: string, arg2: NotificationType) => void,
+    addNotification: (newTitle: string, NewContent: string, newType: NotificationType) => void,
     removeNotification: (arg0: number) => void,
 }
 

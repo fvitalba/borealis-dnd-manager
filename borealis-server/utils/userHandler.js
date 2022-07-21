@@ -10,31 +10,38 @@ export const registerUser = async (user) => {
     //TODO: implement salting
     const userSecret = await argon2.hash(user.secret)
 
-    return User.findOne({ $or: [{ 'guid': user.guid, }, { 'name': user.userName }, { 'email': user.email }] })
-        .then((existingUser) => {
+    return await User.findOne({ $or: [{ 'guid': user.guid, }, { 'name': user.userName }, { 'email': user.email, 'guest': false, }] })
+        .then(async (existingUser) => {
             if ((existingUser !== null) && ((existingUser.guid !== undefined) && (existingUser.guid !== ''))) {
-                return argon2.verify(existingUser.secret, user.secret)
-                    .then((passwordsMatch) => {
-                        if (passwordsMatch)
-                            return cleanUserBeforeSending(existingUser)
-                        else {
-                            const newUser = new User({
-                                guid: (user.userGuid !== undefined) && (user.userGuid !== '') ? user.userGuid : randomUUID(),
-                                name: user.userName,
-                                secret: userSecret,
-                                email: user.email,
-                                guest: user.isGuest,
-                                lastOnline: new Date(),
-                                active: true,
-                            })
-                            return newUser.save((error, document) => {
-                                if (!error)
-                                    return cleanUserBeforeSending(document)
-                                else
-                                    return undefined
-                            })
-                        }
-                    })
+                if (existingUser.guest) {
+                    return cleanUserBeforeSending(existingUser)
+                } else {
+                    return argon2.verify(existingUser.secret, user.secret)
+                        .then(async (passwordsMatch) => {
+                            if (passwordsMatch) {
+                                const updatedUser = new User({
+                                    guid: existingUser.guid,
+                                    name: existingUser.name,
+                                    secret: existingUser.secret,
+                                    email: existingUser.email,
+                                    guest: existingUser.guest,
+                                    lastOnline: new Date(),
+                                    active: true,
+                                })
+                                return await updatedUser.save((error, newUser) => {
+                                    if (!error)
+                                        // Saving of User update successful, so we return the updated user
+                                        return cleanUserBeforeSending(newUser)
+                                    else
+                                        // Saving of User update failed
+                                        return undefined
+                                })
+                            } else {
+                                // User already exists and wrong secret was provided
+                                return undefined
+                            }
+                        })
+                }
             } else {
                 const newUser = new User({
                     guid: (user.userGuid !== undefined) && (user.userGuid !== '') ? user.userGuid : randomUUID(),
@@ -45,12 +52,9 @@ export const registerUser = async (user) => {
                     lastOnline: new Date(),
                     active: true,
                 })
-                return newUser.save((error, document) => {
-                    if (!error)
-                        return cleanUserBeforeSending(document)
-                    else
-                        return undefined
-                })
+                return await newUser.save()
+                    .then((document) => cleanUserBeforeSending(document))
+                    .catch(() => undefined)
             }
     })    
 }

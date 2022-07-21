@@ -63,7 +63,7 @@ userRouter.post('/status/', (request, response) => {
         .then((result) => response.json(result))
 })
 
-userRouter.post('/authenticate/', (request, response) => {
+userRouter.post('/authenticate/', async (request, response) => {
     const body = request.body
     if (!body.userGuid && !body.userName && !body.email)
         return response.status(400).json({ error: 'Request is badly specified. Please provide either a userGuid, userName or email.' })
@@ -72,54 +72,72 @@ userRouter.post('/authenticate/', (request, response) => {
     if (!body.userName && body.isGuest)
         return response.status(400).json({ error: 'Guests must specify a username.' })
 
+    //TODO: Error on existing Username as guest/non-guest
+    let foundUser = null
     switch(true) {
         case (body.userGuid !== undefined) && (body.userGuid !== ''):
-            User.findOne({ 'guid': body.userGuid, 'guest': false, })
+            foundUser = await User.findOne({ 'guid': body.userGuid, 'guest': false, })
                 .then((existingUser) => {
-                    if ((existingUser !== null) && ((existingUser.guid !== undefined) && (existingUser.guid !== ''))) {
-                        argon2.verify(existingUser.secret, body.secret)
-                            .then((passwordsMatch) => {
-                                if (passwordsMatch)
-                                    response.json(cleanUserBeforeSending(existingUser))
-                            })
-                    }
+                    return existingUser
                 })
             break
         case (body.userName !== undefined) && (body.userName !== ''):
             if (body.isGuest) {
-                //TODO: fix for guests, we actually just need to create a new user
-                User.find({ 'name': body.userName, 'guest': true, })
-                    .then((users) => {
-                        response.json(users.map((user) => cleanUserBeforeSending(user)))
+                const guestUser = {
+                    userGuid: '',
+                    userName: body.userName,
+                    secret: '',
+                    email: '',
+                    isGuest: true,
+                }
+                // Check if the Guest User can be created
+                foundUser = await registerUser(guestUser)
+                    .then(async (result) => {
+                        if ((result !== undefined) && (result.guid !== null) && (result.guid !== ''))
+                            return await User.findOne({ 'name': body.userName, 'guest': true, })
+                                .then((existingUser) => existingUser)
                     })
             } else {
-                User.findOne({ 'name': body.userName, 'guest': false, })
-                    .then((existingUser) => {
-                        if ((existingUser !== null) && ((existingUser.guid !== undefined) && (existingUser.guid !== ''))) {
-                            argon2.verify(existingUser.secret, body.secret)
-                                .then((passwordsMatch) => {
-                                    if (passwordsMatch)
-                                        response.json(cleanUserBeforeSending(existingUser))
-                                })
-                        }
-                    })
+                foundUser = await User.findOne({ 'name': body.userName, 'guest': false, })
+                    .then((existingUser) => existingUser)
             }
             break
         case (body.email !== undefined) && (body.email !== ''):
-            User.findOne({ 'email': body.email, 'guest': false, })
-                .then((existingUser) => {
-                    if ((existingUser !== null) && ((existingUser.guid !== undefined) && (existingUser.guid !== ''))) {
-                        argon2.verify(existingUser.secret, body.secret)
-                            .then((passwordsMatch) => {
-                                if (passwordsMatch)
-                                    response.json(cleanUserBeforeSending(existingUser))
-                            })
-                    }
-                })
+            foundUser = await User.findOne({ 'email': body.email, 'guest': false, })
+                .then((existingUser) =>  existingUser)
             break
         default:
             return response.status(400).json({ error: 'All provided parameters were empty. Please rephrase the request.' })
+    }
+
+    // Verify what kind of User we've found
+    if ((foundUser !== null) && (foundUser !== undefined)) {
+        if ((foundUser.guid !== undefined) && (foundUser.guid !== '')) {
+            if (foundUser.guest) {
+                response.json(cleanUserBeforeSending(foundUser))
+            } else {
+                argon2.verify(foundUser.secret, body.secret)
+                    .then((passwordsMatch) => {
+                        if (passwordsMatch)
+                            // Everything matches, authentication successful!
+                            response.json(cleanUserBeforeSending(foundUser))
+                        else
+                            // Password incorrect!
+                            response.status(401).json({ error: 'The provided credentials are incorrect.' })
+                    })
+                    .catch(() => {
+                        // Some kind of Error happened during salting
+                        response.status(401).json({ error: 'The provided credentials are incorrect.' })
+                    })
+            }
+        } else {
+            // User does not exist
+            response.status(401).json({ error: 'The provided credentials are incorrect.' })
         }
+    } else {
+        // User does not exist
+        response.status(401).json({ error: 'The provided credentials are incorrect.' })
+    }
 })
 
 userRouter.post('/register/', (request, response) => {
@@ -135,6 +153,7 @@ userRouter.post('/register/', (request, response) => {
 
 userRouter.post('/session/', (request, response) => {
     const body = request.body
+    console.log('POST user/session, body:', body)
     if (!body.userGuid && !body.sessionToken) {
         if (!body.userGuid && !body.secret && !body.isGuest)
             return response.status(400).json({ error: 'Request is badly specified. Please provide either authentication or an existing session token.' })
@@ -170,17 +189,17 @@ userRouter.post('/session/', (request, response) => {
                                                     if (!error) {
                                                         response.json([document.guid])
                                                     } else {
-                                                        return response.status(500).json({ error: 'Session could not be opened.' })
+                                                        response.status(500).json({ error: 'Session could not be opened.' })
                                                     }
                                                 })
                                             } else
-                                                return response.status(403).json({ error: 'The provided credentials are not allowed to authenticate.' })
+                                                response.status(403).json({ error: 'The provided credentials are not allowed to authenticate.' })
                                         })
                                 } else
-                                    return response.status(403).json({ error: 'The provided credentials are not allowed to authenticate.' })
+                                    response.status(403).json({ error: 'The provided credentials are not allowed to authenticate.' })
                             })
                     } else
-                        return response.status(410).json({ error: 'No active session with provided token found. Please reauthenticate.' })
+                        response.status(410).json({ error: 'No active session with provided token found. Please reauthenticate.' })
                 }
             })
         break
@@ -204,17 +223,18 @@ userRouter.post('/session/', (request, response) => {
                                 if (!error) {
                                     response.json([document.guid])
                                 } else {
-                                    return response.status(500).json({ error: 'Session could not be opened.' })
+                                    response.status(500).json({ error: 'Session could not be opened.' })
                                 }
                             })
                         } else
-                            return response.status(403).json({ error: 'The provided credentials are not allowed to authenticate.' })
+                            response.status(403).json({ error: 'The provided credentials are not allowed to authenticate.' })
                     })
                 } else
-                    return response.status(403).json({ error: 'The provided credentials are not allowed to authenticate.' })
+                    response.status(403).json({ error: 'The provided credentials are not allowed to authenticate.' })
             })
         break
     case ((body.userGuid !== '' && body.userGuid !== undefined) && (body.isGuest !== '' && body.isGuest !== undefined)):
+        console.log('preparing new Session')
         const newSession = new Session({
             guid: randomUUID(),
             userGuid: body.userGuid,
@@ -225,14 +245,17 @@ userRouter.post('/session/', (request, response) => {
             active: true,
         })
         newSession.save((error, document) => {
-            if (!error) {
-                response.json([document.guid])
+            console.log('saved session', error, document)
+            if ((error === null) || (error === undefined)) {
+                console.log('sending session token', [document.guid])
+                response.json([ document.guid ])
             } else {
-                return response.status(500).json({ error: 'Session could not be opened.' })
+                response.status(500).json({ error: 'Session could not be opened.' })
             }
         })
+        break
     default:
-        return response.status(400).json({ error: 'All provided parameters were empty. Please rephrase the request.' })
+        response.status(400).json({ error: 'All provided parameters were empty. Please rephrase the request.' })
     }
 })
 
