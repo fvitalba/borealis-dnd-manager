@@ -1,5 +1,38 @@
 import mongoose from 'mongoose'
 
+export interface ICharacterClassSchema {
+    level: number,
+    class: number,
+}
+
+export interface ICharacterHitDiceSchema {
+    numberOfDice: number,
+    remainingNoOfDice: number,
+    hitDiceType: number,
+}
+
+export interface ICharacterSchema {
+    roomId: string,
+    guid: string,
+    name: string,
+    strength: number,
+    dexterity: number,
+    constitution: number,
+    intelligence: number,
+    wisdom: number,
+    charisma: number,
+    proficiency: number,
+    armorclass: number,
+    passivePerception: number,
+    maxHealth: number,
+    currHealth: number,
+    tempHealth: number,
+    class: [ICharacterClassSchema],
+    hitDice: [ICharacterHitDiceSchema],
+    username: string,
+    timestamp: number,
+}
+
 const url = process.env.MONGODB_URI ? process.env.MONGODB_URI : ''
 mongoose.connect(url)
     .then()
@@ -7,18 +40,18 @@ mongoose.connect(url)
         console.log('error connecting to MongoDB:', error.message)
     })
 
-const characterClassSchema = new mongoose.Schema({
+const characterClassSchema = new mongoose.Schema<ICharacterClassSchema>({
     level: Number,
     class: Number,
 })
 
-const characterHitDiceSchema = new mongoose.Schema({
+const characterHitDiceSchema = new mongoose.Schema<ICharacterHitDiceSchema>({
     numberOfDice: Number,
     remainingNoOfDice: Number,
     hitDiceType: Number,
 })
 
-const characterSchema = new mongoose.Schema({
+const characterSchema = new mongoose.Schema<ICharacterSchema>({
     roomId: String,
     guid: String,
     name: String,

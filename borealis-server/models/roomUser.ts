@@ -1,5 +1,15 @@
 import mongoose from 'mongoose'
 
+export interface IRoomUserSchema {
+    roomId: string,
+    guid: string,
+    name: string,
+    type: number,
+    assignedCharacterGuid: string,
+    lastOnline: number,
+    active: boolean,
+}
+
 const url = process.env.MONGODB_URI ? process.env.MONGODB_URI : ''
 mongoose.connect(url)
     .then()
@@ -7,7 +17,7 @@ mongoose.connect(url)
         console.log('error connecting to MongoDB:', error.message)
     })
 
-const roomUserSchema = new mongoose.Schema({
+const roomUserSchema = new mongoose.Schema<IRoomUserSchema>({
     roomId: String,
     guid: String,
     name: String,

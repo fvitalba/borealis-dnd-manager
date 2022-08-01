@@ -1,5 +1,26 @@
 import mongoose from 'mongoose'
 
+export interface ITokenSchema {
+    roomId: string,
+    guid: string,
+    name: string,
+    imageUrl: string,
+    mapId: number,
+    x: number,
+    y: number,
+    condition: number,
+    type: number,
+    size: number,
+    width: number,
+    height: number,
+    selected: boolean,
+    hidden: boolean,
+    showLabel: boolean,
+    x0: number,
+    y0: number,
+    timestamp: number,
+}
+
 const url = process.env.MONGODB_URI ? process.env.MONGODB_URI : ''
 mongoose.connect(url)
     .then()
@@ -7,7 +28,7 @@ mongoose.connect(url)
         console.log('error connecting to MongoDB:', error.message)
     })
 
-const tokenSchema = new mongoose.Schema({
+const tokenSchema = new mongoose.Schema<ITokenSchema>({
     roomId: String,
     guid: String,
     name: String,
