@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
 
-const url = process.env.MONGODB_URI
+const url = process.env.MONGODB_URI ? process.env.MONGODB_URI : ''
 mongoose.connect(url)
-    .then((result) => { })
+    .then()
     .catch((error) => {
         console.log('error connecting to MongoDB:', error.message)
     })
