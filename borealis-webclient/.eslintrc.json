@@ -3,7 +3,7 @@
     "env": {
         "node": true,
         "browser": true,
-        "es2016": true,
+        "es6": true,
         "jest": true
     },
     "extends": [

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import 'dotenv/config'
 import express from 'express'
 import fs from 'fs'
@@ -52,7 +53,7 @@ const wss = new WebSocketServer({ server: server, autoAcceptConnections: true, }
 wss.on('connection', (websocketConnection, connectionRequest) => {
     const [path, params] = connectionRequest?.url?.split('?')
     const connectionParams = queryString.parse(params)
-    
+
     websocketConnection.roomId = connectionParams.roomId
     websocketConnection.socketGuid = connectionParams.socketGuid
     websocketConnection.userGuid = connectionParams.userGuid
