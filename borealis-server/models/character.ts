@@ -27,8 +27,8 @@ export interface ICharacterSchema {
     maxHealth: number,
     currHealth: number,
     tempHealth: number,
-    class: [ICharacterClassSchema],
-    hitDice: [ICharacterHitDiceSchema],
+    class: Array<ICharacterClassSchema>,
+    hitDice: Array<ICharacterHitDiceSchema>,
     username: string,
     timestamp: number,
 }

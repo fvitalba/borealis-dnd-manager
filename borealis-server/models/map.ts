@@ -6,7 +6,7 @@ export interface IPointSchema {
 }
 
 export interface IPathSchema {
-    points: [IPointSchema],
+    points: Array<IPointSchema>,
     r: number,
     r2: number,
     tool: number,
@@ -23,8 +23,8 @@ export interface IMapSchema {
     y: number,
     width: number,
     height: number,
-    drawPaths: [IPathSchema],
-    fogPaths: [IPathSchema],
+    drawPaths: Array<IPathSchema>,
+    fogPaths: Array<IPathSchema>,
     timestamp: number,
 }
 

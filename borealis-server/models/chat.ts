@@ -14,7 +14,7 @@ export interface IChatMessage {
 
 export interface IChatSchema {
     roomId: string,
-    messages: [IChatMessage],
+    messages: Array<IChatMessage>,
     timestamp: number,
 }
 
