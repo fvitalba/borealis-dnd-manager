@@ -3,8 +3,8 @@ import IIncCharacter from '../incomingInterfaces/incCharacter.js'
 import { overwriteRoomCharacters, getRoomCharacters, parseIncCharacterToCharacterSchema } from '../utils/characterHandler.js'
 
 interface ICharacterRouterRequestQuery {
-    roomId: string,
-    characterGuid: string,
+    roomId?: string,
+    characterGuid?: string,
 }
 
 interface ICharacterRouterRequestBody {
@@ -36,9 +36,7 @@ characterRouter.post('/', (request: Request<unknown, unknown, ICharacterRouterRe
     const newCharacters = incCharacters.map((incCharacter) => parseIncCharacterToCharacterSchema(incCharacter, body.roomId, new Date()))
 
     const updatedCharacters = overwriteRoomCharacters(body.roomId, newCharacters)
-        .then((result) => {
-            return result
-        })
+        .then((result) => result)
     response.json(updatedCharacters)
 })
 

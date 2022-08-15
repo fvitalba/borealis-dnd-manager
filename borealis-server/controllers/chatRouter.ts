@@ -1,31 +1,41 @@
-import { Router } from 'express'
-import Chat from '../models/chat.js'
-import { saveUpdateRoomChat } from '../utils/chatHandler.js'
+import { Request, Response, Router } from 'express'
+import IIncChatMessage from '../incomingInterfaces/incChatMessage.js'
+import { overwriteRoomChat, getRoomChat, parseIncChatToChatSchema } from '../utils/chatHandler.js'
 
-const chatRouter = new Router()
+interface IChatRouterRequestQuery {
+    roomId?: string,
+}
 
-chatRouter.get('/:roomId?', (request, result) => {
-    const roomId = request.params.roomId ? request.params.roomId : request.query.roomId
+interface IChatRouterRequestBody {
+    payload: string,
+    roomId: string,
+}
 
-    if (roomId !== undefined && roomId !== '') {
-        Chat.find({ 'roomId': roomId, })
-            .then((chat) => {
-                result.json(chat)
-            })
+const chatRouter = Router()
+
+chatRouter.get('/:roomId?', (request: Request<unknown, unknown, unknown, IChatRouterRequestQuery>, response: Response) => {
+    const roomId = request.query.roomId ? request.query.roomId : ''
+
+    if (roomId !== '') {
+        response.json(getRoomChat(roomId))
     } else {
-        result.json([])
+        response.json([])
     }
 })
 
-chatRouter.post('/', (request, response) => {
+chatRouter.post('/', (request: Request<unknown, unknown, IChatRouterRequestBody, unknown>, response: Response) => {
     const body = request.body
     if (body.payload === undefined)
-        return response.status(400).json({ error: 'Request Payload is missing.' })
+        response.status(400).json({ error: 'Request Payload is missing.' })
     if (body.roomId === undefined || body.roomId === '')
-        return response.status(400).json({ error: 'Room was not specified.' })
+        response.status(400).json({ error: 'Room was not specified.' })
 
-    saveUpdateRoomChat(body.roomId, JSON.parse(body.payload))
-        .then((result) => response.json(result))
+    const incChatMessages = JSON.parse(body.payload) as Array<IIncChatMessage>
+    const newChat = parseIncChatToChatSchema(incChatMessages, body.roomId, new Date())
+
+    const updatedChat = overwriteRoomChat(body.roomId, newChat.messages)
+        .then((result) => result)
+    response.json(updatedChat)
 })
 
 export default chatRouter
