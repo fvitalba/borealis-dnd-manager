@@ -1,33 +1,43 @@
-import { Router } from 'express'
-import Map from '../models/map.js'
-import { saveUpdateRoomMap } from '../utils/mapHandler.js'
+import { Request, Response, Router } from 'express'
+import IIncMap from '../incomingInterfaces/incMap.js'
+import { getRoomMaps, overwriteRoomMaps, parseIncMapToMapSchema } from '../utils/mapHandler.js'
 
-const mapRouter = new Router()
+interface IMapsRouterRequestQuery {
+    roomId?: string,
+    mapId?: number,
+}
 
-mapRouter.get('/:roomId?:mapId?', (request, result) => {
-    const roomId = request.params.roomId ? request.params.roomId : request.query.roomId
-    const mapId = request.params.mapId ? request.params.mapId : request.query.mapId
+interface IMapsRouterRequestBody {
+    payload: string,
+    roomId: string,
+}
 
-    if (roomId !== undefined && roomId !== '') {
-        const queryParameters = mapId ? { 'roomId': roomId, 'id': mapId, } : { 'roomId': roomId, }
-        Map.find(queryParameters)
-            .then((maps) => {
-                result.json(maps)
-            })
+const mapRouter = Router()
+
+mapRouter.get('/:roomId?:mapId?', (request: Request<unknown, unknown, unknown, IMapsRouterRequestQuery>, response: Response) => {
+    const roomId = request.query.roomId ? request.query.roomId : ''
+    const mapId = (request.query.mapId !== undefined) ? request.query.mapId : -1
+
+    if (roomId !== '') {
+        response.json(getRoomMaps(roomId, mapId))
     } else {
-        result.json([])
+        response.json([])
     }
 })
 
-mapRouter.post('/', (request, response) => {
+mapRouter.post('/', (request: Request<unknown, unknown, IMapsRouterRequestBody, unknown>, response: Response) => {
     const body = request.body
     if (body.payload === undefined)
-        return response.status(400).json({ error: 'Request Payload is missing.' })
+        response.status(400).json({ error: 'Request Payload is missing.' })
     if (body.roomId === undefined || body.roomId === '')
-        return response.status(400).json({ error: 'Room was not specified.' })
+        response.status(400).json({ error: 'Room was not specified.' })
 
-    saveUpdateRoomMap(body.roomId, JSON.parse(body.payload))
-        .then((result) => response.json(result))
+    const incMaps = JSON.parse(body.payload) as Array<IIncMap>
+    const newMaps = incMaps.map((incMap) => parseIncMapToMapSchema(incMap, body.roomId, new Date()))
+
+    const updatedMaps = overwriteRoomMaps(body.roomId, newMaps)
+        .then((result) => result)
+    response.json(updatedMaps)
 })
 
 export default mapRouter
