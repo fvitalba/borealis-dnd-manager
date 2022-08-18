@@ -150,20 +150,21 @@ export const overwriteAllRoomUsersStatus = async (roomId: string, newStatus: boo
 
     return await upsertRoomUsers(roomId, { active: newStatus, })
 }
-// #endregion Room Users
 
-
-export const cleanUserBeforeSending = (user: IUserSchema): IUserSchema => {
-    return {
-        guid: user.guid,
-        name: user.name,
-        email: user.guest ? '' : user.email,
-        guest: user.guest,
-        lastOnline: user.guest ? 0 : user.lastOnline,
-        active: user.guest ? true : user.active,
-        secret: '',
-    }
+export const setRoomUsersInactiveAfterTimeout = async (): Promise<number> => {
+    const lastOnlineThreshold = new Date()
+    return await RoomUser.updateMany({ lastOnline: { $lt: (lastOnlineThreshold.getMilliseconds() - 30000) } }, { active: false })
+        .then((res) => res.upsertedCount)
+        .catch(() => 0)
 }
+
+export const getAllRoomActiveUsers = async (roomId: string, userGuid?: string): Promise<Array<IRoomUserSchema>> => {
+    const queryParameters = userGuid ? { 'roomId': roomId, 'guid': userGuid, 'active': true, } : { 'roomId': roomId, 'active': true, }
+    return RoomUser.find(queryParameters)
+        .then((roomUsers) => roomUsers))
+        .catch(() => [])
+}
+// #endregion Room Users
 
 export const emptyUser = (): IUserSchema => {
     return {

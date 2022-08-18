@@ -1,44 +1,43 @@
-import { Router } from 'express'
+import { Request, Response, Router } from 'express'
 import { randomUUID } from 'crypto'
 import argon2 from 'argon2'
 import User from '../models/user.js'
 import RoomUser from '../models/roomUser.js'
 import Session from '../models/session.js'
-import { registerUser, saveUpdateRoomUser, cleanUserBeforeSending, setAllRoomUserStatus, saveUpdateRoomUsers } from '../utils/userHandler.js'
+import { registerUser, saveUpdateRoomUser, cleanUserBeforeSending, setAllRoomUserStatus, saveUpdateRoomUsers, setRoomUsersInactiveAfterTimeout, getAllRoomActiveUsers } from '../utils/userHandler.js'
+import IIncRoomUser from '../incomingInterfaces/incRoomUser.js'
+import IIncUser from '../incomingInterfaces/incUser.js'
 
-const userRouter = new Router()
+interface IUsersRouterRequestQuery {
+    userGuid?: string,
+    roomId?: string,
+}
 
-userRouter.get('/:userGuid?:roomId?', (request, result) => {
-    const userGuid = request.params.userGuid ? request.params.userGuid : request.query.userGuid
-    const roomId = request.params.roomId ? request.params.roomId : request.query.roomId
+interface IUsersRouterRequestBody {
+    payload?: string,
+    newUser?: IIncRoomUser,
+    roomId: string,
+}
 
-    // check user activity
-    RoomUser.updateMany({ lastOnline: { $lt: (new Date() - 30000) } }, { active: false })
+const userRouter = Router()
+
+userRouter.get('/:userGuid?:roomId?', (request: Request<unknown, unknown, unknown, IUsersRouterRequestQuery>, response: Response) => {
+    const userGuid = request.query.userGuid ? request.query.userGuid : ''
+    const roomId = request.query.roomId ? request.query.roomId : ''
+
+    // First we updated all the Users Activity
+    setRoomUsersInactiveAfterTimeout()
         .then(() => {
-            if (userGuid !== undefined && userGuid !== '') {
-                User.find({ 'guid': userGuid, 'active': true, })
-                    .then((users) => {
-                        result.json(users)
-                    })
-            } else if ((roomId !== undefined) && (roomId !== '')) {
-                const queryParameters = { 'roomId': roomId, 'active': true, }
-                if (userGuid !== undefined && userGuid !== '')
-                    queryParameters['guid'] = userGuid
-                RoomUser.find(queryParameters)
-                    .then((roomUsers) => {
-                        result.json(roomUsers)
-                    })
-            } else {
-                result.json([])
-            }
+            // Then we retrieve the users from the DB and return them
+            response.json(getAllRoomActiveUsers(roomId, userGuid))
         })
-        .catch(() => result.json([]))
+        .catch(() => response.json([]))
 })
 
-userRouter.post('/', (request, response) => {
+userRouter.post('/', (request: Request<unknown, unknown, IUsersRouterRequestBody, unknown>, response: Response) => {
     const body = request.body
     if (!body.newUser && !body.payload)
-        return response.status(400).json({ error: 'Request is badly specified. Please provide users to save.' })
+        response.status(400).json({ error: 'Request is badly specified. Please provide users to save.' })
 
     // check user activity
     RoomUser.updateMany({ lastOnline: { $lt: (new Date() - 30000) } }, { active: false })
@@ -48,6 +47,7 @@ userRouter.post('/', (request, response) => {
                     .then((result) => response.json(result))
             }
             if (body.payload !== undefined) {
+                const incUsers = JSON.parse(body.payload) as Array<IIncUser>
                 saveUpdateRoomUsers(body.roomId, JSON.parse(body.payload))
                     .then((result) => response.json(result))
             }
@@ -75,39 +75,39 @@ userRouter.post('/authenticate/', async (request, response) => {
     //TODO: Error on existing Username as guest/non-guest
     let foundUser = null
     switch(true) {
-        case (body.userGuid !== undefined) && (body.userGuid !== ''):
-            foundUser = await User.findOne({ 'guid': body.userGuid, 'guest': false, })
-                .then((existingUser) => {
-                    return existingUser
-                })
-            break
-        case (body.userName !== undefined) && (body.userName !== ''):
-            if (body.isGuest) {
-                const guestUser = {
-                    userGuid: '',
-                    userName: body.userName,
-                    secret: '',
-                    email: '',
-                    isGuest: true,
-                }
-                // Check if the Guest User can be created
-                foundUser = await registerUser(guestUser)
-                    .then(async (result) => {
-                        if ((result !== undefined) && (result.guid !== null) && (result.guid !== ''))
-                            return await User.findOne({ 'name': body.userName, 'guest': true, })
-                                .then((existingUser) => existingUser)
-                    })
-            } else {
-                foundUser = await User.findOne({ 'name': body.userName, 'guest': false, })
-                    .then((existingUser) => existingUser)
+    case (body.userGuid !== undefined) && (body.userGuid !== ''):
+        foundUser = await User.findOne({ 'guid': body.userGuid, 'guest': false, })
+            .then((existingUser) => {
+                return existingUser
+            })
+        break
+    case (body.userName !== undefined) && (body.userName !== ''):
+        if (body.isGuest) {
+            const guestUser = {
+                userGuid: '',
+                userName: body.userName,
+                secret: '',
+                email: '',
+                isGuest: true,
             }
-            break
-        case (body.email !== undefined) && (body.email !== ''):
-            foundUser = await User.findOne({ 'email': body.email, 'guest': false, })
-                .then((existingUser) =>  existingUser)
-            break
-        default:
-            return response.status(400).json({ error: 'All provided parameters were empty. Please rephrase the request.' })
+            // Check if the Guest User can be created
+            foundUser = await registerUser(guestUser)
+                .then(async (result) => {
+                    if ((result !== undefined) && (result.guid !== null) && (result.guid !== ''))
+                        return await User.findOne({ 'name': body.userName, 'guest': true, })
+                            .then((existingUser) => existingUser)
+                })
+        } else {
+            foundUser = await User.findOne({ 'name': body.userName, 'guest': false, })
+                .then((existingUser) => existingUser)
+        }
+        break
+    case (body.email !== undefined) && (body.email !== ''):
+        foundUser = await User.findOne({ 'email': body.email, 'guest': false, })
+            .then((existingUser) =>  existingUser)
+        break
+    default:
+        return response.status(400).json({ error: 'All provided parameters were empty. Please rephrase the request.' })
     }
 
     // Verify what kind of User we've found
@@ -144,7 +144,7 @@ userRouter.post('/register/', (request, response) => {
     const body = request.body
     if (!body.user)
         return response.status(400).json({ error: 'Request is badly specified. Please provide an user for registration.' })
-    
+
     registerUser(JSON.parse(body.user))
         .then((result) => {
             response.json(result)
@@ -208,27 +208,27 @@ userRouter.post('/session/', (request, response) => {
             .then((existingUser) => {
                 if ((existingUser !== null) && ((existingUser.guid !== undefined) && (existingUser.guid !== ''))) {
                     argon2.verify(existingUser.secret, body.secret)
-                    .then((passwordsMatch) => {
-                        if (passwordsMatch) {
-                            const newSession = new Session({
-                                guid: randomUUID(),
-                                userGuid: existingUser.guid,
-                                timestamp: Date.now(),
-                                createdFrom: '',
-                                createdFromDevice: '',
-                                validTo: Date.now() + 86400000, // Valid for 24h
-                                active: true,
-                            })
-                            newSession.save((error, document) => {
-                                if (!error) {
-                                    response.json([document.guid])
-                                } else {
-                                    response.status(500).json({ error: 'Session could not be opened.' })
-                                }
-                            })
-                        } else
-                            response.status(403).json({ error: 'The provided credentials are not allowed to authenticate.' })
-                    })
+                        .then((passwordsMatch) => {
+                            if (passwordsMatch) {
+                                const newSession = new Session({
+                                    guid: randomUUID(),
+                                    userGuid: existingUser.guid,
+                                    timestamp: Date.now(),
+                                    createdFrom: '',
+                                    createdFromDevice: '',
+                                    validTo: Date.now() + 86400000, // Valid for 24h
+                                    active: true,
+                                })
+                                newSession.save((error, document) => {
+                                    if (!error) {
+                                        response.json([document.guid])
+                                    } else {
+                                        response.status(500).json({ error: 'Session could not be opened.' })
+                                    }
+                                })
+                            } else
+                                response.status(403).json({ error: 'The provided credentials are not allowed to authenticate.' })
+                        })
                 } else
                     response.status(403).json({ error: 'The provided credentials are not allowed to authenticate.' })
             })
