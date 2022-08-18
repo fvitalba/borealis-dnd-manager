@@ -1,9 +1,25 @@
 import { FilterQuery, UpdateQuery } from 'mongoose'
+import IIncRoom from '../incomingInterfaces/incRoom.js'
 import Room, { IGameSchema } from '../models/room.js'
 import RoomUser, { IRoomUserSchema } from '../models/roomUser.js'
 
 export interface IGameSchemaWithRole extends IGameSchema {
     userRole: number,
+}
+
+export const parseIncRoomToRoomSchema = (incRoom: IIncRoom, hostUserGuid: string, roomId: string, roomName: string, timestamp: Date): IGameSchema => {
+    return {
+        currentMapId: incRoom.currentMapId,
+        fogEnabled: incRoom.fogEnabled,
+        height: incRoom.height,
+        width: incRoom.width,
+        tokenSelected: incRoom.tokenSelected,
+        version: incRoom.version,
+        hostUserGuid: hostUserGuid,
+        roomId: roomId,
+        roomName: roomName,
+        timestamp: timestamp.getMilliseconds(),
+    }
 }
 
 export const upsertSingleRoom = async (roomId: string, hostUserGuid: string, updQuery: UpdateQuery<IGameSchema>): Promise<IGameSchema | undefined> => {
@@ -64,7 +80,7 @@ export const getAllUserRoomsWithRole = async (roomId: string, userGuid: string):
 }
 
 export const getAllRoomsForUserIdWithRole = async (roomId: string, userGuid: string): Promise<Array<IGameSchemaWithRole | undefined>> => {
-    if (!userGuid)
+    if (userGuid === '')
         return []
 
     const usersRoomsWithRole = await getAllUserRoomsWithRole(roomId, userGuid)
