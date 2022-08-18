@@ -1,33 +1,43 @@
-import { Router } from 'express'
-import Token from '../models/token.js'
-import { saveUpdateRoomToken } from '../utils/tokenHandler.js'
+import { Request, Response, Router } from 'express'
+import IIncToken from '../incomingInterfaces/incToken.js'
+import { getRoomTokens, overwriteRoomTokens, parseIncTokenToTokenSchema } from '../utils/tokenHandler.js'
 
-const tokenRouter = new Router()
+interface ITokensRouterRequestQuery {
+    roomId?: string,
+    tokenGuid?: string,
+}
 
-tokenRouter.get('/:roomId?:tokenGuid?', (request, result) => {
-    const roomId = request.params.roomId ? request.params.roomId : request.query.roomId
-    const tokenGuid = request.params.tokenGuid ? request.params.tokenGuid : request.query.tokenGuid
+interface ITokensRouterRequestBody {
+    payload: string,
+    roomId: string,
+}
 
-    if (roomId !== undefined && roomId !== '') {
-        const queryParameters = tokenGuid ? { 'roomId': roomId, 'guid': tokenGuid, } : { 'roomId': roomId, }
-        Token.find(queryParameters)
-            .then((tokens) => {
-                result.json(tokens)
-            })
+const tokenRouter = Router()
+
+tokenRouter.get('/:roomId?:tokenGuid?', (request: Request<unknown, unknown, unknown, ITokensRouterRequestQuery>, response: Response) => {
+    const roomId = request.query.roomId ? request.query.roomId : ''
+    const tokenGuid = (request.query.tokenGuid !== undefined) ? request.query.tokenGuid : ''
+
+    if (roomId !== '') {
+        response.json(getRoomTokens(roomId,tokenGuid))
     } else {
-        result.json([])
+        response.json([])
     }
 })
 
-tokenRouter.post('/', (request, response) => {
+tokenRouter.post('/', (request: Request<unknown, unknown, ITokensRouterRequestBody, unknown>, response: Response) => {
     const body = request.body
     if (body.payload === undefined)
-        return response.status(400).json({ error: 'Request Payload is missing.' })
+        response.status(400).json({ error: 'Request Payload is missing.' })
     if (body.roomId === undefined || body.roomId === '')
-        return response.status(400).json({ error: 'Room was not specified.' })
+        response.status(400).json({ error: 'Room was not specified.' })
 
-    saveUpdateRoomToken(body.roomId, JSON.parse(body.payload))
-        .then((result) => response.json(result))
+    const incTokens = JSON.parse(body.payload) as Array<IIncToken>
+    const newTokens = incTokens.map((incToken) => parseIncTokenToTokenSchema(incToken, body.roomId, new Date()))
+
+    const updatedTokens = overwriteRoomTokens(body.roomId, newTokens)
+        .then((result) => result)
+    response.json(updatedTokens)
 })
 
 export default tokenRouter
