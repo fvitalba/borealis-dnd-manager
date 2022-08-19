@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express'
-import { registerUser, overwriteRoomUsers, setRoomUsersInactiveAfterTimeout, getAllRoomActiveUsers, parseIncRoomUserToRoomUserSchema, overwriteSingleRoomUser, overwriteAllRoomUsersStatus, authenticateUser, emptyUser, startUserSession } from '../utils/userHandler.js'
+import { registerUser, overwriteRoomUsers, setRoomUsersInactiveAfterTimeout, getAllRoomActiveUsers, parseIncRoomUserToRoomUserSchema, overwriteSingleRoomUser, overwriteAllRoomUsersStatus, authenticateUser, startUserSession, parseIncUserToUserSchema } from '../utils/userHandler.js'
 import IIncRoomUser from '../incomingInterfaces/incRoomUser.js'
 import IIncUser from '../incomingInterfaces/incUser.js'
 
@@ -46,14 +46,18 @@ userRouter.post('/', (request: Request<unknown, unknown, IUsersRouterRequestBody
     if (body.newRoomUser !== undefined) {
         const incRoomUser = body.newRoomUser
         const newRoomUser = parseIncRoomUserToRoomUserSchema(incRoomUser)
-        overwriteSingleRoomUser(body.roomId, newRoomUser)
-            .then((result) => response.json(result))
+        const updatedUsers = overwriteSingleRoomUser(body.roomId, newRoomUser)
+            .then((result) => [result])
+            .catch(() => [])
+        response.json(updatedUsers)
     }
     if (body.payload !== undefined) {
         const incUsers = JSON.parse(body.payload) as Array<IIncRoomUser>
         const newUsers = incUsers.map((incUser) => parseIncRoomUserToRoomUserSchema(incUser))
-        overwriteRoomUsers(body.roomId, newUsers)
-            .then((result) => response.json(result))
+        const updatedUsers = overwriteRoomUsers(body.roomId, newUsers)
+            .then((result) => result)
+            .catch(() => [])
+        response.json(updatedUsers)
     }
     response.status(400).json({ error: 'Request is badly specified. Either newRoomUser or payload was missing.' })
 })
@@ -64,8 +68,10 @@ userRouter.post('/status/', (request: Request<unknown, unknown, IUsersRouterRequ
         response.status(400).json({ error: 'Request is badly specified. Either RoomID or new Status was missing.' })
 
     const newUserActive = body.active ? body.active : false
-    overwriteAllRoomUsersStatus(body.roomId, newUserActive)
-        .then((result) => response.json(result))
+    const updatedUsers = overwriteAllRoomUsersStatus(body.roomId, newUserActive)
+        .then((result) => result)
+        .catch(() => [])
+    response.json(updatedUsers)
 })
 
 userRouter.post('/authenticate/', (request: Request<unknown, unknown, IUsersRouterRequestBody, unknown>, response: Response) => {
@@ -78,44 +84,46 @@ userRouter.post('/authenticate/', (request: Request<unknown, unknown, IUsersRout
         response.status(400).json({ error: 'Guests must specify a username.' })
 
     const isGuest = body.isGuest ? body.isGuest : false
-    const authenticatedUser = authenticateUser(isGuest, body.userGuid, body.userName, body.email, body.secret)
-        .then((result) => result)
-        .catch(() => emptyUser())
-    if (authenticatedUser.guid === '')
-        response.status(401).json({ error: 'The provided credentials are incorrect.' })
-    response.json(authenticatedUser)
+    authenticateUser(isGuest, body.userGuid, body.userName, body.email, body.secret)
+        .then((result) => {
+            if (result.guid === '')
+                response.status(401).json({ error: 'The provided credentials are incorrect.' })
+            response.json(result)
+        })
+        .catch(() => response.status(401).json({ error: 'The provided credentials are incorrect.' }))
 })
 
 userRouter.post('/register/', (request: Request<unknown, unknown, IUsersRouterRequestBody, unknown>, response: Response) => {
     const body = request.body
-    if (!body.newRoomUser)
+    if (!body.newUser)
         response.status(400).json({ error: 'Request is badly specified. Please provide an user for registration.' })
 
-    const incUser = body.newUser
-    const newUser = parseIncRoomUserToRoomUserSchema(incUser)
-    const registeredUser = registerUser(newUser)
-        .then((result) => result)
-        .catch(() => emptyUser())
-    if (registeredUser.guid === '')
-        response.status(500).json({ error: 'User could not be registered.' })
-    response.json(registeredUser)
+    const incUser = body.newUser as IIncUser
+    const newUser = parseIncUserToUserSchema(incUser, false, (new Date()).getMilliseconds())
+    registerUser(newUser)
+        .then((result) => {
+            if (result.guid === '')
+                response.status(500).json({ error: 'User could not be registered.' })
+            response.json(result)
+        })
+        .catch(() => response.status(500).json({ error: 'User could not be registered.' }))
 })
 
 userRouter.post('/session/', (request: Request<unknown, unknown, IUsersRouterRequestBody, unknown>, response: Response) => {
     const body = request.body
-    console.log('POST user/session, body:', body)
     if (!body.userGuid && !body.sessionToken) {
         if (!body.userGuid && !body.secret && !body.isGuest)
             response.status(400).json({ error: 'Request is badly specified. Please provide either authentication or an existing session token.' })
     }
 
-    const isGuest = body.isGuest ? body.isGuest : false
-    const newSessionToken = startUserSession(isGuest, body.userGuid, body.sessionToken, body.secret)
-        .then((result) => result)
-        .catch(() => '')
-    if (newSessionToken === '')
-        response.status(500).json({ error: 'Session could not be opened.' })
-    response.json([ newSessionToken ])
+    startUserSession(body.userGuid, body.sessionToken, body.secret)
+        .then((result) => {
+            if (result === '')
+                response.status(500).json({ error: 'Session could not be opened.' })
+            else
+                response.json([ result ])
+        })
+        .catch(() => response.status(500).json({ error: 'Session could not be opened.' }))
 })
 
 export default userRouter
