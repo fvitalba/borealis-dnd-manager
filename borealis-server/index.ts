@@ -3,7 +3,7 @@ import express from 'express'
 import fs from 'fs'
 import http from 'http'
 import https from 'https'
-import { ServerOptions, WebSocket, WebSocketServer } from 'ws'
+import { AddressInfo, ServerOptions, WebSocket, WebSocketServer } from 'ws'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import queryString from 'query-string'
@@ -93,5 +93,6 @@ wss.on('connection', (websocketConnection: IBorealisWebSocket, connectionRequest
 
 // Start server
 server.listen(serverPort, () => {
-    console.log(`Server started on following address\n${ server.address()?.toString() }.`)
+    const serverAddress = server.address() as AddressInfo
+    console.log(`Server started on following port: ${ serverAddress.port }.`)
 })

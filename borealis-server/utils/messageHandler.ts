@@ -9,10 +9,10 @@ interface IIncomingMessage {
     type: string,
 }
 
-export const handleIncomingMessage = async (websocketConnection: WebSocket, incMessage: string): Promise<IOutgoingMessage> => {
+export const handleIncomingMessage = (_websocketConnection: WebSocket, incMessage: string): Promise<IOutgoingMessage> => {
     const parsedMessage = JSON.parse(incMessage) as IIncomingMessage
 
-    return await new Promise((resolve, _reject) => {
+    return new Promise((resolve, _reject) => {
         let outgoingMessage = ''
         switch (parsedMessage.type) {
         /*

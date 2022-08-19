@@ -12,6 +12,9 @@
         "es6": true,
         "node": true
     },
+    "ignorePatterns": [
+        "srvbuild/*"
+    ],
     "rules": {
         "@typescript-eslint/semi": [
             "off"
