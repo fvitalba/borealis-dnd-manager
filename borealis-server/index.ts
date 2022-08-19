@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import 'dotenv/config'
 import express from 'express'
 import fs from 'fs'
@@ -63,6 +62,7 @@ interface IBorealisWebSocket extends WebSocket {
 }
 
 wss.on('connection', (websocketConnection: IBorealisWebSocket, connectionRequest) => {
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const [_path, params] = connectionRequest.url ? connectionRequest.url.split('?') : ['', '']
     const connectionParams = queryString.parse(params, { parseNumbers: true, parseBooleans: true, })
 
@@ -87,6 +87,7 @@ wss.on('connection', (websocketConnection: IBorealisWebSocket, connectionRequest
                     })
                 }
             })
+            .catch(() => undefined)
     })
 })
 

@@ -5,11 +5,15 @@ export interface IOutgoingMessage {
     sendBackToSender: boolean,
 }
 
+interface IIncomingMessage {
+    type: string,
+}
+
 export const handleIncomingMessage = async (websocketConnection: WebSocket, incMessage: string): Promise<IOutgoingMessage> => {
-    const parsedMessage = JSON.parse(incMessage)
+    const parsedMessage = JSON.parse(incMessage) as IIncomingMessage
 
     return await new Promise((resolve, _reject) => {
-        let outgoingMessage = undefined
+        let outgoingMessage = ''
         switch (parsedMessage.type) {
         /*
             case 'pushAssignCharacter':
@@ -22,7 +26,8 @@ export const handleIncomingMessage = async (websocketConnection: WebSocket, incM
 */
         default:
             // Forward message to all other clients (for this room)
-            outgoingMessage = parsedMessage
+            //TODO: Check if this is still OK, we changed from = parsedMessage to = incMessage
+            outgoingMessage = incMessage
             resolve({
                 outgoingMessage,
                 sendBackToSender: false
