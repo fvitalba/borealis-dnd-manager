@@ -4,7 +4,7 @@ import express from 'express'
 import fs from 'fs'
 import http from 'http'
 import https from 'https'
-import { WebSocketServer } from 'ws'
+import { ServerOptions, WebSocket, WebSocketServer } from 'ws'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import queryString from 'query-string'
@@ -48,22 +48,35 @@ const createServer = () => {
 const server = createServer()
 
 // Initialize the WebSocket server instance
-const wss = new WebSocketServer({ server: server, autoAcceptConnections: true, })
+const wsOptions: ServerOptions = {
+    server: server,
+    //TODO: Check if neccessary:
+    //autoAcceptConnections: true,
+}
+const wss = new WebSocketServer(wsOptions)
 
-wss.on('connection', (websocketConnection, connectionRequest) => {
-    const [path, params] = connectionRequest?.url?.split('?')
-    const connectionParams = queryString.parse(params)
+interface IBorealisWebSocket extends WebSocket {
+    roomId: string,
+    socketGuid: string,
+    userGuid: string,
+    userType: number,
+}
 
-    websocketConnection.roomId = connectionParams.roomId
-    websocketConnection.socketGuid = connectionParams.socketGuid
-    websocketConnection.userGuid = connectionParams.userGuid
-    websocketConnection.userType = connectionParams.userType
+wss.on('connection', (websocketConnection: IBorealisWebSocket, connectionRequest) => {
+    const [_path, params] = connectionRequest.url ? connectionRequest.url.split('?') : ['', '']
+    const connectionParams = queryString.parse(params, { parseNumbers: true, parseBooleans: true, })
+
+    websocketConnection.roomId = connectionParams.roomId as string
+    websocketConnection.socketGuid = connectionParams.socketGuid as string
+    websocketConnection.userGuid = connectionParams.userGuid as string
+    websocketConnection.userType = connectionParams.userType as number
     websocketConnection.on('message', (message) => {
-        handleIncomingMessage(websocketConnection, message)
+        handleIncomingMessage(websocketConnection, message.toString())
             .then(({ outgoingMessage, sendBackToSender }) => {
                 if (outgoingMessage) {
                     // Forward message to all other clients (for this room)
-                    wss.clients.forEach(client => {
+                    const clients = wss.clients as Set<IBorealisWebSocket>
+                    clients.forEach(client => {
                         if (client.readyState === client.OPEN) {
                             if (client.roomId !== websocketConnection.roomId)
                                 return // Don't send to other rooms
@@ -79,5 +92,5 @@ wss.on('connection', (websocketConnection, connectionRequest) => {
 
 // Start server
 server.listen(serverPort, () => {
-    console.log(`Server started on port ${server.address().port}.`)
+    console.log(`Server started on following address\n${ server.address()?.toString() }.`)
 })
