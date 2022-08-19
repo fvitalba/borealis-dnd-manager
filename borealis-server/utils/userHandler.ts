@@ -3,6 +3,7 @@ import { randomUUID } from 'crypto'
 import argon2 from 'argon2'
 import User, { IUserSchema } from '../models/user.js'
 import RoomUser, { IRoomUserSchema } from '../models/roomUser.js'
+import IIncRoomUser from '../incomingInterfaces/incRoomUser.js'
 
 // ######################
 // #region Actual Users #
@@ -91,12 +92,194 @@ export const registerUser = async (user: IUserSchema): Promise<IUserSchema> => {
         return newUser
     }
 }
+
+export const authenticateUser = async (isGuest: boolean, userGuid?: string, userName?: string, userEmail?: string, userSecret?: string): Promise<IUserSchema> => {
+    //TODO: Implement authentication
+    //TODO: Error on existing Username as guest/non-guest
+    /*
+    let foundUser = null
+    switch(true) {
+    case (body.userGuid !== undefined) && (body.userGuid !== ''):
+        foundUser = await User.findOne({ 'guid': body.userGuid, 'guest': false, })
+            .then((existingUser) => {
+                return existingUser
+            })
+        break
+    case (body.userName !== undefined) && (body.userName !== ''):
+        if (body.isGuest) {
+            const guestUser = {
+                userGuid: '',
+                userName: body.userName,
+                secret: '',
+                email: '',
+                isGuest: true,
+            }
+            // Check if the Guest User can be created
+            foundUser = await registerUser(guestUser)
+                .then(async (result) => {
+                    if ((result !== undefined) && (result.guid !== null) && (result.guid !== ''))
+                        return await User.findOne({ 'name': body.userName, 'guest': true, })
+                            .then((existingUser) => existingUser)
+                })
+        } else {
+            foundUser = await User.findOne({ 'name': body.userName, 'guest': false, })
+                .then((existingUser) => existingUser)
+        }
+        break
+    case (body.email !== undefined) && (body.email !== ''):
+        foundUser = await User.findOne({ 'email': body.email, 'guest': false, })
+            .then((existingUser) =>  existingUser)
+        break
+    default:
+        return response.status(400).json({ error: 'All provided parameters were empty. Please rephrase the request.' })
+    }
+
+    // Verify what kind of User we've found
+    if ((foundUser !== null) && (foundUser !== undefined)) {
+        if ((foundUser.guid !== undefined) && (foundUser.guid !== '')) {
+            if (foundUser.guest) {
+                response.json(cleanUserBeforeSending(foundUser))
+            } else {
+                argon2.verify(foundUser.secret, body.secret)
+                    .then((passwordsMatch) => {
+                        if (passwordsMatch)
+                            // Everything matches, authentication successful!
+                            response.json(cleanUserBeforeSending(foundUser))
+                        else
+                            // Password incorrect!
+                            response.status(401).json({ error: 'The provided credentials are incorrect.' })
+                    })
+                    .catch(() => {
+                        // Some kind of Error happened during salting
+                        response.status(401).json({ error: 'The provided credentials are incorrect.' })
+                    })
+            }
+        } else {
+            // User does not exist
+            response.status(401).json({ error: 'The provided credentials are incorrect.' })
+        }
+    } else {
+        // User does not exist
+        response.status(401).json({ error: 'The provided credentials are incorrect.' })
+    }
+    */
+}
+
+export const startUserSession = async (isGuest: boolean, userGuid?: string, sessionToken?: string, userSecret?: string): Promise<string> => {
+    //TODO: Implement start User Session
+    /*
+    //TODO: check for session validity
+    //TODO: Fix guest user session creation
+    //TODO: Refactor using seperate functions to clean up code
+    switch(true) {
+    case ((body.userGuid !== '' && body.userGuid !== undefined) && (body.sessionToken !== '' && body.sessionToken !== undefined)):
+        Session.find({ 'userGuid': body.userGuid, 'guid': body.sessionToken, 'active': true, })
+            .then((sessions) => {
+                if (sessions.length > 0)
+                    response.json(sessions.map((session) => session.guid))
+                else {
+                    if (body.secret) {
+                        User.findOne({ 'guid': body.userGuid, 'guest': false, })
+                            .then((existingUser) => {
+                                if ((existingUser !== null) && ((existingUser.guid !== undefined) && (existingUser.guid !== ''))) {
+                                    argon2.verify(existingUser.secret, body.secret)
+                                        .then((passwordsMatch) => {
+                                            if (passwordsMatch) {
+                                                const newSession = new Session({
+                                                    guid: randomUUID(),
+                                                    userGuid: existingUser.guid,
+                                                    timestamp: Date.now(),
+                                                    createdFrom: '',
+                                                    createdFromDevice: '',
+                                                    validTo: Date.now() + 86400000, // Valid for 24h
+                                                    active: true,
+                                                })
+                                                newSession.save((error, document) => {
+                                                    if (!error) {
+                                                        response.json([document.guid])
+                                                    } else {
+                                                        response.status(500).json({ error: 'Session could not be opened.' })
+                                                    }
+                                                })
+                                            } else
+                                                response.status(403).json({ error: 'The provided credentials are not allowed to authenticate.' })
+                                        })
+                                } else
+                                    response.status(403).json({ error: 'The provided credentials are not allowed to authenticate.' })
+                            })
+                    } else
+                        response.status(410).json({ error: 'No active session with provided token found. Please reauthenticate.' })
+                }
+            })
+        break
+    case ((body.userGuid !== '' && body.userGuid !== undefined) && (body.secret !== '' && body.secret !== undefined)):
+        User.findOne({ 'guid': body.userGuid, 'guest': false, })
+            .then((existingUser) => {
+                if ((existingUser !== null) && ((existingUser.guid !== undefined) && (existingUser.guid !== ''))) {
+                    argon2.verify(existingUser.secret, body.secret)
+                        .then((passwordsMatch) => {
+                            if (passwordsMatch) {
+                                const newSession = new Session({
+                                    guid: randomUUID(),
+                                    userGuid: existingUser.guid,
+                                    timestamp: Date.now(),
+                                    createdFrom: '',
+                                    createdFromDevice: '',
+                                    validTo: Date.now() + 86400000, // Valid for 24h
+                                    active: true,
+                                })
+                                newSession.save((error, document) => {
+                                    if (!error) {
+                                        response.json([document.guid])
+                                    } else {
+                                        response.status(500).json({ error: 'Session could not be opened.' })
+                                    }
+                                })
+                            } else
+                                response.status(403).json({ error: 'The provided credentials are not allowed to authenticate.' })
+                        })
+                } else
+                    response.status(403).json({ error: 'The provided credentials are not allowed to authenticate.' })
+            })
+        break
+    case ((body.userGuid !== '' && body.userGuid !== undefined) && (body.isGuest !== '' && body.isGuest !== undefined)):
+        console.log('preparing new Session')
+        const newSession = new Session({
+            guid: randomUUID(),
+            userGuid: body.userGuid,
+            timestamp: Date.now(),
+            createdFrom: '',
+            createdFromDevice: '',
+            validTo: Date.now() + 7200000, // Valid for 2h
+            active: true,
+        })
+        newSession.save((error, document) => {
+            console.log('saved session', error, document)
+            if ((error === null) || (error === undefined)) {
+                console.log('sending session token', [document.guid])
+                response.json([ document.guid ])
+            } else {
+                response.status(500).json({ error: 'Session could not be opened.' })
+            }
+        })
+        break
+    default:
+        response.status(400).json({ error: 'All provided parameters were empty. Please rephrase the request.' })
+    }
+    */
+}
 // #endregion Actual Users
 
 
 // ######################
 // #region Room Users   #
 // ######################
+export const parseIncRoomUserToRoomUserSchema = (incRoomUser: IIncRoomUser): IRoomUserSchema => {
+    return {
+        ...incRoomUser,
+    }
+}
+
 export const deleteAllRoomUsers = async (roomId: string) : Promise<number> => {
     return RoomUser.deleteMany({ roomId: roomId, })
         .then((result) => result.deletedCount)
@@ -161,10 +344,22 @@ export const setRoomUsersInactiveAfterTimeout = async (): Promise<number> => {
 export const getAllRoomActiveUsers = async (roomId: string, userGuid?: string): Promise<Array<IRoomUserSchema>> => {
     const queryParameters = userGuid ? { 'roomId': roomId, 'guid': userGuid, 'active': true, } : { 'roomId': roomId, 'active': true, }
     return RoomUser.find(queryParameters)
-        .then((roomUsers) => roomUsers))
+        .then((roomUsers) => roomUsers)
         .catch(() => [])
 }
 // #endregion Room Users
+
+export const cleanUserBeforeSending = (user: IUserSchema): IUserSchema => {
+    return {
+        guid: user.guid,
+        name: user.name,
+        email: user.guest ? '' : user.email,
+        guest: user.guest,
+        lastOnline: user.guest ? 0 : user.lastOnline,
+        active: user.guest ? true : user.active,
+        secret: '',
+    }
+}
 
 export const emptyUser = (): IUserSchema => {
     return {
