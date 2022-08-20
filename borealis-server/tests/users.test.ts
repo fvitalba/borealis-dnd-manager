@@ -2,12 +2,12 @@ import supertest from 'supertest'
 import app from '../app'
 
 describe('GET /users', () => {
-    it('retrieves a JSON List of users', async () => {
+    it('retrieves a JSON List of Users', async () => {
         await supertest(app)
             .get('/api/v1.0/users')
             .expect(200)
             .expect('Content-Type', /application\/json/)
-    })
+    }, 100000)
 })
 
 // afterAll(() => {
