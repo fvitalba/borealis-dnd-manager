@@ -1,5 +1,8 @@
 import supertest from 'supertest'
+import mongo from '../utils/mongo'
 import app from '../app'
+import User from '../models/user'
+import { initialUsers } from './testData/initial.users'
 
 describe('GET /users', () => {
     it('retrieves a JSON List of Users', async () => {
@@ -8,43 +11,22 @@ describe('GET /users', () => {
             .expect(200)
             .expect('Content-Type', /application\/json/)
     }, 100000)
+
+    it('The List of Users contains exactly two users', async () => {
+        const response = await supertest(app).get('/api/v1.0/users')
+        console.log('Response.Body',response.body)
+        expect(response.body).toHaveLength(initialUsers.length)
+    }, 100000)
 })
 
-// afterAll(() => {
-//     mongoose.connection.close()
-// })
-
-/*
-test('reverse of a', () => {
-  const result = reverse('a')
-
-  expect(result).toBe('a')
+beforeAll(async () => {
+    await User.deleteMany()
+    initialUsers.map(async (initialUser) => {
+        const newUser = new User(initialUser)
+        await newUser.save()
+    })
 })
 
-test('reverse of react', () => {
-  const result = reverse('react')
-
-  expect(result).toBe('tcaer')
+afterAll(async () => {
+    await mongo.connection.close()
 })
-
-test('reverse of releveler', () => {
-  const result = reverse('releveler')
-
-  expect(result).toBe('releveler')
-})
-*/
-
-/*
-test('there are two notes', async () => {
-  const response = await api.get('/api/notes')
-
-  expect(response.body).toHaveLength(2)
-})
-
-test('the first note is about HTTP methods', async () => {
-  const response = await api.get('/api/notes')
-
-  expect(response.body[0].content).toBe('HTML is easy')
-})
-*/
-
