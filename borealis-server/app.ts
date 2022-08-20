@@ -1,25 +1,25 @@
-import express from 'express'
+import express, { Application } from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
-import characterRouter from './controllers/characterRouter.js'
-import roomRouter from './controllers/roomRouter.js'
-import userRouter from './controllers/userRouter.js'
-import mapRouter from './controllers/mapRouter.js'
-import tokenRouter from './controllers/tokenRouter.js'
-import chatRouter from './controllers/chatRouter.js'
+import characterRouter from './controllers/characterRouter'
+import roomRouter from './controllers/roomRouter'
+import userRouter from './controllers/userRouter'
+import mapRouter from './controllers/mapRouter'
+import tokenRouter from './controllers/tokenRouter'
+import chatRouter from './controllers/chatRouter'
 
-const app = express()
+const app: Application = express()
 
 app.use(cors())
 app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 
 app.use(express.static('build'))
-app.use('/api/characters', characterRouter)
-app.use('/api/rooms', roomRouter)
-app.use('/api/users', userRouter)
-app.use('/api/maps', mapRouter)
-app.use('/api/tokens', tokenRouter)
-app.use('/api/chats', chatRouter)
+app.use('/api/v1.0/characters', characterRouter)
+app.use('/api/v1.0/rooms', roomRouter)
+app.use('/api/v1.0/users', userRouter)
+app.use('/api/v1.0/maps', mapRouter)
+app.use('/api/v1.0/tokens', tokenRouter)
+app.use('/api/v1.0/chats', chatRouter)
 
 export default app

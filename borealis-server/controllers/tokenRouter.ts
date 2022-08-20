@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express'
-import IIncToken from '../incomingInterfaces/incToken.js'
-import { getRoomTokens, overwriteRoomTokens, parseIncTokenToTokenSchema } from '../utils/tokenHandler.js'
+import IIncToken from '../incomingInterfaces/incToken'
+import { getRoomTokens, overwriteRoomTokens, parseIncTokenToTokenSchema } from '../utils/tokenHandler'
 
 interface ITokensRouterRequestQuery {
     roomId?: string,

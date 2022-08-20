@@ -1,6 +1,6 @@
 import { UpdateQuery } from 'mongoose'
-import IIncToken from '../incomingInterfaces/incToken.js'
-import Token, { ITokenSchema } from '../models/token.js'
+import IIncToken from '../incomingInterfaces/incToken'
+import Token, { ITokenSchema } from '../models/token'
 
 export const parseIncTokenToTokenSchema = (incToken: IIncToken, roomId: string, timestamp: Date): ITokenSchema => {
     return {

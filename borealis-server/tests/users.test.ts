@@ -1,3 +1,19 @@
+import supertest from 'supertest'
+import app from '../app'
+
+describe('GET /users', () => {
+    it('retrieves a JSON List of users', async () => {
+        await supertest(app)
+            .get('/api/v1.0/users')
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+    })
+})
+
+// afterAll(() => {
+//     mongoose.connection.close()
+// })
+
 /*
 test('reverse of a', () => {
   const result = reverse('a')

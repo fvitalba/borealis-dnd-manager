@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express'
-import IIncChatMessage from '../incomingInterfaces/incChatMessage.js'
-import { overwriteRoomChat, getRoomChat, parseIncChatToChatSchema } from '../utils/chatHandler.js'
+import IIncChatMessage from '../incomingInterfaces/incChatMessage'
+import { overwriteRoomChat, getRoomChat, parseIncChatToChatSchema } from '../utils/chatHandler'
 
 interface IChatRouterRequestQuery {
     roomId?: string,

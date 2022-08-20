@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express'
-import IIncMap from '../incomingInterfaces/incMap.js'
-import { getRoomMaps, overwriteRoomMaps, parseIncMapToMapSchema } from '../utils/mapHandler.js'
+import IIncMap from '../incomingInterfaces/incMap'
+import { getRoomMaps, overwriteRoomMaps, parseIncMapToMapSchema } from '../utils/mapHandler'
 
 interface IMapsRouterRequestQuery {
     roomId?: string,

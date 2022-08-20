@@ -1,7 +1,7 @@
 import { FilterQuery, UpdateQuery } from 'mongoose'
-import IIncRoom from '../incomingInterfaces/incRoom.js'
-import Room, { IGameSchema } from '../models/room.js'
-import RoomUser, { IRoomUserSchema } from '../models/roomUser.js'
+import IIncRoom from '../incomingInterfaces/incRoom'
+import Room, { IGameSchema } from '../models/room'
+import RoomUser, { IRoomUserSchema } from '../models/roomUser'
 
 export interface IGameSchemaWithRole extends IGameSchema {
     userRole: number,

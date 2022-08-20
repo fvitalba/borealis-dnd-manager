@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express'
-import IIncRoom from '../incomingInterfaces/incRoom.js'
-import { getAllRoomsForUserIdWithRole, overwriteRoom, parseIncRoomToRoomSchema } from '../utils/roomHandler.js'
+import IIncRoom from '../incomingInterfaces/incRoom'
+import { getAllRoomsForUserIdWithRole, overwriteRoom, parseIncRoomToRoomSchema } from '../utils/roomHandler'
 
 interface IRoomsRouterRequestQuery {
     roomId?: string,

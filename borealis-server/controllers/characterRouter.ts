@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express'
-import IIncCharacter from '../incomingInterfaces/incCharacter.js'
-import { overwriteRoomCharacters, getRoomCharacters, parseIncCharacterToCharacterSchema } from '../utils/characterHandler.js'
+import IIncCharacter from '../incomingInterfaces/incCharacter'
+import { overwriteRoomCharacters, getRoomCharacters, parseIncCharacterToCharacterSchema } from '../utils/characterHandler'
 
 interface ICharacterRouterRequestQuery {
     roomId?: string,
