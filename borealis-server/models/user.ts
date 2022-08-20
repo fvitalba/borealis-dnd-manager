@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongo from '../utils/mongo'
 
 export interface IUserSchema {
     guid: string,
@@ -10,14 +10,7 @@ export interface IUserSchema {
     active: boolean,
 }
 
-const url = process.env.MONGODB_URI ? process.env.MONGODB_URI : ''
-mongoose.connect(url)
-    .then()
-    .catch((error) => {
-        console.log('error connecting to MongoDB:', error.message)
-    })
-
-const userSchema = new mongoose.Schema<IUserSchema>({
+const userSchema = new mongo.Schema<IUserSchema>({
     guid: String,
     name: String,
     secret: String,
@@ -27,4 +20,4 @@ const userSchema = new mongoose.Schema<IUserSchema>({
     active: Boolean,
 })
 
-export default mongoose.model('User', userSchema, 'user')
+export default mongo.model('User', userSchema, 'user')

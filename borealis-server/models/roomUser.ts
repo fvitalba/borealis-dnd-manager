@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongo from '../utils/mongo'
 
 export interface IRoomUserSchema {
     roomId: string,
@@ -10,14 +10,7 @@ export interface IRoomUserSchema {
     active: boolean,
 }
 
-const url = process.env.MONGODB_URI ? process.env.MONGODB_URI : ''
-mongoose.connect(url)
-    .then()
-    .catch((error) => {
-        console.log('error connecting to MongoDB:', error.message)
-    })
-
-const roomUserSchema = new mongoose.Schema<IRoomUserSchema>({
+const roomUserSchema = new mongo.Schema<IRoomUserSchema>({
     roomId: String,
     guid: String,
     name: String,
@@ -27,4 +20,4 @@ const roomUserSchema = new mongoose.Schema<IRoomUserSchema>({
     active: Boolean,
 })
 
-export default mongoose.model('RoomUser', roomUserSchema, 'room-user')
+export default mongo.model('RoomUser', roomUserSchema, 'room-user')

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongo from '../utils/mongo'
 
 export interface IPointSchema {
     x: number,
@@ -28,19 +28,12 @@ export interface IMapSchema {
     timestamp: number,
 }
 
-const url = process.env.MONGODB_URI ? process.env.MONGODB_URI : ''
-mongoose.connect(url)
-    .then()
-    .catch((error) => {
-        console.log('error connecting to MongoDB:', error.message)
-    })
-
-const pointSchema = new mongoose.Schema<IPointSchema>({
+const pointSchema = new mongo.Schema<IPointSchema>({
     x: Number,
     y: Number,
 })
 
-const pathSchema = new mongoose.Schema<IPathSchema>({
+const pathSchema = new mongo.Schema<IPathSchema>({
     points: [pointSchema],
     r: Number,
     r2: Number,
@@ -49,7 +42,7 @@ const pathSchema = new mongoose.Schema<IPathSchema>({
     drawSize: Number,
 })
 
-const mapSchema = new mongoose.Schema<IMapSchema>({
+const mapSchema = new mongo.Schema<IMapSchema>({
     roomId: String,
     name: String,
     id: Number,
@@ -63,4 +56,4 @@ const mapSchema = new mongoose.Schema<IMapSchema>({
     timestamp: Number,
 })
 
-export default mongoose.model('Map', mapSchema, 'room-map')
+export default mongo.model('Map', mapSchema, 'room-map')

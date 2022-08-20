@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongo from '../utils/mongo'
 
 export interface ISessionSchema {
     guid: string,
@@ -10,14 +10,7 @@ export interface ISessionSchema {
     active: boolean,
 }
 
-const url = process.env.MONGODB_URI ? process.env.MONGODB_URI : ''
-mongoose.connect(url)
-    .then()
-    .catch((error) => {
-        console.log('error connecting to MongoDB:', error.message)
-    })
-
-const sessionSchema = new mongoose.Schema<ISessionSchema>({
+const sessionSchema = new mongo.Schema<ISessionSchema>({
     guid: String,
     userGuid: String,
     timestamp: Number,
@@ -27,4 +20,4 @@ const sessionSchema = new mongoose.Schema<ISessionSchema>({
     active: Boolean,
 })
 
-export default mongoose.model('Session', sessionSchema, 'session')
+export default mongo.model('Session', sessionSchema, 'session')

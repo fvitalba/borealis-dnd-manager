@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongo from '../utils/mongo'
 
 export interface IGameSchema {
     roomId: string,
@@ -13,14 +13,7 @@ export interface IGameSchema {
     timestamp: number,
 }
 
-const url = process.env.MONGODB_URI ? process.env.MONGODB_URI : ''
-mongoose.connect(url)
-    .then()
-    .catch((error) => {
-        console.log('error connecting to MongoDB:', error.message)
-    })
-
-const gameSchema = new mongoose.Schema<IGameSchema>({
+const gameSchema = new mongo.Schema<IGameSchema>({
     roomId: String,
     roomName: String,
     currentMapId: Number,
@@ -33,4 +26,4 @@ const gameSchema = new mongoose.Schema<IGameSchema>({
     timestamp: Number,
 })
 
-export default mongoose.model('Room', gameSchema, 'room')
+export default mongo.model('Room', gameSchema, 'room')

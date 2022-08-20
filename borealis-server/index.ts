@@ -1,36 +1,15 @@
 import 'dotenv/config'
-import express from 'express'
 import fs from 'fs'
 import http from 'http'
 import https from 'https'
 import { AddressInfo, ServerOptions, WebSocket, WebSocketServer } from 'ws'
-import cors from 'cors'
-import bodyParser from 'body-parser'
 import queryString from 'query-string'
-import characterRouter from './controllers/characterRouter.js'
-import roomRouter from './controllers/roomRouter.js'
-import userRouter from './controllers/userRouter.js'
-import mapRouter from './controllers/mapRouter.js'
-import tokenRouter from './controllers/tokenRouter.js'
-import chatRouter from './controllers/chatRouter.js'
+import app from './app.js'
 import { handleIncomingMessage } from './utils/messageHandler.js'
 
-const app = express()
 const privateKeyFilename = 'privkey.pem'
 const SslCertificateFilename = 'fullchain.pem'
 const serverPort = process.env.PORT || 8000
-
-app.use(cors())
-app.use(bodyParser.json({ limit: '50mb' }))
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
-
-app.use(express.static('build'))
-app.use('/api/characters', characterRouter)
-app.use('/api/rooms', roomRouter)
-app.use('/api/users', userRouter)
-app.use('/api/maps', mapRouter)
-app.use('/api/tokens', tokenRouter)
-app.use('/api/chats', chatRouter)
 
 const createServer = () => {
     // Check SSL files & create HTTPS server

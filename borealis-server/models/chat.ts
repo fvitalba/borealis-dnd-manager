@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongo from '../utils/mongo'
 
 export interface IChatMessage {
     guid: string,
@@ -18,14 +18,7 @@ export interface IChatSchema {
     timestamp: number,
 }
 
-const url = process.env.MONGODB_URI ? process.env.MONGODB_URI : ''
-mongoose.connect(url)
-    .then()
-    .catch((error) => {
-        console.log('error connecting to MongoDB:', error.message)
-    })
-
-const chatMessageSchema = new mongoose.Schema<IChatMessage>({
+const chatMessageSchema = new mongo.Schema<IChatMessage>({
     guid: String,
     type: Number,
     username: String,
@@ -37,10 +30,10 @@ const chatMessageSchema = new mongoose.Schema<IChatMessage>({
     read: Boolean,
 })
 
-const chatSchema = new mongoose.Schema<IChatSchema>({
+const chatSchema = new mongo.Schema<IChatSchema>({
     roomId: String,
     messages: [chatMessageSchema],
     timestamp: Number,
 })
 
-export default mongoose.model('Chat', chatSchema, 'room-chat')
+export default mongo.model('Chat', chatSchema, 'room-chat')

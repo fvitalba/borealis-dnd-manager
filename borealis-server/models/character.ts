@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongo from '../utils/mongo'
 
 export interface ICharacterClassSchema {
     level: number,
@@ -33,25 +33,19 @@ export interface ICharacterSchema {
     timestamp: number,
 }
 
-const url = process.env.MONGODB_URI ? process.env.MONGODB_URI : ''
-mongoose.connect(url)
-    .then()
-    .catch((error) => {
-        console.log('error connecting to MongoDB:', error.message)
-    })
 
-const characterClassSchema = new mongoose.Schema<ICharacterClassSchema>({
+const characterClassSchema = new mongo.Schema<ICharacterClassSchema>({
     level: Number,
     class: Number,
 })
 
-const characterHitDiceSchema = new mongoose.Schema<ICharacterHitDiceSchema>({
+const characterHitDiceSchema = new mongo.Schema<ICharacterHitDiceSchema>({
     numberOfDice: Number,
     remainingNoOfDice: Number,
     hitDiceType: Number,
 })
 
-const characterSchema = new mongoose.Schema<ICharacterSchema>({
+const characterSchema = new mongo.Schema<ICharacterSchema>({
     roomId: String,
     guid: String,
     name: String,
@@ -73,4 +67,4 @@ const characterSchema = new mongoose.Schema<ICharacterSchema>({
     timestamp: Number,
 })
 
-export default mongoose.model('Character', characterSchema, 'room-character')
+export default mongo.model('Character', characterSchema, 'room-character')

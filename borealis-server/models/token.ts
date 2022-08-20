@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongo from '../utils/mongo'
 
 export interface ITokenSchema {
     roomId: string,
@@ -21,14 +21,7 @@ export interface ITokenSchema {
     timestamp: number,
 }
 
-const url = process.env.MONGODB_URI ? process.env.MONGODB_URI : ''
-mongoose.connect(url)
-    .then()
-    .catch((error) => {
-        console.log('error connecting to MongoDB:', error.message)
-    })
-
-const tokenSchema = new mongoose.Schema<ITokenSchema>({
+const tokenSchema = new mongo.Schema<ITokenSchema>({
     roomId: String,
     guid: String,
     name: String,
@@ -49,4 +42,4 @@ const tokenSchema = new mongoose.Schema<ITokenSchema>({
     timestamp: Number,
 })
 
-export default mongoose.model('Token', tokenSchema, 'room-token')
+export default mongo.model('Token', tokenSchema, 'room-token')
