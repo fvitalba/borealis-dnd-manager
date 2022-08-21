@@ -188,9 +188,10 @@ export const startUserSession = async (userGuid?: string, sessionToken?: string,
 
 export const getAllActiveUsers = async (userGuid?: string): Promise<Array<IUserSchema>> => {
     const queryParameters = userGuid ? { 'guid': userGuid, 'active': true, } : { 'active': true, }
-    return User.find(queryParameters)
+    const activeUsers = await User.find(queryParameters)
         .then((users) => users)
         .catch(() => [])
+    return activeUsers.map((activeUser) => cleanUserBeforeSending(activeUser))
 }
 // #endregion Actual Users
 
