@@ -185,6 +185,13 @@ export const startUserSession = async (userGuid?: string, sessionToken?: string,
     const newSession = await startNewUserSession(existingUser, userSecret)
     return newSession.guid
 }
+
+export const getAllActiveUsers = async (userGuid?: string): Promise<Array<IUserSchema>> => {
+    const queryParameters = userGuid ? { 'guid': userGuid, 'active': true, } : { 'active': true, }
+    return User.find(queryParameters)
+        .then((users) => users)
+        .catch(() => [])
+}
 // #endregion Actual Users
 
 

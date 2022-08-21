@@ -1,11 +1,10 @@
 import { Request, Response, Router } from 'express'
-import { registerUser, overwriteRoomUsers, setRoomUsersInactiveAfterTimeout, getAllRoomActiveUsers, parseIncRoomUserToRoomUserSchema, overwriteSingleRoomUser, overwriteAllRoomUsersStatus, authenticateUser, startUserSession, parseIncUserToUserSchema } from '../utils/userHandler'
+import { registerUser, overwriteRoomUsers, getAllActiveUsers, parseIncRoomUserToRoomUserSchema, overwriteSingleRoomUser, overwriteAllRoomUsersStatus, authenticateUser, startUserSession, parseIncUserToUserSchema } from '../utils/userHandler'
 import IIncRoomUser from '../incomingInterfaces/incRoomUser'
 import IIncUser from '../incomingInterfaces/incUser'
 
 interface IUsersRouterRequestQuery {
     userGuid?: string,
-    roomId?: string,
 }
 
 interface IUsersRouterRequestBody {
@@ -24,17 +23,11 @@ interface IUsersRouterRequestBody {
 
 const userRouter = Router()
 
-userRouter.get('/:userGuid?:roomId?', (request: Request<unknown, unknown, unknown, IUsersRouterRequestQuery>, response: Response) => {
+userRouter.get('/:userGuid?', (request: Request<unknown, unknown, unknown, IUsersRouterRequestQuery>, response: Response) => {
     const userGuid = request.query.userGuid ? request.query.userGuid : ''
-    const roomId = request.query.roomId ? request.query.roomId : ''
 
     // First we updated all the Users Activity
-    setRoomUsersInactiveAfterTimeout()
-        .then(() => {
-            // Then we retrieve the users from the DB and return them
-            response.json(getAllRoomActiveUsers(roomId, userGuid))
-        })
-        .catch(() => response.json([]))
+    response.json(getAllActiveUsers(userGuid))
 })
 
 userRouter.post('/', (request: Request<unknown, unknown, IUsersRouterRequestBody, unknown>, response: Response) => {
