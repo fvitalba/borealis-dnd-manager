@@ -12,10 +12,10 @@ describe('GET /users', () => {
             .expect('Content-Type', /application\/json/)
     }, 100000)
 
-    it('The List of Users contains exactly two users', async () => {
+    it('The List of Users contains the list of initial Users', async () => {
         const response = await supertest(app).get('/api/v1.0/users')
-        console.log('Response.Body',response.body)
-        expect(response.body).toHaveLength(initialUsers.length)
+        const activeInitialUsers = initialUsers.filter((initialUser) => initialUser.active)
+        expect(response.body).toHaveLength(activeInitialUsers.length)
     }, 100000)
 })
 
