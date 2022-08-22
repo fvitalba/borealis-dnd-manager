@@ -22,14 +22,15 @@ export const parseIncUserToUserSchema = (incUser: IIncUser, isActive?: boolean, 
     }
 }
 
-const hashUserSecret = async (inputSecret: string): Promise<string> => {
+export const hashUserSecret = async (inputSecret: string): Promise<string> => {
     //TODO: implement salting
     const outputSecret = await argon2.hash(inputSecret)
     return outputSecret
 }
 
-const checkSecretsMatch = async (secret1: string, secret2: string): Promise<boolean> => {
-    return argon2.verify(secret1, secret2)
+const checkSecretsMatch = async (existingSecret: string, compareSecret: string): Promise<boolean> => {
+    console.log('matching',existingSecret,compareSecret)
+    const pwdMatch = await argon2.verify(existingSecret, compareSecret)
         .then((passwordsMatch) => {
             if (passwordsMatch) {
                 return true
@@ -37,6 +38,7 @@ const checkSecretsMatch = async (secret1: string, secret2: string): Promise<bool
                 return false
             }
         })
+    return pwdMatch
 }
 
 const findUser = async (userGuid?:string, userName?:string, userEmail?:string): Promise<IUserSchema> => {
@@ -130,6 +132,8 @@ const startNewUserSession = async (user: IUserSchema, userSecret?: string): Prom
 export const registerUser = async (user: IUserSchema): Promise<IUserSchema> => {
     if (!user)
         return emptyUser()
+    if (((user.secret === '') || (user.email === '')) && (!user.guest))
+        return emptyUser()
 
     const userSecret = await hashUserSecret(user.secret)
 
@@ -158,11 +162,14 @@ export const authenticateUser = async (isGuest: boolean, userGuid?: string, user
     if (existingUser.guid === '')
         return emptyUser()
     else {
-        if (existingUser.guest) {
+        console.log('existingUser',existingUser)
+        if (existingUser.guest === true) {
             const updatedUser = updateExistingUserActivity(existingUser, true)
             return cleanUserBeforeSending(updatedUser)
         } else {
             const hashesMatch = (userSecret !== undefined) ? await checkSecretsMatch(existingUser.secret, userSecret) : false
+            console.log('hashesMatch',hashesMatch)
+            console.log('passwordinc',userSecret,'passwordfound',existingUser.secret)
             if (hashesMatch) {
                 const updatedUser = updateExistingUserActivity(existingUser, true)
                 return cleanUserBeforeSending(updatedUser)
@@ -191,6 +198,7 @@ export const getAllActiveUsers = async (userGuid?: string): Promise<Array<IUserS
     const activeUsers = await User.find(queryParameters)
         .then((users) => users)
         .catch(() => [])
+    
     return activeUsers.map((activeUser) => cleanUserBeforeSending(activeUser))
 }
 // #endregion Actual Users

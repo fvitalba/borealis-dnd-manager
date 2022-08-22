@@ -23,11 +23,11 @@ interface IUsersRouterRequestBody {
 
 const userRouter = Router()
 
-userRouter.get('/:userGuid?', (request: Request<unknown, unknown, unknown, IUsersRouterRequestQuery>, response: Response) => {
+userRouter.get('/:userGuid?', async (request: Request<unknown, unknown, unknown, IUsersRouterRequestQuery>, response: Response) => {
     const userGuid = request.query.userGuid ? request.query.userGuid : ''
 
     // First we updated all the Users Activity
-    response.json(getAllActiveUsers(userGuid))
+    response.json(await getAllActiveUsers(userGuid))
 })
 
 userRouter.post('/', (request: Request<unknown, unknown, IUsersRouterRequestBody, unknown>, response: Response) => {
@@ -81,7 +81,8 @@ userRouter.post('/authenticate/', (request: Request<unknown, unknown, IUsersRout
         .then((result) => {
             if (result.guid === '')
                 response.status(401).json({ error: 'The provided credentials are incorrect.' })
-            response.json(result)
+            else
+                response.json(result)
         })
         .catch(() => response.status(401).json({ error: 'The provided credentials are incorrect.' }))
 })
@@ -97,7 +98,8 @@ userRouter.post('/register/', (request: Request<unknown, unknown, IUsersRouterRe
         .then((result) => {
             if (result.guid === '')
                 response.status(500).json({ error: 'User could not be registered.' })
-            response.json(result)
+            else
+                response.json(result)
         })
         .catch(() => response.status(500).json({ error: 'User could not be registered.' }))
 })
