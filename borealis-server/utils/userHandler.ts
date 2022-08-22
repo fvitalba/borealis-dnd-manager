@@ -29,7 +29,6 @@ export const hashUserSecret = async (inputSecret: string): Promise<string> => {
 }
 
 const checkSecretsMatch = async (existingSecret: string, compareSecret: string): Promise<boolean> => {
-    console.log('matching',existingSecret,compareSecret)
     const pwdMatch = await argon2.verify(existingSecret, compareSecret)
         .then((passwordsMatch) => {
             if (passwordsMatch) {
@@ -135,7 +134,7 @@ export const registerUser = async (user: IUserSchema): Promise<IUserSchema> => {
     if (((user.secret === '') || (user.email === '')) && (!user.guest))
         return emptyUser()
 
-    const userSecret = await hashUserSecret(user.secret)
+    const userSecret = !user.guest ? await hashUserSecret(user.secret) : ''
 
     const existingUser = await findUser(user.guid, user.name, user.email)
     if (existingUser.guid !== '') {
@@ -198,7 +197,7 @@ export const getAllActiveUsers = async (userGuid?: string): Promise<Array<IUserS
     const activeUsers = await User.find(queryParameters)
         .then((users) => users)
         .catch(() => [])
-    
+
     return activeUsers.map((activeUser) => cleanUserBeforeSending(activeUser))
 }
 // #endregion Actual Users

@@ -23,11 +23,13 @@ interface IUsersRouterRequestBody {
 
 const userRouter = Router()
 
-userRouter.get('/:userGuid?', async (request: Request<unknown, unknown, unknown, IUsersRouterRequestQuery>, response: Response) => {
+userRouter.get('/:userGuid?', (request: Request<unknown, unknown, unknown, IUsersRouterRequestQuery>, response: Response) => {
     const userGuid = request.query.userGuid ? request.query.userGuid : ''
 
     // First we updated all the Users Activity
-    response.json(await getAllActiveUsers(userGuid))
+    getAllActiveUsers(userGuid)
+        .then((result) => response.json(result))
+        .catch(() => [])
 })
 
 userRouter.post('/', (request: Request<unknown, unknown, IUsersRouterRequestBody, unknown>, response: Response) => {

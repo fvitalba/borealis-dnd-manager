@@ -3,7 +3,6 @@ import mongo from '../utils/mongo'
 import app from '../app'
 import User, { IUserSchema } from '../models/user'
 import { initialUsers, initialUsersForAuthentication, newActualUser, newGuestUser } from './testData/initial.users'
-import { hashUserSecret } from '../utils/userHandler'
 
 const usersGetEndpoint = '/api/v1.0/users'
 const usersPostEndpoint = '/api/v1.0/users'
@@ -11,14 +10,24 @@ const usersRegisterEndpoint = usersPostEndpoint + '/register'
 const usersAuthenticateEndpoint = usersPostEndpoint + '/authenticate'
 //const usersSessionEndpoint = usersPostEndpoint + '/session'
 
+const getHashedSecret = (inputPassword: string): string => {
+    switch (inputPassword) {
+    case 'password':
+        return '$argon2id$v=19$m=4096,t=3,p=1$+WEtYQRcN9cWU3ASX65FPA$N2lxRSkie3+oU68BnwcR1VRfz15k2URL45RU1SpHCYw'
+    case 'drowssap':
+        return '$argon2id$v=19$m=4096,t=3,p=1$NQ68CTgNKSnwniUtY5rhVg$aC+gL5GTA6vkPnaP4Om9xatTujxOwaT0SOubJRmBwWE'
+    default:
+        return ''
+    }
+}
+
 const resetInitialUsers = async () => {
     await User.deleteMany()
     initialUsers.map(async (initialUser) => {
         const newUser = new User({
             ...initialUser,
-            secret: await hashUserSecret(initialUser.secret),
+            secret: getHashedSecret(initialUser.secret),
         })
-        console.log(newUser)
         await newUser.save()
     })
 }
@@ -28,7 +37,7 @@ const resetInitialAuthUsers = async () => {
     initialUsersForAuthentication.map(async (initialUser) => {
         const newUser = new User({
             ...initialUser,
-            secret: await hashUserSecret(initialUser.secret),
+            secret: getHashedSecret(initialUser.secret),
         })
         await newUser.save()
     })
@@ -37,7 +46,7 @@ const resetInitialAuthUsers = async () => {
 describe('GET /users', () => {
     beforeEach(async () => {
         await resetInitialUsers()
-    })
+    }, 10000)
 
     it('retrieves a JSON List of Users', async () => {
         await supertest(app)
@@ -54,13 +63,15 @@ describe('GET /users', () => {
 
     it('The List of Users does not contain a Guest User with an E-Mail', async () => {
         const response = await supertest(app).get(usersGetEndpoint)
-        const guestUsersWithEmail = response.body.filter((user: IUserSchema) => (user.email !== '') && (user.guest))
+        const responseUsers = response.body as Array<IUserSchema>
+        const guestUsersWithEmail = responseUsers.filter((user: IUserSchema) => (user.email !== '') && (user.guest))
         expect(guestUsersWithEmail).toHaveLength(0)
     }, 100000)
 
     it('The List of Users does not contain the same Username twice', async () => {
         const response = await supertest(app).get(usersGetEndpoint)
-        const usersCount = response.body.map((user: IUserSchema) => {
+        const responseUsers = response.body as Array<IUserSchema>
+        const usersCount = responseUsers.map((user: IUserSchema) => {
             const usersCopy = response.body as Array<IUserSchema>
             const usersWithSameUsername = usersCopy.filter((userCopy) => userCopy.name === user.name)
             return usersWithSameUsername.length
@@ -69,10 +80,11 @@ describe('GET /users', () => {
             expect(userCounter).toBe(1)
         })
     }, 100000)
-    
+
     it('No User secret is passed on to the API', async () => {
         const response = await supertest(app).get(usersGetEndpoint)
-        const usersWithSecret = response.body.filter((user: IUserSchema) => (user.secret !== ''))
+        const responseUsers = response.body as Array<IUserSchema>
+        const usersWithSecret = responseUsers.filter((user: IUserSchema) => (user.secret !== ''))
         expect(usersWithSecret).toHaveLength(0)
     }, 100000)
 })
@@ -80,7 +92,7 @@ describe('GET /users', () => {
 describe('POST /users - Register', () => {
     beforeEach(async () => {
         await resetInitialUsers()
-    })
+    }, 10000)
 
     it('Register a new Actual User', async () => {
         const params = {
@@ -139,7 +151,7 @@ describe('POST /users - Register', () => {
             .post(usersRegisterEndpoint)
             .send(params2)
         expect(response2.body.error).not.toBeUndefined()
-        expect(response2.body.guid).toBeUndefined() 
+        expect(response2.body.guid).toBeUndefined()
 
         const response3 = await supertest(app).get(usersGetEndpoint)
         const activeInitialUsers = initialUsers.filter((initialUser) => initialUser.active)
@@ -183,7 +195,7 @@ describe('POST /users - Register', () => {
 describe('POST /users - Authenticate', () => {
     beforeEach(async () => {
         await resetInitialAuthUsers()
-    })
+    }, 10000)
 
     it('Authenticate the third Actual User', async () => {
         const params = {
@@ -205,38 +217,38 @@ describe('POST /users - Authenticate', () => {
     }, 100000)
 
     /*
-    
+
 
     it('Do not allow authentication for the new Actual User with the wrong secret', async () => {
-        
+
     }, 100000)
 
     it('Start a Session for an Actual User', async () => {
-        
+
     }, 100000)
 
     it('Get the Active Session for an Actual User', async () => {
-        
+
     }, 100000)
 
     it('Start a Session for a Guest User', async () => {
-        
+
     }, 100000)
 
     it('Do not start a Session for a nonexisting User', async () => {
-        
+
     }, 100000)
 
     it('Update the Online Status of the Users', async () => {
-        
+
     }, 100000)
 
     it('Overwrite all Users with the Inital Users', async () => {
-        
+
     }, 100000)
 
     it('Overwrite a nonexisting User', async () => {
-        
+
     }, 100000)
     */
 })
@@ -244,4 +256,4 @@ describe('POST /users - Authenticate', () => {
 afterAll(async () => {
     if (mongo.connection.readyState in [1, 2])
         await mongo.connection.close()
-})
+}, 10000)
