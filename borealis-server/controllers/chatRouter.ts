@@ -25,10 +25,14 @@ chatRouter.get('/:roomId?', (request: Request<unknown, unknown, unknown, IChatRo
 
 chatRouter.post('/', (request: Request<unknown, unknown, IChatRouterRequestBody, unknown>, response: Response) => {
     const body = request.body
-    if (body.payload === undefined)
+    if (body.payload === undefined) {
         response.status(400).json({ error: 'Request Payload is missing.' })
-    if (body.roomId === undefined || body.roomId === '')
+        return
+    }
+    if (body.roomId === undefined || body.roomId === '') {
         response.status(400).json({ error: 'Room was not specified.' })
+        return
+    }
 
     const incChatMessages = JSON.parse(body.payload) as Array<IIncChatMessage>
     const newChat = parseIncChatToChatSchema(incChatMessages, body.roomId, new Date())

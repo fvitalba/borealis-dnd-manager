@@ -29,12 +29,18 @@ roomRouter.get('/:roomId?:hostUserGuid?', (request: Request<unknown, unknown, un
 
 roomRouter.post('/', (request: Request<unknown, unknown, IRoomsRouterRequestBody, unknown>, response: Response) => {
     const body = request.body
-    if (body.payload === undefined)
+    if (body.payload === undefined) {
         response.status(400).json({ error: 'Request Payload is missing.' })
-    if ((body.roomId === undefined || body.roomId === '') || ((body.roomName === undefined) || (body.roomName === '')))
+        return
+    }
+    if ((body.roomId === undefined || body.roomId === '') || ((body.roomName === undefined) || (body.roomName === ''))) {
         response.status(400).json({ error: 'Room was not specified.' })
-    if ((body.hostUserGuid === undefined) || (body.hostUserGuid === ''))
+        return
+    }
+    if ((body.hostUserGuid === undefined) || (body.hostUserGuid === '')) {
         response.status(400).json({ error: 'Host was not specified.' })
+        return
+    }
 
     const incRoom = JSON.parse(body.payload) as IIncRoom
     const newRoom = parseIncRoomToRoomSchema(incRoom, body.hostUserGuid, body.roomId, body.roomName, new Date())

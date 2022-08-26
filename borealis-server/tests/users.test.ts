@@ -8,7 +8,7 @@ const usersGetEndpoint = '/api/v1.0/users'
 const usersPostEndpoint = '/api/v1.0/users'
 const usersRegisterEndpoint = usersPostEndpoint + '/register'
 const usersAuthenticateEndpoint = usersPostEndpoint + '/authenticate'
-//const usersSessionEndpoint = usersPostEndpoint + '/session'
+const usersSessionEndpoint = usersPostEndpoint + '/session'
 
 const getHashedSecret = (inputPassword: string): string => {
     switch (inputPassword) {
@@ -46,7 +46,7 @@ const resetInitialAuthUsers = async () => {
 describe('GET /users', () => {
     beforeEach(async () => {
         await resetInitialUsers()
-    }, 10000)
+    }, 100000)
 
     it('retrieves a JSON List of Users', async () => {
         await supertest(app)
@@ -92,7 +92,7 @@ describe('GET /users', () => {
 describe('POST /users - Register', () => {
     beforeEach(async () => {
         await resetInitialUsers()
-    }, 10000)
+    }, 100000)
 
     it('Register a new Actual User', async () => {
         const params = {
@@ -195,9 +195,10 @@ describe('POST /users - Register', () => {
 describe('POST /users - Authenticate', () => {
     beforeEach(async () => {
         await resetInitialAuthUsers()
-    }, 10000)
+    }, 100000)
 
     it('Authenticate the third Actual User', async () => {
+        // First we authenticate providing all possible parameters
         const params = {
             isGuest: initialUsersForAuthentication[2].guest,
             userGuid: initialUsersForAuthentication[2].guid,
@@ -214,19 +215,123 @@ describe('POST /users - Authenticate', () => {
         expect(response.body.email).toBe(initialUsersForAuthentication[2].email)
         expect(response.body.guest).toBe(initialUsersForAuthentication[2].guest)
         expect(response.body.secret).toBe('')
+
+        // Then we authenticate by just providing guest, name and secret
+        const params2 = {
+            isGuest: initialUsersForAuthentication[2].guest,
+            userGuid: '',
+            userName: initialUsersForAuthentication[2].name,
+            email: '',
+            secret: initialUsersForAuthentication[2].secret,
+        }
+        const response2 = await supertest(app)
+            .post(usersAuthenticateEndpoint)
+            .send(params2)
+        expect(response2.body.error).toBeUndefined()
+        expect(response2.body.guid).not.toBe('')
+        expect(response2.body.name).toBe(initialUsersForAuthentication[2].name)
+        expect(response2.body.email).not.toBe('')
+        expect(response2.body.guest).toBe(initialUsersForAuthentication[2].guest)
+        expect(response2.body.secret).toBe('')
+
+        // Then we authenticate by just providing guest, mail and secret
+        const params3 = {
+            isGuest: initialUsersForAuthentication[2].guest,
+            userGuid: '',
+            userName: '',
+            email: initialUsersForAuthentication[2].email,
+            secret: initialUsersForAuthentication[2].secret,
+        }
+        const response3 = await supertest(app)
+            .post(usersAuthenticateEndpoint)
+            .send(params3)
+        expect(response3.body.error).toBeUndefined()
+        expect(response3.body.guid).not.toBe('')
+        expect(response3.body.name).not.toBe('')
+        expect(response3.body.email).toBe(initialUsersForAuthentication[2].email)
+        expect(response3.body.guest).toBe(initialUsersForAuthentication[2].guest)
+        expect(response3.body.secret).toBe('')
     }, 100000)
 
-    /*
-
-
     it('Do not allow authentication for the new Actual User with the wrong secret', async () => {
+        // First we just provide no secret.
+        const params = {
+            isGuest: initialUsersForAuthentication[2].guest,
+            userGuid: initialUsersForAuthentication[2].guid,
+            userName: initialUsersForAuthentication[2].name,
+            email: initialUsersForAuthentication[2].email,
+            secret: '',
+        }
+        const response = await supertest(app)
+            .post(usersAuthenticateEndpoint)
+            .send(params)
+        expect(response.body.error).not.toBeUndefined()
+        expect(response.body.guid).toBeUndefined()
+        expect(response.body.name).toBeUndefined()
+        expect(response.body.email).toBeUndefined()
+        expect(response.body.guest).toBeUndefined()
+        expect(response.body.secret).toBeUndefined()
 
+        // Then we provide just a username and nothing else
+        const params2 = {
+            isGuest: false,
+            userGuid: '',
+            userName: initialUsersForAuthentication[2].name,
+            email: '',
+            secret: '',
+        }
+        const response2 = await supertest(app)
+            .post(usersAuthenticateEndpoint)
+            .send(params2)
+        expect(response2.body.error).not.toBeUndefined()
+        expect(response2.body.guid).toBeUndefined()
+        expect(response2.body.name).toBeUndefined()
+        expect(response2.body.email).toBeUndefined()
+        expect(response2.body.guest).toBeUndefined()
+        expect(response2.body.secret).toBeUndefined()
+
+        // Then we provide just a username and the already hashed secret
+        const params3 = {
+            isGuest: false,
+            userGuid: '',
+            userName: initialUsersForAuthentication[2].name,
+            email: '',
+            secret: getHashedSecret(initialUsersForAuthentication[2].secret),
+        }
+        const response3 = await supertest(app)
+            .post(usersAuthenticateEndpoint)
+            .send(params3)
+        expect(response3.body.error).not.toBeUndefined()
+        expect(response3.body.guid).toBeUndefined()
+        expect(response3.body.name).toBeUndefined()
+        expect(response3.body.email).toBeUndefined()
+        expect(response3.body.guest).toBeUndefined()
+        expect(response3.body.secret).toBeUndefined()
+    }, 100000)
+
+})
+
+describe('POST /users - Sessions', () => {
+    beforeEach(async () => {
+        await resetInitialAuthUsers()
     }, 100000)
 
     it('Start a Session for an Actual User', async () => {
-
+        const params = {
+            isGuest: initialUsersForAuthentication[2].guest,
+            userGuid: initialUsersForAuthentication[2].guid,
+            secret: initialUsersForAuthentication[2].secret,
+            sessionToken: '',
+        }
+        const response = await supertest(app)
+            .post(usersSessionEndpoint)
+            .send(params)
+        expect(response.body.error).toBeUndefined()
+        expect(response.body).toHaveLength(1)
+        expect(response.body).not.toBeUndefined()
     }, 100000)
 
+    /*
     it('Get the Active Session for an Actual User', async () => {
 
     }, 100000)

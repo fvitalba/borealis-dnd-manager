@@ -40,8 +40,10 @@ roomUserRouter.get('/:userGuid?:roomId?', (request: Request<unknown, unknown, un
 roomUserRouter.post('/', (request: Request<unknown, unknown, IUsersRouterRequestBody, unknown>, response: Response) => {
     //TODO: Verify that these typings are correct. Apparently newUser and payload were different User-Classes
     const body = request.body
-    if (!body.newUser && !body.payload)
+    if (!body.newUser && !body.payload) {
         response.status(400).json({ error: 'Request is badly specified. Please provide users to save.' })
+        return
+    }
 
     if (body.newRoomUser !== undefined) {
         const incRoomUser = body.newRoomUser

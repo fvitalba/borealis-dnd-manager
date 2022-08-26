@@ -27,10 +27,14 @@ mapRouter.get('/:roomId?:mapId?', (request: Request<unknown, unknown, unknown, I
 
 mapRouter.post('/', (request: Request<unknown, unknown, IMapsRouterRequestBody, unknown>, response: Response) => {
     const body = request.body
-    if (body.payload === undefined)
+    if (body.payload === undefined) {
         response.status(400).json({ error: 'Request Payload is missing.' })
-    if (body.roomId === undefined || body.roomId === '')
+        return
+    }
+    if (body.roomId === undefined || body.roomId === '') {
         response.status(400).json({ error: 'Room was not specified.' })
+        return
+    }
 
     const incMaps = JSON.parse(body.payload) as Array<IIncMap>
     const newMaps = incMaps.map((incMap) => parseIncMapToMapSchema(incMap, body.roomId, new Date()))

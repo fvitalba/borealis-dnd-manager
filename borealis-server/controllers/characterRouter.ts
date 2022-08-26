@@ -27,10 +27,14 @@ characterRouter.get('/:roomId?:characterGuid?', (request: Request<unknown, unkno
 
 characterRouter.post('/', (request: Request<unknown, unknown, ICharacterRouterRequestBody, unknown>, response: Response) => {
     const body = request.body
-    if (body.payload === undefined)
+    if (body.payload === undefined) {
         response.status(400).json({ error: 'Request Payload is missing.' })
-    if (body.roomId === undefined || body.roomId === '')
+        return
+    }
+    if (body.roomId === undefined || body.roomId === '') {
         response.status(400).json({ error: 'Room was not specified.' })
+        return
+    }
 
     const incCharacters = JSON.parse(body.payload) as Array<IIncCharacter>
     const newCharacters = incCharacters.map((incCharacter) => parseIncCharacterToCharacterSchema(incCharacter, body.roomId, new Date()))

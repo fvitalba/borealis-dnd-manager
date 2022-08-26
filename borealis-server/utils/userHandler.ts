@@ -161,14 +161,11 @@ export const authenticateUser = async (isGuest: boolean, userGuid?: string, user
     if (existingUser.guid === '')
         return emptyUser()
     else {
-        console.log('existingUser',existingUser)
         if (existingUser.guest === true) {
             const updatedUser = updateExistingUserActivity(existingUser, true)
             return cleanUserBeforeSending(updatedUser)
         } else {
             const hashesMatch = (userSecret !== undefined) ? await checkSecretsMatch(existingUser.secret, userSecret) : false
-            console.log('hashesMatch',hashesMatch)
-            console.log('passwordinc',userSecret,'passwordfound',existingUser.secret)
             if (hashesMatch) {
                 const updatedUser = updateExistingUserActivity(existingUser, true)
                 return cleanUserBeforeSending(updatedUser)

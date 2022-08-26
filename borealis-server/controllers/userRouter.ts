@@ -35,8 +35,10 @@ userRouter.get('/:userGuid?', (request: Request<unknown, unknown, unknown, IUser
 userRouter.post('/', (request: Request<unknown, unknown, IUsersRouterRequestBody, unknown>, response: Response) => {
     //TODO: Verify that these typings are correct. Apparently newUser and payload were different User-Classes
     const body = request.body
-    if (!body.newUser && !body.payload)
+    if (!body.newUser && !body.payload) {
         response.status(400).json({ error: 'Request is badly specified. Please provide users to save.' })
+        return
+    }
 
     if (body.newRoomUser !== undefined) {
         const incRoomUser = body.newRoomUser
@@ -59,8 +61,10 @@ userRouter.post('/', (request: Request<unknown, unknown, IUsersRouterRequestBody
 
 userRouter.post('/status/', (request: Request<unknown, unknown, IUsersRouterRequestBody, unknown>, response: Response) => {
     const body = request.body
-    if (body.active === undefined)
+    if (body.active === undefined) {
         response.status(400).json({ error: 'Request is badly specified. Either RoomID or new Status was missing.' })
+        return
+    }
 
     const newUserActive = body.active ? body.active : false
     const updatedUsers = overwriteAllRoomUsersStatus(body.roomId, newUserActive)
@@ -71,12 +75,18 @@ userRouter.post('/status/', (request: Request<unknown, unknown, IUsersRouterRequ
 
 userRouter.post('/authenticate/', (request: Request<unknown, unknown, IUsersRouterRequestBody, unknown>, response: Response) => {
     const body = request.body
-    if (!body.userGuid && !body.userName && !body.email)
+    if (!body.userGuid && !body.userName && !body.email) {
         response.status(400).json({ error: 'Request is badly specified. Please provide either a userGuid, userName or email.' })
-    if (!body.secret && !body.isGuest)
+        return
+    }
+    if (!body.secret && !body.isGuest) {
         response.status(400).json({ error: 'Users must specify their secret to authenticate.' })
-    if (!body.userName && body.isGuest)
+        return
+    }
+    if (!body.userName && body.isGuest) {
         response.status(400).json({ error: 'Guests must specify a username.' })
+        return
+    }
 
     const isGuest = body.isGuest ? body.isGuest : false
     authenticateUser(isGuest, body.userGuid, body.userName, body.email, body.secret)
@@ -91,10 +101,12 @@ userRouter.post('/authenticate/', (request: Request<unknown, unknown, IUsersRout
 
 userRouter.post('/register/', (request: Request<unknown, unknown, IUsersRouterRequestBody, unknown>, response: Response) => {
     const body = request.body
-    if (!body.newUser)
+    if (!body.newUser) {
         response.status(400).json({ error: 'Request is badly specified. Please provide an user for registration.' })
+        return
+    }
 
-    const incUser = body.newUser as IIncUser
+    const incUser = body.newUser
     const newUser = parseIncUserToUserSchema(incUser, false, (new Date()).getMilliseconds())
     registerUser(newUser)
         .then((result) => {
@@ -109,8 +121,10 @@ userRouter.post('/register/', (request: Request<unknown, unknown, IUsersRouterRe
 userRouter.post('/session/', (request: Request<unknown, unknown, IUsersRouterRequestBody, unknown>, response: Response) => {
     const body = request.body
     if (!body.userGuid && !body.sessionToken) {
-        if (!body.userGuid && !body.secret && !body.isGuest)
+        if (!body.userGuid && !body.secret && !body.isGuest) {
             response.status(400).json({ error: 'Request is badly specified. Please provide either authentication or an existing session token.' })
+            return
+        }
     }
 
     startUserSession(body.userGuid, body.sessionToken, body.secret)
