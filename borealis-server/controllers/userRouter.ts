@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express'
-import { registerUser, overwriteRoomUsers, getAllActiveUsers, parseIncRoomUserToRoomUserSchema, overwriteSingleRoomUser, overwriteAllRoomUsersStatus, authenticateUser, startUserSession, parseIncUserToUserSchema } from '../utils/userHandler'
+import { registerUser, getAllActiveUsers, authenticateUser, startUserSession, parseIncUserToUserSchema } from '../utils/userHandler'
 import IIncRoomUser from '../incomingInterfaces/incRoomUser'
 import IIncUser from '../incomingInterfaces/incUser'
 
@@ -30,47 +30,6 @@ userRouter.get('/:userGuid?', (request: Request<unknown, unknown, unknown, IUser
     getAllActiveUsers(userGuid)
         .then((result) => response.json(result))
         .catch(() => [])
-})
-
-userRouter.post('/', (request: Request<unknown, unknown, IUsersRouterRequestBody, unknown>, response: Response) => {
-    //TODO: Verify that these typings are correct. Apparently newUser and payload were different User-Classes
-    const body = request.body
-    if (!body.newUser && !body.payload) {
-        response.status(400).json({ error: 'Request is badly specified. Please provide users to save.' })
-        return
-    }
-
-    if (body.newRoomUser !== undefined) {
-        const incRoomUser = body.newRoomUser
-        const newRoomUser = parseIncRoomUserToRoomUserSchema(incRoomUser)
-        const updatedUsers = overwriteSingleRoomUser(body.roomId, newRoomUser)
-            .then((result) => [result])
-            .catch(() => [])
-        response.json(updatedUsers)
-    }
-    if (body.payload !== undefined) {
-        const incUsers = JSON.parse(body.payload) as Array<IIncRoomUser>
-        const newUsers = incUsers.map((incUser) => parseIncRoomUserToRoomUserSchema(incUser))
-        const updatedUsers = overwriteRoomUsers(body.roomId, newUsers)
-            .then((result) => result)
-            .catch(() => [])
-        response.json(updatedUsers)
-    }
-    response.status(400).json({ error: 'Request is badly specified. Either newRoomUser or payload was missing.' })
-})
-
-userRouter.post('/status/', (request: Request<unknown, unknown, IUsersRouterRequestBody, unknown>, response: Response) => {
-    const body = request.body
-    if (body.active === undefined) {
-        response.status(400).json({ error: 'Request is badly specified. Either RoomID or new Status was missing.' })
-        return
-    }
-
-    const newUserActive = body.active ? body.active : false
-    const updatedUsers = overwriteAllRoomUsersStatus(body.roomId, newUserActive)
-        .then((result) => result)
-        .catch(() => [])
-    response.json(updatedUsers)
 })
 
 userRouter.post('/authenticate/', (request: Request<unknown, unknown, IUsersRouterRequestBody, unknown>, response: Response) => {

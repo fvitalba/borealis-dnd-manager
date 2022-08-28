@@ -133,7 +133,7 @@ describe('POST /users - Register', () => {
         expect(response.body).toHaveLength(activeInitialUsers.length + 1)
     }, 100000)
 
-    it('Do not register a new Actual User with an existing Email', async () => {
+    it('Do not register a new Actual User with an existing Email or Username', async () => {
         // Get a list of users with emails that are already present
         // Then take that Email and overwrite the newActualUser mail
         // Then try to create a new User using the existing mail
@@ -147,7 +147,7 @@ describe('POST /users - Register', () => {
         // Check that we cannot create a new User with a different Email, but the same Username as someone else
         const newUserWithExistingName = {
             ...newActualUser,
-            name: existingUserEmails[0].name,
+            userName: existingUserEmails[0].name,
         }
         await checkRegisterUserUnsuccessful(newUserWithExistingName)
 
@@ -337,20 +337,6 @@ describe('POST /users - Sessions', () => {
         // Try starting a session for a guest user, that does not exist (random name).
         await checkStartSessionUnsuccessful(true, randomUUID(), '', '')
     }, 100000)
-
-    /*
-    it('Update the Online Status of the Users', async () => {
-
-    }, 100000)
-
-    it('Overwrite all Users with the Inital Users', async () => {
-
-    }, 100000)
-
-    it('Overwrite a nonexisting User', async () => {
-
-    }, 100000)
-    */
 })
 
 afterAll(async () => {
