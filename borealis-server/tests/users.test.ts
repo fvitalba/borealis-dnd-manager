@@ -1,8 +1,10 @@
 import supertest from 'supertest'
+import { randomUUID } from 'crypto'
 import mongo from '../utils/mongo'
 import app from '../app'
 import User, { IUserSchema } from '../models/user'
 import { initialUsers, initialUsersForAuthentication, newActualUser, newGuestUser } from './testData/initial.users'
+import Session from '../models/session'
 
 const usersGetEndpoint = '/api/v1.0/users'
 const usersPostEndpoint = '/api/v1.0/users'
@@ -43,12 +45,16 @@ const resetInitialAuthUsers = async () => {
     })
 }
 
+const resetActiveSessions = async () => {
+    await Session.deleteMany()
+}
+
 describe('GET /users', () => {
     beforeEach(async () => {
         await resetInitialUsers()
     }, 100000)
 
-    it('retrieves a JSON List of Users', async () => {
+    it('Retrieves a JSON List of Users', async () => {
         await supertest(app)
             .get(usersGetEndpoint)
             .expect(200)
@@ -314,36 +320,59 @@ describe('POST /users - Authenticate', () => {
 describe('POST /users - Sessions', () => {
     beforeEach(async () => {
         await resetInitialAuthUsers()
+        await resetActiveSessions()
     }, 100000)
 
-    it('Start a Session for an Actual User', async () => {
+    const startSession = async (isGuest: boolean, userGuid: string, secret: string, sessionToken: string): Promise<supertest.Test> => {
         const params = {
-            isGuest: initialUsersForAuthentication[2].guest,
-            userGuid: initialUsersForAuthentication[2].guid,
-            secret: initialUsersForAuthentication[2].secret,
-            sessionToken: '',
+            isGuest: isGuest,
+            userGuid: userGuid,
+            secret: secret,
+            sessionToken: sessionToken,
         }
         const response = await supertest(app)
             .post(usersSessionEndpoint)
             .send(params)
+        return response
+    }
+
+    const checkStartSessionSuccessful = async (isGuest: boolean, userGuid: string, secret: string, sessionToken: string): Promise<string> => {
+        const response = await startSession(isGuest, userGuid, secret, sessionToken)
         expect(response.body.error).toBeUndefined()
         expect(response.body).toHaveLength(1)
         expect(response.body).not.toBeUndefined()
+        return response.body[0] as string
+    }
+
+    const checkStartSessionUnsuccessful = async (isGuest: boolean, userGuid: string, secret: string, sessionToken: string): Promise<string> => {
+        const response = await startSession(isGuest, userGuid, secret, sessionToken)
+        expect(response.body.error).not.toBeUndefined()
+        expect(response.body[0]).toBeUndefined()
+        return ''
+    }
+
+    it('Start a Session for an Actual User', async () => {
+        await checkStartSessionSuccessful(initialUsersForAuthentication[2].guest, initialUsersForAuthentication[2].guid, initialUsersForAuthentication[2].secret, '')
     }, 100000)
 
-    /*
     it('Get the Active Session for an Actual User', async () => {
-
+        const activeSessionId = await checkStartSessionSuccessful(initialUsersForAuthentication[2].guest, initialUsersForAuthentication[2].guid, initialUsersForAuthentication[2].secret, '')
+        const newSessionId = await checkStartSessionSuccessful(initialUsersForAuthentication[2].guest, initialUsersForAuthentication[2].guid, initialUsersForAuthentication[2].secret, activeSessionId)
+        expect(activeSessionId).toBe(newSessionId)
     }, 100000)
 
     it('Start a Session for a Guest User', async () => {
-
+        await checkStartSessionSuccessful(initialUsersForAuthentication[4].guest, initialUsersForAuthentication[4].guid, initialUsersForAuthentication[4].secret, '')
     }, 100000)
 
     it('Do not start a Session for a nonexisting User', async () => {
-
+        await checkStartSessionUnsuccessful(false, '', '', '')
+        await checkStartSessionUnsuccessful(false, randomUUID(), randomUUID(), '')
+        await checkStartSessionUnsuccessful(true, '', '', '')
+        await checkStartSessionUnsuccessful(true, randomUUID(), '', '')
     }, 100000)
 
+    /*
     it('Update the Online Status of the Users', async () => {
 
     }, 100000)

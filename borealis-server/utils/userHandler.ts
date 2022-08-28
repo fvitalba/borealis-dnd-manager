@@ -29,6 +29,8 @@ export const hashUserSecret = async (inputSecret: string): Promise<string> => {
 }
 
 const checkSecretsMatch = async (existingSecret: string, compareSecret: string): Promise<boolean> => {
+    if ((existingSecret === '') || (compareSecret === ''))
+        return false
     const pwdMatch = await argon2.verify(existingSecret, compareSecret)
         .then((passwordsMatch) => {
             if (passwordsMatch) {
@@ -102,8 +104,8 @@ const findLastUserSession = async (user: IUserSchema, sessionToken?: string): Pr
 }
 
 const startNewUserSession = async (user: IUserSchema, userSecret?: string): Promise<ISessionSchema> => {
-    const hashesMatch = (userSecret !== undefined) ? await checkSecretsMatch(user.secret, userSecret) : false
-    if (hashesMatch) {
+    const secretsMatch = (userSecret !== undefined) ? await checkSecretsMatch(user.secret, userSecret) : false
+    if (secretsMatch || user.guest) {
         const newSession = new Session({
             guid: randomUUID(),
             userGuid: user.guid,
