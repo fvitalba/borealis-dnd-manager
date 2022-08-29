@@ -38,7 +38,7 @@ describe('GET /roomUsers', () => {
             }
         })
         for (let i = 0; i < userPerRoomCount.length; i++) {
-            const response = await supertest(app).get(roomUsersGetEndpoint).send({
+            const response = await supertest(app).get(roomUsersGetEndpoint).query({
                 roomId: userPerRoomCount[i].roomId,
             })
             expect(response.body).toHaveLength(userPerRoomCount[i].activeUserCount)

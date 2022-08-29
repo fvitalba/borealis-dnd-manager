@@ -274,7 +274,7 @@ export const setRoomUsersInactiveAfterTimeout = async (): Promise<number> => {
 
 export const getAllRoomActiveUsers = async (roomId: string, userGuid?: string): Promise<Array<IRoomUserSchema>> => {
     const queryParameters = userGuid ? { 'roomId': roomId, 'guid': userGuid, 'active': true, } : { 'roomId': roomId, 'active': true, }
-    return RoomUser.find(queryParameters)
+    return await RoomUser.find(queryParameters)
         .then((roomUsers) => roomUsers)
         .catch(() => [])
 }

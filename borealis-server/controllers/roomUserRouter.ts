@@ -32,7 +32,9 @@ roomUserRouter.get('/:userGuid?:roomId?', (request: Request<unknown, unknown, un
     setRoomUsersInactiveAfterTimeout()
         .then(() => {
             // Then we retrieve the users from the DB and return them
-            response.json(getAllRoomActiveUsers(roomId, userGuid))
+            getAllRoomActiveUsers(roomId, userGuid)
+                .then((roomUsers) => response.json(roomUsers))
+                .catch(() => response.json([]))
         })
         .catch(() => response.json([]))
 })
