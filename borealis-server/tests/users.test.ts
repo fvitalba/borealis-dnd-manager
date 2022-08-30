@@ -26,24 +26,24 @@ const getHashedSecret = (inputPassword: string): string => {
 
 const resetInitialUsers = async () => {
     await User.deleteMany()
-    initialUsers.map(async (initialUser) => {
+    for (const initialUser of initialUsers) {
         const newUser = new User({
             ...initialUser,
             secret: getHashedSecret(initialUser.secret),
         })
         await newUser.save()
-    })
+    }
 }
 
 const resetInitialAuthUsers = async () => {
     await User.deleteMany()
-    initialUsersForAuthentication.map(async (initialUser) => {
+    for (const initialUser of initialUsersForAuthentication) {
         const newUser = new User({
             ...initialUser,
             secret: getHashedSecret(initialUser.secret),
         })
         await newUser.save()
-    })
+    }
 }
 
 const resetActiveSessions = async () => {

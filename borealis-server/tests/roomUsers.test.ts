@@ -9,12 +9,12 @@ const roomUsersGetEndpoint = '/api/v1.0/roomUsers'
 
 const resetInitialRoomUsers = async () => {
     await RoomUser.deleteMany()
-    initialRoomUsers.map(async (initialRoomUser) => {
+    for (const initialRoomUser of initialRoomUsers) {
         const newRoomUser = new RoomUser({
             ...initialRoomUser,
         })
         await newRoomUser.save()
-    })
+    }
 }
 
 describe('GET /roomUsers', () => {
