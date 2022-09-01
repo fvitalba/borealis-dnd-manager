@@ -1,8 +1,6 @@
 import { UpdateQuery } from 'mongoose'
 import IIncCharacter, { IIncCharacterClassLevel, IIncCharacterHitDice } from '../incomingInterfaces/incCharacter'
 import Character, { ICharacterClassSchema, ICharacterHitDiceSchema, ICharacterSchema } from '../models/character'
-//https://github.com/TomDoesTech/The-Ultimate-Guide-to-TypeScript-With-Mongoose/
-//https://www.youtube.com/watch?v=TbT7eO1fxuI
 
 export const parseIncCharacterToCharacterSchema = (incCharacter: IIncCharacter, roomId: string, timestamp: Date): ICharacterSchema => {
     const parsedCharacterClass = incCharacter.class.map((incClassLevel: IIncCharacterClassLevel) => {

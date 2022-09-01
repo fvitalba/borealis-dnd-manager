@@ -33,7 +33,6 @@ export interface ICharacterSchema {
     timestamp: number,
 }
 
-
 const characterClassSchema = new mongo.Schema<ICharacterClassSchema>({
     level: Number,
     class: Number,
