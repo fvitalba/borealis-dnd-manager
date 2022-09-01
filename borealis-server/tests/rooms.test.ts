@@ -1,6 +1,6 @@
 import supertest from 'supertest'
-import app from '../app'
-import mongo from '../utils/mongo'
+import app from '../app.js'
+import mongo from '../utils/mongo.js'
 
 const roomsGetEndpoint = '/api/v1.0/rooms'
 

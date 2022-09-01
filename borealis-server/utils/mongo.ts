@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { MONGODB_URI } from './config'
+import { MONGODB_URI } from './config.js'
 
 if (mongoose.connection.readyState in [0, 3, 99]) {
     // Only connect if we are disconnected (0), disconnecting (3) or uninitialized (99)
