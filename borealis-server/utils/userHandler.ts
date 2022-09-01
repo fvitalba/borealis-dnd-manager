@@ -1,11 +1,11 @@
 import { UpdateQuery } from 'mongoose'
 import { randomUUID } from 'crypto'
 import argon2 from 'argon2'
-import User, { IUserSchema } from '../models/user'
-import RoomUser, { IRoomUserSchema } from '../models/roomUser'
-import IIncRoomUser from '../incomingInterfaces/incRoomUser'
-import Session, { ISessionSchema } from '../models/session'
-import IIncUser from '../incomingInterfaces/incUser'
+import User, { IUserSchema } from '../models/user.js'
+import RoomUser, { IRoomUserSchema } from '../models/roomUser.js'
+import IIncRoomUser from '../incomingInterfaces/incRoomUser.js'
+import Session, { ISessionSchema } from '../models/session.js'
+import IIncUser from '../incomingInterfaces/incUser.js'
 
 // ######################
 // #region Actual Users #

@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express'
-import { registerUser, getAllActiveUsers, authenticateUser, startUserSession, parseIncUserToUserSchema } from '../utils/userHandler'
-import IIncRoomUser from '../incomingInterfaces/incRoomUser'
-import IIncUser from '../incomingInterfaces/incUser'
+import { registerUser, getAllActiveUsers, authenticateUser, startUserSession, parseIncUserToUserSchema } from '../utils/userHandler.js'
+import IIncRoomUser from '../incomingInterfaces/incRoomUser.js'
+import IIncUser from '../incomingInterfaces/incUser.js'
 
 interface IUsersRouterRequestQuery {
     userGuid?: string,

@@ -1,4 +1,4 @@
-import mongo from '../utils/mongo'
+import mongo from '../utils/mongo.js'
 
 export interface IChatMessage {
     guid: string,

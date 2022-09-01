@@ -1,6 +1,6 @@
-import { IGameSchema } from '../../models/room'
+import { IGameSchema } from '../../models/room.js'
 import { randomUUID } from 'crypto'
-import { initialUsersForAuthentication } from './initial.users'
+import { initialUsersForAuthentication } from './initial.users.js'
 
 export const initialRooms: Array<IGameSchema> = [
     {

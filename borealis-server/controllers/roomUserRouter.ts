@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express'
-import { overwriteRoomUsers, setRoomUsersInactiveAfterTimeout, getAllRoomActiveUsers, parseIncRoomUserToRoomUserSchema, overwriteSingleRoomUser, overwriteAllRoomUsersStatus } from '../utils/userHandler'
-import IIncRoomUser from '../incomingInterfaces/incRoomUser'
-import IIncUser from '../incomingInterfaces/incUser'
+import { overwriteRoomUsers, setRoomUsersInactiveAfterTimeout, getAllRoomActiveUsers, parseIncRoomUserToRoomUserSchema, overwriteSingleRoomUser, overwriteAllRoomUsersStatus } from '../utils/userHandler.js'
+import IIncRoomUser from '../incomingInterfaces/incRoomUser.js'
+import IIncUser from '../incomingInterfaces/incUser.js'
 
 interface IUsersRouterRequestQuery {
     userGuid?: string,
@@ -54,6 +54,7 @@ roomUserRouter.post('/', (request: Request<unknown, unknown, IUsersRouterRequest
             .then((result) => [result])
             .catch(() => [])
         response.json(updatedUsers)
+        return
     }
     if (body.payload !== undefined) {
         const incUsers = JSON.parse(body.payload) as Array<IIncRoomUser>
@@ -62,14 +63,17 @@ roomUserRouter.post('/', (request: Request<unknown, unknown, IUsersRouterRequest
             .then((result) => result)
             .catch(() => [])
         response.json(updatedUsers)
+        return
     }
     response.status(400).json({ error: 'Request is badly specified. Either newRoomUser or payload was missing.' })
 })
 
 roomUserRouter.post('/status/', (request: Request<unknown, unknown, IUsersRouterRequestBody, unknown>, response: Response) => {
     const body = request.body
-    if (body.active === undefined)
+    if (body.active === undefined) {
         response.status(400).json({ error: 'Request is badly specified. Either RoomID or new Status was missing.' })
+        return
+    }
 
     const newUserActive = body.active ? body.active : false
     const updatedUsers = overwriteAllRoomUsersStatus(body.roomId, newUserActive)

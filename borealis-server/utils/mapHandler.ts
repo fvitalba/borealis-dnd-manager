@@ -1,6 +1,6 @@
 import { UpdateQuery } from 'mongoose'
-import IIncMap, { IIncPath } from '../incomingInterfaces/incMap'
-import Map, { IMapSchema, IPathSchema } from '../models/map'
+import IIncMap, { IIncPath } from '../incomingInterfaces/incMap.js'
+import Map, { IMapSchema, IPathSchema } from '../models/map.js'
 
 const parseIncPathToPathSchema = (incPath: IIncPath): IPathSchema => {
     return {

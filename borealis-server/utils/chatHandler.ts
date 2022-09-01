@@ -1,5 +1,5 @@
-import IIncChatMessage from '../incomingInterfaces/incChatMessage'
-import Chat, { IChatMessage, IChatSchema } from '../models/chat'
+import IIncChatMessage from '../incomingInterfaces/incChatMessage.js'
+import Chat, { IChatMessage, IChatSchema } from '../models/chat.js'
 
 export const parseIncChatToChatSchema = (incChatMessages: Array<IIncChatMessage>, roomId: string, timestamp: Date): IChatSchema => {
     const parsedChatMessages = incChatMessages.map((incChatMessage): IChatMessage => {

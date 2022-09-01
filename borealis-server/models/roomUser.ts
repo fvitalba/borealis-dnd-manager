@@ -1,4 +1,4 @@
-import mongo from '../utils/mongo'
+import mongo from '../utils/mongo.js'
 
 export interface IRoomUserSchema {
     roomId: string,

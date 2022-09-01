@@ -1,6 +1,6 @@
-import { IRoomUserSchema } from '../../models/roomUser'
-import { initialUsersForAuthentication } from './initial.users'
-import { initialRooms } from './initial.rooms'
+import { IRoomUserSchema } from '../../models/roomUser.js'
+import { initialUsersForAuthentication } from './initial.users.js'
+import { initialRooms } from './initial.rooms.js'
 
 export const initialRoomUsers: Array<IRoomUserSchema> = [
     {
