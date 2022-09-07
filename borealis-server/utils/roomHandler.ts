@@ -46,7 +46,7 @@ export const exportRoomWithRole = (room: IGameSchema, role: number): IGameSchema
     }
 }
 
-export const getAllUserRooms = async (roomId: string, userGuid: string): Promise<Array<IRoomUserSchema>> => {
+export const getAllRoomUsers = async (roomId: string, userGuid: string): Promise<Array<IRoomUserSchema>> => {
     // Returns all the Rooms where the userGuid is present as a User. This includes any Player or GM occurences.
     const queryParameters: FilterQuery<IRoomUserSchema> = {}
     queryParameters['guid'] = userGuid
@@ -65,13 +65,13 @@ export const getRoomFromId = async (roomId: string): Promise<IGameSchema | null 
 }
 
 export const getAllUserRoomsWithRole = async (roomId: string, userGuid: string): Promise<Array<IGameSchemaWithRole | undefined>> => {
-    const userRooms = await getAllUserRooms(roomId, userGuid)
+    const roomUsers = await getAllRoomUsers(roomId, userGuid)
 
     return Promise.all(
-        userRooms.map(async (userRoom) => {
-            const room = await getRoomFromId(userRoom.roomId)
+        roomUsers.map(async (roomUser) => {
+            const room = await getRoomFromId(roomUser.roomId)
             if ((room !== undefined) && (room !== null)) {
-                return exportRoomWithRole(room, userRoom.type)
+                return exportRoomWithRole(room, roomUser.type)
             } else {
                 return undefined
             }

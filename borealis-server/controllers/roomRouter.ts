@@ -21,7 +21,9 @@ roomRouter.get('/:roomId?:hostUserGuid?', (request: Request<unknown, unknown, un
     const hostUserGuid = (request.query.hostUserGuid !== undefined) ? request.query.hostUserGuid : ''
 
     if ((roomId !== '') || hostUserGuid !== '') {
-        response.json(getAllRoomsForUserIdWithRole(roomId, hostUserGuid))
+        getAllRoomsForUserIdWithRole(roomId, hostUserGuid)
+            .then((result) => response.json(result))
+            .catch(() => response.json([]))
     } else {
         response.json([])
     }
