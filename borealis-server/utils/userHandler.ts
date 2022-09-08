@@ -239,7 +239,7 @@ export const markAllRoomUsersAsInactive = async (roomId: string) => {
 }
 
 export const overwriteRoomUsers = async (roomId: string, newRoomUsers: Array<IRoomUserSchema>): Promise<Array<IRoomUserSchema | undefined>> => {
-    if ((roomId !== '') || !newRoomUsers)
+    if ((roomId === '') || !newRoomUsers)
         return []
 
     // Set all users to inactive, then reactivate only the received users
@@ -252,14 +252,14 @@ export const overwriteRoomUsers = async (roomId: string, newRoomUsers: Array<IRo
 }
 
 export const overwriteSingleRoomUser = async (roomId: string, newRoomUser: IRoomUserSchema): Promise<IRoomUserSchema | undefined> => {
-    if ((roomId !== '') || !newRoomUser)
+    if ((roomId === '') || !newRoomUser)
         return undefined
 
     return await upsertSingleRoomUser(roomId, newRoomUser.guid, { ...newRoomUser, roomId: roomId, timestamp: new Date(), active: true,  })
 }
 
 export const overwriteAllRoomUsersStatus = async (roomId: string, newStatus: boolean): Promise<number> => {
-    if (roomId !== '')
+    if (roomId === '')
         return 0
 
     return await upsertRoomUsers(roomId, { active: newStatus, })

@@ -1,13 +1,14 @@
 import supertest from 'supertest'
 import app from '../app.js'
 import mongo from '../utils/mongo.js'
-import Room from '../models/room.js'
+import Room, { IGameSchema } from '../models/room.js'
 import RoomUser from '../models/roomUser.js'
-import { initialRooms } from './testData/initial.rooms.js'
+import { initialRooms, newRoomId, newRoomName, newRoomHostUserGuid, newRoom } from './testData/initial.rooms.js'
 import { initialRoomUsers } from './testData/initial.roomUsers.js'
 import { initialUsersForAuthentication } from './testData/initial.users.js'
 
 const roomsGetEndpoint = '/api/v1.0/rooms'
+const roomsPostEndpoint = '/api/v1.0/rooms'
 
 const resetInitialRooms = async () => {
     await Room.deleteMany()
@@ -42,7 +43,7 @@ describe('GET /rooms', () => {
             .expect('Content-Type', /application\/json/)
     }, 100000)
 
-    it('The List of rooms contains the initial list of Rooms', async () => {
+    it('The List of Rooms contains the initial list of Rooms', async () => {
         for (let i = 0; i < initialUsersForAuthentication.length; i++) {
             const response = await supertest(app).get(roomsGetEndpoint).query({
                 hostUserGuid: initialUsersForAuthentication[i].guid,
@@ -50,9 +51,42 @@ describe('GET /rooms', () => {
             const userRoomsAsHost = initialRooms.filter((initialRoom) => initialRoom.hostUserGuid === initialUsersForAuthentication[i].guid)
             const userRoomsAsParticipant = initialRoomUsers.filter((initialRoomUser) => (initialRoomUser.guid === initialUsersForAuthentication[i].guid) && (initialRoomUser.type === 1))
             expect(response.body.length).toBe(userRoomsAsHost.length + userRoomsAsParticipant.length)
-
         }
     })
+})
+
+describe('POST /room', () => {
+    beforeEach(async () => {
+        await resetInitialRooms()
+        await resetInitialRoomUsers()
+    }, 100000)
+
+    it('Add new Room', async () => {
+        const params = {
+            payload: JSON.stringify(newRoom),
+            roomId: newRoomId,
+            roomName: newRoomName,
+            hostUserGuid: newRoomHostUserGuid,
+        }
+        const response = await supertest(app)
+            .post(roomsPostEndpoint)
+            .send(params)
+        expect(response.body).not.toBeUndefined()
+        expect(response.body.error).toBeUndefined()
+
+        const response2 = await supertest(app).get(roomsGetEndpoint).query({
+            hostUserGuid: newRoomHostUserGuid,
+        })
+        const responseRooms = response2.body as Array<IGameSchema>
+        const userRoomsAsHost = initialRooms.filter((initialRoom) => initialRoom.hostUserGuid === newRoomHostUserGuid)
+        const userRoomsAsParticipant = initialRoomUsers.filter((initialRoomUser) => (initialRoomUser.guid === newRoomHostUserGuid) && (initialRoomUser.type === 1))
+        expect(responseRooms.length).toBe(userRoomsAsHost.length + userRoomsAsParticipant.length + 1)
+        const newRoomInDb = responseRooms.filter((responseRoom) => responseRoom.roomId === newRoomId)
+        expect(newRoomInDb.length).toBe(1)
+        expect(newRoomInDb[0].roomName).toBe(newRoomName)
+        expect(newRoomInDb[0].version).toBe(newRoom.version)
+        expect(newRoomInDb[0].currentMapId).toBe(newRoom.currentMapId)
+    }, 10000)
 })
 
 afterAll(async () => {

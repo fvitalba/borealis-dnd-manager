@@ -47,9 +47,9 @@ roomRouter.post('/', (request: Request<unknown, unknown, IRoomsRouterRequestBody
     const incRoom = JSON.parse(body.payload) as IIncRoom
     const newRoom = parseIncRoomToRoomSchema(incRoom, body.hostUserGuid, body.roomId, body.roomName, new Date())
 
-    const updatedRoom = overwriteRoom(body.roomId, body.roomName, body.hostUserGuid, newRoom)
-        .then((result) => result)
-    response.json(updatedRoom)
+    overwriteRoom(body.roomId, body.roomName, body.hostUserGuid, newRoom)
+        .then((result) => response.json(result))
+        .catch(() => response.json({}))
 })
 
 /*

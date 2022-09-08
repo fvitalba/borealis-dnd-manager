@@ -29,7 +29,7 @@ describe('GET /roomUsers', () => {
             .expect('Content-Type', /application\/json/)
     }, 100000)
 
-    it('The List of Users contains the list of initial Users per room', async () => {
+    it('The List of RoomUsers contains the list of initial Users per room', async () => {
         const userPerRoomCount = initialRooms.map((initialRoom) => {
             const activeInitialRoomUsers = initialRoomUsers.filter((initialRoomUser) => initialRoomUser.active && (initialRoom.roomId === initialRoomUser.roomId))
             return {

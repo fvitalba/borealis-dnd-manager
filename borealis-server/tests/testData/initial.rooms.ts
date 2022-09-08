@@ -1,6 +1,7 @@
 import { IGameSchema } from '../../models/room.js'
 import { randomUUID } from 'crypto'
 import { initialUsersForAuthentication } from './initial.users.js'
+import IIncRoom from '../../incomingInterfaces/incRoom.js'
 
 export const initialRooms: Array<IGameSchema> = [
     {
@@ -40,3 +41,16 @@ export const initialRooms: Array<IGameSchema> = [
         timestamp: (new Date()).getMilliseconds(),
     },
 ]
+
+export const newRoom: IIncRoom = {
+    currentMapId: 0,
+    fogEnabled: true,
+    height: 1080,
+    width: 1920,
+    tokenSelected: false,
+    version: 1,
+}
+
+export const newRoomId = randomUUID()
+export const newRoomName = 'New Room'
+export const newRoomHostUserGuid = initialUsersForAuthentication[3].guid
