@@ -53,9 +53,18 @@ export const overwriteRoom = async (roomId: string, roomName: string, hostUserGu
     return newRoomInDb
 }
 
-export const exportRoomWithRole = (room: IGameSchema, role: number): IGameSchemaWithRole => {
+export const exportRoomWithRole = (roomToExport: IGameSchema, role: number): IGameSchemaWithRole => {
     return {
-        ...room,
+        currentMapId: roomToExport.currentMapId,
+        fogEnabled: roomToExport.fogEnabled,
+        height: roomToExport.height,
+        hostUserGuid: roomToExport.hostUserGuid,
+        roomId: roomToExport.roomId,
+        roomName: roomToExport.roomName,
+        timestamp: roomToExport.timestamp,
+        tokenSelected: roomToExport.tokenSelected,
+        version: roomToExport.version,
+        width: roomToExport.width,
         userRole: role,
     }
 }
@@ -79,40 +88,16 @@ export const getRoomFromId = async (roomId: string): Promise<IGameSchema | null 
 }
 
 export const getAllUserRoomsWithRole = async (roomId: string, userGuid: string): Promise<Array<IGameSchemaWithRole | undefined>> => {
-    // Fix export, the JSON looks weird:
-    /*
-    {
-        '$__': { activePaths: [Object], skipId: true },
-        '$isNew': false,
-        _doc: {
-            _id: '631a6253fc91a2b52d9f3fe2',
-            hostUserGuid: 'd4fd704c-f6ff-4689-9cab-16a1e8233324',
-            roomId: 'd2bf2f6b-388e-403b-8f38-127a9107ef26',
-            __v: 0,
-            currentMapId: 0,
-            fogEnabled: true,
-            height: 1080,
-            roomName: 'New Room',
-            timestamp: 1662673490996,
-            tokenSelected: false,
-            version: 1,
-            width: 1920
-        },
-        userRole: 0
-    }
-    */
     const roomUsers = await getAllRoomUsers(roomId, userGuid)
-
-    return Promise.all(
-        roomUsers.map(async (roomUser) => {
-            const room = await getRoomFromId(roomUser.roomId)
-            if ((room !== undefined) && (room !== null)) {
-                return exportRoomWithRole(room, roomUser.type)
-            } else {
-                return undefined
-            }
-        })
-    )
+    const roomsToExport: Array<IGameSchemaWithRole> = []
+    for(let i = 0; i < roomUsers.length; i++) {
+        const userRoom = await getRoomFromId(roomUsers[i].roomId)
+        if ((userRoom !== undefined) && (userRoom !== null)) {
+            const roomWithRole = exportRoomWithRole(userRoom, roomUsers[i].type)
+            roomsToExport.push(roomWithRole)
+        }
+    }
+    return roomsToExport
 }
 
 export const getAllRoomsForUserIdWithRole = async (roomId: string, userGuid: string): Promise<Array<IGameSchemaWithRole | undefined>> => {
