@@ -19,7 +19,9 @@ mapRouter.get('/:roomId?:mapId?', (request: Request<unknown, unknown, unknown, I
     const mapId = (request.query.mapId !== undefined) ? request.query.mapId : -1
 
     if (roomId !== '') {
-        response.json(getRoomMaps(roomId, mapId))
+        getRoomMaps(roomId, mapId)
+            .then((maps) => response.json(maps))
+            .catch(() => response.json([]))
     } else {
         response.json([])
     }
@@ -39,9 +41,9 @@ mapRouter.post('/', (request: Request<unknown, unknown, IMapsRouterRequestBody, 
     const incMaps = JSON.parse(body.payload) as Array<IIncMap>
     const newMaps = incMaps.map((incMap) => parseIncMapToMapSchema(incMap, body.roomId, new Date()))
 
-    const updatedMaps = overwriteRoomMaps(body.roomId, newMaps)
-        .then((result) => result)
-    response.json(updatedMaps)
+    overwriteRoomMaps(body.roomId, newMaps)
+        .then((result) => response.json(result))
+        .catch(() => response.json([]))
 })
 
 export default mapRouter
