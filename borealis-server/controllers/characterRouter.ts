@@ -19,7 +19,9 @@ characterRouter.get('/:roomId?:characterGuid?', (request: Request<unknown, unkno
     const characterGuid = request.query.characterGuid ? request.query.characterGuid : ''
 
     if (roomId !== '') {
-        response.json(getRoomCharacters(roomId, characterGuid))
+        getRoomCharacters(roomId, characterGuid)
+            .then((characters) => response.json(characters))
+            .catch(() => response.json([]))
     } else {
         response.json([])
     }
@@ -39,9 +41,10 @@ characterRouter.post('/', (request: Request<unknown, unknown, ICharacterRouterRe
     const incCharacters = JSON.parse(body.payload) as Array<IIncCharacter>
     const newCharacters = incCharacters.map((incCharacter) => parseIncCharacterToCharacterSchema(incCharacter, body.roomId, new Date()))
 
-    const updatedCharacters = overwriteRoomCharacters(body.roomId, newCharacters)
-        .then((result) => result)
-    response.json(updatedCharacters)
+    overwriteRoomCharacters(body.roomId, newCharacters)
+        .then((result) => response.json(result))
+        .catch(() => response.json([]))
+
 })
 
 export default characterRouter

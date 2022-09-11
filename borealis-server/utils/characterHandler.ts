@@ -39,15 +39,13 @@ export const parseIncCharacterToCharacterSchema = (incCharacter: IIncCharacter, 
 }
 
 export const deleteAllRoomCharacters = async (roomId: string): Promise<number> => {
-    return Character.deleteMany({ roomId: roomId, })
-        .then((result) => {
-            return result.deletedCount
-        })
+    return await Character.deleteMany({ roomId: roomId, })
+        .then((result) => result.deletedCount)
         .catch(() => 0)
 }
 
 export const upsertSingleCharacter = async (roomId: string, characterGuid: string, updQuery: UpdateQuery<ICharacterSchema>): Promise<ICharacterSchema | undefined> => {
-    return Character.findOneAndUpdate(
+    return await Character.findOneAndUpdate(
         { roomId: roomId, guid: characterGuid },
         updQuery,
         { new: true, upsert: true, })
@@ -69,7 +67,7 @@ export const overwriteRoomCharacters = async (roomId: string, newCharacters: Arr
 
 export const getRoomCharacters = async (roomId: string, characterGuid?: string): Promise<Array<ICharacterSchema>> => {
     const queryParameters = ((characterGuid !== undefined) && (characterGuid !== '')) ? { 'roomId': roomId, 'guid': characterGuid, } : { 'roomId': roomId, }
-    return Character.find(queryParameters)
+    return await Character.find(queryParameters)
         .then((characters) => characters)
         .catch(() => [])
 }
