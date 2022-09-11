@@ -26,13 +26,13 @@ export const parseIncTokenToTokenSchema = (incToken: IIncToken, roomId: string, 
 }
 
 export const deleteAllRoomTokens = async (roomId: string) : Promise<number> => {
-    return Token.deleteMany({ roomId: roomId, })
+    return await Token.deleteMany({ roomId: roomId, })
         .then((result) => result.deletedCount)
         .catch(() => 0)
 }
 
 export const upsertSingleToken = async (roomId: string, tokenGuid: string, updQuery: UpdateQuery<ITokenSchema>): Promise<ITokenSchema | undefined> => {
-    return Token.findOneAndUpdate(
+    return await Token.findOneAndUpdate(
         { roomId: roomId, guid: tokenGuid },
         updQuery,
         { new: true, upsert: true, })
@@ -54,7 +54,7 @@ export const overwriteRoomTokens = async (roomId: string, newTokens: Array<IToke
 
 export const getRoomTokens = async (roomId: string, tokenGuid?: string): Promise<Array<ITokenSchema>> => {
     const queryParameters = tokenGuid ? { 'roomId': roomId, 'guid': tokenGuid, } : { 'roomId': roomId, }
-    return Token.find(queryParameters)
+    return await Token.find(queryParameters)
         .then((tokens) => tokens)
         .catch(() => [])
 }

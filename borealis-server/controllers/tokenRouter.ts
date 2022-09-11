@@ -19,7 +19,9 @@ tokenRouter.get('/:roomId?:tokenGuid?', (request: Request<unknown, unknown, unkn
     const tokenGuid = (request.query.tokenGuid !== undefined) ? request.query.tokenGuid : ''
 
     if (roomId !== '') {
-        response.json(getRoomTokens(roomId,tokenGuid))
+        getRoomTokens(roomId,tokenGuid)
+            .then((tokens) => response.json(tokens))
+            .catch(() => response.json([]))
     } else {
         response.json([])
     }
@@ -39,9 +41,9 @@ tokenRouter.post('/', (request: Request<unknown, unknown, ITokensRouterRequestBo
     const incTokens = JSON.parse(body.payload) as Array<IIncToken>
     const newTokens = incTokens.map((incToken) => parseIncTokenToTokenSchema(incToken, body.roomId, new Date()))
 
-    const updatedTokens = overwriteRoomTokens(body.roomId, newTokens)
-        .then((result) => result)
-    response.json(updatedTokens)
+    overwriteRoomTokens(body.roomId, newTokens)
+        .then((result) => response.json(result))
+        .catch(() => response.json([]))
 })
 
 export default tokenRouter

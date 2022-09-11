@@ -76,7 +76,6 @@ describe('POST /maps', () => {
             .send(params)
         expect(response.body).not.toBeUndefined()
         expect(response.body.error).toBeUndefined()
-        console.log(response.body)
 
         const response2 = await supertest(app).get(mapsGetEndpoint).query({
             roomId: initialRooms[2].roomId,
