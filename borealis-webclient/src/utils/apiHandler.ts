@@ -119,12 +119,7 @@ export const getUserRoomsFromDatabase = (hostUserGuid: string): Promise<Array<Ro
     return new Promise((resolve, reject) => {
         axios.get(roomsUrl('',hostUserGuid))
             .then((result) => {
-                resolve(result.data.map((dirtyRoom: any) => {
-                    return {
-                        ...dirtyRoom['_doc'],
-                        userRole: dirtyRoom.userRole,
-                    }
-                }))
+                resolve(result.data)
             })
             .catch((error) => {
                 reject(error)
