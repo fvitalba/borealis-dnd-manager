@@ -17,7 +17,9 @@ chatRouter.get('/:roomId?', (request: Request<unknown, unknown, unknown, IChatRo
     const roomId = request.query.roomId ? request.query.roomId : ''
 
     if (roomId !== '') {
-        response.json(getRoomChat(roomId))
+        getRoomChat(roomId)
+            .then((chats) => response.json(chats))
+            .catch(() => response.json([]))
     } else {
         response.json([])
     }
@@ -37,9 +39,9 @@ chatRouter.post('/', (request: Request<unknown, unknown, IChatRouterRequestBody,
     const incChatMessages = JSON.parse(body.payload) as Array<IIncChatMessage>
     const newChat = parseIncChatToChatSchema(incChatMessages, body.roomId, new Date())
 
-    const updatedChat = overwriteRoomChat(body.roomId, newChat.messages)
-        .then((result) => result)
-    response.json(updatedChat)
+    overwriteRoomChat(body.roomId, newChat.messages)
+        .then((result) => response.json(result))
+        .catch(() => response.json([]))
 })
 
 export default chatRouter

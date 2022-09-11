@@ -26,17 +26,15 @@ export const overwriteRoomChat = async (roomId : string, newMessages: Array<ICha
     if (!roomId || !newMessages)
         return undefined
 
-    return Chat.findOneAndUpdate(
+    return await Chat.findOneAndUpdate(
         { roomId: roomId },
         { roomId: roomId, messages: newMessages, timestamp: new Date(), },
         { new: true, upsert: true, }
-    ).then((updatedChat) => {
-        return updatedChat
-    })
+    )
 }
 
 export const getRoomChat = async (roomId: string): Promise<Array<IChatSchema>> => {
-    return Chat.find({ 'roomId': roomId, })
+    return await Chat.find({ 'roomId': roomId, })
         .then((chat) => chat)
         .catch(() => [])
 }
