@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express'
 import IIncRoom from '../incomingInterfaces/incRoom.js'
-import { getAllRoomsForUserIdWithRole, overwriteRoom, parseIncRoomToRoomSchema } from '../utils/roomHandler.js'
+import { getAllRoomsForUserIdWithRole, getRoomFromId, overwriteRoom, parseIncRoomToRoomSchema } from '../utils/roomHandler.js'
 
 interface IRoomsRouterRequestQuery {
     roomId?: string,
@@ -17,12 +17,16 @@ interface IRoomsRouterRequestBody {
 const roomRouter = Router()
 
 roomRouter.get('/:roomId?:hostUserGuid?', (request: Request<unknown, unknown, unknown, IRoomsRouterRequestQuery>, response: Response) => {
-    const roomId = request.query.roomId ? request.query.roomId : ''
+    const roomId = request.query.roomId !== undefined ? request.query.roomId : ''
     const hostUserGuid = (request.query.hostUserGuid !== undefined) ? request.query.hostUserGuid : ''
 
-    if ((roomId !== '') || hostUserGuid !== '') {
+    if (hostUserGuid !== '') {
         getAllRoomsForUserIdWithRole(roomId, hostUserGuid)
             .then((result) => response.json(result))
+            .catch(() => response.json([]))
+    } else if (roomId !== '') {
+        getRoomFromId(roomId)
+            .then((result) => response.json([result]))
             .catch(() => response.json([]))
     } else {
         response.json([])

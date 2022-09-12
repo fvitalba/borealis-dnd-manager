@@ -127,11 +127,11 @@ export const getUserRoomsFromDatabase = (hostUserGuid: string): Promise<Array<Ro
     })
 }
 
-export const getRoomFromDatabase = (wsSettings: IWsSettings): Promise<Array<GameSchema>> => {
+export const getRoomFromDatabase = (wsSettings: IWsSettings): Promise<GameSchema> => {
     return new Promise((resolve, reject) => {
         axios.get(roomsUrl(wsSettings.roomId, ''))
             .then((result) => {
-                resolve(result.data)
+                resolve(result.data[0])
             })
             .catch((error) => {
                 reject(error)

@@ -32,13 +32,13 @@ export const parseIncMapToMapSchema = (incMap: IIncMap, roomId: string, timestam
 }
 
 export const deleteAllRoomMaps = async (roomId: string) : Promise<number> => {
-    return Map.deleteMany({ roomId: roomId, })
+    return await Map.deleteMany({ roomId: roomId, })
         .then((result) => result.deletedCount)
         .catch(() => 0)
 }
 
 export const upsertSingleMap = async (roomId: string, mapId: number, updQuery: UpdateQuery<IMapSchema>): Promise<IMapSchema | undefined> => {
-    return Map.findOneAndUpdate(
+    return await Map.findOneAndUpdate(
         { roomId: roomId, id: mapId },
         updQuery,
         { new: true, upsert: true, })

@@ -44,13 +44,24 @@ describe('GET /rooms', () => {
     }, 100000)
 
     it('The List of Rooms contains the initial list of Rooms', async () => {
-        for (let i = 0; i < initialUsersForAuthentication.length; i++) {
+        for (const initialUser of initialUsersForAuthentication) {
             const response = await supertest(app).get(roomsGetEndpoint).query({
-                hostUserGuid: initialUsersForAuthentication[i].guid,
+                hostUserGuid: initialUser.guid,
             })
-            const userRoomsAsHost = initialRooms.filter((initialRoom) => initialRoom.hostUserGuid === initialUsersForAuthentication[i].guid)
-            const userRoomsAsParticipant = initialRoomUsers.filter((initialRoomUser) => (initialRoomUser.guid === initialUsersForAuthentication[i].guid) && (initialRoomUser.type === 1))
+            const userRoomsAsHost = initialRooms.filter((initialRoom) => initialRoom.hostUserGuid === initialUser.guid)
+            const userRoomsAsParticipant = initialRoomUsers.filter((initialRoomUser) => (initialRoomUser.guid === initialUser.guid) && (initialRoomUser.type === 1))
             expect(response.body.length).toBe(userRoomsAsHost.length + userRoomsAsParticipant.length)
+        }
+    })
+
+    it('A Room can be retrieved by only providing its RoomId', async () => {
+        for (const initialRoom of initialRooms) {
+            const response = await supertest(app).get(roomsGetEndpoint).query({
+                hostUserGuid: '',
+                roomId: initialRoom.roomId,
+            })
+            expect(response.body.length).toBe(1)
+            expect(response.body[0].roomId).toBe(initialRoom.roomId)
         }
     })
 })

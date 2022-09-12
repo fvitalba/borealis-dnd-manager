@@ -24,7 +24,7 @@ export const parseIncRoomToRoomSchema = (incRoom: IIncRoom, hostUserGuid: string
 }
 
 export const upsertSingleRoom = async (roomId: string, hostUserGuid: string, updQuery: UpdateQuery<IGameSchema>): Promise<IGameSchema | undefined> => {
-    return Room.findOneAndUpdate(
+    return await Room.findOneAndUpdate(
         { roomId: roomId, hostUserGuid: hostUserGuid, },
         updQuery,
         { new: true, upsert: true, })
@@ -76,13 +76,13 @@ export const getAllRoomUsers = async (roomId: string, userGuid: string): Promise
     if (roomId !== undefined && roomId !== '')
         queryParameters['roomId'] = roomId
 
-    return RoomUser.find(queryParameters)
+    return await RoomUser.find(queryParameters)
         .then((roomUsers) => roomUsers)
         .catch(() => [])
 }
 
 export const getRoomFromId = async (roomId: string): Promise<IGameSchema | null | undefined> => {
-    return Room.findOne({ roomId: roomId })
+    return await Room.findOne({ roomId: roomId })
         .then((foundRoom) => foundRoom)
         .catch(() => undefined)
 }

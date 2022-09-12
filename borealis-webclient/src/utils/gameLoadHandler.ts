@@ -65,7 +65,7 @@ const loadRoomFromDatabase = async (webSocketContext: IWebSocketContext, loading
         loadingContext.startLoadingTask(API_LOAD_ROOM)
         getRoomFromDatabase(webSocketContext.wsSettings)
             .then((result) => {
-                const newGame = Game.fromDbSchema(result[0])
+                const newGame = Game.fromDbSchema(result)
                 loadingContext.stopLoadingTask(API_LOAD_ROOM)
                 resolve(newGame)
             })
