@@ -25,7 +25,7 @@ const notificationReducer = (state = initialNotificationState(), action: Notific
     switch (action.type) {
     case ADD_NOTIFICATION:
         if ((action.notificationTitle !== undefined) && (action.notificationContent !== undefined) && (action.notificationType !== undefined))
-            newNotifications.push(new Notification(action.notificationTitle, action.notificationContent, action.notificationType))
+            newNotifications = newNotifications.concat(new Notification(action.notificationTitle, action.notificationContent, action.notificationType))
         return {
             ...state,
             notifications: newNotifications,

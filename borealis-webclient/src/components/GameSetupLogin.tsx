@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { SHA256 } from 'crypto-js'
 import hmacSHA512 from 'crypto-js/hmac-sha512'
@@ -6,12 +6,14 @@ import Base64 from 'crypto-js/enc-base64'
 import UserType from '../enums/UserType'
 import { useLoading } from '../hooks/useLoading'
 import { useWebSocket } from '../hooks/useSocket'
+import { useNotification } from '../hooks/useNotification'
 import StateInterface from '../interfaces/StateInterface'
 import { MetadataState, setGameSettings, setSessionToken } from '../reducers/metadataReducer'
 import { setUsername } from '../reducers/settingsReducer'
 import { API_AUTHENTICATING_USER, API_REGISTERING_USER, API_STARTING_SESSION } from '../utils/loadingTasks'
-import { authenticateUser, registerUser, startSession } from '../utils/loginHandler'
+import { authenticateUser, getloginFromLocalStorage, registerUser, saveLoginToLocalStorage, startSession } from '../utils/loginHandler'
 import GameSetupLoginView from '../views/GameSetup/GameSetupLoginView'
+import NotificationType from '../enums/NotificationType'
 
 const SERVER_KEY = process.env.REACT_APP_SERVER_KEY
 
@@ -50,6 +52,7 @@ const GameSetupLogin = ({ metadataState, setGameSettings, setUsername, setSessio
     const [gameSetupLoginState, setGameSetupLoginState] = useState(initialGameSetupLoginState())
     const webSocketContext = useWebSocket()
     const loadingContext = useLoading()
+    const notificationContext = useNotification()
 
     const onUserNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newUserName = e.target.value
@@ -103,7 +106,7 @@ const GameSetupLogin = ({ metadataState, setGameSettings, setUsername, setSessio
         const authenticationParameters = {
             userGuid: gameSetupLoginState.userGuid,
             userName: gameSetupLoginState.userName,
-            secret: hmacDigest,
+            secret: gameSetupLoginState.isGuest ? '' : hmacDigest,
             email: gameSetupLoginState.email,
             isGuest: gameSetupLoginState.isGuest,
         }
@@ -119,15 +122,16 @@ const GameSetupLogin = ({ metadataState, setGameSettings, setUsername, setSessio
         } else {
             loadingContext.startLoadingTask(API_AUTHENTICATING_USER)
             currentUser = await authenticateUser(webSocketContext.wsSettings, authenticationParameters)
+                .then((result) => result)
                 .catch(() => {
                     loadingContext.stopLoadingTask(API_AUTHENTICATING_USER)
                     return null
                 })
             loadingContext.stopLoadingTask(API_AUTHENTICATING_USER)
         }
-        if (currentUser === null)
-            throw new Error('User could not be authenticated!')
-        else {
+        if (currentUser === null) {
+            notificationContext.addNotification('User not authenticated', 'Your provided credentials were not valid.', NotificationType.Error)
+        } else {
             loadingContext.startLoadingTask(API_STARTING_SESSION)
             const sessionParameters = {
                 userGuid: currentUser.guid,
@@ -151,10 +155,43 @@ const GameSetupLogin = ({ metadataState, setGameSettings, setUsername, setSessio
                     userGuid: currentUser.guid,
                     sessionToken: sessionToken,
                 })
+                saveLoginToLocalStorage(currentUser.guid, sessionToken)
+            } else {
+                notificationContext.addNotification('Session could not be started', 'Your session was not able to be started. Try again later.', NotificationType.Error)
             }
-            // TODO: notify user that the authentication failed
         }
     }
+
+    useEffect(() => {
+        const [userGuid, sessionToken] = getloginFromLocalStorage()
+        const authenticationParameters = {
+            userGuid: userGuid,
+            userName: '',
+            secret: '',
+            email: '',
+            isGuest: false,
+            sessionToken: sessionToken,
+        }
+        loadingContext.startLoadingTask(API_AUTHENTICATING_USER)
+        authenticateUser(webSocketContext.wsSettings, authenticationParameters)
+            .then((currentUser) => {
+                loadingContext.stopLoadingTask(API_AUTHENTICATING_USER)
+                if (currentUser !== null) {
+                    setGameSettings(undefined, currentUser.guid, currentUser.guest, metadataState.roomName, metadataState.roomGuid)
+                    setUsername(currentUser.name)
+                    setSessionToken(sessionToken)
+                    webSocketContext.setWsSettings({
+                        ...webSocketContext.wsSettings,
+                        userGuid: currentUser.guid,
+                        sessionToken: sessionToken,
+                    })
+                    saveLoginToLocalStorage(currentUser.guid, sessionToken)
+                }
+            })
+            .catch(() => {
+                loadingContext.stopLoadingTask(API_AUTHENTICATING_USER)
+            })
+    }, [])
 
     const isSubmitEnabled = ((gameSetupLoginState.userName !== '') && ((gameSetupLoginState.password !== '') || (gameSetupLoginState.isGuest)))
 

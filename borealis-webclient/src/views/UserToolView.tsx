@@ -8,6 +8,7 @@ import {
     BorealisHideFogIcon,
     BorealisSaveWorldIcon,
     BorealisLoadWorldIcon,
+    BorealisLogoutIcon,
 } from './Icons'
 import ControlPanelRow from './GenericViews/ControlPanelRow'
 import TextInput from './GenericViews/TextInput'
@@ -26,9 +27,10 @@ interface UserToolViewProps {
     mouseIsShared: boolean,
     toggleShareMouse: () => void,
     copyUrlToClipboard: () => void,
+    logoutUser: () => void,
 }
 
-const UserToolView = ({ isHost, initAsDev, fogEnabled, toggleFog, saveGameInServer, loadGameFromServer, userName, updateUserName, mouseIsShared, toggleShareMouse, copyUrlToClipboard }: UserToolViewProps) => {
+const UserToolView = ({ isHost, initAsDev, fogEnabled, toggleFog, saveGameInServer, loadGameFromServer, userName, updateUserName, mouseIsShared, toggleShareMouse, copyUrlToClipboard, logoutUser }: UserToolViewProps) => {
     return (
         <ControlPanelRow>
             <TextInput title='User name' placeholder='User name' value={ userName } onChange={ updateUserName } autofocus={ true } />
@@ -40,6 +42,7 @@ const UserToolView = ({ isHost, initAsDev, fogEnabled, toggleFog, saveGameInServ
                     <ActionButton title='Toggle Fog' value={ fogEnabled ? <BorealisHideFogIcon /> : <BorealisShowFogIcon /> } onClick={ toggleFog } />
                     <ActionButton title='Save room' value={ <BorealisSaveWorldIcon /> } onClick={ saveGameInServer } />
                     <ActionButton title='Load room' value={ <BorealisLoadWorldIcon /> } onClick={ loadGameFromServer } />
+                    <ActionButton title='Logout' value={ <BorealisLogoutIcon /> } onClick={ logoutUser } />
                 </>
                 : null
             }

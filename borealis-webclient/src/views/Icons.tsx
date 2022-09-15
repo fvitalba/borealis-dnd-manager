@@ -50,6 +50,7 @@ import {
     IconAlertTriangle,
     IconAlertOctagon,
     IconCircleX,
+    IconLogout,
 } from '@tabler/icons'
 // These icons were copied from https://github.com/la-moore/scarlab-icons/tree/master/react
 // I had to copy them, because they are written as JSX.Elements, whereas I need React Function Components
@@ -774,6 +775,12 @@ export const BorealisAddCharacterClassIcon = (props: IconProps) => {
 
 export const BorealisAddCharacterHitDiceIcon = (props: IconProps) => {
     return <IconHeartPlus
+        size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisLogoutIcon = (props: IconProps) => {
+    return <IconLogout
         size={ props.size ? props.size : defaultSize }
     />
 }

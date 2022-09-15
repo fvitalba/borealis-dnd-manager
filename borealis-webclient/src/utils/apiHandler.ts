@@ -12,9 +12,11 @@ const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
 const CHARACTER_API_URL = 'characters'
 const ROOM_API_URL = 'rooms'
 const USER_API_URL = 'users'
+const ROOM_USER_API_URL = 'roomUsers'
 const MAP_API_URL = 'maps'
 const TOKEN_API_URL = 'tokens'
 const CHAT_API_URL = 'chats'
+const API_VERSION = 'v1.0'
 const SOCKET_SERVER_PORT = process.env.PORT || process.env.REACT_APP_PORT || 8000
 
 interface APIRequestParams {
@@ -39,8 +41,8 @@ const getUrlSchema = (selectedApi: string) => {
     const protocol = /https/.test(window.location.protocol) ? 'https' : 'http'
 
     return DEBUG_MODE
-        ? `${protocol}://${host}:${SOCKET_SERVER_PORT}/api/${selectedApi}/`
-        : `${protocol}://${host}/api/${selectedApi}/`
+        ? `${protocol}://${host}:${SOCKET_SERVER_PORT}/api/${API_VERSION}/${selectedApi}/`
+        : `${protocol}://${host}/api/${API_VERSION}/${selectedApi}/`
 }
 
 const charactersUrl = (roomId: string): string => {
@@ -56,11 +58,12 @@ const roomsUrl = (roomId: string, hostUserGuid: string): string => {
     return combineUrlArrayToUrl(urlArray)
 }
 
-const usersUrl = (roomId?: string): string => {
-    const urlArray = [getUrlSchema(USER_API_URL)]
-    if (roomId !== undefined && roomId !== '')
-        urlArray.push(`roomId=${roomId}`)
-    return combineUrlArrayToUrl(urlArray)
+const usersUrl = (): string => {
+    return getUrlSchema(USER_API_URL)
+}
+
+const roomUsersUrl = (roomId: string): string => {
+    return getUrlSchema(ROOM_USER_API_URL) + `?roomId=${roomId}`
 }
 
 const mapsUrl = (roomId: string): string => {
@@ -116,12 +119,7 @@ export const getUserRoomsFromDatabase = (hostUserGuid: string): Promise<Array<Ro
     return new Promise((resolve, reject) => {
         axios.get(roomsUrl('',hostUserGuid))
             .then((result) => {
-                resolve(result.data.map((dirtyRoom: any) => {
-                    return {
-                        ...dirtyRoom['_doc'],
-                        userRole: dirtyRoom.userRole,
-                    }
-                }))
+                resolve(result.data)
             })
             .catch((error) => {
                 reject(error)
@@ -129,11 +127,11 @@ export const getUserRoomsFromDatabase = (hostUserGuid: string): Promise<Array<Ro
     })
 }
 
-export const getRoomFromDatabase = (wsSettings: IWsSettings): Promise<Array<GameSchema>> => {
+export const getRoomFromDatabase = (wsSettings: IWsSettings): Promise<GameSchema> => {
     return new Promise((resolve, reject) => {
         axios.get(roomsUrl(wsSettings.roomId, ''))
             .then((result) => {
-                resolve(result.data)
+                resolve(result.data[0])
             })
             .catch((error) => {
                 reject(error)
@@ -150,7 +148,7 @@ export const saveUsersToDatabase = (wsSettings: IWsSettings, payload: Array<User
             payload: JSON.stringify(payload),
         }
 
-        axios.post(usersUrl(), params)
+        axios.post(roomUsersUrl(wsSettings.roomId), params)
             .then((result) => {
                 resolve(result.data)
             })
@@ -162,7 +160,7 @@ export const saveUsersToDatabase = (wsSettings: IWsSettings, payload: Array<User
 
 export const getUsersFromDatabase = (wsSettings: IWsSettings): Promise<Array<RoomUserSchema>> => {
     return new Promise ((resolve, reject) => {
-        axios.get(usersUrl(wsSettings.roomId))
+        axios.get(roomUsersUrl(wsSettings.roomId))
             .then((result) => {
                 resolve(result.data)
             })
@@ -200,7 +198,7 @@ export const setAllRoomUsersInactive =  (wsSettings: IWsSettings): Promise<Array
             active: false,
         }
 
-        axios.post(usersUrl() + 'status/', params)
+        axios.post(roomUsersUrl(wsSettings.roomId) + 'status/', params)
             .then((result) => {
                 resolve(result.data)
             })
@@ -210,7 +208,7 @@ export const setAllRoomUsersInactive =  (wsSettings: IWsSettings): Promise<Array
     })
 }
 
-export const getUserDetailsFromDatabase = (wsSettings: IWsSettings, userGuid?: string, userName?: string, email?: string, secret?: string, isGuest?: boolean): Promise<UserSchema> => {
+export const getUserDetailsFromDatabase = (wsSettings: IWsSettings, userGuid?: string, userName?: string, email?: string, secret?: string, isGuest?: boolean, sessionToken?: string): Promise<UserSchema> => {
     return new Promise((resolve, reject) => {
         const params = {
             fromSocketGuid: wsSettings.socketGuid,
@@ -221,6 +219,7 @@ export const getUserDetailsFromDatabase = (wsSettings: IWsSettings, userGuid?: s
             email: email,
             secret: secret,
             isGuest: isGuest,
+            sessionToken: sessionToken,
         }
 
         axios.post(usersUrl() + 'authenticate/', params)
@@ -261,7 +260,7 @@ export const registerUserToDatabase = (wsSettings: IWsSettings, user: RegisterPa
             fromSocketGuid: wsSettings.socketGuid,
             fromUserGuid: wsSettings.userGuid,
             roomId: wsSettings.roomId,
-            user: JSON.stringify(user),
+            newUser: JSON.stringify(user),
         }
 
         axios.post(usersUrl() + 'register/', params)
