@@ -103,7 +103,7 @@ describe('POST /users - Register', () => {
 
     const registerUser = async (newUser: IIncUser): Promise<supertest.Test> => {
         const params = {
-            newUser: newUser,
+            newUser: JSON.stringify(newUser),
         }
         const response = await supertest(app)
             .post(usersRegisterEndpoint)
