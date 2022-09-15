@@ -69,3 +69,8 @@ export const getloginFromLocalStorage = (): [string, string] => {
     const sessionToken = localStorageSessionToken ? localStorageSessionToken : ''
     return [userGuid, sessionToken]
 }
+
+export const deleteLoginFromLocalStorage = () => {
+    localStorage.removeItem('borealis-dnd:userGuid')
+    localStorage.removeItem('borealis-dnd:sessionToken')
+}

@@ -23,6 +23,7 @@ import Map from '../classes/Map'
 import Character from '../classes/Character'
 import User from '../classes/User'
 import saveAllToDatabase from '../utils/gameSaveHandler'
+import { deleteLoginFromLocalStorage } from '../utils/loginHandler'
 
 const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
 const REACT_APP_PORT = 3000
@@ -137,6 +138,10 @@ const UserTool = ({ toggleOnUser, gameState, mapState, tokenState, chatState, ch
         navigator.clipboard.writeText(userUrl)
     }
 
+    const logoutUser = () => {
+        deleteLoginFromLocalStorage()
+    }
+
     return (
         toggleOnUser ?
             <UserToolView
@@ -150,7 +155,8 @@ const UserTool = ({ toggleOnUser, gameState, mapState, tokenState, chatState, ch
                 updateUserName={ updateUsername }
                 mouseIsShared={ settingsState.shareMouse }
                 toggleShareMouse={ toggleShareMouse }
-                copyUrlToClipboard={ copyUrlToClipboard } />
+                copyUrlToClipboard={ copyUrlToClipboard }
+                logoutUser={ logoutUser } />
             : null
     )
 }
