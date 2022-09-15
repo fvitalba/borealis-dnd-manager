@@ -162,9 +162,21 @@ export const authenticateUser = async (isGuest: boolean, userGuid?: string, user
         return emptyUser()
 
     const existingUser = await findUser(userGuid, userName, userEmail)
-    if (existingUser.guid === '')
-        return emptyUser()
-    else {
+    if (existingUser.guid === '') {
+        if (isGuest) {
+            const guestUser: IUserSchema = {
+                name: userName ? userName : '',
+                email: '',
+                guest: isGuest,
+                guid: userGuid ? userGuid : '',
+                secret: '',
+                active: false,
+                lastOnline: 0,
+            }
+            return await registerUser(guestUser)
+        } else
+            return emptyUser()
+    } else {
         if (existingUser.guest === true) {
             const updatedUser = updateExistingUserActivity(existingUser, true)
             return cleanUserBeforeSending(updatedUser)
