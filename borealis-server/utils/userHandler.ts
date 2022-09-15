@@ -133,6 +133,8 @@ const startNewUserSession = async (user: IUserSchema, userSecret?: string): Prom
 export const registerUser = async (user: IUserSchema): Promise<IUserSchema> => {
     if (!user)
         return emptyUser()
+    if (!user.name || ((!user.secret || !user.email) && !user.guest))
+        return emptyUser()
     if (((user.secret === '') || (user.email === '')) && (!user.guest))
         return emptyUser()
 

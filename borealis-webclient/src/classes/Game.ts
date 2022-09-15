@@ -32,7 +32,7 @@ class Game {
 
     public getCurrentMap(maps: Array<Map>): Map {
         const currentMap = maps.filter((map: Map) => map.id === this.currentMapId)
-        if (currentMap.length > 0)
+        if ((currentMap !== undefined) && (currentMap.length > 0))
             return currentMap[0]
         else
             return new Map(-1,'','',0,0,0,0)

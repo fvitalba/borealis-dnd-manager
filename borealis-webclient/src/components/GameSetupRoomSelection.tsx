@@ -146,7 +146,7 @@ const GameSetupRoomSelection = ({ metadataState, settingsState, setGameSettings,
                             assignCharacter(dbState.characterState.currentCharacterGuid)
                         } else {
                             const firstAssignedCharacter = dbState.characterState.characters.filter((character) => character.username === settingsState.username)[0]
-                            if (firstAssignedCharacter.guid !== '')
+                            if ((firstAssignedCharacter !== undefined) && (firstAssignedCharacter.guid !== ''))
                                 assignCharacter(firstAssignedCharacter.guid)
                         }
                     }

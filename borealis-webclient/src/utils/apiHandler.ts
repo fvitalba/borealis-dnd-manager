@@ -259,7 +259,7 @@ export const registerUserToDatabase = (wsSettings: IWsSettings, user: RegisterPa
             fromSocketGuid: wsSettings.socketGuid,
             fromUserGuid: wsSettings.userGuid,
             roomId: wsSettings.roomId,
-            user: JSON.stringify(user),
+            newUser: JSON.stringify(user),
         }
 
         axios.post(usersUrl() + 'register/', params)

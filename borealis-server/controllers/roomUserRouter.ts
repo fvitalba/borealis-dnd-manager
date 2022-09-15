@@ -1,7 +1,6 @@
 import { Request, Response, Router } from 'express'
 import { overwriteRoomUsers, setRoomUsersInactiveAfterTimeout, getAllRoomActiveUsers, parseIncRoomUserToRoomUserSchema, overwriteSingleRoomUser, overwriteAllRoomUsersStatus } from '../utils/userHandler.js'
 import IIncRoomUser from '../incomingInterfaces/incRoomUser.js'
-import IIncUser from '../incomingInterfaces/incUser.js'
 
 interface IUsersRouterRequestQuery {
     userGuid?: string,
@@ -10,8 +9,7 @@ interface IUsersRouterRequestQuery {
 
 interface IUsersRouterRequestBody {
     payload?: string,
-    newRoomUser?: IIncRoomUser,
-    newUser?: IIncUser,
+    newRoomUser?: string,
     roomId: string,
     active?: boolean,
     userGuid?: string,
@@ -42,13 +40,13 @@ roomUserRouter.get('/:userGuid?:roomId?', (request: Request<unknown, unknown, un
 roomUserRouter.post('/', (request: Request<unknown, unknown, IUsersRouterRequestBody, unknown>, response: Response) => {
     //TODO: Verify that these typings are correct. Apparently newUser and payload were different User-Classes
     const body = request.body
-    if (!body.newUser && !body.payload) {
+    if (!body.newRoomUser && !body.payload) {
         response.status(400).json({ error: 'Request is badly specified. Please provide users to save.' })
         return
     }
 
     if (body.newRoomUser !== undefined) {
-        const incRoomUser = body.newRoomUser
+        const incRoomUser = JSON.parse(body.newRoomUser) as IIncRoomUser
         const newRoomUser = parseIncRoomUserToRoomUserSchema(incRoomUser)
         const updatedUsers = overwriteSingleRoomUser(body.roomId, newRoomUser)
             .then((result) => [result])

@@ -1,6 +1,5 @@
 import { Request, Response, Router } from 'express'
 import { registerUser, getAllActiveUsers, authenticateUser, startUserSession, parseIncUserToUserSchema } from '../utils/userHandler.js'
-import IIncRoomUser from '../incomingInterfaces/incRoomUser.js'
 import IIncUser from '../incomingInterfaces/incUser.js'
 
 interface IUsersRouterRequestQuery {
@@ -9,8 +8,7 @@ interface IUsersRouterRequestQuery {
 
 interface IUsersRouterRequestBody {
     payload?: string,
-    newRoomUser?: IIncRoomUser,
-    newUser?: IIncUser,
+    newUser?: string,
     roomId: string,
     active?: boolean,
     userGuid?: string,
@@ -65,7 +63,7 @@ userRouter.post('/register/', (request: Request<unknown, unknown, IUsersRouterRe
         return
     }
 
-    const incUser = body.newUser
+    const incUser = JSON.parse(body.newUser) as IIncUser
     const newUser = parseIncUserToUserSchema(incUser, false, (new Date()).getMilliseconds())
     registerUser(newUser)
         .then((result) => {
