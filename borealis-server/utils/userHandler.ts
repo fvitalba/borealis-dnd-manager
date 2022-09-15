@@ -42,7 +42,7 @@ const checkSecretsMatch = async (existingSecret: string, compareSecret: string):
     return pwdMatch
 }
 
-const findUser = async (userGuid?:string, userName?:string, userEmail?:string): Promise<IUserSchema> => {
+const findUser = async (userGuid?: string, userName?: string, userEmail?: string): Promise<IUserSchema> => {
     const user = await User.findOne({ $or: [{ 'guid': userGuid, }, { 'name': userName }, { 'email': userEmail, 'guest': false, }] })
         .then((foundUser) => foundUser)
         .catch(() => undefined)
@@ -88,11 +88,11 @@ const updateExistingUserActivity = (existingUser: IUserSchema, isActive: boolean
     return cleanUserBeforeSending(updatedUser)
 }
 
-const findLastUserSession = async (user: IUserSchema, sessionToken?: string): Promise<ISessionSchema> => {
+const findLastUserSession = async (userGuid: string, sessionToken?: string): Promise<ISessionSchema> => {
     // We search for any fitting sessions, and sort them by the longest Validity first.
     // Only active sessions are regarded.
     // If at least one session is found, the session with the longest validity is returned.
-    const userSessions = await Session.find({ $or: [{ 'userGuid': user.guid, }, { 'guid': sessionToken }], 'active': true, })
+    const userSessions = await Session.find({ $or: [{ 'userGuid': userGuid, }, { 'guid': sessionToken }], 'active': true, })
         .sort({ 'validTo': 'desc', })
         .then((sessions) => sessions)
         .catch(() => [])
@@ -156,7 +156,7 @@ export const registerUser = async (user: IUserSchema): Promise<IUserSchema> => {
     }
 }
 
-export const authenticateUser = async (isGuest: boolean, userGuid?: string, userName?: string, userEmail?: string, userSecret?: string): Promise<IUserSchema> => {
+export const authenticateUser = async (isGuest: boolean, userGuid?: string, userName?: string, userEmail?: string, userSecret?: string, sessionToken?: string): Promise<IUserSchema> => {
     //TODO: Error on existing Username as guest/non-guest
     if (isGuest && (userEmail !== undefined) && (userEmail !== ''))
         return emptyUser()
@@ -185,8 +185,18 @@ export const authenticateUser = async (isGuest: boolean, userGuid?: string, user
             if (hashesMatch) {
                 const updatedUser = updateExistingUserActivity(existingUser, true)
                 return cleanUserBeforeSending(updatedUser)
-            } else
-                return emptyUser()
+            } else {
+                if ((sessionToken !== undefined) && (sessionToken !== '')) {
+                    const activeSession = await findLastUserSession(existingUser.guid, sessionToken)
+                    if (activeSession.active) {
+                        const updatedUser = updateExistingUserActivity(existingUser, true)
+                        return cleanUserBeforeSending(updatedUser)
+                    } else {
+                        return emptyUser()
+                    }
+                } else
+                    return emptyUser()
+            }
         }
     }
 }
@@ -197,7 +207,7 @@ export const startUserSession = async (userGuid?: string, sessionToken?: string,
     if (existingUser.guid === '')
         return ''
 
-    const lastSession = await findLastUserSession(existingUser, sessionToken)
+    const lastSession = await findLastUserSession(existingUser.guid, sessionToken)
     if (lastSession.active)
         return lastSession.guid
 

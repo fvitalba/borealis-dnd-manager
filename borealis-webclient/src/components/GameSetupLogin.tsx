@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { SHA256 } from 'crypto-js'
 import hmacSHA512 from 'crypto-js/hmac-sha512'
@@ -11,7 +11,7 @@ import StateInterface from '../interfaces/StateInterface'
 import { MetadataState, setGameSettings, setSessionToken } from '../reducers/metadataReducer'
 import { setUsername } from '../reducers/settingsReducer'
 import { API_AUTHENTICATING_USER, API_REGISTERING_USER, API_STARTING_SESSION } from '../utils/loadingTasks'
-import { authenticateUser, registerUser, startSession } from '../utils/loginHandler'
+import { authenticateUser, getloginFromLocalStorage, registerUser, saveLoginToLocalStorage, startSession } from '../utils/loginHandler'
 import GameSetupLoginView from '../views/GameSetup/GameSetupLoginView'
 import NotificationType from '../enums/NotificationType'
 
@@ -155,11 +155,43 @@ const GameSetupLogin = ({ metadataState, setGameSettings, setUsername, setSessio
                     userGuid: currentUser.guid,
                     sessionToken: sessionToken,
                 })
+                saveLoginToLocalStorage(currentUser.guid, sessionToken)
             } else {
                 notificationContext.addNotification('Session could not be started', 'Your session was not able to be started. Try again later.', NotificationType.Error)
             }
         }
     }
+
+    useEffect(() => {
+        const [userGuid, sessionToken] = getloginFromLocalStorage()
+        const authenticationParameters = {
+            userGuid: userGuid,
+            userName: '',
+            secret: '',
+            email: '',
+            isGuest: false,
+            sessionToken: sessionToken,
+        }
+        loadingContext.startLoadingTask(API_AUTHENTICATING_USER)
+        authenticateUser(webSocketContext.wsSettings, authenticationParameters)
+            .then((currentUser) => {
+                loadingContext.stopLoadingTask(API_AUTHENTICATING_USER)
+                if (currentUser !== null) {
+                    setGameSettings(undefined, currentUser.guid, currentUser.guest, metadataState.roomName, metadataState.roomGuid)
+                    setUsername(currentUser.name)
+                    setSessionToken(sessionToken)
+                    webSocketContext.setWsSettings({
+                        ...webSocketContext.wsSettings,
+                        userGuid: currentUser.guid,
+                        sessionToken: sessionToken,
+                    })
+                    saveLoginToLocalStorage(currentUser.guid, sessionToken)
+                }
+            })
+            .catch(() => {
+                loadingContext.stopLoadingTask(API_AUTHENTICATING_USER)
+            })
+    }, [])
 
     const isSubmitEnabled = ((gameSetupLoginState.userName !== '') && ((gameSetupLoginState.password !== '') || (gameSetupLoginState.isGuest)))
 

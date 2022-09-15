@@ -8,6 +8,7 @@ interface AuthenticationParameters {
     secret?: string,
     email?: string,
     isGuest?: boolean,
+    sessionToken?: string,
 }
 
 interface SessionParameters {
@@ -21,7 +22,7 @@ export const authenticateUser = async (wsSettings: IWsSettings, params: Authenti
     if (!params.userGuid && !params.userName)
         throw new Error('In order to authenticate, please provide either userGuid or userName.')
 
-    return getUserDetailsFromDatabase(wsSettings, params.userGuid, params.userName, params.email, params.secret, params.isGuest)
+    return getUserDetailsFromDatabase(wsSettings, params.userGuid, params.userName, params.email, params.secret, params.isGuest, params.sessionToken)
         .then((dbUser) => {
             if (dbUser)
                 return dbUser
@@ -54,4 +55,17 @@ export const startSession = async (wsSettings: IWsSettings, params: SessionParam
                 return null
         })
         .catch(() => null)
+}
+
+export const saveLoginToLocalStorage = (userGuid: string, sessionToken: string) => {
+    localStorage.setItem('borealis-dnd:userGuid',userGuid)
+    localStorage.setItem('borealis-dnd:sessionToken',sessionToken)
+}
+
+export const getloginFromLocalStorage = (): [string, string] => {
+    const localStorageUserGuid = localStorage.getItem('borealis-dnd:userGuid')
+    const localStorageSessionToken = localStorage.getItem('borealis-dnd:sessionToken')
+    const userGuid = localStorageUserGuid ? localStorageUserGuid : ''
+    const sessionToken = localStorageSessionToken ? localStorageSessionToken : ''
+    return [userGuid, sessionToken]
 }

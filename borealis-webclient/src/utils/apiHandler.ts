@@ -208,7 +208,7 @@ export const setAllRoomUsersInactive =  (wsSettings: IWsSettings): Promise<Array
     })
 }
 
-export const getUserDetailsFromDatabase = (wsSettings: IWsSettings, userGuid?: string, userName?: string, email?: string, secret?: string, isGuest?: boolean): Promise<UserSchema> => {
+export const getUserDetailsFromDatabase = (wsSettings: IWsSettings, userGuid?: string, userName?: string, email?: string, secret?: string, isGuest?: boolean, sessionToken?: string): Promise<UserSchema> => {
     return new Promise((resolve, reject) => {
         const params = {
             fromSocketGuid: wsSettings.socketGuid,
@@ -219,6 +219,7 @@ export const getUserDetailsFromDatabase = (wsSettings: IWsSettings, userGuid?: s
             email: email,
             secret: secret,
             isGuest: isGuest,
+            sessionToken: sessionToken,
         }
 
         axios.post(usersUrl() + 'authenticate/', params)

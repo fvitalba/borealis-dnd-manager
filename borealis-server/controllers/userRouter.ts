@@ -36,7 +36,7 @@ userRouter.post('/authenticate/', (request: Request<unknown, unknown, IUsersRout
         response.status(400).json({ error: 'Request is badly specified. Please provide either a userGuid, userName or email.' })
         return
     }
-    if (!body.secret && !body.isGuest) {
+    if (!body.secret && !body.isGuest && !body.sessionToken) {
         response.status(400).json({ error: 'Users must specify their secret to authenticate.' })
         return
     }
@@ -46,7 +46,7 @@ userRouter.post('/authenticate/', (request: Request<unknown, unknown, IUsersRout
     }
 
     const isGuest = body.isGuest ? body.isGuest : false
-    authenticateUser(isGuest, body.userGuid, body.userName, body.email, body.secret)
+    authenticateUser(isGuest, body.userGuid, body.userName, body.email, body.secret, body.sessionToken)
         .then((result) => {
             if (result.guid === '')
                 response.status(401).json({ error: 'The provided credentials are incorrect.' })
