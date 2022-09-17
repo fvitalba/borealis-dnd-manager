@@ -7,7 +7,7 @@
   "scripts": {
     "daemon": ">/dev/null nohup node srvbuild/index.js &",
     "kill": "kill $(cat pid.tmp) && rm pid.tmp",
-    "start": "cross-env NODE_ENV=production node srvbuild/index.js",
+    "start": "cross-env NODE_ENV=production nodemon -e ts --watch . .env --exec \"tsc --incremental && node srvbuild/index.js --experimental-modules\"",
     "dev": "cross-env NODE_ENV=development nodemon -e ts --watch . .env --exec \"tsc --incremental && node srvbuild/index.js --experimental-modules\"",
     "lint": "eslint --ext .ts .",
     "tsc": "tsc",
