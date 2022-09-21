@@ -1,12 +1,12 @@
 import React, { ChangeEvent } from 'react'
-import { Room } from '../../components/GameSetupRoomSelection'
-import UserType from '../../enums/UserType'
-import ActionTextInput from '../GenericViews/ActionTextInput'
-import FormContainer from '../GenericViews/FormContainer'
-import FormRow from '../GenericViews/FormRow'
-import ActionButton from '../GenericViews/ActionButton'
-import TextInputSelector from '../GenericViews/TextInputSelector'
-import { BorealisPlayIcon } from '../Icons'
+import UserType from '../../../enums/UserType'
+import ActionTextInput from '../../../views/GenericViews/ActionTextInput'
+import FormContainer from '../../../views/GenericViews/FormContainer'
+import FormRow from '../../../views/GenericViews/FormRow'
+import ActionButton from '../../../views/GenericViews/ActionButton'
+import TextInputSelector from '../../../views/GenericViews/TextInputSelector'
+import { BorealisPlayIcon } from '../../../views/Icons'
+import { Room } from './types'
 
 interface GameSetupRoomSelectionViewProps {
     userName: string,

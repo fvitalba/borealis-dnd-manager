@@ -1,11 +1,11 @@
 import React, { ChangeEvent } from 'react'
-import { BorealisPlayIcon } from '../Icons'
-import TextInput from '../GenericViews/TextInput'
-import MaskedTextInput from '../GenericViews/MaskedTextInput'
-import CheckboxInput from '../GenericViews/CheckboxInput'
-import FormContainer from '../GenericViews/FormContainer'
-import FormRow from '../GenericViews/FormRow'
-import ActionButton from '../GenericViews/ActionButton'
+import { BorealisPlayIcon } from '../../../views/Icons'
+import TextInput from '../../../views/GenericViews/TextInput'
+import MaskedTextInput from '../../../views/GenericViews/MaskedTextInput'
+import CheckboxInput from '../../../views/GenericViews/CheckboxInput'
+import FormContainer from '../../../views/GenericViews/FormContainer'
+import FormRow from '../../../views/GenericViews/FormRow'
+import ActionButton from '../../../views/GenericViews/ActionButton'
 
 interface GameSetupLoginViewProps {
     userName: string,
@@ -24,7 +24,7 @@ interface GameSetupLoginViewProps {
     isSubmitEnabled: boolean,
 }
 
-const GameSetupLoginView = ({ userName, onUserNameChange, password, onPasswordChange, email, onEmailChange, newUser, toggleNewUser, isGuest, toggleIsGuest, rememberUser, toggleRememberUser, onSubmitSetup, isSubmitEnabled }: GameSetupLoginViewProps) => {
+export const GameSetupLoginView = ({ userName, onUserNameChange, password, onPasswordChange, email, onEmailChange, newUser, toggleNewUser, isGuest, toggleIsGuest, rememberUser, toggleRememberUser, onSubmitSetup, isSubmitEnabled }: GameSetupLoginViewProps) => {
     return (
         <FormContainer>
             <h1>Borealis D&D - Login</h1>
@@ -56,5 +56,3 @@ const GameSetupLoginView = ({ userName, onUserNameChange, password, onPasswordCh
         </FormContainer>
     )
 }
-
-export default GameSetupLoginView

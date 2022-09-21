@@ -1,41 +1,21 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import Game from '../classes/Game'
-import Map from '../classes/Map'
-import Token from '../classes/Token'
-import Message from '../classes/Message'
-import Character from '../classes/Character'
-import User from '../classes/User'
-import UserType from '../enums/UserType'
-import { useLoading } from '../hooks/useLoading'
-import { useWebSocket } from '../hooks/useSocket'
-import StateInterface from '../interfaces/StateInterface'
-import { overwriteGame } from '../reducers/gameReducer'
-import { updateMaps } from '../reducers/mapReducer'
-import { updateTokens } from '../reducers/tokenReducer'
-import { overwriteChat } from '../reducers/chatReducer'
-import { setCharacters, assignCharacter } from '../reducers/characterReducer'
-import { setUsersFromAPI } from '../reducers/userReducer'
-import { MetadataState, setGameSettings } from '../reducers/metadataReducer'
-import { SettingsState } from '../reducers/settingsReducer'
-import { getUserRoomsFromDatabase } from '../utils/apiHandler'
-import loadAllFromDatabase from '../utils/gameLoadHandler'
-import guid from '../utils/guid'
-import GameSetupRoomSelectionView from '../views/GameSetup/GameSetupRoomSelectionView'
-
-export interface Room {
-    id: string,
-    name: string,
-    userRole: UserType,
-}
-
-interface GameSetupRoomSelectionState {
-    newRoomName: string,
-    selectedRoomName: string,
-    roomId: string,
-    userType: UserType | undefined,
-    availableRooms: Array<Room>,
-}
+import UserType from '../../../enums/UserType'
+import { useLoading } from '../../../hooks/useLoading'
+import { useWebSocket } from '../../../hooks/useSocket'
+import StateInterface from '../../../interfaces/StateInterface'
+import { overwriteGame } from '../../../reducers/gameReducer'
+import { updateMaps } from '../../../reducers/mapReducer'
+import { updateTokens } from '../../../reducers/tokenReducer'
+import { overwriteChat } from '../../../reducers/chatReducer'
+import { setCharacters, assignCharacter } from '../../../reducers/characterReducer'
+import { setUsersFromAPI } from '../../../reducers/userReducer'
+import { setGameSettings } from '../../../reducers/metadataReducer'
+import { getUserRoomsFromDatabase } from '../../../utils/apiHandler'
+import loadAllFromDatabase from '../../../utils/gameLoadHandler'
+import guid from '../../../utils/guid'
+import GameSetupRoomSelectionView from './GameSetupRoomSelectionView'
+import { Room, GameSetupRoomSelectionState, GameSetupRoomSelectionProps } from './types'
 
 const initialGameSetupRoomSelectionState = (): GameSetupRoomSelectionState => {
     return {
@@ -45,19 +25,6 @@ const initialGameSetupRoomSelectionState = (): GameSetupRoomSelectionState => {
         userType: undefined,
         availableRooms: [],
     }
-}
-
-interface GameSetupRoomSelectionProps {
-    metadataState: MetadataState,
-    settingsState: SettingsState,
-    setGameSettings: (userType: UserType, userGuid: string, isGuest: boolean, roomName: string, roomGuid: string) => void,
-    overwriteGame: (game: Game) => void,
-    updateMaps: (maps: Array<Map>) => void,
-    updateTokens: (tokens: Array<Token>) => void,
-    overwriteChat: (messages: Array<Message>) => void,
-    setCharacters: (characters: Array<Character>) => void,
-    assignCharacter: (characterGuid: string) => void,
-    setUsersFromAPI: (users: Array<User>) => void,
 }
 
 const GameSetupRoomSelection = ({ metadataState, settingsState, setGameSettings, overwriteGame, updateMaps, updateTokens, overwriteChat, setCharacters, assignCharacter, setUsersFromAPI }: GameSetupRoomSelectionProps) => {

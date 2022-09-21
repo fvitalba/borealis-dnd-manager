@@ -1,11 +1,7 @@
 import React from 'react'
-import GameSetupLogin from '../../components/GameSetupLogin'
-import GameSetupRoomSelection from '../../components/GameSetupRoomSelection'
-
-interface GameSetupViewProps {
-    showLogin: boolean,
-    showRoomSelection: boolean,
-}
+import { GameSetupLogin } from './GameSetupLogin'
+import { GameSetupRoomSelection } from './GameSetupRoomSelection'
+import { GameSetupViewProps } from './types'
 
 const GameSetupView = ({ showLogin, showRoomSelection }: GameSetupViewProps) => {
     return (

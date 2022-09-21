@@ -3,30 +3,19 @@ import { connect } from 'react-redux'
 import { SHA256 } from 'crypto-js'
 import hmacSHA512 from 'crypto-js/hmac-sha512'
 import Base64 from 'crypto-js/enc-base64'
-import UserType from '../enums/UserType'
-import { useLoading } from '../hooks/useLoading'
-import { useWebSocket } from '../hooks/useSocket'
-import { useNotification } from '../hooks/useNotification'
-import StateInterface from '../interfaces/StateInterface'
-import { MetadataState, setGameSettings, setSessionToken } from '../reducers/metadataReducer'
-import { setUsername } from '../reducers/settingsReducer'
-import { API_AUTHENTICATING_USER, API_REGISTERING_USER, API_STARTING_SESSION } from '../utils/loadingTasks'
-import { authenticateUser, getloginFromLocalStorage, registerUser, saveLoginToLocalStorage, startSession } from '../utils/loginHandler'
-import GameSetupLoginView from '../views/GameSetup/GameSetupLoginView'
-import NotificationType from '../enums/NotificationType'
+import { useLoading } from '../../../hooks/useLoading'
+import { useWebSocket } from '../../../hooks/useSocket'
+import { useNotification } from '../../../hooks/useNotification'
+import StateInterface from '../../../interfaces/StateInterface'
+import { setGameSettings, setSessionToken } from '../../../reducers/metadataReducer'
+import { setUsername } from '../../../reducers/settingsReducer'
+import { API_AUTHENTICATING_USER, API_REGISTERING_USER, API_STARTING_SESSION } from '../../../utils/loadingTasks'
+import { authenticateUser, getloginFromLocalStorage, registerUser, saveLoginToLocalStorage, startSession } from '../../../utils/loginHandler'
+import { GameSetupLoginView } from './GameSetupLoginView'
+import NotificationType from '../../../enums/NotificationType'
+import { GameSetupLoginState, GameSetupLoginProps } from './types'
 
 const SERVER_KEY = process.env.REACT_APP_SERVER_KEY
-
-interface GameSetupLoginState {
-    userName: string,
-    userGuid: string,
-    password: string,
-    email: string,
-    sessionToken: string,
-    newUser: boolean,
-    isGuest: boolean,
-    rememberUser: boolean,
-}
 
 const initialGameSetupLoginState = (): GameSetupLoginState => {
     return {
@@ -39,13 +28,6 @@ const initialGameSetupLoginState = (): GameSetupLoginState => {
         isGuest: false,
         rememberUser: false,
     }
-}
-
-interface GameSetupLoginProps {
-    metadataState: MetadataState,
-    setGameSettings: (userType: UserType | undefined, userGuid: string, isGuest: boolean, roomName: string, roomGuid: string) => void,
-    setUsername: (username: string) => void,
-    setSessionToken: (sessionToken: string) => void,
 }
 
 const GameSetupLogin = ({ metadataState, setGameSettings, setUsername, setSessionToken }: GameSetupLoginProps) => {
