@@ -1,8 +1,8 @@
-import { IChatSchema } from '../../models/chat'
+import { IChatSchema } from '../../src/models/chat'
 import { randomUUID } from 'crypto'
 import { initialRooms } from './initial.rooms'
 import { initialUsersForAuthentication } from './initial.users.js'
-import IIncChatMessage from '../../incomingInterfaces/incChatMessage'
+import IIncChatMessage from '../../src/incomingInterfaces/incChatMessage'
 
 export const initialChats: Array<IChatSchema> = [
     {

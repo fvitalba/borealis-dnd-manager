@@ -1,8 +1,8 @@
-import { ICharacterClassSchema, ICharacterHitDiceSchema, ICharacterSchema } from '../../models/character'
+import { ICharacterClassSchema, ICharacterHitDiceSchema, ICharacterSchema } from '../../src/models/character'
 import { randomUUID } from 'crypto'
 import { initialRooms } from './initial.rooms'
 import { initialUsersForAuthentication } from './initial.users'
-import IIncCharacter, { IIncCharacterClassLevel, IIncCharacterHitDice } from '../../incomingInterfaces/incCharacter'
+import IIncCharacter, { IIncCharacterClassLevel, IIncCharacterHitDice } from '../../src/incomingInterfaces/incCharacter'
 
 const initialCharacterClasses: Array<Array<ICharacterClassSchema>> = [
     [

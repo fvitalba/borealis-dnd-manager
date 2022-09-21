@@ -1,6 +1,6 @@
-import { IUserSchema } from '../../models/user.js'
+import { IUserSchema } from '../../src/models/user.js'
 import { randomUUID } from 'crypto'
-import IIncUser from '../../incomingInterfaces/incUser.js'
+import IIncUser from '../../src/incomingInterfaces/incUser.js'
 
 export const initialUsers: Array<IUserSchema> = [
     {

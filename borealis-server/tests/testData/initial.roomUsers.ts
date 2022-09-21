@@ -1,4 +1,4 @@
-import { IRoomUserSchema } from '../../models/roomUser.js'
+import { IRoomUserSchema } from '../../src/models/roomUser.js'
 import { initialUsersForAuthentication } from './initial.users.js'
 import { initialRooms } from './initial.rooms.js'
 
