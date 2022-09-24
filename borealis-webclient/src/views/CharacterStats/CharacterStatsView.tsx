@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from 'react'
 import Character, { ClassNumberProperty } from '../../classes/Character'
 import User from '../../classes/User'
-import CharacterClassLevelInput from '../../components/CharacterClassLevelInput'
+import { CharacterClassLevelInput } from '../../components/CharacterClassLevelInput'
 import CharacterHitDiceInput from '../../components/CharacterHitDiceInput'
 import SelectCharacter from '../../components/SelectCharacter'
 import ActionButton from '../GenericViews/ActionButton'

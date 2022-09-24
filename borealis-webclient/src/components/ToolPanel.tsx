@@ -21,7 +21,6 @@ const initialToolPanelState = (): ToolPanelState => {
     }
 }
 
-
 interface ToolPanelProps {
     metadataState: MetadataState,
     gameState: Game,
