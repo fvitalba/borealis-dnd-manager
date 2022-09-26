@@ -1,17 +1,8 @@
-import React, { ChangeEvent } from 'react'
-import { CharacterHitDice, CharacterHitDiceProperty } from '../../classes/Character'
-import DiceType from '../../enums/DiceType'
-import ActionButton from '../GenericViews/ActionButton'
-import { BorealisAddCharacterHitDiceIcon } from '../Icons'
-
-interface CharacterHitDiceInputViewProps {
-    characterHitDice: Array<CharacterHitDice>,
-    availableCharacterHitDice: Array<DiceType>,
-    onSelectHitDiceType: (arg0: ChangeEvent<HTMLSelectElement>, arg1: number) => void,
-    setHitDiceNumber: (arg0: CharacterHitDiceProperty, arg1: number, arg2: number) => void,
-    showAddHitDice: boolean,
-    addHitDice: () => void,
-}
+import React from 'react'
+import DiceType from '../../../enums/DiceType'
+import ActionButton from '../../../views/GenericViews/ActionButton'
+import { BorealisAddCharacterHitDiceIcon } from '../../../views/Icons'
+import { CharacterHitDiceInputViewProps } from './types'
 
 const CharacterHitDiceInputView = ({ characterHitDice, availableCharacterHitDice, onSelectHitDiceType, setHitDiceNumber, addHitDice }: CharacterHitDiceInputViewProps) => {
     return (

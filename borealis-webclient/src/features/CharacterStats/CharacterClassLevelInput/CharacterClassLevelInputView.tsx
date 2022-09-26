@@ -1,7 +1,7 @@
 import React from 'react'
-import CharacterClass from '../../enums/CharacterClass'
-import ActionButton from '../../views/GenericViews/ActionButton'
-import { BorealisAddCharacterClassIcon } from '../../views/Icons'
+import CharacterClass from '../../../enums/CharacterClass'
+import ActionButton from '../../../views/GenericViews/ActionButton'
+import { BorealisAddCharacterClassIcon } from '../../../views/Icons'
 import { CharacterClassLevelInputViewProps } from './types'
 
 const CharacterClassLevelInputView = ({ characterClass, availableCharacterClasses, onSelectCharacterClass, setCharacterClassLevel, showAddCharacterClass, addCharacterClass }: CharacterClassLevelInputViewProps) => {

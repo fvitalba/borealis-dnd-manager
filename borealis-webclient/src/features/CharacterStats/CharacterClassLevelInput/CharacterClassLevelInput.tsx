@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react'
-import { CharacterClassArray } from '../../enums/CharacterClass'
+import { CharacterClassArray } from '../../../enums/CharacterClass'
 import CharacterClassLevelInputView from './CharacterClassLevelInputView'
 import { CharacterClassLevelInputProps } from './types'
 

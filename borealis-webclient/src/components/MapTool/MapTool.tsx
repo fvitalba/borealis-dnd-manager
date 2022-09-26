@@ -1,18 +1,11 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import Game from '../classes/Game'
-import Map from '../classes/Map'
-import { pushCreateMap, useWebSocket } from '../hooks/useSocket'
-import StateInterface from '../interfaces/StateInterface'
-import { addMap, MapState } from '../reducers/mapReducer'
-import MapToolView from '../views/MapToolView'
-
-interface MapToolState {
-    newMapName: string,
-    selectedMapName: string,
-    currSelectedMapName: string,
-    showSelectedMap: boolean,
-}
+import Map from '../../classes/Map'
+import { pushCreateMap, useWebSocket } from '../../hooks/useSocket'
+import StateInterface from '../../interfaces/StateInterface'
+import { addMap } from '../../reducers/mapReducer'
+import MapToolView from './MapToolView'
+import { MapToolState, MapToolProps } from './types'
 
 const initialMapToolState = (): MapToolState => {
     return {
@@ -21,13 +14,6 @@ const initialMapToolState = (): MapToolState => {
         currSelectedMapName: '',
         showSelectedMap: false,
     }
-}
-
-interface MapToolProps {
-    toggleOnMaps: boolean,
-    mapState: MapState,
-    gameState: Game,
-    addMap: (arg0: Map) => void,
 }
 
 const MapTool = ({ toggleOnMaps, mapState, gameState, addMap }: MapToolProps) => {

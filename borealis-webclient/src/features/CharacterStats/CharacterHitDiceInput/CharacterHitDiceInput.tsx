@@ -1,12 +1,8 @@
 import React, { ChangeEvent } from 'react'
-import Character, { CharacterHitDiceProperty } from '../classes/Character'
-import { DiceTypeArray } from '../enums/DiceType'
-import CharacterHitDiceInputView from '../views/CharacterStats/CharacterHitDiceInputView'
-
-interface CharacterHitDiceInputProps {
-    character: Character,
-    setSelectedCharacter: (arg0: Character) => void,
-}
+import { CharacterHitDiceProperty } from '../../../classes/Character'
+import { DiceTypeArray } from '../../../enums/DiceType'
+import CharacterHitDiceInputView from './CharacterHitDiceInputView'
+import { CharacterHitDiceInputProps } from './types'
 
 const CharacterHitDiceInput = ({ character, setSelectedCharacter }: CharacterHitDiceInputProps) => {
     const onSelectHitDiceType = (e: ChangeEvent<HTMLSelectElement>, index: number) => {

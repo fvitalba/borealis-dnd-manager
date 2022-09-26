@@ -1,15 +1,7 @@
-import React, { ChangeEvent } from 'react'
-import Character from '../../classes/Character'
-import ActionButton from '../GenericViews/ActionButton'
-import { BorealisCreateCharacterIcon } from '../Icons'
-
-interface SelectCharacterViewProps {
-    characters: Array<Character>,
-    isHost: boolean,
-    selectedCharacterGuid: string,
-    onCharacterSelect: (arg0: ChangeEvent<HTMLSelectElement>) => void,
-    addNewCharacter: () => void,
-}
+import React from 'react'
+import ActionButton from '../../../views/GenericViews/ActionButton'
+import { BorealisCreateCharacterIcon } from '../../../views/Icons'
+import { SelectCharacterViewProps } from './types'
 
 const SelectCharacterView = ({ characters, isHost, selectedCharacterGuid, onCharacterSelect, addNewCharacter }: SelectCharacterViewProps) => {
     return (

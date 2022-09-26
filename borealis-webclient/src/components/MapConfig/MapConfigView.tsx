@@ -1,22 +1,14 @@
-import React, { ChangeEvent } from 'react'
-import { MapConfigState } from '../components/MapConfig'
+import React from 'react'
 import {
     BorealisSelectedMapIcon,
     BorealisUnselectedMapIcon,
     BorealisDeleteMapIcon,
-} from './Icons'
-import ActionButton from './GenericViews/ActionButton'
-import ControlPanelRow from './GenericViews/ControlPanelRow'
-import ControlPanelSubcontainer from './GenericViews/ControlPanelSubcontainer'
-import TextInput from './GenericViews/TextInput'
-
-interface MapConfigViewProps {
-    isSelected: boolean,
-    mapConfigState: MapConfigState,
-    load: () => void,
-    onTextChange: (arg0: string, arg1: ChangeEvent<HTMLInputElement>) => void,
-    deleteMap: () => void,
-}
+} from '../../views/Icons'
+import ActionButton from '../../views/GenericViews/ActionButton'
+import ControlPanelRow from '../../views/GenericViews/ControlPanelRow'
+import ControlPanelSubcontainer from '../../views/GenericViews/ControlPanelSubcontainer'
+import TextInput from '../../views/GenericViews/TextInput'
+import { MapConfigViewProps } from './types'
 
 const MapConfigView = ({ isSelected, mapConfigState, load, onTextChange, deleteMap }: MapConfigViewProps) => {
     return (

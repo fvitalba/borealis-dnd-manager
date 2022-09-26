@@ -1,21 +1,12 @@
 import React, { ChangeEvent } from 'react'
 import { connect } from 'react-redux'
-import Character from '../classes/Character'
-import UserType from '../enums/UserType'
-import StateInterface from '../interfaces/StateInterface'
-import { addCharacter, assignCharacter, CharacterState } from '../reducers/characterReducer'
-import { MetadataState } from '../reducers/metadataReducer'
-import { SettingsState } from '../reducers/settingsReducer'
-import guid from '../utils/guid'
-import SelectCharacterView from '../views/CharacterStats/SelectCharacterView'
-
-interface SelectCharacterProps {
-    characterState: CharacterState,
-    metadataState: MetadataState,
-    settingsState: SettingsState,
-    assignCharacter: (arg0: string) => void,
-    addCharacter: (arg0: Character) => void,
-}
+import Character from '../../../classes/Character'
+import UserType from '../../../enums/UserType'
+import StateInterface from '../../../interfaces/StateInterface'
+import { addCharacter, assignCharacter } from '../../../reducers/characterReducer'
+import guid from '../../../utils/guid'
+import SelectCharacterView from './SelectCharacterView'
+import { SelectCharacterProps } from './types'
 
 const SelectCharacter = ({ characterState, metadataState, settingsState, assignCharacter, addCharacter }: SelectCharacterProps) => {
     const onCharacterSelect = (e: ChangeEvent<HTMLSelectElement>) => {

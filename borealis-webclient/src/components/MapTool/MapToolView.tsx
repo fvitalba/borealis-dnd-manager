@@ -1,32 +1,17 @@
-import React, { ChangeEvent } from 'react'
-import Map from '../classes/Map'
-import MapConfig from '../components/MapConfig'
+import React from 'react'
+import { MapConfig } from '../MapConfig'
 import {
     BorealisAddNewMapIcon,
     BorealisMapSelectedIcon,
     BorealisMapUnselectedIcon,
     BorealisPlayIcon,
-} from './Icons'
-import ControlPanelSubcontainer from './GenericViews/ControlPanelSubcontainer'
-import ControlPanelRow from './GenericViews/ControlPanelRow'
-import TextInput from './GenericViews/TextInput'
-import TextInputSelector from './GenericViews/TextInputSelector'
-import ActionButton from './GenericViews/ActionButton'
-
-interface MapToolViewProps {
-    maps: Array<Map>,
-    activeMapId: number,
-    newMapName: string,
-    setNewMapName: (e: ChangeEvent<HTMLInputElement>) => void,
-    isCreateMapEnabled: boolean,
-    createMap: () => void,
-    selectedMapName: string,
-    currSelectedMapName: string,
-    onMapSelect: (mapIndex: number) => void,
-    onSubmitSelectMap: () => void,
-    isSubmitSelectionEnabled: boolean,
-    showSelectedMap: boolean,
-}
+} from '../../views/Icons'
+import ControlPanelSubcontainer from '../../views/GenericViews/ControlPanelSubcontainer'
+import ControlPanelRow from '../../views/GenericViews/ControlPanelRow'
+import TextInput from '../../views/GenericViews/TextInput'
+import TextInputSelector from '../../views/GenericViews/TextInputSelector'
+import ActionButton from '../../views/GenericViews/ActionButton'
+import { MapToolViewProps } from './types'
 
 const MapToolView = ({ maps, activeMapId, newMapName, setNewMapName, isCreateMapEnabled, createMap, selectedMapName, currSelectedMapName, onMapSelect, onSubmitSelectMap, isSubmitSelectionEnabled, showSelectedMap }: MapToolViewProps) => {
     const mapOptions = maps.map((map, index) => {

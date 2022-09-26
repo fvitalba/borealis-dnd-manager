@@ -1,25 +1,15 @@
 import React, { useEffect, useState, ChangeEvent } from 'react'
 import { connect } from 'react-redux'
-import Character, { ClassNumberProperty } from '../classes/Character'
-import UserType from '../enums/UserType'
-import { pushDeleteCharacter, pushUpdateCharacter, useWebSocket } from '../hooks/useSocket'
-import { useLoading } from '../hooks/useLoading'
-import StateInterface from '../interfaces/StateInterface'
-import { updateCharacter, deleteCharacter, CharacterState } from '../reducers/characterReducer'
-import { UserState } from '../reducers/userReducer'
-import { MetadataState } from '../reducers/metadataReducer'
-import { saveCharactersToDatabase } from '../utils/apiHandler'
-import CharacterStatsView from '../views/CharacterStats/CharacterStatsView'
-import { CHARACTER_SAVE } from '../utils/loadingTasks'
-
-interface CharacterStatsProps {
-    toggleOnCharacterStats: boolean,
-    characterState: CharacterState,
-    userState: UserState,
-    metadataState: MetadataState,
-    updateCharacter: (arg0: Character) => void,
-    deleteCharacter: (arg0: string) => void,
-}
+import Character, { ClassNumberProperty } from '../../classes/Character'
+import UserType from '../../enums/UserType'
+import { pushDeleteCharacter, pushUpdateCharacter, useWebSocket } from '../../hooks/useSocket'
+import { useLoading } from '../../hooks/useLoading'
+import StateInterface from '../../interfaces/StateInterface'
+import { updateCharacter, deleteCharacter } from '../../reducers/characterReducer'
+import { saveCharactersToDatabase } from '../../utils/apiHandler'
+import CharacterStatsView from './CharacterStatsView'
+import { CHARACTER_SAVE } from '../../utils/loadingTasks'
+import { CharacterStatsProps } from './types'
 
 const CharacterStats = ({ toggleOnCharacterStats, characterState, userState, metadataState, updateCharacter, deleteCharacter }: CharacterStatsProps) => {
     if (!toggleOnCharacterStats)

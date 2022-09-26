@@ -1,35 +1,10 @@
-import React, { ChangeEvent } from 'react'
-import Character, { ClassNumberProperty } from '../../classes/Character'
-import User from '../../classes/User'
-import { CharacterClassLevelInput } from '../../components/CharacterClassLevelInput'
-import CharacterHitDiceInput from '../../components/CharacterHitDiceInput'
-import SelectCharacter from '../../components/SelectCharacter'
-import ActionButton from '../GenericViews/ActionButton'
-import { BorealisSaveCharacterIcon, BorealisDeleteCharacterIcon } from '../Icons'
-
-interface Modifiers {
-    strength: string,
-    dexterity: string,
-    constitution: string,
-    intelligence: string,
-    wisdom: string,
-    charisma: string,
-}
-
-interface CharacterStatsViewProps {
-    showCharacterStats: boolean,
-    isHost: boolean,
-    character: Character,
-    setSelectedCharacter: (arg0: Character) => void,
-    users: Array<User>,
-    modifiers: Modifiers,
-    characterName: string,
-    setCharacterName: (arg0: string) => void,
-    onStatChange: (arg0: ClassNumberProperty, arg1: ChangeEvent<HTMLInputElement>) => void,
-    onSelectUser: (arg0: ChangeEvent<HTMLSelectElement>) => void,
-    saveCharacter: () => void,
-    deleteCharacter: () => void,
-}
+import React from 'react'
+import { CharacterClassLevelInput } from './CharacterClassLevelInput'
+import { CharacterHitDiceInput } from './CharacterHitDiceInput'
+import { SelectCharacter } from './SelectCharacter'
+import ActionButton from '../../views/GenericViews/ActionButton'
+import { BorealisSaveCharacterIcon, BorealisDeleteCharacterIcon } from '../../views/Icons'
+import { CharacterStatsViewProps } from './types'
 
 const CharacterStatsView = ({ showCharacterStats, isHost, character, setSelectedCharacter, users, modifiers, characterName, setCharacterName, onStatChange, onSelectUser, saveCharacter, deleteCharacter }: CharacterStatsViewProps) => {
     return (

@@ -1,22 +1,14 @@
 import React, { useState, ChangeEvent } from 'react'
 import { connect } from 'react-redux'
-import Map from '../classes/Map'
-import Game from '../classes/Game'
-import { pushMapState, useWebSocket } from '../hooks/useSocket'
-import { useLoading } from '../hooks/useLoading'
-import StateInterface from '../interfaces/StateInterface'
-import { loadMap } from '../reducers/gameReducer'
-import { MapState, updateMaps, deleteMap } from '../reducers/mapReducer'
-import MapConfigView from '../views/MapConfigView'
-import { GAME_LOAD_MAP } from '../utils/loadingTasks'
-
-export interface MapConfigState {
-    id: number,
-    name: string,
-    imageUrl: string,
-    x: number,
-    y: number,
-}
+import Map from '../../classes/Map'
+import { pushMapState, useWebSocket } from '../../hooks/useSocket'
+import { useLoading } from '../../hooks/useLoading'
+import StateInterface from '../../interfaces/StateInterface'
+import { loadMap } from '../../reducers/gameReducer'
+import { updateMaps, deleteMap } from '../../reducers/mapReducer'
+import MapConfigView from './MapConfigView'
+import { GAME_LOAD_MAP } from '../../utils/loadingTasks'
+import { MapConfigState, MapConfigProps } from './types'
 
 const initialMapConfigState = (map: Map): MapConfigState => {
     return {
@@ -26,15 +18,6 @@ const initialMapConfigState = (map: Map): MapConfigState => {
         x: map.x,
         y: map.y,
     }
-}
-
-interface MapConfigProps {
-    map: Map,
-    gameState: Game,
-    mapState: MapState,
-    loadMap: (arg0: number) => void,
-    updateMaps: (arg0: Array<Map>) => void,
-    deleteMap: (arg0: number) => void,
 }
 
 const MapConfig = ({ map, gameState, mapState, loadMap, updateMaps, deleteMap }: MapConfigProps) => {
@@ -101,7 +84,6 @@ const MapConfig = ({ map, gameState, mapState, loadMap, updateMaps, deleteMap }:
             : null
     )
 }
-
 
 const mapStateToProps = (state: StateInterface) => {
     return {

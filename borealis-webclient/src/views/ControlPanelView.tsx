@@ -1,8 +1,8 @@
 import React from 'react'
-import MapTool from '../components/MapTool'
+import { MapTool } from '../components/MapTool'
 import TokenTool from '../components/TokenTool'
 import UserTool from '../components/UserTool'
-import CharacterStats from '../components/CharacterStats'
+import { CharacterStats } from '../features/CharacterStats'
 import { ControlPanelState, ControlPanelTabName } from '../components/ControlPanel'
 import {
     BorealisCollapseIcon,
