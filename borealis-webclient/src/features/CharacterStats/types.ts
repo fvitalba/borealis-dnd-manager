@@ -1,9 +1,9 @@
 import { ChangeEvent } from 'react'
-import Character, { ClassNumberProperty } from '../../classes/Character'
-import User from '../../classes/User'
-import { CharacterState } from '../../reducers/characterReducer'
-import { UserState } from '../../reducers/userReducer'
-import { MetadataState } from '../../reducers/metadataReducer'
+import Character, { ClassNumberProperty } from '@/classes/Character'
+import User from '@/classes/User'
+import { CharacterState } from '@/reducers/characterReducer'
+import { UserState } from '@/reducers/userReducer'
+import { MetadataState } from '@/reducers/metadataReducer'
 
 export interface CharacterStatsProps {
     toggleOnCharacterStats: boolean,

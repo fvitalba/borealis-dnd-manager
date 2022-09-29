@@ -1,5 +1,5 @@
 import React from 'react'
-import UserType from '../../enums/UserType'
+import UserType from '@/enums/UserType'
 import { DebugOverlayViewProps } from './types'
 
 const DebugOverlayView = ({ userType, userGuid, userName, roomId, roomName, socketGuid, sessionGuid, isGuest }: DebugOverlayViewProps) => {

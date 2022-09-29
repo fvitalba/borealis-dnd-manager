@@ -1,5 +1,5 @@
 import React from 'react'
-import { CursorAltOutlineIcon } from '../../views/Icons'
+import { CursorAltOutlineIcon } from '@/views/Icons'
 import { CursorProps } from './types'
 
 const CursorView = ({ cursor }: CursorProps) => {

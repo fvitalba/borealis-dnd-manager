@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import ControlTool from '../../enums/Tool'
-import StateInterface from '../../interfaces/StateInterface'
-import { setToolSettings } from '../../reducers/settingsReducer'
-import { ToggleButton } from '../ToggleButton'
+import ControlTool from '@/enums/Tool'
+import StateInterface from '@/interfaces/StateInterface'
+import { setToolSettings } from '@/reducers/settingsReducer'
+import { ToggleButton } from '@/components/ToggleButton'
 import { ToolButtonProps } from './types'
 
 const ToolButton = ({ title, value, controlTools, settingsState, setToolSettings }: ToolButtonProps) => {

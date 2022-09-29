@@ -1,4 +1,4 @@
-import Cursor from '../../classes/Cursor'
+import Cursor from '@/classes/Cursor'
 
 export interface CursorProps {
     cursor: Cursor,

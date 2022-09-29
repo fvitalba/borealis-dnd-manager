@@ -1,6 +1,6 @@
 import React from 'react'
 import { ColorPickerViewProps } from './types'
-import { ColorSelections } from '../../utils/constants'
+import { ColorSelections } from '@/utils/constants'
 
 const ColorPickerView = ({ currentColor, colorPickerRef, colorPickerState, setDrawColor }: ColorPickerViewProps) => {
     return (

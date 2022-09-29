@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState, MouseEvent, WheelEvent } from 'react'
 import { connect } from 'react-redux'
-import { Canvas } from '../Canvas'
-import ControlTool from '../../enums/Tool'
-import StateInterface from '../../interfaces/StateInterface'
-import { updateDeltaXY, updateScale } from '../../reducers/settingsReducer'
-import { drawImageObject } from '../../utils/drawImage'
+import { Canvas } from '@/components/Canvas'
+import ControlTool from '@/enums/Tool'
+import StateInterface from '@/interfaces/StateInterface'
+import { updateDeltaXY, updateScale } from '@/reducers/settingsReducer'
+import { drawImageObject } from '@/utils/drawImage'
 import { BackgroundProps } from './types'
 
 const Background = ({ gameState, mapState, settingsState, updateDeltaXY, updateScale }: BackgroundProps) => {

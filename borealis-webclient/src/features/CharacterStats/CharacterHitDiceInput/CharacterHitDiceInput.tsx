@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react'
-import { CharacterHitDiceProperty } from '../../../classes/Character'
-import { DiceTypeArray } from '../../../enums/DiceType'
+import { CharacterHitDiceProperty } from '@/classes/Character'
+import { DiceTypeArray } from '@/enums/DiceType'
 import CharacterHitDiceInputView from './CharacterHitDiceInputView'
 import { CharacterHitDiceInputProps } from './types'
 

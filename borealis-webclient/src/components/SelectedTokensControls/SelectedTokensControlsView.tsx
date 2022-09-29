@@ -1,5 +1,5 @@
 import React from 'react'
-import TokenConfig from '../TokenConfig/TokenConfig'
+import TokenConfig from '@/features/ControlPanel/TokenTool/TokenConfig/TokenConfig'
 import { SelectedTokensControlsViewProps } from './types'
 
 const SelectedTokensControlsView = ({ tokens }: SelectedTokensControlsViewProps) => {

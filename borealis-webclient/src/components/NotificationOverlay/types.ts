@@ -1,4 +1,4 @@
-import Notification from '../../classes/Notification'
+import Notification from '@/classes/Notification'
 
 export interface SingleNotificationProps {
     notification: Notification,

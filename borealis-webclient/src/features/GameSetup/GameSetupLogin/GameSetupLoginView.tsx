@@ -1,28 +1,12 @@
-import React, { ChangeEvent } from 'react'
-import { BorealisPlayIcon } from '../../../views/Icons'
-import TextInput from '../../../views/GenericViews/TextInput'
-import MaskedTextInput from '../../../views/GenericViews/MaskedTextInput'
-import CheckboxInput from '../../../views/GenericViews/CheckboxInput'
-import FormContainer from '../../../views/GenericViews/FormContainer'
-import FormRow from '../../../views/GenericViews/FormRow'
-import { ActionButton } from '../../../components/ActionButton'
-
-interface GameSetupLoginViewProps {
-    userName: string,
-    onUserNameChange: (arg0: ChangeEvent<HTMLInputElement>) => void,
-    password: string,
-    onPasswordChange: (arg0: ChangeEvent<HTMLInputElement>) => void,
-    email: string,
-    onEmailChange: (arg0: ChangeEvent<HTMLInputElement>) => void,
-    newUser: boolean,
-    toggleNewUser: () => void,
-    isGuest: boolean,
-    toggleIsGuest: () => void,
-    rememberUser: boolean,
-    toggleRememberUser: () => void,
-    onSubmitSetup: () => void,
-    isSubmitEnabled: boolean,
-}
+import React from 'react'
+import { BorealisPlayIcon } from '@/views/Icons'
+import { TextInput } from '@/components/TextInput'
+import { MaskedTextInput } from '@/components/MaskedTextInput'
+import { CheckboxInput } from '@/components/CheckboxInput'
+import { FormContainer } from '@/components/Form'
+import { FormRow } from '@/components/Form'
+import { ActionButton } from '@/components/ActionButton'
+import { GameSetupLoginViewProps } from './types'
 
 export const GameSetupLoginView = ({ userName, onUserNameChange, password, onPasswordChange, email, onEmailChange, newUser, toggleNewUser, isGuest, toggleIsGuest, rememberUser, toggleRememberUser, onSubmitSetup, isSubmitEnabled }: GameSetupLoginViewProps) => {
     return (

@@ -2,8 +2,8 @@ import React from 'react'
 import { CharacterClassLevelInput } from './CharacterClassLevelInput'
 import { CharacterHitDiceInput } from './CharacterHitDiceInput'
 import { SelectCharacter } from './SelectCharacter'
-import { ActionButton } from '../../components/ActionButton'
-import { BorealisSaveCharacterIcon, BorealisDeleteCharacterIcon } from '../../views/Icons'
+import { ActionButton } from '@/components/ActionButton'
+import { BorealisSaveCharacterIcon, BorealisDeleteCharacterIcon } from '@/views/Icons'
 import { CharacterStatsViewProps } from './types'
 
 const CharacterStatsView = ({ showCharacterStats, isHost, character, setSelectedCharacter, users, modifiers, characterName, setCharacterName, onStatChange, onSelectUser, saveCharacter, deleteCharacter }: CharacterStatsViewProps) => {

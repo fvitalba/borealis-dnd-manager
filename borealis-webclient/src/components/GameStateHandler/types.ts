@@ -1,5 +1,5 @@
-import UserType from '../../enums/UserType'
-import { MetadataState } from '../../reducers/metadataReducer'
+import UserType from '@/enums/UserType'
+import { MetadataState } from '@/reducers/metadataReducer'
 
 export interface GameStateHandlerProps {
     metadataState: MetadataState,

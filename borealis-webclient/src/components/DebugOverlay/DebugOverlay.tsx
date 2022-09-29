@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { useWebSocket } from '../../hooks/useSocket'
-import StateInterface from '../../interfaces/StateInterface'
+import { useWebSocket } from '@/hooks/useSocket'
+import StateInterface from '@/interfaces/StateInterface'
 import DebugOverlayView from './DebugOverlayView'
 import { DebugOverlayProps } from './types'
 

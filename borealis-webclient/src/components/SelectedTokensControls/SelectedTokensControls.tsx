@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import StateInterface from '../../interfaces/StateInterface'
+import StateInterface from '@/interfaces/StateInterface'
 import SelectedTokensControlsView from './SelectedTokensControlsView'
 import { SelectedTokensControlsProps } from './types'
 

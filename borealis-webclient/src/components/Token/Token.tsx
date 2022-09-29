@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { connect } from 'react-redux'
-import ControlTool from '../../enums/Tool'
-import StateInterface from '../../interfaces/StateInterface'
-import { setTokenSelected } from '../../reducers/gameReducer'
-import { setTokenOrigin, updateTokens } from '../../reducers/tokenReducer'
+import ControlTool from '@/enums/Tool'
+import StateInterface from '@/interfaces/StateInterface'
+import { setTokenSelected } from '@/reducers/gameReducer'
+import { setTokenOrigin, updateTokens } from '@/reducers/tokenReducer'
 import TokenView from './TokenView'
 import { TokenProps } from './types'
 

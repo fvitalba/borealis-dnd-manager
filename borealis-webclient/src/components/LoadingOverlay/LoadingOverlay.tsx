@@ -1,6 +1,6 @@
 import React from 'react'
-import { useLoading } from '../../hooks/useLoading'
-import { API_LOAD_USERS } from '../../utils/loadingTasks'
+import { useLoading } from '@/hooks/useLoading'
+import { API_LOAD_USERS } from '@/utils/loadingTasks'
 import LoadingOverlayView from './LoadingOverlayView'
 
 const LoadingOverlay = () => {

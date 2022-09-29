@@ -1,6 +1,6 @@
 import React from 'react'
-import { ActionButton } from '../../../components/ActionButton'
-import { BorealisCreateCharacterIcon } from '../../../views/Icons'
+import { ActionButton } from '@/components/ActionButton'
+import { BorealisCreateCharacterIcon } from '@/views/Icons'
 import { SelectCharacterViewProps } from './types'
 
 const SelectCharacterView = ({ characters, isHost, selectedCharacterGuid, onCharacterSelect, addNewCharacter }: SelectCharacterViewProps) => {

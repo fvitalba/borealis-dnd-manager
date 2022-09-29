@@ -1,6 +1,6 @@
-import Game from '../../classes/Game'
-import { SettingsState } from '../../reducers/settingsReducer'
-import { MapState } from '../../reducers/mapReducer'
+import Game from '@/classes/Game'
+import { SettingsState } from '@/reducers/settingsReducer'
+import { MapState } from '@/reducers/mapReducer'
 
 export interface BackgroundProps {
     gameState: Game,

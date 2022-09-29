@@ -1,9 +1,9 @@
 import  { Ref } from 'react'
-import Message from '../../classes/Message'
-import { SettingsState } from '../../reducers/settingsReducer'
-import { CharacterState } from '../../reducers/characterReducer'
-import { MetadataState } from '../../reducers/metadataReducer'
-import DiceType from '../../enums/DiceType'
+import Message from '@/classes/Message'
+import { SettingsState } from '@/reducers/settingsReducer'
+import { CharacterState } from '@/reducers/characterReducer'
+import { MetadataState } from '@/reducers/metadataReducer'
+import DiceType from '@/enums/DiceType'
 
 export interface DiceRollButtonProps {
     settingsState: SettingsState,

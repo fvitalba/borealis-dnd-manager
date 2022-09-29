@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import StateInterface from '../../interfaces/StateInterface'
+import StateInterface from '@/interfaces/StateInterface'
 import { OverlayProps } from './types'
 
 const Overlay = ({ gameState, overlayRef }: OverlayProps) => {

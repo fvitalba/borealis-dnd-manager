@@ -1,5 +1,5 @@
 import React from 'react'
-import useCanvas from '../../hooks/useCanvas'
+import useCanvas from '@/hooks/useCanvas'
 import { CanvasProps } from './types'
 
 const Canvas = ({ id, className, style, width, height, draw, onMouseUp, onMouseDown, onMouseMove, onWheel }: CanvasProps) => {

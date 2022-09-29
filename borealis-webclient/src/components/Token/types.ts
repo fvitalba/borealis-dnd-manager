@@ -1,9 +1,9 @@
 import { Ref, MouseEvent } from 'react'
-import Token from '../../classes/Token'
-import Game from '../../classes/Game'
-import UserType from '../../enums/UserType'
-import { SettingsState } from '../../reducers/settingsReducer'
-import { TokenState } from '../../reducers/tokenReducer'
+import Token from '@/classes/Token'
+import Game from '@/classes/Game'
+import UserType from '@/enums/UserType'
+import { SettingsState } from '@/reducers/settingsReducer'
+import { TokenState } from '@/reducers/tokenReducer'
 
 export interface TokenProps {
     token: Token,

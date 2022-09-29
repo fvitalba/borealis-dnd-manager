@@ -1,7 +1,7 @@
 import { ChangeEvent } from 'react'
-import Character from '../../../classes/Character'
-import { CharacterClassLevel } from '../../../classes/Character'
-import CharacterClass from '../../../enums/CharacterClass'
+import Character from '@/classes/Character'
+import { CharacterClassLevel } from '@/classes/Character'
+import CharacterClass from '@/enums/CharacterClass'
 
 export interface CharacterClassLevelInputProps {
     character: Character,

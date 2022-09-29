@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import StateInterface from '../../interfaces/StateInterface'
+import StateInterface from '@/interfaces/StateInterface'
 import GameSetupView from './GameSetupView'
 import { GameSetupProps } from './types'
 

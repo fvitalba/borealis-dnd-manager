@@ -1,5 +1,5 @@
-import ControlTool from '../../enums/Tool'
-import { SettingsState } from '../../reducers/settingsReducer'
+import ControlTool from '@/enums/Tool'
+import { SettingsState } from '@/reducers/settingsReducer'
 
 export interface ToolButtonProps {
     title: string,

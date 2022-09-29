@@ -1,10 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import Path from '../../classes/Path'
-import { Canvas } from '../Canvas'
-import ControlTool from '../../enums/Tool'
-import StateInterface from '../../interfaces/StateInterface'
-import { getMap } from '../../utils/mapHandler'
+import Path from '@/classes/Path'
+import { Canvas } from '@/components/Canvas'
+import ControlTool from '@/enums/Tool'
+import StateInterface from '@/interfaces/StateInterface'
+import { getMap } from '@/utils/mapHandler'
 import { DrawingProps } from './types'
 
 const Drawing = ({ gameState, mapState, settingsState }: DrawingProps) => {

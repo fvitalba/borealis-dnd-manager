@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react'
-import Character, { CharacterHitDice, CharacterHitDiceProperty } from '../../../classes/Character'
-import DiceType from '../../../enums/DiceType'
+import Character, { CharacterHitDice, CharacterHitDiceProperty } from '@/classes/Character'
+import DiceType from '@/enums/DiceType'
 
 export interface CharacterHitDiceInputProps {
     character: Character,

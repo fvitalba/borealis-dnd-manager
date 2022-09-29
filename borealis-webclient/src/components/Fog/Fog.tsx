@@ -1,10 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import Path from '../../classes/Path'
-import { Canvas } from '../Canvas'
-import UserType from '../../enums/UserType'
-import StateInterface from '../../interfaces/StateInterface'
-import { getMap } from '../../utils/mapHandler'
+import Path from '@/classes/Path'
+import { Canvas } from '@/components/Canvas'
+import UserType from '@/enums/UserType'
+import StateInterface from '@/interfaces/StateInterface'
+import { getMap } from '@/utils/mapHandler'
 import { FogProps } from './types'
 
 const Fog = ({ gameState, mapState, metadataState, settingsState }: FogProps) => {

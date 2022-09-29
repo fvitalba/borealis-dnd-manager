@@ -1,6 +1,6 @@
-import UserType from '../../enums/UserType'
-import { MetadataState } from '../../reducers/metadataReducer'
-import { SettingsState } from '../../reducers/settingsReducer'
+import UserType from '@/enums/UserType'
+import { MetadataState } from '@/reducers/metadataReducer'
+import { SettingsState } from '@/reducers/settingsReducer'
 
 export interface DebugOverlayProps {
     metadataState: MetadataState,
