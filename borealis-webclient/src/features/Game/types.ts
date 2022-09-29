@@ -15,10 +15,10 @@ export interface GameProps {
     tokenState: TokenState,
     settingsState: SettingsState,
     metadataState: MetadataState,
-    updateTokens: (arg0: Array<Token>) => void,
-    toggleTokenValue: (arg0: string, arg1: TokenBooleanProperty) => void,
-    updateMaps: (arg0: Array<Map>) => void,
-    setTokenSelected: (arg0: boolean) => void,
+    updateTokens: (newTokens: Array<Token>) => void,
+    toggleTokenValue: (tokenGuidToUpdate: string, key: TokenBooleanProperty) => void,
+    updateMaps: (newMaps: Array<Map>) => void,
+    setTokenSelected: (newTokenSelected: boolean) => void,
 }
 
 export interface GameViewProps {
@@ -26,7 +26,7 @@ export interface GameViewProps {
     overlayRef: Ref<HTMLCanvasElement>,
     cursors: Array<Cursor>,
     tokens: Array<Token>,
-    onMouseMove: (arg0: MouseEvent) => void,
-    onMouseUp: (arg0: MouseEvent) => void,
-    onMouseDown: (arg0: MouseEvent) => void,
+    onMouseMove: (event: MouseEvent) => void,
+    onMouseUp: (event: MouseEvent) => void,
+    onMouseDown: (event: MouseEvent) => void,
 }

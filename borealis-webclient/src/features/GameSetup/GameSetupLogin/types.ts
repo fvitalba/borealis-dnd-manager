@@ -22,11 +22,11 @@ export interface GameSetupLoginProps {
 
 export interface GameSetupLoginViewProps {
     userName: string,
-    onUserNameChange: (arg0: ChangeEvent<HTMLInputElement>) => void,
+    onUserNameChange: (event: ChangeEvent<HTMLInputElement>) => void,
     password: string,
-    onPasswordChange: (arg0: ChangeEvent<HTMLInputElement>) => void,
+    onPasswordChange: (event: ChangeEvent<HTMLInputElement>) => void,
     email: string,
-    onEmailChange: (arg0: ChangeEvent<HTMLInputElement>) => void,
+    onEmailChange: (event: ChangeEvent<HTMLInputElement>) => void,
     newUser: boolean,
     toggleNewUser: () => void,
     isGuest: boolean,

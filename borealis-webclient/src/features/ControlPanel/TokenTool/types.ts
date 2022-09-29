@@ -16,12 +16,12 @@ export interface TokenToolProps {
     gameState: Game,
     tokenState: TokenState,
     metadataState: MetadataState,
-    addToken: (arg0: Token) => void,
+    addToken: (newToken: Token) => void,
 }
 
 export interface TokenToolViewProps {
     newTokenName: string,
-    setNewTokenName: (e: ChangeEvent<HTMLInputElement>) => void,
+    setNewTokenName: (event: ChangeEvent<HTMLInputElement>) => void,
     isCreateTokenEnabled: boolean,
     createToken: () => void,
     tokens: Array<Token>,

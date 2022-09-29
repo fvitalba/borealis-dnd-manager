@@ -4,10 +4,10 @@ export interface ActionTextInputProps {
     title?: string,
     placeholder?: string,
     value: string,
-    onChange: (arg0: ChangeEvent<HTMLInputElement>) => void,
+    onChange: (event: ChangeEvent<HTMLInputElement>) => void,
     label?: string,
     autofocus?: boolean,
     buttonValue: ReactElement,
-    onClick: (arg0?: MouseEvent<HTMLButtonElement>) => void,
+    onClick: (event?: MouseEvent<HTMLButtonElement>) => void,
     disabled?: boolean,
 }

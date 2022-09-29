@@ -10,7 +10,7 @@ export interface OptionSelectorProps {
     title?: string,
     value: string | number,
     options: Array<SelectionOption>,
-    onChange: (arg0: ChangeEvent<HTMLSelectElement>) => void,
+    onChange: (event: ChangeEvent<HTMLSelectElement>) => void,
     disabled?: boolean,
     label?: string,
 }

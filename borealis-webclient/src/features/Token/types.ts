@@ -11,9 +11,9 @@ export interface TokenProps {
     gameState: Game,
     tokenState: TokenState,
     settingsState: SettingsState,
-    updateTokens: (arg0: Array<Token>) => void,
-    setTokenOrigin: (arg0: string, arg1: number, arg2: number) => void,
-    setTokenSelected: (arg0: boolean) => void,
+    updateTokens: (newTokens: Array<Token>) => void,
+    setTokenOrigin: (tokenGuidToUpdate: string, xOrigin: number, yOrigin: number) => void,
+    setTokenSelected: (newSelected: boolean) => void,
 }
 
 export interface AbsolutePosition {
@@ -34,5 +34,5 @@ export interface TokenViewProps {
     imgStyle: ImageStyle,
     labelRef: Ref<HTMLLabelElement>,
     labelPosition: AbsolutePosition,
-    onMouseDown: (arg0: MouseEvent<HTMLDivElement>) => void,
+    onMouseDown: (event: MouseEvent<HTMLDivElement>) => void,
 }

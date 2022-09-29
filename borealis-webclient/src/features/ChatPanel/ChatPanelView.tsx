@@ -31,10 +31,10 @@ interface ChatPanelViewProps {
     noOfCurrentUsers: number,
     users: Array<User>,
     currentMessage: string,
-    changeCurrentMessage: (arg0: ChangeEvent<HTMLInputElement>) => void,
+    changeCurrentMessage: (event: ChangeEvent<HTMLInputElement>) => void,
     addMessage: () => void,
     chatMessages: Array<Message>,
-    inputOnKeyDown: (arg0: KeyboardEvent) => void,
+    inputOnKeyDown: (event: KeyboardEvent) => void,
     endOfMessagesRef: Ref<HTMLDivElement>,
 }
 

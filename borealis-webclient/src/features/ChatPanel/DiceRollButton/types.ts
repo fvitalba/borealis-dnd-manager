@@ -9,7 +9,7 @@ export interface DiceRollButtonProps {
     settingsState: SettingsState,
     characterState: CharacterState,
     metadataState: MetadataState,
-    addChatMessage: (arg0: Message) => void,
+    addChatMessage: (newMessage: Message) => void,
 }
 
 export interface SelectorPosition {
@@ -18,7 +18,7 @@ export interface SelectorPosition {
 }
 
 export interface DiceRollButtonViewProps {
-    rollDice: (arg0: DiceType) => void,
+    rollDice: (diceType: DiceType) => void,
     selectorPosition: SelectorPosition,
     showSelector: boolean,
     toggleSelector: () => void,

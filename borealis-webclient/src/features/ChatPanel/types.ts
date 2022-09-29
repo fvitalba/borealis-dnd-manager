@@ -17,5 +17,5 @@ export interface ChatPanelProps {
     userState: UserState,
     characterState: CharacterState,
     metadataState: MetadataState,
-    addChatMessage: (arg0: Message) => void,
+    addChatMessage: (newMessage: Message) => void,
 }

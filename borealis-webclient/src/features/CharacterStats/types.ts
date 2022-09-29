@@ -10,8 +10,8 @@ export interface CharacterStatsProps {
     characterState: CharacterState,
     userState: UserState,
     metadataState: MetadataState,
-    updateCharacter: (arg0: Character) => void,
-    deleteCharacter: (arg0: string) => void,
+    updateCharacter: (character: Character) => void,
+    deleteCharacter: (characterGuid: string) => void,
 }
 
 export interface Modifiers {
@@ -27,13 +27,13 @@ export interface CharacterStatsViewProps {
     showCharacterStats: boolean,
     isHost: boolean,
     character: Character,
-    setSelectedCharacter: (arg0: Character) => void,
+    setSelectedCharacter: (character: Character) => void,
     users: Array<User>,
     modifiers: Modifiers,
     characterName: string,
-    setCharacterName: (arg0: string) => void,
-    onStatChange: (arg0: ClassNumberProperty, arg1: ChangeEvent<HTMLInputElement>) => void,
-    onSelectUser: (arg0: ChangeEvent<HTMLSelectElement>) => void,
+    setCharacterName: (characterName: string) => void,
+    onStatChange: (attributeName: ClassNumberProperty, event: ChangeEvent<HTMLInputElement>) => void,
+    onSelectUser: (event: ChangeEvent<HTMLSelectElement>) => void,
     saveCharacter: () => void,
     deleteCharacter: () => void,
 }

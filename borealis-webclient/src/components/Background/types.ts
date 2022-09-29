@@ -6,6 +6,6 @@ export interface BackgroundProps {
     gameState: Game,
     mapState: MapState,
     settingsState: SettingsState,
-    updateDeltaXY: (arg0: number, arg1: number) => void,
-    updateScale: (arg0: number) => void,
+    updateDeltaXY: (deltaX: number, deltaY: number) => void,
+    updateScale: (scale: number) => void,
 }

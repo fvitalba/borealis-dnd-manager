@@ -14,14 +14,14 @@ export interface MapToolProps {
     toggleOnMaps: boolean,
     mapState: MapState,
     gameState: Game,
-    addMap: (arg0: Map) => void,
+    addMap: (newMap: Map) => void,
 }
 
 export interface MapToolViewProps {
     maps: Array<Map>,
     activeMapId: number,
     newMapName: string,
-    setNewMapName: (e: ChangeEvent<HTMLInputElement>) => void,
+    setNewMapName: (event: ChangeEvent<HTMLInputElement>) => void,
     isCreateMapEnabled: boolean,
     createMap: () => void,
     selectedMapName: string,

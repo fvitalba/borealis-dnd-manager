@@ -7,5 +7,5 @@ export interface UserManagerProps {
     metadataState: MetadataState,
     settingsState: SettingsState,
     characterState: CharacterState,
-    setUsersFromAPI: (arg0: Array<User>) => void,
+    setUsersFromAPI: (newUsers: Array<User>) => void,
 }

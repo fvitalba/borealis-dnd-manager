@@ -6,5 +6,5 @@ export interface ToolButtonProps {
     value: JSX.Element,
     controlTools: Array<ControlTool>,
     settingsState: SettingsState,
-    setToolSettings: (arg0: ControlTool) => void,
+    setToolSettings: (newTool: ControlTool) => void,
 }

@@ -6,7 +6,7 @@ export interface CanvasProps {
     style?: object,
     width: number,
     height: number,
-    draw: (arg0: CanvasRenderingContext2D) => void,
+    draw: (canvasContext: CanvasRenderingContext2D) => void,
     onMouseUp?: MouseEventHandler<HTMLCanvasElement>,
     onMouseDown?: MouseEventHandler<HTMLCanvasElement>,
     onMouseMove?: MouseEventHandler<HTMLCanvasElement>,

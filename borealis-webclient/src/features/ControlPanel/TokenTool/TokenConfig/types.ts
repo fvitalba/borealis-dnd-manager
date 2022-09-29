@@ -13,13 +13,13 @@ export interface TokenConfigProps {
     mapState: MapState,
     tokenState: TokenState,
     metadataState: MetadataState,
-    deleteToken: (arg0: string) => void,
-    copyToken: (arg0: string) => void,
-    updateTokenTextValue: (arg0: string, arg1: TokenTextProperty, arg2: string) => void,
-    updateTokenNumberValue: (arg0: string, arg1: TokenNumberProperty, arg2: number) => void,
-    toggleTokenValue: (arg0: string, arg1: TokenBooleanProperty) => void,
-    updateTokens: (arg0: Array<Token>) => void,
-    setTokenSelected: (arg0: boolean) => void,
+    deleteToken: (tokenGuid: string) => void,
+    copyToken: (tokenGuid: string) => void,
+    updateTokenTextValue: (tokenGuid: string, tokenAttribute: TokenTextProperty, newValue: string) => void,
+    updateTokenNumberValue: (tokenGuid: string, tokenAttribute: TokenNumberProperty, newValue: number) => void,
+    toggleTokenValue: (tokenGuid: string, tokenAttribute: TokenBooleanProperty) => void,
+    updateTokens: (tokens: Array<Token>) => void,
+    setTokenSelected: (selected: boolean) => void,
 }
 
 export interface HostTokenConfigViewProps {
@@ -29,17 +29,17 @@ export interface HostTokenConfigViewProps {
     maps: Array<Map>,
     token: Token,
     copy: () => void,
-    onToggle: (arg0: TokenBooleanProperty, arg1: MouseEvent<HTMLButtonElement>) => void,
-    onTextChange: (arg0: TokenTextProperty, arg1: ChangeEvent<HTMLInputElement>) => void,
-    selectToken: (arg0: MouseEvent<HTMLButtonElement>) => void,
-    onTypeSelect: (arg0: ChangeEvent<HTMLSelectElement>) => void,
-    onConditionSelect: (arg0: ChangeEvent<HTMLSelectElement>) => void,
-    onSizeSelect: (arg0: ChangeEvent<HTMLSelectElement>) => void,
-    onMapSelect: (arg0: ChangeEvent<HTMLSelectElement>) => void,
-    deleteToken: (arg0: MouseEvent<HTMLButtonElement>) => void,
+    onToggle: (tokenAttribute: TokenBooleanProperty, event: MouseEvent<HTMLButtonElement>) => void,
+    onTextChange: (tokenAttribute: TokenTextProperty, event: ChangeEvent<HTMLInputElement>) => void,
+    selectToken: (event: MouseEvent<HTMLButtonElement>) => void,
+    onTypeSelect: (event: ChangeEvent<HTMLSelectElement>) => void,
+    onConditionSelect: (event: ChangeEvent<HTMLSelectElement>) => void,
+    onSizeSelect: (event: ChangeEvent<HTMLSelectElement>) => void,
+    onMapSelect: (event: ChangeEvent<HTMLSelectElement>) => void,
+    deleteToken: (event: MouseEvent<HTMLButtonElement>) => void,
 }
 
 export interface GuestTokenConfigViewProps {
     token: Token,
-    onTextChange: (arg0: TokenTextProperty, arg1: ChangeEvent<HTMLInputElement>) => void,
+    onTextChange: (tokenAttribute: TokenTextProperty, event: ChangeEvent<HTMLInputElement>) => void,
 }

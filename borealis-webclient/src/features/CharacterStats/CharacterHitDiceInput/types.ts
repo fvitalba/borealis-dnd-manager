@@ -4,14 +4,14 @@ import DiceType from '@/enums/DiceType'
 
 export interface CharacterHitDiceInputProps {
     character: Character,
-    setSelectedCharacter: (arg0: Character) => void,
+    setSelectedCharacter: (character: Character) => void,
 }
 
 export interface CharacterHitDiceInputViewProps {
     characterHitDice: Array<CharacterHitDice>,
     availableCharacterHitDice: Array<DiceType>,
-    onSelectHitDiceType: (arg0: ChangeEvent<HTMLSelectElement>, arg1: number) => void,
-    setHitDiceNumber: (arg0: CharacterHitDiceProperty, arg1: number, arg2: number) => void,
+    onSelectHitDiceType: (event: ChangeEvent<HTMLSelectElement>, index: number) => void,
+    setHitDiceNumber: (characterHitDiceProperty: CharacterHitDiceProperty, noOfDice: number, index: number) => void,
     showAddHitDice: boolean,
     addHitDice: () => void,
 }

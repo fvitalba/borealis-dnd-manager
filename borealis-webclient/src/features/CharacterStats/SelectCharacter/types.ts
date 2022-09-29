@@ -8,14 +8,14 @@ export interface SelectCharacterProps {
     characterState: CharacterState,
     metadataState: MetadataState,
     settingsState: SettingsState,
-    assignCharacter: (arg0: string) => void,
-    addCharacter: (arg0: Character) => void,
+    assignCharacter: (characterGuid: string) => void,
+    addCharacter: (character: Character) => void,
 }
 
 export interface SelectCharacterViewProps {
     characters: Array<Character>,
     isHost: boolean,
     selectedCharacterGuid: string,
-    onCharacterSelect: (arg0: ChangeEvent<HTMLSelectElement>) => void,
+    onCharacterSelect: (event: ChangeEvent<HTMLSelectElement>) => void,
     addNewCharacter: () => void,
 }
