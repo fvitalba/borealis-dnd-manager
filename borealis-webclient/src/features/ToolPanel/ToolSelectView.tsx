@@ -1,5 +1,5 @@
 import React from 'react'
-import { ToolButton } from '@/components/ToolButton'
+import { ToolButton } from '@/features/ToolPanel/ToolButton'
 import ControlTool from '@/enums/Tool'
 import {
     BorealisMoveToolIcon,

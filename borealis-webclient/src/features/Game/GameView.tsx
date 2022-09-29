@@ -3,7 +3,7 @@ import { Background } from '@/components/Background'
 import { Drawing } from '@/components/Drawing'
 import { Fog } from '@/components/Fog'
 import { Overlay } from '@/components/Overlay'
-import { Token as TokenComponent } from '@/components/Token'
+import { Token } from '@/features/Token'
 import { ControlPanel } from '@/features/ControlPanel'
 import { ToolPanel } from '@/features/ToolPanel'
 import { ChatPanel } from '@/features/ChatPanel'
@@ -20,7 +20,7 @@ const GameView = ({ userType, overlayRef, cursors, tokens, onMouseMove, onMouseU
                 { tokens ?
                     <div className='borealis-token-layer'>
                         { tokens.map((token, index) => (
-                            <TokenComponent key={ `Token${index}` } token={ token } userType={ userType } />
+                            <Token key={ `Token${index}` } token={ token } userType={ userType } />
                         )) }
                     </div>
                     : null

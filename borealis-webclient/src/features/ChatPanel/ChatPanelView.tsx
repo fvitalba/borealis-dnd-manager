@@ -1,7 +1,7 @@
 import React, { ChangeEvent, Ref, KeyboardEvent } from 'react'
 import User from '@/classes/User'
 import Message from '@/classes/Message'
-import { DiceRollButton } from '@/components/DiceRollButton'
+import { DiceRollButton } from '@/features/ChatPanel/DiceRollButton'
 import MessageType from '@/enums/MessageType'
 import { BorealisPlayIcon, BorealisCloseChatIcon, BorealisOpenChatIcon, BorealisChatHelpIcon } from '@/views/Icons'
 import ChatPanelCommandsHelp from './ChatPanelCommandsHelp'
