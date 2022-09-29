@@ -4,16 +4,15 @@ import {
     BorealisAddNewMapIcon,
     BorealisMapSelectedIcon,
     BorealisMapUnselectedIcon,
-    BorealisPlayIcon,
 } from '@/views/Icons'
 import { ControlPanelSubcontainer } from '@/features/ControlPanel'
 import { ControlPanelRow } from '@/features/ControlPanel'
 import { TextInput } from '@/components/TextInput'
-import { TextInputSelector } from '@/components/TextInputSelector'
 import { ActionButton } from '@/components/ActionButton'
+import { FolderSelector } from '@/components/FolderSelector'
 import { MapToolViewProps } from './types'
 
-const MapToolView = ({ maps, activeMapId, newMapName, setNewMapName, isCreateMapEnabled, createMap, selectedMapName, currSelectedMapName, onMapSelect, onSubmitSelectMap, isSubmitSelectionEnabled, showSelectedMap }: MapToolViewProps) => {
+const MapToolView = ({ maps, activeMapId, newMapName, setNewMapName, isCreateMapEnabled, createMap, currSelectedMapName, onMapSelect, showSelectedMap }: MapToolViewProps) => {
     const mapOptions = maps.map((map, index) => {
         return {
             index: index,
@@ -22,8 +21,8 @@ const MapToolView = ({ maps, activeMapId, newMapName, setNewMapName, isCreateMap
         }
     }).filter((option) => option.caption !== undefined)
 
-    const onSelectElement = (elementIndex: number) => {
-        onMapSelect(elementIndex)
+    const onFolderSelectElement = (elementIndex: number) => {
+        onMapSelect(elementIndex, true)
     }
 
     const selectedMap = showSelectedMap ? maps.filter((map) => map.name === currSelectedMapName) : []
@@ -35,8 +34,7 @@ const MapToolView = ({ maps, activeMapId, newMapName, setNewMapName, isCreateMap
                 <ActionButton title='Create new map' value={ <BorealisAddNewMapIcon /> } onClick={ createMap } disabled={ (newMapName === '') || (!isCreateMapEnabled) } />
             </ControlPanelRow>
             <ControlPanelRow>
-                <TextInputSelector title='Choose Map' placeholder='Choose Map' value={ selectedMapName } onSelectElement={ onSelectElement } label='Choose existing Map:' options={ mapOptions } />
-                <ActionButton title='Select map' value={ <BorealisPlayIcon /> } onClick={ onSubmitSelectMap } disabled={ !isSubmitSelectionEnabled } />
+                <FolderSelector elements={ mapOptions } onSelectElement={ onFolderSelectElement } />
             </ControlPanelRow>
             { selectedMap.length > 0
                 ? <ControlPanelRow>

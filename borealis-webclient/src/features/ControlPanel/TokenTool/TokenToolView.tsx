@@ -4,17 +4,16 @@ import { TokenConfig } from './TokenConfig'
 import { ControlPanelSubcontainer } from '..'
 import { ControlPanelRow } from '..'
 import { TextInput } from '@/components/TextInput'
-import { TextInputSelector } from '@/components/TextInputSelector'
 import { ActionButton } from '@/components/ActionButton'
 import {
     BorealisAddNewTokenIcon,
-    BorealisPlayIcon,
     BorealisTokenIsNpcIcon,
     BorealisTokenIsPcIcon,
 } from '@/views/Icons'
+import { FolderSelector } from '@/components/FolderSelector'
 import { TokenToolViewProps } from './types'
 
-const TokenToolView = ({ newTokenName, setNewTokenName, isCreateTokenEnabled, createToken, tokens, selectedTokenName, currSelectedTokenName, onTokenSelect, onSubmitSelectToken, isSubmitSelectionEnabled, showSelectedToken }: TokenToolViewProps) => {
+const TokenToolView = ({ newTokenName, setNewTokenName, isCreateTokenEnabled, createToken, tokens, currSelectedTokenName, onTokenSelect, showSelectedToken }: TokenToolViewProps) => {
     const tokenOptions = tokens.map((token, index) => {
         return {
             index: index,
@@ -23,8 +22,8 @@ const TokenToolView = ({ newTokenName, setNewTokenName, isCreateTokenEnabled, cr
         }
     }).filter((option) => option.caption !== undefined)
 
-    const onSelectElement = (elementIndex: number) => {
-        onTokenSelect(elementIndex)
+    const onFolderSelectElement = (elementIndex: number) => {
+        onTokenSelect(elementIndex, true)
     }
 
     const selectedToken = showSelectedToken ? tokens.filter((token) => token.name === currSelectedTokenName) : []
@@ -36,8 +35,7 @@ const TokenToolView = ({ newTokenName, setNewTokenName, isCreateTokenEnabled, cr
                 <ActionButton title='Create new Token' value={ <BorealisAddNewTokenIcon /> } onClick={ createToken } disabled={ (newTokenName === '') || (!isCreateTokenEnabled) } />
             </ControlPanelRow>
             <ControlPanelRow>
-                <TextInputSelector title='Choose Token' placeholder='Choose Token' value={ selectedTokenName } onSelectElement={ onSelectElement } label='Choose existing Token:' options={ tokenOptions } />
-                <ActionButton title='Select token' value={ <BorealisPlayIcon /> } onClick={ onSubmitSelectToken } disabled={ !isSubmitSelectionEnabled } />
+                <FolderSelector elements={ tokenOptions } onSelectElement={ onFolderSelectElement } />
             </ControlPanelRow>
             { selectedToken.length > 0
                 ? <ControlPanelRow>

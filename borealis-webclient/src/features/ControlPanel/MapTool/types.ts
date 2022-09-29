@@ -26,7 +26,7 @@ export interface MapToolViewProps {
     createMap: () => void,
     selectedMapName: string,
     currSelectedMapName: string,
-    onMapSelect: (mapIndex: number) => void,
+    onMapSelect: (mapIndex: number, submitSelection: boolean) => void,
     onSubmitSelectMap: () => void,
     isSubmitSelectionEnabled: boolean,
     showSelectedMap: boolean,

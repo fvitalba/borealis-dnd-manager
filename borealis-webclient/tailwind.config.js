@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const colors = require('tailwindcss/colors')
 
 module.exports = {
@@ -71,6 +72,18 @@ module.exports = {
             },
             fontFamily: {
                 'barbaro': ['Barbaro', 'Serif'],
+            },
+            minWidth: {
+                '8': '2rem',
+            },
+            maxWidth: {
+                '28': '7rem',
+            },
+            minHeight: {
+                '8': '2rem',
+            },
+            maxHeight: {
+                '28': '7rem',
             }
         },
     },

@@ -41,12 +41,14 @@ const MapTool = ({ toggleOnMaps, mapState, gameState, addMap }: MapToolProps) =>
         })
     }
 
-    const onMapSelect = (mapIndex: number) => {
+    const onMapSelect = (mapIndex: number, submitSelection: boolean) => {
         const selectedMap = mapState.maps.filter((map, index) => index === mapIndex)[0]
         setMapToolState({
             ...mapToolState,
-            selectedMapName: selectedMap.name,
             newMapName: '',
+            selectedMapName: submitSelection ? '' : selectedMap.name,
+            currSelectedMapName: submitSelection ? selectedMap.name : mapToolState.currSelectedMapName,
+            showSelectedMap: submitSelection ? true : mapToolState.showSelectedMap,
         })
     }
 

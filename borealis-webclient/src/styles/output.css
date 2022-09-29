@@ -2831,6 +2831,62 @@ a:hover {
   border-color: rgb(52 53 58 / var(--tw-border-opacity));
 }
 
+.borealis-folder-select-container {
+  --tw-text-opacity: 1;
+  color: rgb(235 235 236 / var(--tw-text-opacity));
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  justify-content: center;
+  --tw-bg-opacity: 1;
+  background-color: rgb(29 30 32 / var(--tw-bg-opacity));
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  display: flex;
+  flex-direction: row;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  --tw-border-opacity: 1;
+  border-color: rgb(52 53 58 / var(--tw-border-opacity));
+}
+
+.borealis-folder-select-container > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.borealis-folder-select-element-container {
+  border-radius: 0.25rem;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  align-items: center;
+  --tw-border-opacity: 1;
+  border-color: rgb(78 79 83 / var(--tw-border-opacity));
+  border-width: 2px;
+  border-style: solid;
+  --tw-bg-opacity: 1;
+  background-color: rgb(52 53 58 / var(--tw-bg-opacity));
+  min-width: 2rem;
+  max-width: 7rem;
+  min-height: 2rem;
+  max-height: 7rem;
+  -webkit-user-select: none;
+          user-select: none;
+}
+
+.borealis-folder-select-element-container:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(40 146 125 / var(--tw-bg-opacity));
+}
+
+.borealis-folder-select-element {
+    
+}
+
 .borealis-text-input-selector-container {
   display: flex;
   flex-direction: column;

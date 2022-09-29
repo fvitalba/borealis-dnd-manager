@@ -44,17 +44,18 @@ const TokenTool = ({ toggleOnTokens, gameState, tokenState, metadataState, addTo
         })
     }
 
-    const onTokenSelect = (tokenIndex: number) => {
+    const onTokenSelect = (tokenIndex: number, submitSelection: boolean) => {
         const selectedToken = currentTokens.filter((token, index) => index === tokenIndex)[0]
         setTokenToolState({
             ...tokenToolState,
-            selectedTokenName: selectedToken.name,
             newTokenName: '',
+            selectedTokenName: submitSelection ? '' : selectedToken.name,
+            currSelectedTokenName: submitSelection ? selectedToken.name : tokenToolState.currSelectedTokenName,
+            showSelectedToken: submitSelection ? true : tokenToolState.showSelectedToken,
         })
     }
 
     const onSubmitSelectToken = () => {
-        console.log('selected token name',tokenToolState.selectedTokenName)
         setTokenToolState({
             ...tokenToolState,
             selectedTokenName: '',

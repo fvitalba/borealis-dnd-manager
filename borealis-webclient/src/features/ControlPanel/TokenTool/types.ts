@@ -27,7 +27,7 @@ export interface TokenToolViewProps {
     tokens: Array<Token>,
     selectedTokenName: string,
     currSelectedTokenName: string,
-    onTokenSelect: (tokenIndex: number) => void,
+    onTokenSelect: (tokenIndex: number, submitSelection: boolean) => void,
     onSubmitSelectToken: () => void,
     isSubmitSelectionEnabled: boolean,
     showSelectedToken: boolean,

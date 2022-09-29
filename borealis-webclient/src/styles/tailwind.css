@@ -1540,6 +1540,49 @@ a:hover {
     @apply border-primary-medium;
 }
 
+.borealis-folder-select-container {
+    @apply text-text-primary;
+    @apply rounded;
+    @apply text-base;
+    @apply justify-center;
+    @apply bg-primary-darker;
+    @apply pl-1;
+    @apply pr-1;
+    @apply flex;
+    @apply flex-row;
+    @apply flex-auto;
+    @apply flex-wrap;
+    @apply items-center;
+    @apply border-primary-medium;
+    @apply space-x-2;
+}
+
+.borealis-folder-select-element-container {
+    @apply rounded;
+    @apply justify-center;
+    @apply flex;
+    @apply flex-col;
+    @apply flex-auto;
+    @apply items-center;
+    @apply border-primary-light;
+    @apply border-2;
+    @apply border-solid;
+    @apply bg-primary-medium;
+    @apply min-w-8;
+    @apply max-w-28;
+    @apply min-h-8;
+    @apply max-h-28;
+    @apply select-none;
+}
+
+.borealis-folder-select-element-container:hover {
+    @apply bg-accent-dark;
+}
+
+.borealis-folder-select-element {
+    
+}
+
 .borealis-text-input-selector-container {
     @apply flex;
     @apply flex-col;
