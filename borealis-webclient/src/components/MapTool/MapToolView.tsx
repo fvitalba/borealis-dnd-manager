@@ -6,11 +6,11 @@ import {
     BorealisMapUnselectedIcon,
     BorealisPlayIcon,
 } from '../../views/Icons'
-import ControlPanelSubcontainer from '../../views/GenericViews/ControlPanelSubcontainer'
-import ControlPanelRow from '../../views/GenericViews/ControlPanelRow'
+import { ControlPanelSubcontainer } from '../ControlPanel'
+import { ControlPanelRow } from '../ControlPanel'
 import TextInput from '../../views/GenericViews/TextInput'
 import TextInputSelector from '../../views/GenericViews/TextInputSelector'
-import ActionButton from '../../views/GenericViews/ActionButton'
+import { ActionButton } from '../ActionButton'
 import { MapToolViewProps } from './types'
 
 const MapToolView = ({ maps, activeMapId, newMapName, setNewMapName, isCreateMapEnabled, createMap, selectedMapName, currSelectedMapName, onMapSelect, onSubmitSelectMap, isSubmitSelectionEnabled, showSelectedMap }: MapToolViewProps) => {

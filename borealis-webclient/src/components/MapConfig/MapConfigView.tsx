@@ -4,9 +4,9 @@ import {
     BorealisUnselectedMapIcon,
     BorealisDeleteMapIcon,
 } from '../../views/Icons'
-import ActionButton from '../../views/GenericViews/ActionButton'
-import ControlPanelRow from '../../views/GenericViews/ControlPanelRow'
-import ControlPanelSubcontainer from '../../views/GenericViews/ControlPanelSubcontainer'
+import { ActionButton } from '../ActionButton'
+import { ControlPanelRow } from '../ControlPanel'
+import { ControlPanelSubcontainer } from '../ControlPanel'
 import TextInput from '../../views/GenericViews/TextInput'
 import { MapConfigViewProps } from './types'
 

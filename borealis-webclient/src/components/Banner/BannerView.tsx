@@ -1,5 +1,5 @@
 import React from 'react'
-import ActionButton from '../../views/GenericViews/ActionButton'
+import { ActionButton } from '../ActionButton'
 import { BorealisCloseBannerIcon } from '../../views/Icons'
 import { BannerViewProps } from './types'
 

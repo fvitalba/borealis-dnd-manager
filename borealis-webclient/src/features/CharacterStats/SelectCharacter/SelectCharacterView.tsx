@@ -1,5 +1,5 @@
 import React from 'react'
-import ActionButton from '../../../views/GenericViews/ActionButton'
+import { ActionButton } from '../../../components/ActionButton'
 import { BorealisCreateCharacterIcon } from '../../../views/Icons'
 import { SelectCharacterViewProps } from './types'
 

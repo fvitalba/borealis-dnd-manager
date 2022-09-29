@@ -2,7 +2,7 @@ import React from 'react'
 import { CharacterClassLevelInput } from './CharacterClassLevelInput'
 import { CharacterHitDiceInput } from './CharacterHitDiceInput'
 import { SelectCharacter } from './SelectCharacter'
-import ActionButton from '../../views/GenericViews/ActionButton'
+import { ActionButton } from '../../components/ActionButton'
 import { BorealisSaveCharacterIcon, BorealisDeleteCharacterIcon } from '../../views/Icons'
 import { CharacterStatsViewProps } from './types'
 

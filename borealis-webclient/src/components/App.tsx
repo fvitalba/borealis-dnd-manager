@@ -1,7 +1,7 @@
 import React from 'react'
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
-import GameStateHandler from './GameStateHandler'
+import { GameStateHandler } from './GameStateHandler'
 import WebSocketProvider from '../contexts/WebSocketProvider'
 import LoadingProvider from '../contexts/LoadingProvider'
 import NotificationProvider from '../contexts/NotificationProvider'

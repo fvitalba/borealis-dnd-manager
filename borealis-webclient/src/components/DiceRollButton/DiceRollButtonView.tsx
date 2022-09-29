@@ -1,6 +1,6 @@
 import React from 'react'
 import DiceType, { DiceTypeArray } from '../../enums/DiceType'
-import ActionButton from '../../views/GenericViews/ActionButton'
+import { ActionButton } from '../ActionButton'
 import { BorealisRollDiceIcon } from '../../views/Icons'
 import { DiceRollButtonViewProps } from './types'
 

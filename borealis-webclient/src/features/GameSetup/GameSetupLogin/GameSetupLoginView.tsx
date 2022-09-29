@@ -5,7 +5,7 @@ import MaskedTextInput from '../../../views/GenericViews/MaskedTextInput'
 import CheckboxInput from '../../../views/GenericViews/CheckboxInput'
 import FormContainer from '../../../views/GenericViews/FormContainer'
 import FormRow from '../../../views/GenericViews/FormRow'
-import ActionButton from '../../../views/GenericViews/ActionButton'
+import { ActionButton } from '../../../components/ActionButton'
 
 interface GameSetupLoginViewProps {
     userName: string,

@@ -1,6 +1,6 @@
 import React from 'react'
 import DiceType from '../../../enums/DiceType'
-import ActionButton from '../../../views/GenericViews/ActionButton'
+import { ActionButton } from '../../../components/ActionButton'
 import { BorealisAddCharacterHitDiceIcon } from '../../../views/Icons'
 import { CharacterHitDiceInputViewProps } from './types'
 

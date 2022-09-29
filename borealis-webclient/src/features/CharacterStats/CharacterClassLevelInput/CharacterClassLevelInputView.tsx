@@ -1,6 +1,6 @@
 import React from 'react'
 import CharacterClass from '../../../enums/CharacterClass'
-import ActionButton from '../../../views/GenericViews/ActionButton'
+import { ActionButton } from '../../../components/ActionButton'
 import { BorealisAddCharacterClassIcon } from '../../../views/Icons'
 import { CharacterClassLevelInputViewProps } from './types'
 

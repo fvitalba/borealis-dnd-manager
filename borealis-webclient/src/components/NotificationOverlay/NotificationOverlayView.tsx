@@ -1,6 +1,6 @@
 import React from 'react'
 import NotificationType from '../../enums/NotificationType'
-import ActionButton from '../../views/GenericViews/ActionButton'
+import { ActionButton } from '../ActionButton'
 import { BorealisCloseNotificationIcon, BorealisErrorNotificationIcon, BorealisMessageNotificationIcon, BorealisWarningNotificationIcon } from '../../views/Icons'
 import { SingleNotificationProps, NotificationOverlayViewProps } from './types'
 
