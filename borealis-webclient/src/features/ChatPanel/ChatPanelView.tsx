@@ -1,15 +1,13 @@
-import React, { ChangeEvent, Ref, KeyboardEvent } from 'react'
-import User from '@/classes/User'
+import React from 'react'
 import Message from '@/classes/Message'
 import { DiceRollButton } from '@/features/ChatPanel/DiceRollButton'
 import MessageType from '@/enums/MessageType'
 import { BorealisPlayIcon, BorealisCloseChatIcon, BorealisOpenChatIcon, BorealisChatHelpIcon } from '@/views/Icons'
-import ChatPanelCommandsHelp from './ChatPanelCommandsHelp'
-import ChatPanelMessage from './ChatPanelMessage'
-import ChatPanelWhisper from './ChatPanelWhisper'
-import ChatPanelCommand from './ChatPanelCommand'
-import ChatPanelError from './ChatPanelError'
-import { ChatCommand } from '@/utils/constants'
+import { ChatPanelCommandsHelp } from './ChatPanelCommandsHelp'
+import { ChatPanelMessage } from './ChatPanelMessage'
+import { ChatPanelWhisper } from './ChatPanelMessage'
+import { ChatPanelCommand } from './ChatPanelMessage'
+import { ChatPanelError } from './ChatPanelMessage'
 import ChatPanelContainer from './ChatPanelContainer'
 import ChatPanelHeaderContainer from './ChatPanelHeaderContainer'
 import ChatPanelContentContainer from './ChatPanelContentContainer'
@@ -18,25 +16,7 @@ import { TextInput } from '@/components/TextInput'
 import { ActionButton } from '@/components/ActionButton'
 import ChatPanelActionContainer from './ChatPanelActionContainer'
 import ChatPanelPlayerPanel from './ChatPanelPlayerPanel'
-
-interface ChatPanelViewProps {
-    username: string,
-    chatPanelHidden: boolean,
-    toggleHidden: () => void,
-    showHelp: boolean,
-    toggleHelp: () => void,
-    chatCommands: Array<ChatCommand>,
-    showUserHover: boolean,
-    toggleUserHover: () => void,
-    noOfCurrentUsers: number,
-    users: Array<User>,
-    currentMessage: string,
-    changeCurrentMessage: (event: ChangeEvent<HTMLInputElement>) => void,
-    addMessage: () => void,
-    chatMessages: Array<Message>,
-    inputOnKeyDown: (event: KeyboardEvent) => void,
-    endOfMessagesRef: Ref<HTMLDivElement>,
-}
+import { ChatPanelViewProps } from './types'
 
 const ChatPanelView = ({ username, chatPanelHidden, toggleHidden, showHelp, toggleHelp, chatCommands, showUserHover, toggleUserHover, noOfCurrentUsers, users, currentMessage, changeCurrentMessage, addMessage, chatMessages, inputOnKeyDown, endOfMessagesRef }: ChatPanelViewProps) => {
     const sortedChatMessages = chatMessages.sort((a, b) => a.timestamp - b.timestamp)

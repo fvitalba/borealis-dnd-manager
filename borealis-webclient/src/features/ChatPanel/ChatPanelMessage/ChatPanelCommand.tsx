@@ -1,13 +1,8 @@
 import React, { forwardRef, ForwardedRef } from 'react'
-import Message from '@/classes/Message'
 import MessageType from '@/enums/MessageType'
 import ChatPanelMessageContainer from './ChatPanelMessageContainer'
 import ChatPanelMessageContentContainer from './ChatPanelMessageContentContainer'
-
-interface ChatPanelCommandProps {
-    message: Message,
-    username: string,
-}
+import { ChatPanelCommandProps } from './types'
 
 const ChatPanelCommand = forwardRef(({ message, username }: ChatPanelCommandProps, ref: ForwardedRef<HTMLDivElement>) => {
     const textToShow = message.username === username ? message.privateMessage : message.publicMessage

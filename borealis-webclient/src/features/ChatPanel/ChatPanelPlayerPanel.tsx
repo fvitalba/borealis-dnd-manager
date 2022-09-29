@@ -1,13 +1,6 @@
 import React from 'react'
-import User from '@/classes/User'
 import UserType from '@/enums/UserType'
-
-interface ChatPanelPlayerPanelProps {
-    onMouseEnter: () => void,
-    onMouseLeave: () => void,
-    users: Array<User>,
-    showUserList: boolean,
-}
+import { ChatPanelPlayerPanelProps } from './types'
 
 const ChatPanelPlayerPanel = ({ onMouseEnter, onMouseLeave, users, showUserList }: ChatPanelPlayerPanelProps) => {
     return (

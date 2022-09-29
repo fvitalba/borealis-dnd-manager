@@ -1,10 +1,6 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 import MessageType from '@/enums/MessageType'
-
-interface ChatPanelMessageContentContainerProps {
-    children: ReactNode,
-    messageType: MessageType,
-}
+import { ChatPanelMessageContentContainerProps } from './types'
 
 const ChatPanelMessageContentContainer = ({ children, messageType }: ChatPanelMessageContentContainerProps) => {
     let className = ''

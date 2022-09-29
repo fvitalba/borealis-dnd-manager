@@ -1,9 +1,5 @@
 import React from 'react'
-import { ChatCommand } from '@/utils/constants'
-
-interface ChatPanelCommandProps {
-    command: ChatCommand,
-}
+import { ChatPanelCommandProps } from './types'
 
 const ChatPanelCommandHelp = ({ command }: ChatPanelCommandProps) => {
     return (

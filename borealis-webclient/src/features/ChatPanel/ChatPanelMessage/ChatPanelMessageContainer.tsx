@@ -1,11 +1,5 @@
-import React, { forwardRef, ForwardedRef, ReactNode } from 'react'
-
-type MessageProperty = 'own' | 'other'
-
-interface ChatPanelMessageContainerProps {
-    children: ReactNode,
-    property: MessageProperty,
-}
+import React, { forwardRef, ForwardedRef } from 'react'
+import { ChatPanelMessageContainerProps } from './types'
 
 const ChatPanelMessageContainer = forwardRef(({ children, property }: ChatPanelMessageContainerProps, ref: ForwardedRef<HTMLDivElement>) => {
     return (

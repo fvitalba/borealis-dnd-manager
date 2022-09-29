@@ -1,8 +1,5 @@
-import React, { ReactNode } from 'react'
-
-interface ChatPanelContainerProps {
-    children: ReactNode,
-}
+import React from 'react'
+import { ChatPanelContainerProps } from './types'
 
 const ChatPanelContainer = ({ children }: ChatPanelContainerProps) => {
     return (<div className='borealis-chat-panel-container'>

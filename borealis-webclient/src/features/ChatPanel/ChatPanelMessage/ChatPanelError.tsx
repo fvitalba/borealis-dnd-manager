@@ -1,13 +1,8 @@
 import React, { forwardRef, ForwardedRef } from 'react'
-import Message from '@/classes/Message'
 import MessageType from '@/enums/MessageType'
 import ChatPanelMessageContainer from './ChatPanelMessageContainer'
 import ChatPanelMessageContentContainer from './ChatPanelMessageContentContainer'
-
-interface ChatPanelErrorProps {
-    message: Message,
-    username: string,
-}
+import { ChatPanelErrorProps } from './types'
 
 const ChatPanelError = forwardRef(({ message, username }: ChatPanelErrorProps, ref: ForwardedRef<HTMLDivElement>) => {
     return (

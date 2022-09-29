@@ -1,15 +1,9 @@
 import React, { forwardRef, ForwardedRef } from 'react'
-import Message from '@/classes/Message'
 import MessageType from '@/enums/MessageType'
 import ChatPanelMessageContainer from './ChatPanelMessageContainer'
 import ChatPanelMessageContentContainer from './ChatPanelMessageContentContainer'
 import ChatPanelMessageInfo from './ChatPanelMessageInfo'
-
-interface ChatPanelWhisperProps {
-    message: Message,
-    username: string,
-    playerInfo: string,
-}
+import { ChatPanelWhisperProps } from './types'
 
 const ChatPanelWhisper = forwardRef(({ message, username, playerInfo }: ChatPanelWhisperProps, ref: ForwardedRef<HTMLDivElement>) => {
     let textToShow = ''

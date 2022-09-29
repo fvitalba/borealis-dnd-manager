@@ -1,11 +1,5 @@
 import React from 'react'
-import Message from '@/classes/Message'
-
-interface ChatPanelMessageInfoProps {
-    message: Message,
-    username: string,
-    playerInfo: string,
-}
+import { ChatPanelMessageInfoProps } from './types'
 
 const ChatPanelMessageInfo = ({ message, username, playerInfo }: ChatPanelMessageInfoProps) => {
     return (
