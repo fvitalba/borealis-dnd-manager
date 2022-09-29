@@ -36,8 +36,8 @@ const Background = ({ gameState, mapState, settingsState, updateDeltaXY, updateS
             imgObject.src = currentMap.backgroundUrl
 
         // Scale Image to Window Size
-        const scaleX = (gameState.width !== 0) && (imgObject.width !== 0) ? Math.floor(gameState.width / imgObject.width) : 1
-        const scaleY = (gameState.height !== 0) && (imgObject.height !== 0) ? Math.floor(gameState.height / imgObject.height) : 1
+        const scaleX = (gameState.width !== 0) && (imgObject.width !== 0) ? Math.floor(gameState.width / imgObject.width * 10) / 10 : 1
+        const scaleY = (gameState.height !== 0) && (imgObject.height !== 0) ? Math.floor(gameState.height / imgObject.height * 10) / 10 : 1
         const scale = scaleX < scaleY ? scaleX : scaleY
         if (scale !== settingsState.scale)
             updateScale(scale)
