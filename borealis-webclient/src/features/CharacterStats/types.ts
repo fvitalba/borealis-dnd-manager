@@ -37,3 +37,11 @@ export interface CharacterStatsViewProps {
     saveCharacter: () => void,
     deleteCharacter: () => void,
 }
+
+export interface CharacterStatInputProps {
+    statFullname: ClassNumberProperty,
+    statAbbreviation: string,
+    statValue: number,
+    statModifier: string,
+    onStatChange: (attributeName: ClassNumberProperty, event: ChangeEvent<HTMLInputElement>) => void,
+}

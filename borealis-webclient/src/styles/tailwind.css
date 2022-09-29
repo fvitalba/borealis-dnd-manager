@@ -1703,3 +1703,66 @@ a:hover {
     @apply absolute;
     @apply h-full;
 }
+
+.borealis-character-selector-container {
+    @apply flex;
+    @apply flex-row;
+    @apply space-x-2;
+}
+
+.borealis-character-stats-container {
+    @apply flex;
+    @apply flex-col;
+    @apply space-y-4;
+}
+
+.borealis-character-stats-row {
+    @apply flex;
+    @apply flex-row;
+    @apply space-x-4;
+}
+
+.borealis-character-stat-input-container {
+    @apply flex;
+    @apply flex-col;
+    @apply border-4;
+    @apply border-accent-darker;
+    @apply rounded-md;
+    @apply justify-items-center;
+    @apply text-text-primary;
+}
+
+.borealis-character-stats-label {
+    @apply text-sm;
+    @apply align-middle;
+    @apply text-center;
+    @apply px-1;
+    @apply m-1;
+    @apply text-text-primary;
+}
+
+.borealis-character-stats-modifier-label {
+    @apply text-sm;
+    @apply font-extrabold;
+    @apply align-middle;
+    @apply text-center;
+    @apply px-1;
+    @apply m-1;
+    @apply bg-primary-light;
+    @apply text-text-primary;
+    @apply border-4;
+    @apply border-accent-medium;
+    @apply rounded;
+    @apply shadow-md;
+    @apply -mt-3;
+    @apply mx-3;
+}
+
+.borealis-character-main-stats-input {
+    @apply character-stats-input;
+    @apply w-16;
+    @apply h-16;
+    @apply text-5xl;
+    @apply align-middle;
+    @apply text-center;
+}

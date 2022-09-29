@@ -2,19 +2,20 @@ import React from 'react'
 import { CharacterClassLevelInput } from './CharacterClassLevelInput'
 import { CharacterHitDiceInput } from './CharacterHitDiceInput'
 import { SelectCharacter } from './SelectCharacter'
+import CharacterStatInput from './CharacterStatInput'
 import { ActionButton } from '@/components/ActionButton'
 import { BorealisSaveCharacterIcon, BorealisDeleteCharacterIcon } from '@/views/Icons'
 import { CharacterStatsViewProps } from './types'
 
 const CharacterStatsView = ({ showCharacterStats, isHost, character, setSelectedCharacter, users, modifiers, characterName, setCharacterName, onStatChange, onSelectUser, saveCharacter, deleteCharacter }: CharacterStatsViewProps) => {
     return (
-        <div className='character-stats-view-container'>
-            <div className='character-stats-view-row'>
+        <div className='borealis-character-stats-container'>
+            <div className='borealis-character-stats-row'>
                 <SelectCharacter />
             </div>
             { showCharacterStats
-                ? <div className='character-stats-view-container'>
-                    <div className='character-stats-view-row'>
+                ? <div className='borealis-character-stats-container'>
+                    <div className='borealis-character-stats-row'>
                         { isHost
                             ? <div className='character-stat-input-container'>
                                 <label className='character-stats-label'>Assigned User</label>
@@ -30,46 +31,22 @@ const CharacterStatsView = ({ showCharacterStats, isHost, character, setSelected
                         <ActionButton title='Save your character' value={ <BorealisSaveCharacterIcon /> } onClick={ saveCharacter } />
                         <ActionButton title='Delete your character' value={ <BorealisDeleteCharacterIcon /> } onClick={ deleteCharacter } />
                     </div>
-                    <div className='character-stats-view-row'>
+                    <div className='borealis-character-stats-row'>
                         <div className='character-stat-input-container'>
                             <label className='character-stats-label'>Name</label>
                             <input title='Character name' placeholder='Character name' value={ characterName } onChange={ (e) => setCharacterName(e.target.value) } className='character-stats-input' />
                         </div>
                     </div>
                     <CharacterClassLevelInput character={ character } setSelectedCharacter={ setSelectedCharacter } />
-                    <div className='character-stats-view-row'>
-                        <div className='character-stat-input-container'>
-                            <label className='character-stats-label'>STR</label>
-                            <input value={ character.strength } placeholder='Strength' onChange={ (e) => onStatChange('strength', e) } type='number' min='0' max='20' step='1' title='strength' className='w-12 character-main-stats-input' />
-                            <label className='character-stats-modifier-label'>{ modifiers.strength }</label>
-                        </div>
-                        <div className='character-stat-input-container'>
-                            <label className='character-stats-label'>DEX</label>
-                            <input value={ character.dexterity } placeholder='Dexterity' onChange={ (e) => onStatChange('dexterity', e) } type='number' min='0' max='20' step='1' title='dexterity' className='w-12 character-main-stats-input' />
-                            <label className='character-stats-modifier-label'>{ modifiers.dexterity }</label>
-                        </div>
-                        <div className='character-stat-input-container'>
-                            <label className='character-stats-label'>CON</label>
-                            <input value={ character.constitution } placeholder='Constitution' onChange={ (e) => onStatChange('constitution', e) } type='number' min='0' max='20' step='1' title='constitution' className='w-12 character-main-stats-input' />
-                            <label className='character-stats-modifier-label'>{ modifiers.constitution }</label>
-                        </div>
-                        <div className='character-stat-input-container'>
-                            <label className='character-stats-label'>INT</label>
-                            <input value={ character.intelligence } placeholder='Intelligence' onChange={ (e) => onStatChange('intelligence', e) } type='number' min='0' max='20' step='1' title='intelligence' className='w-12 character-main-stats-input' />
-                            <label className='character-stats-modifier-label'>{ modifiers.intelligence }</label>
-                        </div>
-                        <div className='character-stat-input-container'>
-                            <label className='character-stats-label'>WIS</label>
-                            <input value={ character.wisdom } placeholder='Wisdom' onChange={ (e) => onStatChange('wisdom', e) } type='number' min='0' max='20' step='1' title='wisdom' className='w-12 character-main-stats-input' />
-                            <label className='character-stats-modifier-label'>{ modifiers.wisdom }</label>
-                        </div>
-                        <div className='character-stat-input-container'>
-                            <label className='character-stats-label'>CHA</label>
-                            <input value={ character.charisma } placeholder='Charisma' onChange={ (e) => onStatChange('charisma', e) } type='number' min='0' max='20' step='1' title='charisma' className='w-12 character-main-stats-input' />
-                            <label className='character-stats-modifier-label'>{ modifiers.charisma }</label>
-                        </div>
+                    <div className='borealis-character-stats-row'>
+                        <CharacterStatInput statFullname='strength' statAbbreviation='STR' statModifier={ modifiers.strength } statValue={ character.strength } onStatChange={ onStatChange } />
+                        <CharacterStatInput statFullname='dexterity' statAbbreviation='DEX' statModifier={ modifiers.dexterity } statValue={ character.dexterity } onStatChange={ onStatChange } />
+                        <CharacterStatInput statFullname='constitution' statAbbreviation='CON' statModifier={ modifiers.constitution } statValue={ character.constitution } onStatChange={ onStatChange } />
+                        <CharacterStatInput statFullname='intelligence' statAbbreviation='INT' statModifier={ modifiers.intelligence } statValue={ character.intelligence } onStatChange={ onStatChange } />
+                        <CharacterStatInput statFullname='wisdom' statAbbreviation='WIS' statModifier={ modifiers.wisdom } statValue={ character.wisdom } onStatChange={ onStatChange } />
+                        <CharacterStatInput statFullname='charisma' statAbbreviation='CHA' statModifier={ modifiers.charisma } statValue={ character.charisma } onStatChange={ onStatChange } />
                     </div>
-                    <div className='character-stats-view-row'>
+                    <div className='borealis-character-stats-row'>
                         <div className='character-stats-view-row-subgroup'>
                             <div className='character-stat-input-container'>
                                 <label className='character-stats-label'>AC</label>
@@ -88,7 +65,7 @@ const CharacterStatsView = ({ showCharacterStats, isHost, character, setSelected
                                 <input value={ character.tempHealth } placeholder='Temp. Health' onChange={ (e) => onStatChange('tempHealth', e) } type='number' min='0' max='20' step='1' title='tempHealth' className='w-12 character-stats-input' />
                             </div>
                         </div>
-                        <div className='character-stats-view-row-subgroup'>
+                        <div className='borealis-character-stats-row'>
                             <div className='character-stat-input-container'>
                                 <label className='character-stats-label'>Proficiency</label>
                                 <input value={ character.proficiency } placeholder='Proficiency' onChange={ (e) => onStatChange('proficiency', e) } type='number' min='0' max='20' step='1' title='proficiency' className='w-12 character-stats-input' />
