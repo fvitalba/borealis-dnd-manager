@@ -18,6 +18,7 @@ export const parseIncUserToUserSchema = (incUser: IIncUser, isActive?: boolean, 
         guest: incUser.isGuest,
         lastOnline: lastOnline ? lastOnline : 0,
         name: incUser.userName,
+        name_lowercase: incUser.userName.toLowerCase(),
         secret: incUser.secret,
     }
 }
@@ -43,9 +44,8 @@ const checkSecretsMatch = async (existingSecret: string, compareSecret: string):
 }
 
 const findUser = async (userGuid?: string, userName?: string, userEmail?: string): Promise<IUserSchema> => {
-    const user = await User.findOne({ $or: [{ 'guid': userGuid, }, { 'name': userName }, { 'email': userEmail, 'guest': false, }] })
-        .then((foundUser) => foundUser)
-        .catch(() => undefined)
+    console.log('userGuid',userGuid,'userName',userName,'email',userEmail)
+    const user = await User.findOne({ $or: [{ 'guid': userGuid, }, { 'name_lowercase': userName?.toLowerCase() }, { 'email': userEmail, 'guest': false, }] })
     if ((user !== null) && (user !== undefined))
         return user
     else
@@ -166,6 +166,7 @@ export const authenticateUser = async (isGuest: boolean, userGuid?: string, user
         if (isGuest) {
             const guestUser: IUserSchema = {
                 name: userName ? userName : '',
+                name_lowercase: userName ? userName.toLowerCase() : '',
                 email: '',
                 guest: isGuest,
                 guid: userGuid ? userGuid : '',
@@ -308,6 +309,7 @@ export const cleanUserBeforeSending = (user: IUserSchema): IUserSchema => {
     return {
         guid: user.guid,
         name: user.name,
+        name_lowercase: user.name_lowercase,
         email: user.guest ? '' : user.email,
         guest: user.guest,
         lastOnline: user.guest ? 0 : user.lastOnline,
@@ -325,6 +327,7 @@ export const emptyUser = (): IUserSchema => {
         guest: true,
         lastOnline: 0,
         name: '',
+        name_lowercase: '',
     }
 }
 
