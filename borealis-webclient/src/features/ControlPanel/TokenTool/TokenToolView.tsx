@@ -35,7 +35,7 @@ const TokenToolView = ({ newTokenName, setNewTokenName, isCreateTokenEnabled, cr
                 <ActionButton title='Create new Token' value={ <BorealisAddNewTokenIcon /> } onClick={ createToken } disabled={ (newTokenName === '') || (!isCreateTokenEnabled) } />
             </ControlPanelRow>
             <ControlPanelRow>
-                <FolderSelector elements={ tokenOptions } onSelectElement={ onFolderSelectElement } />
+                <FolderSelector elements={ tokenOptions } selectedElementCaption={ selectedToken[0]?.name } onSelectElement={ onFolderSelectElement } />
             </ControlPanelRow>
             { selectedToken.length > 0
                 ? <ControlPanelRow>

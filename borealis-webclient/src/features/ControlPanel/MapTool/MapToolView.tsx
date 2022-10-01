@@ -34,7 +34,7 @@ const MapToolView = ({ maps, activeMapId, newMapName, setNewMapName, isCreateMap
                 <ActionButton title='Create new map' value={ <BorealisAddNewMapIcon /> } onClick={ createMap } disabled={ (newMapName === '') || (!isCreateMapEnabled) } />
             </ControlPanelRow>
             <ControlPanelRow>
-                <FolderSelector elements={ mapOptions } onSelectElement={ onFolderSelectElement } />
+                <FolderSelector elements={ mapOptions } selectedElementCaption={ selectedMap[0]?.name } onSelectElement={ onFolderSelectElement } />
             </ControlPanelRow>
             { selectedMap.length > 0
                 ? <ControlPanelRow>

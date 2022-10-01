@@ -9,4 +9,5 @@ interface FolderSelectorElement {
 export interface FolderSelectorProps {
     elements: Array<FolderSelectorElement>,
     onSelectElement: (selectedElementIndex: number) => void,
+    selectedElementCaption?: string,
 }

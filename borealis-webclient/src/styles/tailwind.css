@@ -754,17 +754,46 @@ a:hover {
     @apply bg-primary-medium;
     @apply min-w-8;
     @apply max-w-28;
-    @apply min-h-8;
+    @apply min-h-20;
     @apply max-h-28;
     @apply select-none;
+    @apply divide-y;
+    @apply divide-dashed;
+    @apply divide-primary-light;
 }
 
 .borealis-folder-select-element-container:hover {
-    @apply bg-accent-dark;
+    @apply bg-secondary-dark;
+}
+
+.borealis-folder-select-element-container:active {
+    @apply bg-secondary-medium;
+}
+
+.borealis-folder-select-selected-element-container {
+    @apply borealis-folder-select-element-container;
+    @apply text-accent-dark;
+}
+
+.borealis-folder-select-selected-element-container:hover {
+    @apply bg-secondary-dark;
+}
+
+.borealis-folder-select-selected-element-container:active {
+    @apply bg-secondary-medium;
+}
+
+.borealis-folder-select-icon {
+    @apply flex-shrink;
+    @apply flex-grow-0;
+    @apply py-1;
 }
 
 .borealis-folder-select-element {
-    
+    @apply flex-shrink-0;
+    @apply flex-grow;
+    @apply text-sm;
+    @apply px-1;
 }
 
 .borealis-text-input-selector-container {
@@ -963,6 +992,14 @@ a:hover {
     @apply border-primary-medium;
 }
 
+.borealis-character-main-stats-input:disabled {
+    @apply opacity-50;
+}
+
+.borealis-character-main-stats-input:focus:enabled {
+    @apply border-accent-medium;
+}
+
 .borealis-character-stats-text-input {
     @apply text-text-primary;
     @apply rounded-md;
@@ -982,6 +1019,14 @@ a:hover {
     @apply mr-auto;
 }
 
+.borealis-character-stats-text-input:disabled {
+    @apply opacity-50;
+}
+
+.borealis-character-stats-text-input:focus:enabled {
+    @apply border-accent-medium;
+}
+
 .borealis-character-stats-number-input {
     @apply text-text-primary;
     @apply rounded-md;
@@ -999,6 +1044,14 @@ a:hover {
     @apply border-primary-medium;
     @apply ml-auto;
     @apply mr-auto;
+}
+
+.borealis-character-stats-number-input:disabled {
+    @apply opacity-50;
+}
+
+.borealis-character-stats-number-input:focus:enabled {
+    @apply border-accent-medium;
 }
 
 .borealis-game-setup-container {
