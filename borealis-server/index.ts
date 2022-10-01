@@ -61,7 +61,7 @@ wss.on('connection', (websocketConnection: IBorealisWebSocket, connectionRequest
                                 return // Don't send to other rooms
                             if ((client === websocketConnection) && !sendBackToSender)
                                 return // Don't send back to sender
-                            client.send(JSON.stringify(outgoingMessage))
+                            client.send(outgoingMessage)
                         }
                     })
                 }

@@ -38,7 +38,6 @@ const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settings
         let pathToUpdate = new Array<Path>()
         let updatedMaps = mapState.maps.map((map) => map.copy())
         let updatedTokens = tokenState.tokens.map((token) => token.copy())
-        let myUser
         switch (data.type) {
         case 'pushCursor':
             if ((data.x && data.y) && (data.fromUserGuid !== metadataState.userGuid))
