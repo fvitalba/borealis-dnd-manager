@@ -31,22 +31,21 @@ const Background = ({ gameState, mapState, settingsState, updateDeltaXY, updateS
                 ...backgroundSettings,
                 imageObject: imgObject,
             })
+            // Scale Image to Window Size
+            const scaleX = (gameState.width !== 0) && (imgObject.width !== 0) ? Math.floor(gameState.width / imgObject.width * 10) / 10 : 1
+            const scaleY = (gameState.height !== 0) && (imgObject.height !== 0) ? Math.floor(gameState.height / imgObject.height * 10) / 10 : 1
+            const scale = scaleX < scaleY ? scaleX : scaleY
+            if (scale !== settingsState.scale)
+                updateScale(scale)
+
+            // Center Background on load
+            const deltaX = (gameState.width - (imgObject.width * scale)) / 2
+            const deltaY = (gameState.height - (imgObject.height * scale)) / 2
+            if ((deltaX !== settingsState.deltaX) || (deltaY !== settingsState.deltaY))
+                updateDeltaXY(deltaX, deltaY)
         }
         if (!currentMap.isEmpty())
             imgObject.src = currentMap.backgroundUrl
-
-        // Scale Image to Window Size
-        const scaleX = (gameState.width !== 0) && (imgObject.width !== 0) ? Math.floor(gameState.width / imgObject.width * 10) / 10 : 1
-        const scaleY = (gameState.height !== 0) && (imgObject.height !== 0) ? Math.floor(gameState.height / imgObject.height * 10) / 10 : 1
-        const scale = scaleX < scaleY ? scaleX : scaleY
-        if (scale !== settingsState.scale)
-            updateScale(scale)
-
-        // Center Background on load
-        const deltaX = (gameState.width - (imgObject.width * scale)) / 2
-        const deltaY = (gameState.height - (imgObject.height * scale)) / 2
-        if ((deltaX !== settingsState.deltaX) || (deltaY !== settingsState.deltaY))
-            updateDeltaXY(deltaX, deltaY)
     }, [ currentMap, gameState.currentMapId, mapState.maps ])
 
     const onMouseDown = () => {
