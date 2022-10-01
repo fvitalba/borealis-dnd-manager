@@ -35,6 +35,7 @@ export interface UserToolProps {
     setCharacters: (newCharacters: Array<Character>) => void,
     assignCharacter: (guidToAssign: string) => void,
     setUsersFromAPI: (newUsers: Array<User>) => void,
+    resetGameSettings: () => void,
 }
 
 export interface UserToolViewProps {

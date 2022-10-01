@@ -12,17 +12,18 @@ import { overwriteGame, incrementVersion, setFogEnabled } from '@/reducers/gameR
 import { setUsername, setToolSettings, toggleMousesharing } from '@/reducers/settingsReducer'
 import { updateMaps } from '@/reducers/mapReducer'
 import { updateTokens } from '@/reducers/tokenReducer'
-import UserToolView from './UserToolView'
-import loadAllFromDatabase from '@/utils/gameLoadHandler'
 import { setUsersFromAPI } from '@/reducers/userReducer'
+import { resetGameSettings } from '@/reducers/metadataReducer'
+import loadAllFromDatabase from '@/utils/gameLoadHandler'
 import saveAllToDatabase from '@/utils/gameSaveHandler'
 import { deleteLoginFromLocalStorage } from '@/utils/loginHandler'
+import UserToolView from './UserToolView'
 import { UserToolProps } from './types'
 
 const DEBUG_MODE = process.env.NODE_ENV === 'production' ? false : true
 const REACT_APP_PORT = 3000
 
-const UserTool = ({ toggleOnUser, gameState, mapState, tokenState, chatState, characterState, userState, metadataState, settingsState, setFogEnabled, incrementVersion, setUsername, toggleMousesharing, setToolSettings, overwriteGame, updateMaps, updateTokens, overwriteChat, setCharacters, assignCharacter, setUsersFromAPI }: UserToolProps) => {
+const UserTool = ({ toggleOnUser, gameState, mapState, tokenState, chatState, characterState, userState, metadataState, settingsState, setFogEnabled, incrementVersion, setUsername, toggleMousesharing, setToolSettings, overwriteGame, updateMaps, updateTokens, overwriteChat, setCharacters, assignCharacter, setUsersFromAPI, resetGameSettings }: UserToolProps) => {
     const webSocketContext = useWebSocket()
     const loadingContext = useLoading()
 
@@ -110,6 +111,16 @@ const UserTool = ({ toggleOnUser, gameState, mapState, tokenState, chatState, ch
 
     const logoutUser = () => {
         deleteLoginFromLocalStorage()
+        resetGameSettings()
+        setUsername('')
+        webSocketContext.setWsSettings({
+            ...webSocketContext.wsSettings,
+            userGuid: '',
+            sessionToken: '',
+            roomId: '',
+            socketGuid: '',
+            userType: 0,
+        })
     }
 
     return (
@@ -157,6 +168,7 @@ const mapDispatchToProps = {
     setCharacters,
     assignCharacter,
     setUsersFromAPI,
+    resetGameSettings,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserTool)
