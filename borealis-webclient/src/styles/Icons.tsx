@@ -63,6 +63,7 @@ interface IconProps {
     id?: string,
     style?: CSSProperties,
     size?: number,
+    fill?: string,
 }
 
 export const PlusCircleOutlineIcon = (props: IconProps) => {
@@ -782,5 +783,13 @@ export const BorealisAddCharacterHitDiceIcon = (props: IconProps) => {
 export const BorealisLogoutIcon = (props: IconProps) => {
     return <IconLogout
         size={ props.size ? props.size : defaultSize }
+    />
+}
+
+export const BorealisCursor = (props: IconProps) => {
+    return <IconHandFinger
+        size={ props.size ? props.size : defaultSize }
+        className={ props.className }
+        fill={ props.fill }
     />
 }

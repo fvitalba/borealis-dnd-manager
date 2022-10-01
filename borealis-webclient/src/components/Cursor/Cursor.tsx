@@ -1,5 +1,5 @@
 import React from 'react'
-import { CursorAltOutlineIcon } from '@/styles/Icons'
+import { BorealisCursor } from '@/styles/Icons'
 import { CursorProps } from './types'
 
 const CursorView = ({ cursor }: CursorProps) => {
@@ -10,8 +10,8 @@ const CursorView = ({ cursor }: CursorProps) => {
 
     return (
         <div style={ divStyle } className='borealis-cursor' >
-            <CursorAltOutlineIcon />
-            { cursor.username }
+            <BorealisCursor fill='white' className='mx-auto' />
+            <div className='borealis-cursor-name'>{ cursor.username }</div>
         </div>
     )
 }

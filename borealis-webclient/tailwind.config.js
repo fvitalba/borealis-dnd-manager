@@ -22,6 +22,7 @@ module.exports = {
                 'text-whisper': '#405B87',
                 'text-comment': '',
                 'text-error': '#FF0000',
+                'text-black': '#000000',
                 'primary-lighter': '#757679',
                 'primary-light': '#4E4F53',
                 'primary-medium': '#34353A',

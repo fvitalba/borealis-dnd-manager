@@ -111,8 +111,18 @@ a:hover {
 }
 
 .borealis-cursor {
-    @apply block;
     @apply absolute;
+    @apply flex;
+    @apply flex-col;
+    @apply text-text-black;
+}
+
+.borealis-cursor-name {
+    @apply mx-auto;
+    @apply max-w-20;
+    @apply max-h-6;
+    @apply overflow-hidden;
+    @apply text-text-primary;
 }
 
 .borealis-loading-overlay {
