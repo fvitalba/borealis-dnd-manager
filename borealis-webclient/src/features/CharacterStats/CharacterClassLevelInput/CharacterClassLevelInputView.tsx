@@ -1,12 +1,16 @@
-import React from 'react'
+import React, { ChangeEvent } from 'react'
 import CharacterClass from '@/enums/CharacterClass'
 import { ActionButton } from '@/components/ActionButton'
 import { BorealisAddCharacterClassIcon } from '@/views/Icons'
 import { CharacterClassLevelInputViewProps } from './types'
+import CharacterStatsRow from '../CharacterStatsRow'
+import CharacterOptionSelector from '../CharacterOptionSelector'
+import CharacterStatsContainer from '../CharacterStatsContainer'
+import CharacterNumberInput from '../CharacterNumberInput'
 
 const CharacterClassLevelInputView = ({ characterClass, availableCharacterClasses, onSelectCharacterClass, setCharacterClassLevel, showAddCharacterClass, addCharacterClass }: CharacterClassLevelInputViewProps) => {
     return (
-        <div className='character-stats-view-row'>
+        <CharacterStatsContainer>
             { characterClass.map((classLevel, index) => {
                 // We need to filter out all the duplicate Class Lines, to avoid assigning the same class twice
                 const availableCharacterClassesForLine = availableCharacterClasses.filter((currClass) => {
@@ -17,31 +21,34 @@ const CharacterClassLevelInputView = ({ characterClass, availableCharacterClasse
                         return true
                 })
                 availableCharacterClassesForLine.push(classLevel.class)
+                const classOptions = availableCharacterClassesForLine.map((characterClass) => {
+                    return {
+                        key: characterClass,
+                        value: characterClass,
+                        caption: `${CharacterClass[characterClass]}`,
+                    }
+                })
+                const onSelectClass = (e: ChangeEvent<HTMLSelectElement>) => {
+                    onSelectCharacterClass(e, index)
+                }
+                const onLevelChange = (e: ChangeEvent<HTMLInputElement>) => {
+                    setCharacterClassLevel(parseInt(e.target.value), index)
+                }
 
                 return (
-                    <div key={ classLevel.class } className='character-stats-view-row'>
-                        <div className='character-stat-input-container'>
-                            <label className='character-stats-label'>Class</label>
-                            <select value={ classLevel.class } onChange={ (e) => onSelectCharacterClass(e, index) } title='which class' className='character-stats-input'>
-                                { availableCharacterClassesForLine.map((characterClass) => (
-                                    <option key={ characterClass } value={ characterClass } >{ CharacterClass[characterClass] }</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className='character-stat-input-container'>
-                            <label className='character-stats-label'>Level</label>
-                            <input value={ classLevel.level } placeholder='Level' onChange={ (e) => setCharacterClassLevel(parseInt(e.target.value), index) } type='number' min='0' max='20' step='1' title='level' className='w-12 character-stats-input' />
-                        </div>
-                    </div>
+                    <CharacterStatsRow key={ classLevel.class }>
+                        <CharacterOptionSelector label='Class' statValue={ classLevel.class } title='Which class' valueOptions={ classOptions } onSelectValue={ onSelectClass } />
+                        <CharacterNumberInput label='Level' statValue={ classLevel.level } minValue={ 0 } maxValue={ 20 } valueStep={ 1 } onValueChange={ onLevelChange } />
+                    </CharacterStatsRow>
                 )
             })}
             { showAddCharacterClass
-                ? <div className='select-character-input-container'>
+                ? <CharacterStatsRow>
                     <ActionButton title='Add new Class' value={ <BorealisAddCharacterClassIcon /> } onClick={ addCharacterClass } />
-                </div>
+                </CharacterStatsRow>
                 : null
             }
-        </div>
+        </CharacterStatsContainer>
     )
 }
 

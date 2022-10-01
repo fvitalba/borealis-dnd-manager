@@ -1,9 +1,10 @@
-import { ChangeEvent } from 'react'
-import Character, { ClassNumberProperty } from '@/classes/Character'
+import { ChangeEvent, ReactNode } from 'react'
+import Character, { ClassNumberProperty, ClassTextProperty } from '@/classes/Character'
 import User from '@/classes/User'
 import { CharacterState } from '@/reducers/characterReducer'
 import { UserState } from '@/reducers/userReducer'
 import { MetadataState } from '@/reducers/metadataReducer'
+import { SelectionOption } from '@/components/OptionSelector/types'
 
 export interface CharacterStatsProps {
     toggleOnCharacterStats: boolean,
@@ -38,10 +39,47 @@ export interface CharacterStatsViewProps {
     deleteCharacter: () => void,
 }
 
-export interface CharacterStatInputProps {
+export interface CharacterStatsContainerProps {
+    children: ReactNode,
+}
+
+export interface CharacterStatsRowProps {
+    children: ReactNode,
+    reverseDirection?: boolean,
+}
+
+export interface CharacterMainStatInputProps {
     statFullname: ClassNumberProperty,
     statAbbreviation: string,
     statValue: number,
     statModifier: string,
     onStatChange: (attributeName: ClassNumberProperty, event: ChangeEvent<HTMLInputElement>) => void,
+}
+
+export interface CharacterTextInputProps {
+    statFullname: ClassTextProperty,
+    statValue: string,
+    onStatChange: (newValue: string) => void,
+    label?: string,
+    placeholder?: string,
+}
+
+export interface CharacterNumberInputProps {
+    statValue: number,
+    minValue: number,
+    maxValue: number,
+    valueStep: number,
+    statFullname?: ClassNumberProperty,
+    onStatChange?: (attributeName: ClassNumberProperty, event: ChangeEvent<HTMLInputElement>) => void,
+    onValueChange?: (event: ChangeEvent<HTMLInputElement>) => void,
+    label?: string,
+    placeholder?: string,
+}
+
+export interface CharacterOptionSelctorProps {
+    label: string,
+    statValue: string | number,
+    valueOptions: Array<SelectionOption>,
+    onSelectValue: (event: ChangeEvent<HTMLSelectElement>) => void,
+    title: string,
 }

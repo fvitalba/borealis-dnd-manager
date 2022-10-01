@@ -1,12 +1,16 @@
-import React from 'react'
+import React, { ChangeEvent } from 'react'
 import DiceType from '@/enums/DiceType'
 import { ActionButton } from '@/components/ActionButton'
 import { BorealisAddCharacterHitDiceIcon } from '@/views/Icons'
 import { CharacterHitDiceInputViewProps } from './types'
+import CharacterStatsRow from '../CharacterStatsRow'
+import CharacterOptionSelector from '../CharacterOptionSelector'
+import CharacterStatsContainer from '../CharacterStatsContainer'
+import CharacterNumberInput from '../CharacterNumberInput'
 
 const CharacterHitDiceInputView = ({ characterHitDice, availableCharacterHitDice, onSelectHitDiceType, setHitDiceNumber, addHitDice }: CharacterHitDiceInputViewProps) => {
     return (
-        <div className='character-stats-view-row'>
+        <CharacterStatsContainer>
             { characterHitDice.map((charHitDice, index) => {
                 // We need to filter out all the duplicate Dice Types, to avoid assigning the same type twice
                 const availableCharacterDiceTypesForLine = availableCharacterHitDice.filter((currDiceType) => {
@@ -17,32 +21,35 @@ const CharacterHitDiceInputView = ({ characterHitDice, availableCharacterHitDice
                         return true
                 })
                 availableCharacterDiceTypesForLine.push(charHitDice.hitDiceType)
+                const diceOptions = availableCharacterDiceTypesForLine.map((characterDiceType) => {
+                    return {
+                        key: characterDiceType,
+                        value: characterDiceType,
+                        caption: `${DiceType[characterDiceType]}`,
+                    }
+                })
+                const onSelectDiceType = (e: ChangeEvent<HTMLSelectElement>) => {
+                    onSelectHitDiceType(e, index)
+                }
+                const onNoOfDiceChange = (e: ChangeEvent<HTMLInputElement>) => {
+                    setHitDiceNumber('numberOfDice', parseInt(e.target.value), index)
+                }
+                const onRemNoOfDiceChange = (e: ChangeEvent<HTMLInputElement>) => {
+                    setHitDiceNumber('remainingNoOfDice', parseInt(e.target.value), index)
+                }
 
                 return (
-                    <div key={ charHitDice.hitDiceType } className='character-stats-view-row'>
-                        <div className='character-stat-input-container'>
-                            <label className='character-stats-label'>Class</label>
-                            <select value={ charHitDice.hitDiceType } onChange={ (e) => onSelectHitDiceType(e, index) } title='which hit dice type' className='character-stats-input'>
-                                { availableCharacterDiceTypesForLine.map((characterDiceType) => (
-                                    <option key={ characterDiceType } value={ characterDiceType } >{ DiceType[characterDiceType] }</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className='character-stat-input-container'>
-                            <label className='character-stats-label'>Max. Hit Dice</label>
-                            <input value={ charHitDice.numberOfDice } placeholder='Maximum Hit Dice' onChange={ (e) => setHitDiceNumber('numberOfDice', parseInt(e.target.value), index) } type='number' min='0' max='20' step='1' title='maxNoOfHitDice' className='w-12 character-stats-input' />
-                        </div>
-                        <div className='character-stat-input-container'>
-                            <label className='character-stats-label'>Remaining Hit Dice</label>
-                            <input value={ charHitDice.remainingNoOfDice } placeholder='Remaining Hit Dice' onChange={ (e) => setHitDiceNumber('remainingNoOfDice', parseInt(e.target.value), index) } type='number' min='0' max='20' step='1' title='currNoOfHitDice' className='w-12 character-stats-input' />
-                        </div>
-                    </div>
+                    <CharacterStatsRow key={ charHitDice.hitDiceType } >
+                        <CharacterOptionSelector label='Dice Type' statValue={ charHitDice.hitDiceType } title='Which dice type' valueOptions={ diceOptions } onSelectValue={ onSelectDiceType } />
+                        <CharacterNumberInput label='Max. Hit Dice' statValue={ charHitDice.numberOfDice } minValue={ 0 } maxValue={ 20 } valueStep={ 1 } onValueChange={ onNoOfDiceChange } />
+                        <CharacterNumberInput label='Rem. Hit Dice' statValue={ charHitDice.remainingNoOfDice } minValue={ 0 } maxValue={ 20 } valueStep={ 1 } onValueChange={ onRemNoOfDiceChange } />
+                    </CharacterStatsRow>
                 )
             })}
-            <div className='select-character-input-container'>
+            <CharacterStatsRow>
                 <ActionButton title='Add new Hit Dice' value={ <BorealisAddCharacterHitDiceIcon /> } onClick={ addHitDice } />
-            </div>
-        </div>
+            </CharacterStatsRow>
+        </CharacterStatsContainer>
     )
 }
 

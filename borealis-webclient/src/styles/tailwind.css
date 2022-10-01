@@ -1720,6 +1720,7 @@ a:hover {
     @apply flex;
     @apply flex-row;
     @apply space-x-4;
+    @apply justify-center;
 }
 
 .borealis-character-stat-input-container {
@@ -1728,7 +1729,7 @@ a:hover {
     @apply border-4;
     @apply border-accent-darker;
     @apply rounded-md;
-    @apply justify-items-center;
+    @apply justify-center;
     @apply text-text-primary;
 }
 
@@ -1759,10 +1760,59 @@ a:hover {
 }
 
 .borealis-character-main-stats-input {
-    @apply character-stats-input;
+    @apply text-text-primary;
+    @apply rounded-md;
+    @apply text-base;
+    @apply justify-center;
+    @apply bg-primary-darker;
+    @apply px-1;
+    @apply placeholder-text-secondary;
+    @apply m-1;
+    @apply outline-none;
+    @apply appearance-none;
     @apply w-16;
     @apply h-16;
     @apply text-5xl;
     @apply align-middle;
     @apply text-center;
+    @apply border-2;
+    @apply border-primary-medium;
+}
+
+.borealis-character-stats-text-input {
+    @apply text-text-primary;
+    @apply rounded-md;
+    @apply text-base;
+    @apply text-center;
+    @apply justify-center;
+    @apply bg-primary-darker;
+    @apply px-1;
+    @apply placeholder-text-secondary;
+    @apply m-1;
+    @apply outline-none;
+    @apply appearance-none;
+    @apply h-8;
+    @apply border-2;
+    @apply border-primary-medium;
+    @apply ml-auto;
+    @apply mr-auto;
+}
+
+.borealis-character-stats-number-input {
+    @apply text-text-primary;
+    @apply rounded-md;
+    @apply text-base;
+    @apply text-center;
+    @apply justify-center;
+    @apply bg-primary-darker;
+    @apply px-1;
+    @apply placeholder-text-secondary;
+    @apply m-1;
+    @apply outline-none;
+    @apply appearance-none;
+    @apply h-8;
+    @apply border-2;
+    @apply border-primary-medium;
+    @apply ml-auto;
+    @apply mr-auto;
 }
