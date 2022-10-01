@@ -44,7 +44,6 @@ const checkSecretsMatch = async (existingSecret: string, compareSecret: string):
 }
 
 const findUser = async (userGuid?: string, userName?: string, userEmail?: string): Promise<IUserSchema> => {
-    console.log('userGuid',userGuid,'userName',userName,'email',userEmail)
     const user = await User.findOne({ $or: [{ 'guid': userGuid, }, { 'name_lowercase': userName?.toLowerCase() }, { 'email': userEmail, 'guest': false, }] })
     if ((user !== null) && (user !== undefined))
         return user
@@ -67,24 +66,12 @@ const createNewUser = async (newName: string, newSecret: string, newEmail: strin
         .catch(() => emptyUser())
 }
 
-const updateExistingUserActivity = (existingUser: IUserSchema, isActive: boolean): IUserSchema => {
-    const updatedUser = new User({
-        guid: existingUser.guid,
-        name: existingUser.name,
-        secret: existingUser.secret,
-        email: existingUser.email,
-        guest: existingUser.guest,
-        lastOnline: new Date(),
-        active: isActive,
-    })
-    updatedUser.save((error, newUser) => {
-        if (!error)
-            // Saving of User update successful, so we return the updated user
-            return cleanUserBeforeSending(newUser)
-        else
-            // Saving of User update failed
-            return emptyUser()
-    })
+const updateExistingUserActivity = async (existingUser: IUserSchema, isActive: boolean): Promise<IUserSchema> => {
+    const updatedUser = await User.findOneAndUpdate(
+        { 'guid': existingUser.guid },
+        { $set: { active: isActive, lastOnline: new Date(), } },
+        { upsert: true, useFindAndModify: false, }
+    ) as IUserSchema
     return cleanUserBeforeSending(updatedUser)
 }
 
@@ -145,7 +132,7 @@ export const registerUser = async (user: IUserSchema): Promise<IUserSchema> => {
         // User already exists
         const hashesMatch = await checkSecretsMatch(existingUser.secret, userSecret)
         if (hashesMatch) {
-            const updatedUser = updateExistingUserActivity(existingUser, true)
+            const updatedUser = await updateExistingUserActivity(existingUser, true)
             return updatedUser
         } else
             return emptyUser()
@@ -179,18 +166,18 @@ export const authenticateUser = async (isGuest: boolean, userGuid?: string, user
             return emptyUser()
     } else {
         if (existingUser.guest === true) {
-            const updatedUser = updateExistingUserActivity(existingUser, true)
+            const updatedUser = await updateExistingUserActivity(existingUser, true)
             return cleanUserBeforeSending(updatedUser)
         } else {
             const hashesMatch = (userSecret !== undefined) ? await checkSecretsMatch(existingUser.secret, userSecret) : false
             if (hashesMatch) {
-                const updatedUser = updateExistingUserActivity(existingUser, true)
+                const updatedUser = await updateExistingUserActivity(existingUser, true)
                 return cleanUserBeforeSending(updatedUser)
             } else {
                 if ((sessionToken !== undefined) && (sessionToken !== '')) {
                     const activeSession = await findLastUserSession(existingUser.guid, sessionToken)
                     if (activeSession.active) {
-                        const updatedUser = updateExistingUserActivity(existingUser, true)
+                        const updatedUser = await updateExistingUserActivity(existingUser, true)
                         return cleanUserBeforeSending(updatedUser)
                     } else {
                         return emptyUser()

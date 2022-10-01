@@ -18,7 +18,7 @@ import ControlPanelRow from './ControlPanelRow'
 import { ToggleButton } from '@/components/ToggleButton'
 import { ControlPanelViewProps } from './types'
 
-const ControlPanelView = ({ controlPanelState, hidden, toggleControlPanelTab, submenuHidden, isHost, socketRequestRefresh, pushRefreshToPlayers }: ControlPanelViewProps) => {
+const ControlPanelView = ({ controlPanelState, hidden, toggleControlPanelTab, submenuHidden, isHost }: ControlPanelViewProps) => {
     if (hidden)
         return (
             <ControlPanelContainer>

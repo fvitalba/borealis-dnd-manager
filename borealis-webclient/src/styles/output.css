@@ -450,6 +450,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 .static {
   position: static;
 }
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
 .mr-2 {
   margin-right: 0.5rem;
 }
@@ -660,8 +664,21 @@ a:hover {
 }
 
 .borealis-cursor {
-  display: block;
   position: absolute;
+  display: flex;
+  flex-direction: column;
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity));
+}
+
+.borealis-cursor-name {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 5rem;
+  max-height: 1.5rem;
+  overflow: hidden;
+  --tw-text-opacity: 1;
+  color: rgb(235 235 236 / var(--tw-text-opacity));
 }
 
 .borealis-loading-overlay {

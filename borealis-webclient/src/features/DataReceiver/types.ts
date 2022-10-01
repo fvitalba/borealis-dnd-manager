@@ -3,12 +3,13 @@ import Map from '@/classes/Map'
 import Token from '@/classes/Token'
 import Character from '@/classes/Character'
 import Message from '@/classes/Message'
-import {  MapState } from '@/reducers/mapReducer'
+import { MapState } from '@/reducers/mapReducer'
 import { TokenState } from '@/reducers/tokenReducer'
-import {  ChatState } from '@/reducers/chatReducer'
+import { ChatState } from '@/reducers/chatReducer'
 import { MetadataState } from '@/reducers/metadataReducer'
 import { SettingsState } from '@/reducers/settingsReducer'
 import { CharacterState } from '@/reducers/characterReducer'
+import { UserState } from '@/reducers/userReducer'
 import { CharacterSchema, CharacterStateSchema, ChatMessageSchema, ChatStateSchema, GameSchema, MapSchema, MapStateSchema, PathSchema, RoomUserSchema, TokenSchema, TokenStateSchema } from '@/utils/mongoDbSchemas'
 
 export interface IncomingWebSocketPayload {
@@ -49,6 +50,7 @@ export interface DataReceiverProps {
     settingsState: SettingsState,
     characterState: CharacterState,
     chatState: ChatState,
+    userState: UserState,
     updateCursor: (newUsername: string, newX: number, newY: number) => void,
     updateMaps: (newMaps: Array<Map>) => void,
     updateTokens: (newTokens: Array<Token>) => void,

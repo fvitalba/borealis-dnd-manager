@@ -19,7 +19,7 @@ import { getMap } from '@/utils/mapHandler'
 import { GAME_REQUEST_REFRESH } from '@/utils/loadingTasks'
 import { IncomingWebSocketPayload, DataReceiverProps } from './types'
 
-const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settingsState, characterState, chatState, updateCursor, updateMaps, updateTokens, loadMap, addMap, setFogEnabled, assignCharacterToUser, updateCharacter, overwriteGame, overwriteChat, setCharacters, addChatMessage }: DataReceiverProps) => {
+const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settingsState, characterState, chatState, userState, updateCursor, updateMaps, updateTokens, loadMap, addMap, setFogEnabled, assignCharacterToUser, updateCharacter, overwriteGame, overwriteChat, setCharacters, addChatMessage }: DataReceiverProps) => {
     const webSocketContext = useWebSocket()
     const loadingContext = useLoading()
     const currMap = getMap(mapState, gameState.currentMapId)
@@ -38,11 +38,12 @@ const DataReceiver = ({ gameState, mapState, tokenState, metadataState, settings
         let pathToUpdate = new Array<Path>()
         let updatedMaps = mapState.maps.map((map) => map.copy())
         let updatedTokens = tokenState.tokens.map((token) => token.copy())
-        let myUser
         switch (data.type) {
         case 'pushCursor':
-            if ((data.x && data.y) && (data.fromUserGuid !== metadataState.userGuid))
-                updateCursor(data.fromUserGuid, data.x, data.y)
+            if ((data.x && data.y) && (data.fromUserGuid !== metadataState.userGuid)) {
+                const cursorUser = userState.users.filter((user) => user.guid === data.fromUserGuid)[0]
+                updateCursor(cursorUser?.name, data.x, data.y)
+            }
             break
         case 'pushDrawPath':
             if (currMap !== undefined) {
@@ -212,6 +213,7 @@ const mapStateToProps = (state: StateInterface) => {
         settingsState: state.settings,
         chatState: state.chat,
         characterState: state.character,
+        userState: state.user,
     }
 }
 
