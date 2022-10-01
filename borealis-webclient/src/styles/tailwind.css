@@ -773,6 +773,7 @@ a:hover {
 .borealis-folder-select-selected-element-container {
     @apply borealis-folder-select-element-container;
     @apply text-accent-dark;
+    @apply border-accent-dark;
 }
 
 .borealis-folder-select-selected-element-container:hover {
@@ -1072,7 +1073,7 @@ a:hover {
 .debug-overlay-container {
     @apply flex;
     @apply flex-col;
-    @apply text-primary-300;
+    @apply text-text-primary;
     @apply text-xs;
     @apply bottom-12;
     @apply left-4;
@@ -1106,32 +1107,6 @@ a:hover {
     @apply z-npc-div;
 }
 
-.token-image {
-    @apply relative;
-    @apply pointer-events-none;
-    @apply rounded-full;
-    @apply overflow-hidden;
-    @apply mx-auto;
-}
-
-.token-image-selected {
-    @apply token-image;
-    @apply border-dashed;
-    @apply border-accent-500;
-    @apply border-2;
-}
-
-.token-label {
-    @apply text-xs;
-    @apply bg-primary-300;
-    @apply text-primary-700;
-    @apply border-2;
-    @apply border-primary-500;
-    @apply p-1;
-    @apply rounded-md;
-    @apply fixed;
-}
-
 .token-grabbable {
     @apply cursor-grab;
 }
@@ -1139,4 +1114,47 @@ a:hover {
 .token-dead {
     @apply invert;
     @apply rotate-180;
+}
+
+.borealis-color-picker-container {
+    @apply fixed;
+    @apply z-control-panel-color-picker;
+    @apply flex;
+    @apply bg-primary-darker;
+    @apply px-1;
+    @apply py-1;
+    @apply border-2;
+    @apply border-primary-medium;
+    @apply space-x-2;
+    @apply rounded;
+}
+
+.borealis-color-picker-color {
+    @apply rounded-full;
+    @apply border-4;
+    @apply border-solid;
+    @apply border-primary-darker;
+    @apply w-6;
+    @apply h-6;
+}
+
+.borealis-color-picker-color:hover {
+    @apply border-primary-medium;
+}
+
+.borealis-color-picker-color:active {
+    @apply border-primary-lighter;
+}
+
+.borealis-color-picker-color-selected {
+    @apply borealis-color-picker-color;
+    @apply border-transparent;
+}
+
+.borealis-color-picker-color-selected:hover {
+    @apply border-transparent;
+}
+
+.borealis-color-picker-color-selected:active {
+    @apply border-transparent;
 }

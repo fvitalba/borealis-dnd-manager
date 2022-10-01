@@ -53,6 +53,7 @@ module.exports = {
                 'indicator': '30',
                 'cursors': '40',
                 'control-panel': '100',
+                'control-panel-color-picker': '101',
                 'chat-panel': '110',
                 'chat-panel-roll': '120',
                 'banner': '120',
