@@ -1,10 +1,6 @@
 import { ReactNode } from 'react'
 import Game from '@/classes/Game'
 import { MetadataState } from '@/reducers/metadataReducer'
-import { ChatState } from '@/reducers/chatReducer'
-import { CharacterState } from '@/reducers/characterReducer'
-import { TokenState } from '@/reducers/tokenReducer'
-import { MapState } from '@/reducers/mapReducer'
 
 export interface ControlPanelState {
     hidden: boolean,
@@ -21,10 +17,6 @@ export type ControlPanelTabName = 'hidden' | 'toggleOnMaps' | 'toggleOnUser' | '
 export interface ControlPanelProps {
     metadataState: MetadataState,
     gameState: Game,
-    mapState: MapState,
-    tokenState: TokenState,
-    chatState: ChatState,
-    characterState: CharacterState,
 }
 
 export interface ControlPanelContainerProps {
@@ -47,6 +39,4 @@ export interface ControlPanelViewProps {
     submenuHidden: boolean,
     fogEnabled: boolean,
     isHost: boolean,
-    socketRequestRefresh: () => void,
-    pushRefreshToPlayers: () => void,
 }

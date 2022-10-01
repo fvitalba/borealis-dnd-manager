@@ -1,11 +1,8 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import UserType from '@/enums/UserType'
-import { pushGameRefresh, requestRefresh, useWebSocket } from '@/hooks/useSocket'
-import { useLoading } from '@/hooks/useLoading'
 import StateInterface from '@/interfaces/StateInterface'
 import ControlPanelView from './ControlPanelView'
-import { GAME_REQUEST_REFRESH } from '@/utils/loadingTasks'
 import { ControlPanelState, ControlPanelProps, ControlPanelTabName } from './types'
 
 const initialControlPanelState = (): ControlPanelState => {
@@ -20,22 +17,8 @@ const initialControlPanelState = (): ControlPanelState => {
     }
 }
 
-const ControlPanel = ({ metadataState, gameState, mapState, tokenState, chatState, characterState }: ControlPanelProps) => {
+const ControlPanel = ({ metadataState, gameState }: ControlPanelProps) => {
     const [controlPanelState, setControlPanelState] = useState(initialControlPanelState())
-    const webSocketContext = useWebSocket()
-    const loadingContext = useLoading()
-
-    const socketRequestRefresh = () => {
-        if (webSocketContext.ws) {
-            loadingContext.startLoadingTask(GAME_REQUEST_REFRESH)
-            requestRefresh(webSocketContext.ws, webSocketContext.wsSettings)
-        }
-    }
-
-    const pushRefreshToPlayers = () => {
-        if (webSocketContext.ws)
-            pushGameRefresh(webSocketContext.ws, webSocketContext.wsSettings, gameState, mapState, tokenState, chatState, characterState)
-    }
 
     const toggleControlPanelTab = (tabName: ControlPanelTabName) => {
         setControlPanelState({
@@ -60,9 +43,7 @@ const ControlPanel = ({ metadataState, gameState, mapState, tokenState, chatStat
             toggleControlPanelTab={ toggleControlPanelTab }
             submenuHidden={ submenuHidden }
             fogEnabled={ gameState.fogEnabled }
-            isHost={ metadataState.userType === UserType.host }
-            socketRequestRefresh={ socketRequestRefresh }
-            pushRefreshToPlayers={ pushRefreshToPlayers } />
+            isHost={ metadataState.userType === UserType.host } />
     )
 }
 

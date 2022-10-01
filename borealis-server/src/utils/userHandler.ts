@@ -44,7 +44,6 @@ const checkSecretsMatch = async (existingSecret: string, compareSecret: string):
 }
 
 const findUser = async (userGuid?: string, userName?: string, userEmail?: string): Promise<IUserSchema> => {
-    console.log('userGuid',userGuid,'userName',userName,'email',userEmail)
     const user = await User.findOne({ $or: [{ 'guid': userGuid, }, { 'name_lowercase': userName?.toLowerCase() }, { 'email': userEmail, 'guest': false, }] })
     if ((user !== null) && (user !== undefined))
         return user
