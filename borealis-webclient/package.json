@@ -15,6 +15,7 @@
     "@types/react-redux": "^7.1.23",
     "autoprefixer": "^10.4.4",
     "axios": "^0.26.1",
+    "craco": "^0.0.3",
     "crypto-js": "^4.1.1",
     "postcss": "^8.4.12",
     "react": "^18.0.0",
@@ -27,10 +28,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "npm run watch:css && react-scripts start",
-    "build": "npm run watch:css && react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "npm run watch:css && craco start",
+    "build": "npm run watch:css && craco build",
+    "test": "craco test",
+    "eject": "craco eject",
     "lint": "eslint './src/**/*.{ts,tsx}'",
     "watch:css": "postcss src/styles/tailwind.css -o src/styles/output.css",
     "buildandcopy": "react-scripts build && cp -r build ../borealis-server/build"

@@ -1,7 +1,7 @@
 import supertest from 'supertest'
 import app from '../app.js'
-import mongo from '../utils/mongo.js'
-import Chat from '../models/chat.js'
+import mongo from '../src/utils/mongo.js'
+import Chat from '../src/models/chat.js'
 import { initialChats, newChat } from './testData/initial.chats.js'
 import { initialRooms } from './testData/initial.rooms.js'
 

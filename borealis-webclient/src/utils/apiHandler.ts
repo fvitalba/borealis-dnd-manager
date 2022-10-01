@@ -176,10 +176,10 @@ export const addUserToDatabase = (wsSettings: IWsSettings, newUser: User): Promi
             fromSocketGuid: wsSettings.socketGuid,
             fromUserGuid: wsSettings.userGuid,
             roomId: wsSettings.roomId,
-            newUser: JSON.stringify(newUser),
+            newRoomUser: JSON.stringify(newUser),
         }
 
-        axios.post(usersUrl(), params)
+        axios.post(roomUsersUrl(wsSettings.roomId), params)
             .then((result) => {
                 resolve(result.data)
             })

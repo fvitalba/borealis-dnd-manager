@@ -4,7 +4,8 @@ import {
     SET_CURSORS,
     UPDATE_CURSOR,
     SET_LAST_COORDINATES,
-    SET_DOWN_COORDINATES
+    SET_DOWN_COORDINATES,
+    RESET_GAMESETTINGS
 } from '../redux/constants'
 import UserType from '../enums/UserType'
 import Cursor from '../classes/Cursor'
@@ -94,6 +95,8 @@ const metadataReducer = (state = initialMetadataState(), action: MetadataAction)
             ...state,
             downPos: action.downPos !== undefined ? action.downPos : state.downPos
         }
+    case RESET_GAMESETTINGS:
+        return initialMetadataState()
     default:
         return state
     }
@@ -146,6 +149,12 @@ export const setDownCoordinates = (newDownX: number, newDownY: number): Metadata
     return {
         type: SET_DOWN_COORDINATES,
         downPos: newDownPos,
+    }
+}
+
+export const resetGameSettings = (): MetadataAction => {
+    return {
+        type: RESET_GAMESETTINGS,
     }
 }
 //#endregion Action Creators

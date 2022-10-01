@@ -1,8 +1,8 @@
 import supertest from 'supertest'
 import app from '../app.js'
-import mongo from '../utils/mongo.js'
-import Map from '../models/map.js'
-import Room from '../models/room.js'
+import mongo from '../src/utils/mongo.js'
+import Map from '../src/models/map.js'
+import Room from '../src/models/room.js'
 import { initialRooms } from './testData/initial.rooms.js'
 import { initialMaps, newMap } from './testData/initial.maps.js'
 

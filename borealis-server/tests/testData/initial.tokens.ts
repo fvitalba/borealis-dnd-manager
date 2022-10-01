@@ -1,5 +1,5 @@
-import IIncToken from '../../incomingInterfaces/incToken'
-import { ITokenSchema } from '../../models/token'
+import IIncToken from '../../src/incomingInterfaces/incToken'
+import { ITokenSchema } from '../../src/models/token'
 import { randomUUID } from 'crypto'
 import { initialRooms } from './initial.rooms'
 

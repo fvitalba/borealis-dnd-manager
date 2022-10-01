@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const colors = require('tailwindcss/colors')
 
 module.exports = {
@@ -52,6 +53,7 @@ module.exports = {
                 'indicator': '30',
                 'cursors': '40',
                 'control-panel': '100',
+                'control-panel-color-picker': '101',
                 'chat-panel': '110',
                 'chat-panel-roll': '120',
                 'banner': '120',
@@ -71,6 +73,26 @@ module.exports = {
             },
             fontFamily: {
                 'barbaro': ['Barbaro', 'Serif'],
+            },
+            minWidth: {
+                '8': '2rem',
+                '20': '5rem',
+                '28': '7rem',
+            },
+            maxWidth: {
+                '8': '2rem',
+                '20': '5rem',
+                '28': '7rem',
+            },
+            minHeight: {
+                '8': '2rem',
+                '20': '5rem',
+                '28': '7rem',
+            },
+            maxHeight: {
+                '8': '2rem',
+                '20': '5rem',
+                '28': '7rem',
             }
         },
     },

@@ -1,5 +1,5 @@
-import IIncMap from '../../incomingInterfaces/incMap'
-import { IMapSchema } from '../../models/map'
+import IIncMap from '../../src/incomingInterfaces/incMap'
+import { IMapSchema } from '../../src/models/map'
 import { initialRooms } from './initial.rooms'
 
 export const initialMaps: Array<IMapSchema> = [

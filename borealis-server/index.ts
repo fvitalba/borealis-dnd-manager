@@ -5,7 +5,7 @@ import https from 'https'
 import { AddressInfo, ServerOptions, WebSocket, WebSocketServer } from 'ws'
 import queryString from 'query-string'
 import app from './app.js'
-import { handleIncomingMessage } from './utils/messageHandler.js'
+import { handleIncomingMessage } from './src/utils/messageHandler.js'
 
 const privateKeyFilename = 'privkey.pem'
 const SslCertificateFilename = 'fullchain.pem'

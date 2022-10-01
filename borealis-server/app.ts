@@ -1,13 +1,13 @@
 import express, { Application } from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
-import characterRouter from './controllers/characterRouter.js'
-import roomRouter from './controllers/roomRouter.js'
-import roomUserRouter from './controllers/roomUserRouter.js'
-import userRouter from './controllers/userRouter.js'
-import mapRouter from './controllers/mapRouter.js'
-import tokenRouter from './controllers/tokenRouter.js'
-import chatRouter from './controllers/chatRouter.js'
+import characterRouter from './src/controllers/characterRouter.js'
+import roomRouter from './src/controllers/roomRouter.js'
+import roomUserRouter from './src/controllers/roomUserRouter.js'
+import userRouter from './src/controllers/userRouter.js'
+import mapRouter from './src/controllers/mapRouter.js'
+import tokenRouter from './src/controllers/tokenRouter.js'
+import chatRouter from './src/controllers/chatRouter.js'
 
 const app: Application = express()
 

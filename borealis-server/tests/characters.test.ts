@@ -1,8 +1,8 @@
 import supertest from 'supertest'
 import app from '../app.js'
-import mongo from '../utils/mongo.js'
-import Room from '../models/room.js'
-import Character from '../models/character.js'
+import mongo from '../src/utils/mongo.js'
+import Room from '../src/models/room.js'
+import Character from '../src/models/character.js'
 import { initialRooms } from './testData/initial.rooms.js'
 import { initialCharacters, newCharacter } from './testData/initial.characters.js'
 
