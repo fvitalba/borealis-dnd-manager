@@ -9,7 +9,7 @@ import {
     BorealisAddNewTokenIcon,
     BorealisTokenIsNpcIcon,
     BorealisTokenIsPcIcon,
-} from '@/views/Icons'
+} from '@/styles/Icons'
 import { FolderSelector } from '@/components/FolderSelector'
 import { TokenToolViewProps } from './types'
 

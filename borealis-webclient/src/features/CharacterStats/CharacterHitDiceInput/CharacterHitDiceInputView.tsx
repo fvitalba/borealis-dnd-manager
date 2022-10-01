@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from 'react'
 import DiceType from '@/enums/DiceType'
 import { ActionButton } from '@/components/ActionButton'
-import { BorealisAddCharacterHitDiceIcon } from '@/views/Icons'
+import { BorealisAddCharacterHitDiceIcon } from '@/styles/Icons'
 import { CharacterHitDiceInputViewProps } from './types'
 import CharacterStatsRow from '../CharacterStatsRow'
 import CharacterOptionSelector from '../CharacterOptionSelector'

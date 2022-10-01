@@ -5,7 +5,7 @@ import {
     BorealisMoveToolIcon,
     BorealisDrawToolIcon,
     BorealisFogToolIcon,
-} from '@/views/Icons'
+} from '@/styles/Icons'
 import { ToolSelectViewProps } from './types'
 
 const ToolSelectView = ({ isHost, fogEnabled }: ToolSelectViewProps) => {

@@ -11,7 +11,7 @@ import {
     BorealisColorPickerIcon,
     BorealisResetDrawingsIcon,
     BorealisResetFogIcon,
-} from '@/views/Icons'
+} from '@/styles/Icons'
 import { ToolControlsViewProps } from './types'
 
 const ToolControlsView = ({ tool, setTool, drawColor, setDrawColor, drawColorRef, showColorPicker, toggleColorPicker, drawSize, setDrawSize, fogRadius, setFogRadius, resetFog, resetDrawing }: ToolControlsViewProps) => {

@@ -5,7 +5,7 @@ import { FormContainer } from '@/components/Form'
 import { FormRow } from '@/components/Form'
 import { ActionButton } from '@/components/ActionButton'
 import { TextInputSelector } from '@/components/TextInputSelector'
-import { BorealisPlayIcon } from '@/views/Icons'
+import { BorealisPlayIcon } from '@/styles/Icons'
 import { GameSetupRoomSelectionViewProps } from './types'
 
 const GameSetupRoomSelectionView = ({ userName, newRoomName, onNewRoomNameChange, selectedRoomName, onRoomSelect, availableRooms, onSubmitNewRoom, onSubmitSelectRoom, isSubmitNewEnabled, isSubmitSelectionEnabled }: GameSetupRoomSelectionViewProps) => {

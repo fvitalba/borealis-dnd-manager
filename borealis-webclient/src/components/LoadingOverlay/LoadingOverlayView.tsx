@@ -1,6 +1,6 @@
 import React from 'react'
 import { LoadingTaskDescriptions } from '@/utils/constants'
-import { BorealisLoadingIcon } from '@/views/Icons'
+import { BorealisLoadingIcon } from '@/styles/Icons'
 import { LoadingOverlayViewProps } from './types'
 
 const LoadingOverlayView = ({ tasks }: LoadingOverlayViewProps) => {

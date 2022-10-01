@@ -1,5 +1,5 @@
 import React from 'react'
-import { BorealisPlayIcon } from '@/views/Icons'
+import { BorealisPlayIcon } from '@/styles/Icons'
 import { TextInput } from '@/components/TextInput'
 import { MaskedTextInput } from '@/components/MaskedTextInput'
 import { CheckboxInput } from '@/components/CheckboxInput'

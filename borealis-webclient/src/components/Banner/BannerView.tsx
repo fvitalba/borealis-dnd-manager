@@ -1,6 +1,6 @@
 import React from 'react'
 import { ActionButton } from '@/components/ActionButton'
-import { BorealisCloseBannerIcon } from '@/views/Icons'
+import { BorealisCloseBannerIcon } from '@/styles/Icons'
 import { BannerViewProps } from './types'
 
 const BannerView = ({ bannerContent, linkToAction, hidden, toggleHidden }: BannerViewProps) => {

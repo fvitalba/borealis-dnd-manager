@@ -1,6 +1,6 @@
 import React from 'react'
 import { ActionButton } from '@/components/ActionButton'
-import { BorealisCreateCharacterIcon } from '@/views/Icons'
+import { BorealisCreateCharacterIcon } from '@/styles/Icons'
 import { SelectCharacterViewProps } from './types'
 import { OptionSelector } from '@/components/OptionSelector'
 

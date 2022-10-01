@@ -4,7 +4,7 @@ import {
     BorealisAddNewMapIcon,
     BorealisMapSelectedIcon,
     BorealisMapUnselectedIcon,
-} from '@/views/Icons'
+} from '@/styles/Icons'
 import { ControlPanelSubcontainer } from '@/features/ControlPanel'
 import { ControlPanelRow } from '@/features/ControlPanel'
 import { TextInput } from '@/components/TextInput'

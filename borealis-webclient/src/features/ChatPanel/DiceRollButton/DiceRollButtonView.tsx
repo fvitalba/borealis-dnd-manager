@@ -1,7 +1,7 @@
 import React from 'react'
 import DiceType, { DiceTypeArray } from '@/enums/DiceType'
 import { ActionButton } from '@/components/ActionButton'
-import { BorealisRollDiceIcon } from '@/views/Icons'
+import { BorealisRollDiceIcon } from '@/styles/Icons'
 import { DiceRollButtonViewProps } from './types'
 
 const DiceRollButtonView = ({ rollDice, selectorPosition, showSelector, toggleSelector, selectorRef, rollDiceButtonRef }: DiceRollButtonViewProps) => {

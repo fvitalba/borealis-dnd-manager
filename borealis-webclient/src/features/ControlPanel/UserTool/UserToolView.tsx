@@ -9,7 +9,7 @@ import {
     BorealisSaveWorldIcon,
     BorealisLoadWorldIcon,
     BorealisLogoutIcon,
-} from '@/views/Icons'
+} from '@/styles/Icons'
 import { ControlPanelRow } from '@/features/ControlPanel'
 import { TextInput } from '@/components/TextInput'
 import { ToggleButton } from '@/components/ToggleButton'

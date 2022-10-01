@@ -16,7 +16,7 @@ import {
     BorealisTokenDeselectedIcon,
     BorealisShowTokenNameIcon,
     BorealisHideTokenNameIcon,
-} from '@/views/Icons'
+} from '@/styles/Icons'
 import { HostTokenConfigViewProps } from './types'
 
 const HostTokenConfigView = ({ tokenTypes, tokenConditions, tokenSizes, maps, token, copy, onToggle, onTextChange, selectToken, onTypeSelect, onConditionSelect, onSizeSelect, onMapSelect, deleteToken }: HostTokenConfigViewProps) => {

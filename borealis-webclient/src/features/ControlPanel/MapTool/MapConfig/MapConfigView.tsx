@@ -3,7 +3,7 @@ import {
     BorealisSelectedMapIcon,
     BorealisUnselectedMapIcon,
     BorealisDeleteMapIcon,
-} from '@/views/Icons'
+} from '@/styles/Icons'
 import { ActionButton } from '@/components/ActionButton'
 import { ControlPanelRow } from '../..'
 import { ControlPanelSubcontainer } from '../..'

@@ -12,7 +12,7 @@ import {
     BorealisCharacterStatsControlIcon,
     BorealisCharacterInventoryControlIcon,
     BorealisCharacterSpellsControlIcon,
-} from '@/views/Icons'
+} from '@/styles/Icons'
 import ControlPanelContainer from './ControlPanelContainer'
 import ControlPanelRow from './ControlPanelRow'
 import { ToggleButton } from '@/components/ToggleButton'

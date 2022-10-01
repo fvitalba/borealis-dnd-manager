@@ -1,7 +1,7 @@
 import React from 'react'
 import NotificationType from '@/enums/NotificationType'
 import { ActionButton } from '@/components/ActionButton'
-import { BorealisCloseNotificationIcon, BorealisErrorNotificationIcon, BorealisMessageNotificationIcon, BorealisWarningNotificationIcon } from '@/views/Icons'
+import { BorealisCloseNotificationIcon, BorealisErrorNotificationIcon, BorealisMessageNotificationIcon, BorealisWarningNotificationIcon } from '@/styles/Icons'
 import { SingleNotificationProps, NotificationOverlayViewProps } from './types'
 
 const MessageNotification = ({ notification, deleteNotification }:  SingleNotificationProps) => {

@@ -2,7 +2,7 @@ import React from 'react'
 import {
     BorealisCollapseIcon,
     BorealisExpandIcon,
-} from '@/views/Icons'
+} from '@/styles/Icons'
 import { ControlPanelContainer } from '@/features/ControlPanel'
 import { ControlPanelRow } from '@/features/ControlPanel'
 import { ToggleButton } from '@/components/ToggleButton'

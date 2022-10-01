@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { CheckAltOutlineIcon } from '@/views/Icons'
+import { CheckAltOutlineIcon } from '@/styles/Icons'
 import { CheckboxInputProps } from './types'
 
 const CheckboxInput = ({ title, value, onChange, label, disabled }: CheckboxInputProps) => {
