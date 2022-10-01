@@ -25,7 +25,7 @@ const GameSetupRoomSelectionView = ({ userName, newRoomName, onNewRoomNameChange
             <h1>Borealis D&D - Select Room</h1>
             <h3>{ `Welcome back ${userName}, what would you like to do?` }</h3>
             <FormRow>
-                <ActionTextInput title='New Room Name' placeholder='New Room Name' value={ newRoomName } onChange={ onNewRoomNameChange } label='New room:' buttonValue={ <BorealisPlayIcon className='w-8 h-8' /> } onClick={ onSubmitNewRoom } disabled={ !isSubmitNewEnabled } autofocus={ true } />
+                <ActionTextInput title='New Room Name' placeholder='New Room Name' value={ newRoomName } onChange={ onNewRoomNameChange } label='New room:' buttonValue={ <BorealisPlayIcon /> } onClick={ onSubmitNewRoom } disabled={ !isSubmitNewEnabled } autofocus={ true } />
             </FormRow>
             <FormRow>
                 <TextInputSelector title='Select Room' placeholder='Select Room' value={ selectedRoomName } onSelectElement={ onSelectElement } label='Select existing Room:' options={ roomOptions } />

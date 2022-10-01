@@ -1816,3 +1816,18 @@ a:hover {
     @apply ml-auto;
     @apply mr-auto;
 }
+
+.borealis-game-setup-container {
+    @apply w-full;
+    @apply container;
+    @apply content-center;
+    @apply min-w-full;
+    @apply mt-8;
+}
+
+.borealis-chat-panel-content-bottom {
+    @apply h-12;
+    @apply bottom-0;
+    @apply block;
+    @apply relative;
+}

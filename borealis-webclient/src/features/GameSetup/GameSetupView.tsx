@@ -5,7 +5,7 @@ import { GameSetupViewProps } from './types'
 
 const GameSetupView = ({ showLogin, showRoomSelection }: GameSetupViewProps) => {
     return (
-        <div className='game-setup-container'>
+        <div className='borealis-game-setup-container'>
             { showLogin
                 ? <GameSetupLogin />
                 : null

@@ -60,7 +60,7 @@ const ChatPanelView = ({ username, chatPanelHidden, toggleHidden, showHelp, togg
                     <TextInput title='Mesage' placeholder='Type your message...' value={ currentMessage } onChange={ changeCurrentMessage } onKeyDown={ inputOnKeyDown } />
                     <ActionButton title='Push refresh to players' value={ <BorealisPlayIcon /> } onClick={ addMessage } />
                 </ChatPanelInputContainer>
-                <div className='chat-panel-content-bottom' />
+                <div className='borealis-chat-panel-content-bottom' />
             </ChatPanelContainer>
     )
 }
