@@ -137,7 +137,8 @@ const GameSetupLogin = ({ metadataState, setGameSettings, setUsername, setSessio
                     userGuid: currentUser.guid,
                     sessionToken: sessionToken,
                 })
-                saveLoginToLocalStorage(currentUser.guid, sessionToken)
+                if (gameSetupLoginState.rememberUser)
+                    saveLoginToLocalStorage(currentUser.guid, sessionToken)
             } else {
                 notificationContext.addNotification('Session could not be started', 'Your session was not able to be started. Try again later.', NotificationType.Error)
             }
@@ -167,7 +168,8 @@ const GameSetupLogin = ({ metadataState, setGameSettings, setUsername, setSessio
                         userGuid: currentUser.guid,
                         sessionToken: sessionToken,
                     })
-                    saveLoginToLocalStorage(currentUser.guid, sessionToken)
+                    if (gameSetupLoginState.rememberUser)
+                        saveLoginToLocalStorage(currentUser.guid, sessionToken)
                 }
             })
             .catch(() => {
