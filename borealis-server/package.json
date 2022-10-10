@@ -11,7 +11,8 @@
     "dev": "cross-env NODE_ENV=development nodemon -e ts --watch . .env --exec \"tsc --incremental && node srvbuild/index.js --experimental-modules\"",
     "lint": "eslint --ext .ts .",
     "tsc": "tsc",
-    "test": "cross-env NODE_ENV=test jest --verbose --runInBand --detectOpenHandles"
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand --detectOpenHandles",
+    "updatedependencies": "ncu -u"
   },
   "author": "Fabio Vitalba",
   "license": "ISC",

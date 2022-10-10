@@ -34,7 +34,8 @@
     "eject": "craco eject",
     "lint": "eslint './src/**/*.{ts,tsx}'",
     "watch:css": "postcss src/styles/tailwind.css -o src/styles/output.css",
-    "buildandcopy": "react-scripts build && cp -r build ../borealis-server/build"
+    "buildandcopy": "rm -r ./build && craco build && rm -r ../borealis-server/build && cp -r ./build ../borealis-server/build",
+    "updatedependencies": "ncu -u"
   },
   "eslintConfig": {
     "extends": [
