@@ -985,7 +985,7 @@ a:hover {
 
 .borealis-character-main-stats-input {
     @apply text-text-primary;
-    @apply rounded-md;
+    @apply rounded;
     @apply text-base;
     @apply justify-center;
     @apply bg-primary-darker;
@@ -1013,7 +1013,7 @@ a:hover {
 
 .borealis-character-stats-text-input {
     @apply text-text-primary;
-    @apply rounded-md;
+    @apply rounded;
     @apply text-base;
     @apply text-center;
     @apply justify-center;
@@ -1040,7 +1040,7 @@ a:hover {
 
 .borealis-character-stats-number-input {
     @apply text-text-primary;
-    @apply rounded-md;
+    @apply rounded;
     @apply text-base;
     @apply text-center;
     @apply justify-center;
@@ -1167,4 +1167,58 @@ a:hover {
 
 .borealis-color-picker-color-selected:active {
     @apply border-transparent;
+}
+
+.borealis-stats-panel-layer {
+    @apply z-stats-panel;
+    @apply h-screen;
+    @apply w-screen;
+    @apply absolute;
+    @apply w-screen;
+    @apply pointer-events-none;
+}
+
+.borealis-stats-panel-container {
+    @apply w-4/5;
+    @apply h-4/5;
+    @apply border-2;
+    @apply bg-primary-darker;
+    @apply border-primary-dark;
+    @apply opacity-100;
+    @apply bg-opacity-90;
+    @apply border-opacity-90;
+    @apply mx-auto;
+    @apply pointer-events-auto;
+    @apply rounded;
+}
+
+.borealis-stats-panel-table {
+    @apply table-auto;
+    @apply w-full;
+    @apply divide-y;
+    @apply divide-secondary-light;
+}
+
+.borealis-stats-panel-character-header {
+    @apply text-text-primary;
+    @apply font-extrabold;
+    @apply w-full;
+}
+
+.borealis-stats-panel-character-row {
+    @apply text-text-secondary;
+    @apply font-normal;
+    @apply bg-secondary-dark;
+    @apply w-full;
+}
+
+.borealis-stats-panel-character-row:hover {
+    @apply text-text-primary;
+    @apply bg-secondary-medium;
+}
+
+.borealis-stats-panel-character-tablecell {
+    @apply text-base;
+    @apply p-2;
+    @apply pl-4;
 }

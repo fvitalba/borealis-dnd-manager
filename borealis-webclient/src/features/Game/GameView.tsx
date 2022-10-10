@@ -10,6 +10,7 @@ import { ChatPanel } from '@/features/ChatPanel'
 import { Banner } from '@/components/Banner'
 import { Cursor } from '@/components/Cursor'
 import { GameViewProps } from './types'
+import { StatsPanel } from '../StatsPanel'
 
 const GameView = ({ userType, overlayRef, cursors, tokens, onMouseMove, onMouseUp, onMouseDown }: GameViewProps) => {
     return (
@@ -42,6 +43,7 @@ const GameView = ({ userType, overlayRef, cursors, tokens, onMouseMove, onMouseU
             </>
             <ChatPanel />
             <Banner bannerContent={ 'Liking the tool? Want to support me? Buy me a coffee ☕!' } linkToAction={ 'https://www.buymeacoffee.com/fabio.vitalba' } />
+            <StatsPanel pageToShow='Character Stats' />
         </div>
     )
 }

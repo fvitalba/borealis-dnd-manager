@@ -1893,7 +1893,7 @@ a:hover {
 }
 
 .borealis-bottom-banner-container {
-  z-index: 120;
+  z-index: 121;
   position: absolute;
   bottom: 0px;
   width: 100%;
@@ -2028,7 +2028,7 @@ a:hover {
 .borealis-character-main-stats-input {
   --tw-text-opacity: 1;
   color: rgb(235 235 236 / var(--tw-text-opacity));
-  border-radius: 0.375rem;
+  border-radius: 0.25rem;
   font-size: 1rem;
   line-height: 1.5rem;
   justify-content: center;
@@ -2071,7 +2071,7 @@ a:hover {
 .borealis-character-stats-text-input {
   --tw-text-opacity: 1;
   color: rgb(235 235 236 / var(--tw-text-opacity));
-  border-radius: 0.375rem;
+  border-radius: 0.25rem;
   font-size: 1rem;
   line-height: 1.5rem;
   text-align: center;
@@ -2112,7 +2112,7 @@ a:hover {
 .borealis-character-stats-number-input {
   --tw-text-opacity: 1;
   color: rgb(235 235 236 / var(--tw-text-opacity));
-  border-radius: 0.375rem;
+  border-radius: 0.25rem;
   font-size: 1rem;
   line-height: 1.5rem;
   text-align: center;
@@ -2327,4 +2327,70 @@ a:hover {
 
 .borealis-color-picker-color-selected:active {
   border-color: transparent;
+}
+
+.borealis-stats-panel-layer {
+  z-index: 122;
+  height: 100vh;
+  position: absolute;
+  width: 100vw;
+  pointer-events: none;
+}
+
+.borealis-stats-panel-container {
+  width: 80%;
+  height: 80%;
+  border-width: 2px;
+  background-color: rgb(29 30 32 / var(--tw-bg-opacity));
+  border-color: rgb(41 41 45 / var(--tw-border-opacity));
+  opacity: 1;
+  --tw-bg-opacity: 0.9;
+  --tw-border-opacity: 0.9;
+  margin-left: auto;
+  margin-right: auto;
+  pointer-events: auto;
+  border-radius: 0.25rem;
+}
+
+.borealis-stats-panel-table {
+  table-layout: auto;
+  width: 100%;
+}
+
+.borealis-stats-panel-table > :not([hidden]) ~ :not([hidden]) {
+  --tw-divide-y-reverse: 0;
+  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
+  border-bottom-width: calc(1px * var(--tw-divide-y-reverse));
+  --tw-divide-opacity: 1;
+  border-color: rgb(102 124 159 / var(--tw-divide-opacity));
+}
+
+.borealis-stats-panel-character-header {
+  --tw-text-opacity: 1;
+  color: rgb(235 235 236 / var(--tw-text-opacity));
+  font-weight: 800;
+  width: 100%;
+}
+
+.borealis-stats-panel-character-row {
+  --tw-text-opacity: 1;
+  color: rgb(176 177 179 / var(--tw-text-opacity));
+  font-weight: 400;
+  --tw-bg-opacity: 1;
+  background-color: rgb(45 64 95 / var(--tw-bg-opacity));
+  width: 100%;
+}
+
+.borealis-stats-panel-character-row:hover {
+  --tw-text-opacity: 1;
+  color: rgb(235 235 236 / var(--tw-text-opacity));
+  --tw-bg-opacity: 1;
+  background-color: rgb(64 91 135 / var(--tw-bg-opacity));
+}
+
+.borealis-stats-panel-character-tablecell {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  padding: 0.5rem;
+  padding-left: 1rem;
 }
