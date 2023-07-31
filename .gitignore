@@ -77,3 +77,6 @@ typings/
 
 # borealis files
 *.tmp
+
+.DS_Store
+.snapshots
